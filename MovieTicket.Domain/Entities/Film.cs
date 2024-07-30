@@ -42,7 +42,7 @@ public class Film
 
     public string? Language { get; set; }
 
-    public DateOnly? CreatDate { get; set; }
+    public DateTime? CreatDate { get; set; }
 
     public virtual ICollection<ShowTime> ShowTimes { get; set; } = new List<ShowTime>();
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
