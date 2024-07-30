@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieTicket.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
@@ -21,7 +22,7 @@ public  class Ticket
 
     public string? Description { get; set; }
 
-    public int? Status { get; set; }
+    public TicketStatus? Status { get; set; }
 
     public virtual Bill? Bill { get; set; }
     public virtual TicketPrice? TicketPrice { get; set; }

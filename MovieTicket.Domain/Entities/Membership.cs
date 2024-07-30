@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ public class Membership
 
     public int? Point { get; set; }
 
-    public int? Status { get; set; }
+    public MembershipStatus? Status { get; set; }
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 

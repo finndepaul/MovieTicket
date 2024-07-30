@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieTicket.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
@@ -11,7 +12,7 @@ public class Account
 
     public string? Password { get; set; }
 
-    public int? Role { get; set; }
+    public AccountRole? Role { get; set; }
 
     public string? Avatar { get; set; }
 
@@ -23,7 +24,7 @@ public class Account
 
     public string? Email { get; set; }
 
-    public int? Status { get; set; }
+    public AccountStatus? Status { get; set; }
 
     public DateTime? CreateDate { get; set; }
 
