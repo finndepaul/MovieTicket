@@ -162,7 +162,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                     ScreenTypeId = Guid.NewGuid(),
                     TranslationTypeId = Guid.NewGuid(),
                     Rating = i % 5 + 1,
-                    StartDate = new DateOnly(2023, (i % 12) + 1, (i % 28) + 1),
+                    StartDate = new DateTime(2023, (i % 12) + 1, (i % 28) + 1),
                     ReleaseYear = 2023,
                     RunningTime = (i % 120) + 60,
                     Status = Domain.Enums.FilmStatus.NowShowing,

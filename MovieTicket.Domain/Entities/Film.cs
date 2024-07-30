@@ -28,7 +28,7 @@ public class Film
 
     public int? Rating { get; set; }
 
-    public DateOnly? StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
     public int? ReleaseYear { get; set; }
 
