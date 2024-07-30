@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieTicket.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
@@ -33,7 +34,7 @@ public class Film
 
     public int? RunningTime { get; set; }
 
-    public int? Status { get; set; }
+    public FilmStatus? Status { get; set; }
 
     public string? Nation { get; set; }
 

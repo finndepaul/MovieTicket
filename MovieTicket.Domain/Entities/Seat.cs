@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +15,7 @@ public  class Seat
 
     public int? Position { get; set; }
 
-    public int? Status { get; set; }
+    public SeatStatus? Status { get; set; }
 
     public virtual Cinema? Cinema { get; set; }
 

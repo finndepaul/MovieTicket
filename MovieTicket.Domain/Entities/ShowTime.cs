@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +17,7 @@ public  class ShowTime
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
     public string? Desciption { get; set; }
-    public int? Status { get; set; }
+    public ShowtimeStatus? Status { get; set; }
 
     public virtual Cinema? Cinema { get; set; }
     public virtual CinemaCenter? CinemaCenter { get; set; }

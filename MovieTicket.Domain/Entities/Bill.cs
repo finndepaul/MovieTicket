@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MovieTicket.Domain.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
@@ -17,7 +18,7 @@ public class Bill
 
     public string? BarCode { get; set; }
 
-    public int? Status { get; set; }
+    public BillStatus? Status { get; set; }
 
     public virtual Membership? Membership { get; set; }
 
