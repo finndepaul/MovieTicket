@@ -12,7 +12,7 @@ public  class Schedule
 
     public DateTime? StartDate { get; set; }
 
-    public DateOnly? EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 
     public int? Type { get; set; }
 

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\AutoMapperProfiles\" />
     <Folder Include="Implements\Services\" />
     <Folder Include="Implements\Repositories\ReadWrite\" />
     <Folder Include="Implements\Repositories\ReadOnly\" />
