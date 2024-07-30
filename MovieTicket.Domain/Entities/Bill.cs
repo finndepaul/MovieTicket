@@ -14,7 +14,7 @@ public class Bill
 
     public decimal? TotalMoney { get; set; }
 
-    public DateOnly? CreateTime { get; set; }
+    public DateTime? CreateTime { get; set; }
 
     public string? BarCode { get; set; }
 
