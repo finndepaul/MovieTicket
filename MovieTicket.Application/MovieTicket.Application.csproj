@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DataTransferObjs\" />
-    <Folder Include="Interfaces\Repositories\ReadWrite\" />
-    <Folder Include="Interfaces\Repositories\ReadOnly\" />
-    <Folder Include="Interfaces\Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
   </ItemGroup>
 

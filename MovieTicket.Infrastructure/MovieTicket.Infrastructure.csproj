@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\AutoMapperProfiles\" />
-    <Folder Include="Implements\Services\" />
-    <Folder Include="Implements\Repositories\ReadWrite\" />
-    <Folder Include="Implements\Repositories\ReadOnly\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
