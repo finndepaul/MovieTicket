@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
-    public interface IFilmRepository
+    public interface IFilmReadWriteRepository
     //IFilmReadWriteRepository
     {
-        Task<IQueryable<FilmDto>> GetAllFilm(); //để trong readonly
-        Task<Film> GetFilmById(Guid id); //dùng dto, để trong readonly
+        
         Task<Film> CreateFilm(Film film);
-        Task<Film> UpdateFilm(Film film);
+        Task<Film> UpdateFilm(Guid id,Film film);
         Task<Film> DeleteFilm(Guid id);
     }
 }

@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implements\Services\" />
-    <Folder Include="Implements\Repositories\ReadWrite\" />
-    <Folder Include="Implements\Repositories\ReadOnly\" />
+    <Compile Remove="Implements\Services\**" />
+    <EmbeddedResource Remove="Implements\Services\**" />
+    <None Remove="Implements\Services\**" />
   </ItemGroup>
 
   <ItemGroup>
