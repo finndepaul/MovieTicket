@@ -6,16 +6,6 @@ using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Infrastructure.Implements.Repositories.ReadOnly;
 using MovieTicket.Infrastructure.Implements.Repositories.ReadWrite;
 
-using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
-using MovieTicket.Infrastructure.Database.AppDbContexts;
-using MovieTicket.Infrastructure.Implements.Repositories.ReadOnly;
-using MovieTicket.Infrastructure.Implements.Repositories.ReadWrite;
-using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
-using MovieTicket.Infrastructure.Database.AppDbContexts;
-using MovieTicket.Infrastructure.Implements.Repositories.ReadWrite;
-
-
 namespace MovieTicket.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtensions
