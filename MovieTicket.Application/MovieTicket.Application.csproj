@@ -6,13 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-
   <ItemGroup>
-    
+
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
+    <Folder Include="Interfaces\Repositories\ReadOnly\" />
   </ItemGroup>
 
 </Project>
