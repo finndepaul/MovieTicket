@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\Services\**" />
+    <EmbeddedResource Remove="Interfaces\Services\**" />
+    <None Remove="Interfaces\Services\**" />
     <Folder Include="DataTransferObjs\Account\Request\" />
     <Folder Include="Interfaces\Repositories\ReadOnly\" />
   </ItemGroup>
