@@ -11,8 +11,4 @@
     <Folder Include="Interfaces\Repositories\ReadOnly\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
-  </ItemGroup>
-
 </Project>
