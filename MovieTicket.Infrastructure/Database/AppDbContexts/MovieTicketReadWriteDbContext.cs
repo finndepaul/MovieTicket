@@ -78,7 +78,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Đăng:
-            //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+            optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
             // Trung:
             //optionsBuilder.UseSqlServer("Data Source=ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
@@ -254,19 +254,24 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             }
         };
             modelBuilder.Entity<SeatType>().HasData(seatTypes);
-            //CinemaType
-            List<CinemaType> cinemaTypes = new List<CinemaType>();
-            for (int i = 1; i <= 30; i++)
-            {
-                CinemaType cinemaType = new CinemaType
-                {
-                    Id = Guid.NewGuid(),
-                    Name = $"Cinema Type {i}"
-                };
-
-                cinemaTypes.Add(cinemaType);
-            }
+            List<CinemaType> cinemaTypes = new List<CinemaType>() {
+        new CinemaType
+        {
+            Id = Guid.Parse("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+            Name = "2D"
+        },
+        new CinemaType
+        {
+            Id = Guid.Parse("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+            Name = "Gold Class"
+        },
+        new CinemaType
+        {
+            Id = Guid.Parse("03846649-c852-443c-9f5c-f935343318d5"),
+            Name = "Premium Class"
+        }};
             modelBuilder.Entity<CinemaType>().HasData(cinemaTypes);
+            //
         }
 
     }

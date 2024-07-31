@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
@@ -11,7 +13,7 @@ namespace MovieTicket.Infrastructure.Extensions
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
-        {
+        {     
             //Cấu hình DbContext
             services.AddDbContext<MovieTicketReadOnlyDbContext>();
             services.AddDbContext<MovieTicketReadWriteDbContext>();
@@ -23,6 +25,9 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<ILoginReadWriteRepository, LoginReadWriteRepository>();
             services.AddScoped<IFilmReadWriteRepository, FilmReadWriteRepository>();
             services.AddScoped<IFilmReadOnlyRepository, FilmReadOnlyRepostitory>();
+            services.AddTransient<IAccountPasswordRepository, AccountPasswordRepository>();
+            services.AddTransient<ISendEmailRepository, SendEmailRepository>();
+
             return services;
         }
     }
