@@ -7,10 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DataTransferObjs\" />
-    <Folder Include="Interfaces\Repositories\ReadWrite\" />
+    <Folder Include="DataTransferObjs\Account\Request\" />
     <Folder Include="Interfaces\Repositories\ReadOnly\" />
-    <Folder Include="Interfaces\Services\" />
   </ItemGroup>
 
   <ItemGroup>
