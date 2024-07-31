@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Extensions\AutoMapperProfiles\" />
+    <Folder Include="Implements\Repositories\ReadOnly\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
       <PrivateAssets>all</PrivateAssets>

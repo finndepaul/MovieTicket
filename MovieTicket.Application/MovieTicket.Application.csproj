@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
+    <Folder Include="Interfaces\Repositories\ReadOnly\" />
   </ItemGroup>
 
   <ItemGroup>
