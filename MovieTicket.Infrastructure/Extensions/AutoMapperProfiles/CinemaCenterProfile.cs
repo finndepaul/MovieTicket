@@ -15,6 +15,7 @@ namespace MovieTicket.Infrastructure.Extensions.AutoMapperProfiles
         {
             CreateMap<CinemaCenterDto, CinemaCenter>().ReverseMap();
             CreateMap<CinemaCenterCreateRequest, CinemaCenter>();
+            CreateMap<CinemaCenterUpdateRequest, CinemaCenter>();
         }
 
     }

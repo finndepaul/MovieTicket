@@ -10,7 +10,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
     public interface ICinemaCenterReadOnlyRepository
     {
-        IQueryable<CinemaCenterDto> GetAll();
+        Task<IQueryable<CinemaCenterDto>> GetAll();
         Task<CinemaCenter> GetById(Guid id);
     }
 }

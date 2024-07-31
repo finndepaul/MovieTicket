@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Domain.Entities;
@@ -21,15 +22,19 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _movieTicket = movieTicket;
             _mapper = mapper;
         }
-        public IQueryable<CinemaCenterDto> GetAll()
-        {
-            var cinemaCenters = _movieTicket.CinemaCenters;
-            var cinemaCenterDtos = cinemaCenters.ProjectTo<CinemaCenterDto>(_mapper.ConfigurationProvider);
+        public async Task<IQueryable<CinemaCenterDto>> GetAll()
+        { 
+            var cinemaCenters = _movieTicket.CinemaCenters.AsNoTracking();//db gọi đến class
+            var cinemaCenterDtos = cinemaCenters.ProjectTo<CinemaCenterDto>(_mapper.ConfigurationProvider);//map sang dto
             return cinemaCenterDtos;
         }
         public async Task<CinemaCenter> GetById(Guid id)
         {
             var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
+            if (cinemaCenter == null)
+            {
+                return null;
+            }
             return cinemaCenter;
         }
     }

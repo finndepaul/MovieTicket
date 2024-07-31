@@ -22,13 +22,9 @@ namespace MovieTicket.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Register(AccountRegisterRequest registerRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var register = _mappre.Map<Account>(registerRequest);
-            await _accountReadWrite.Register(register);
-            return Ok(register);
+            var check = await _accountReadWrite.Register(register);
+            return Ok(check);
         }
     }
 }

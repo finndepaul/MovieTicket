@@ -1,4 +1,5 @@
-﻿using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
@@ -19,6 +20,11 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         }
         public async Task<Account> Register(Account account)
         {
+            var accountItem = await _db.Accounts.FirstOrDefaultAsync(x=> x.Email == account.Email || x.Phone == account.Phone);
+            if (accountItem != null)
+            {
+                return null;
+            }
             account.CreateDate = DateTime.Now;
             account.Role = AccountRole.User;
             account.Status = AccountStatus.Active;

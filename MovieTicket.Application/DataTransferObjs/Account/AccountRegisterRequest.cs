@@ -16,8 +16,10 @@ namespace MovieTicket.Application.DataTransferObjs.Account
         [Required]
         public string Name { get; set; }
         [Required]
+        [RegularExpression(@"^0\d{9}$")]
         public string Phone { get; set; }
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
     }
 

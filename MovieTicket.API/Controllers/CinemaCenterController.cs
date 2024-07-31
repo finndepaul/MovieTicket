@@ -13,7 +13,6 @@ namespace MovieTicket.API.Controllers
     [ApiController]
     public class CinemaCenterController : ControllerBase
     {
-        // GET: api/<CinemaCenterController>
         private readonly ICinemaCenterReadOnlyRepository _centerReadOnlyRepository;
         private readonly ICinemaCenterReadWriteRepository _centerReadWriteRepository;
         private readonly IMapper _mapper;
@@ -33,63 +32,32 @@ namespace MovieTicket.API.Controllers
             return Ok(cinemaCenterDto);
         }
 
-        // GET api/<CinemaCenterController>/5
         [HttpGet]
         public async Task<ActionResult> GetById(Guid id)
         {
             var cinemaCenter = await _centerReadOnlyRepository.GetById(id);
             var cinemaCenterDto = _mapper.Map<CinemaCenterDto>(cinemaCenter);
-            if (cinemaCenterDto == null)
-            {
-                return NotFound();
-            }
             return Ok(cinemaCenterDto);
         }
 
-        // POST api/<CinemaCenterController>
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CinemaCenterCreateRequest cinemaCenter)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var cinemaCenterCreate = _mapper.Map<CinemaCenter>(cinemaCenter);
-            await _centerReadWriteRepository.Create(cinemaCenterCreate);
-            return Ok(cinemaCenterCreate);
+            var check = await _centerReadWriteRepository.Create(cinemaCenterCreate);
+            return Ok(check);
         }
 
-        // PUT api/<CinemaCenterController>/5
         [HttpPut]
         public async Task<ActionResult> Update(Guid id, [FromBody] CinemaCenterUpdateRequest cinemaCenter)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var cinemaCenterItem = await _centerReadOnlyRepository.GetById(id);
-            if (cinemaCenterItem == null)
-            {
-                return NotFound("Không tìm thấy");
-            }
-            else
-            {
-                cinemaCenterItem.Name = cinemaCenter.Name;
-                cinemaCenterItem.Address = cinemaCenter.Address;
-                await _centerReadWriteRepository.Update(cinemaCenterItem);
-                return Ok(cinemaCenterItem);
-            }
+            var check = await _centerReadWriteRepository.Update(id, cinemaCenter);
+            return Ok(check);
         }
 
-        // DELETE api/<CinemaCenterController>/5
         [HttpDelete]
         public async Task<ActionResult> Delete(Guid id)
-        {
-            var cinemaCenter = await _centerReadOnlyRepository.GetById(id);
-            if (cinemaCenter == null)
-            {
-                return NotFound("Không tìm thấy");
-            }
+        {          
             await _centerReadWriteRepository.Delete(id);
             return Ok("Xóa thành công");
         }
