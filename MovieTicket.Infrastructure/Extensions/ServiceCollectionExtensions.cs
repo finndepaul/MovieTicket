@@ -13,11 +13,11 @@ namespace MovieTicket.Infrastructure.Extensions
     {
         public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<MovieTicketReadOnlyDbContext>();
+            services.AddScoped<MovieTicketReadWriteDbContext>();
             services.AddScoped<ILoginReadWriteRepository, LoginReadWriteRepository>();
             services.AddScoped<IFilmReadWriteRepository, FilmReadWriteRepository>();
             services.AddScoped<IFilmReadOnlyRepository, FilmReadOnlyRepostitory>();
-            services.AddScoped<MovieTicketReadOnlyDbContext>();
-            services.AddScoped<MovieTicketReadWriteDbContext>();
             return services;
         }
     }
