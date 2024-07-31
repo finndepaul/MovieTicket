@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\AutoMapperProfiles\" />
-    <Folder Include="Implements\Repositories\ReadOnly\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Extensions\AutoMapperProfiles\" />
+		<Folder Include="Implements\Repositories\ReadOnly\" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.1" />
