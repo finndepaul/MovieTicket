@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.Combo
 {
-    public class UpdateComboRequestDTOs
+    public class UpdateComboRequest
     {
         public string? Name { get; set; }
 

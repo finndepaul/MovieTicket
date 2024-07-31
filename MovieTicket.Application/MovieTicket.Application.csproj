@@ -10,4 +10,8 @@
     <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Services\" />
+  </ItemGroup>
+
 </Project>

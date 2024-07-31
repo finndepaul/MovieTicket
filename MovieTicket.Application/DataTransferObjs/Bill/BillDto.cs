@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Combo;
+using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.Bill
 {
-    public class BillWithComboDTOs
+    public class BillDto
     {
         public Guid Id { get; set; }
         //public Guid? MembershipId { get; set; }
@@ -21,7 +22,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
         public string? BarCode { get; set; }
 
         public BillStatus? Status { get; set; }
-        public List<ComboDTOs> Combos { get; set; } = new List<ComboDTOs>();
+        public virtual ICollection<BillCombo> BillCombos { get; set; } = new List<BillCombo>();
     }
 
 }

@@ -6,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.Combo
 {
-    public class ComboDTOs
+    public class CreateComboRequest
     {
-        public Guid Id { get; set; }
-
         public string? Name { get; set; }
 
         public decimal? Price { get; set; }
-        //public virtual ICollection<BillCombo> BillCombos { get; set; } = new List<BillCombo>();
     }
 
 }

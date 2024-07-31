@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Combo;
-using MovieTicket.Application.Interfaces.Services.ReadOnly;
-using MovieTicket.Application.Interfaces.Services.ReadWrite;
+using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
@@ -12,67 +12,48 @@ namespace MovieTicket.API.Controllers
     [ApiController]
     public class ComboController : Controller
     {
-        private readonly IRComboService rService;
-        private readonly IRWComboService rWService;
+        private readonly IComboReadOnlyRepository comboReadOnly;
+        private readonly IComboReadWriteRepository comboReadWrite;
         private readonly IMapper mapper;
 
-        public ComboController(IRComboService rService, IRWComboService rWService, IMapper mapper)
+        public ComboController(IComboReadOnlyRepository comboReadOnly, IComboReadWriteRepository comboReadWrite, IMapper mapper)
         {
-            this.rService = rService;
-            this.rWService = rWService;
+            this.comboReadOnly = comboReadOnly;
+            this.comboReadWrite = comboReadWrite;
             this.mapper = mapper;
         }
+
         [HttpGet]
         public IActionResult GetAllAsync()
         {
-            var comboModel = rService.GetAllAsync();
-            var comboDTOs = mapper.Map<List<ComboDTOs>>(comboModel);
-            return Ok(comboDTOs.AsQueryable());
+            return Ok(comboReadOnly.GetAllAsync());
         }
-        [HttpGet("{id}")]
+
+        [HttpGet]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            var comboModel = await rService.GetByIdAsync(id);
-            if (comboModel == null)
-            {
-                return NotFound();
-            }
-            var comboDTOs = mapper.Map<ComboDTOs>(comboModel);
-            return Ok(comboDTOs);
+            var result = await comboReadOnly.GetByIdAsync(id);
+            return Ok(result);
         }
+
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(AddComboRequestDTOs request)
+        public async Task<IActionResult> CreateAsync(CreateComboRequest request)
         {
-            // Mapping DTOs to Model
-            var comboModel = mapper.Map<Combo>(request);
-            // Create new Combo
-            comboModel = await rWService.CreateAsync(comboModel);
-            // Mapping Model to DTOs
-            var comboDTOs = mapper.Map<ComboDTOs>(comboModel);
+            var comboDTOs = await comboReadWrite.CreateAsync(request);
             return Ok(comboDTOs);
         }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, UpdateComboRequestDTOs request)
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync(Guid id, UpdateComboRequest request)
         {
-            // Mapping DTOs to Model
-            var comboModel = mapper.Map<Combo>(request);
-            // Update Combo
-            comboModel = await rWService.UpdateAsync(id, comboModel);
-            // Mapping Model to DTOs
-            var comboDTOs = mapper.Map<ComboDTOs>(comboModel);
+            var comboDTOs = await comboReadWrite.UpdateAsync(id, request);
             return Ok(comboDTOs);
         }
-        [HttpDelete("{id}")]
+
+        [HttpDelete]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            // Delete Combo
-            var comboModel = await rWService.DeleteAsync(id);
-            if (comboModel == null)
-            {
-                return NotFound();
-            }
-            // Mapping Model to DTOs
-            var comboDTOs = mapper.Map<ComboDTOs>(comboModel);
+            var comboDTOs = await comboReadWrite.DeleteAsync(id);
             return Ok(comboDTOs);
         }
     }

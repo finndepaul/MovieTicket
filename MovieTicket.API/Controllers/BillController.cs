@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.Combo;
-using MovieTicket.Application.Interfaces.Services.ReadOnly;
-using MovieTicket.Application.Interfaces.Services.ReadWrite;
+using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
@@ -13,86 +13,51 @@ namespace MovieTicket.API.Controllers
     [ApiController]
     public class BillController : Controller
     {
-        private readonly IRBillService rBillService;
-        private readonly IRWBillService rWBillService;
+        private readonly IBillReadOnlyRepository billReadOnly;
+        private readonly IBillReadWriteRepository billReadWrite;
         private readonly IMapper mapper;
 
-        public BillController(IRBillService rBillService, IRWBillService rWBillService, IMapper mapper)
+        public BillController(IBillReadOnlyRepository billReadOnly,IBillReadWriteRepository billReadWrite,IMapper mapper)
         {
-            this.rBillService = rBillService;
-            this.rWBillService = rWBillService;
+            this.billReadOnly = billReadOnly;
+            this.billReadWrite = billReadWrite;
             this.mapper = mapper;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
-            var billModels = rBillService.GetAllAsync();
-            var billDTOs = billModels.Select(bill => new BillWithComboDTOs
-            {
-                Id = bill.Id,
-                TotalMoney = bill.TotalMoney,
-                CreateTime = bill.CreateTime,
-                BarCode = bill.BarCode,
-                Status = bill.Status,
-                Combos = bill.BillCombos.Select(bc => new ComboDTOs
-                {
-                    Id = bc.Combo.Id,
-                    Name = bc.Combo.Name,
-                    Price = bc.Combo.Price
-                }).ToList()
-            }).ToList();
-
-            return Ok(billDTOs);
+            var billModels = billReadOnly.GetAllAsync();
+            return Ok(billModels);
         }
-        [HttpGet("GetById/{id}")]
+        [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var billModel = await rBillService.GetByIdAsync(id);
-            if (billModel == null)
-            {
-                return NotFound();
-            }
-            var billDTOs = mapper.Map<BillDTOs>(billModel);
-            return Ok(billDTOs);
+            var billModel = await billReadOnly.GetByIdAsync(id);
+            return Ok(billModel);
         }
-        [HttpGet("{id}")]
-        public IActionResult GetBillByCombo(Guid id)
+        [HttpGet]
+        public IActionResult GetAllBillWithCombo()
         {
-            var comboModel = mapper.Map<List<ComboDTOs>>(rBillService.GetBillByCombo(id));
-            if (comboModel == null)
-            {
-                return NotFound();
-            }
-            return Ok(comboModel);
-
+            var billModels = billReadOnly.GetAllWithCombosAsync();
+            return Ok(billModels);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] AddBillRequestDTOs addBillRequestDTOs)
+        public async Task<IActionResult> Create([FromBody] CreateBillRequest createBillRequest)
         {
-            var billModel = mapper.Map<Bill>(addBillRequestDTOs);
-            billModel = await rWBillService.CreateAsync(billModel, addBillRequestDTOs.ComboIds);
-            var billDTOs = mapper.Map<BillDTOs>(billModel);
-            return Ok(billDTOs);
+            var billModel = await billReadWrite.CreateAsync(createBillRequest);
+            return Ok(billModel);
         }
-
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromQuery] Guid id, [FromBody] UpdateBillRequestDTOs updateBillRequestDTOs)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBillRequest updateBillRequest)
         {
-            var billModel = mapper.Map<Bill>(updateBillRequestDTOs);
-            billModel = await rWBillService.UpdateAsync(id, billModel, updateBillRequestDTOs.ComboIds);
-            var billDTOs = mapper.Map<BillDTOs>(billModel);
-            return Ok(billDTOs);
+            var billModel = await billReadWrite.UpdateAsync(id, updateBillRequest);
+            return Ok(billModel);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var billModel = await rWBillService.DeleteAsync(id);
-            if (billModel == null)
-            {
-                return NotFound();
-            }
-            var billDTOs = mapper.Map<BillDTOs>(billModel);
-            return Ok(billDTOs);
+            var billModel = await billReadWrite.DeleteAsync(id);
+            return Ok(billModel);
         }
     }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.Bill
 {
-    public class AddBillRequestDTOs
+    public class CreateBillRequest
     {
         //public Guid? MembershipId { get; set; }
 
