@@ -6,11 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Implements\Services\**" />
-    <EmbeddedResource Remove="Implements\Services\**" />
-    <None Remove="Implements\Services\**" />
-  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.1" />

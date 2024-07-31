@@ -10,6 +10,7 @@ namespace MovieTicket.Infrastructure.Extensions.AutoMapperProfiles
         {
             CreateMap<Film, FilmDto>().ReverseMap();
             CreateMap<FilmUpdateRequest, Film>().ReverseMap();
+            CreateMap<FilmCreateRequest, Film>().ReverseMap();
         }
     }
 }

@@ -45,6 +45,6 @@ namespace MovieTicket.Application.DataTransferObjs
 
         public string? Language { get; set; }
 
-        
+     
     }
 }
