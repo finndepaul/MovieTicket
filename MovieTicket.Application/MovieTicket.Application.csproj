@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
+    <Compile Remove="Interfaces\Services\**" />
+    <EmbeddedResource Remove="Interfaces\Services\**" />
+    <None Remove="Interfaces\Services\**" />
+    <Folder Include="DataTransferObjs\Account\Request\" />
     <Folder Include="Interfaces\Repositories\ReadOnly\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
+    <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
+    <Folder Include="Interfaces\Repositories\ReadOnly\" />
   </ItemGroup>
 
 </Project>
