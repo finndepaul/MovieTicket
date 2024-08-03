@@ -14,7 +14,7 @@ public  class Schedule
 
     public DateTime? EndDate { get; set; }
 
-    public int? Type { get; set; }
+    public ScheduleType? Type { get; set; }
 
     public ScheduleStatus? Status { get; set; }
 

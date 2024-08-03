@@ -14,7 +14,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
         public void Configure(EntityTypeBuilder<Cinema> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasOne(x => x.CinemaType).WithOne(x=>x.Cinema).HasForeignKey<Cinema>(x=>x.CinemaTypeId);
+            builder.HasOne(x => x.CinemaType).WithMany(x=>x.Cinema).HasForeignKey(x=>x.CinemaTypeId);
             builder.HasOne(x => x.CinemaCenter).WithMany(x=>x.Cinemas).HasForeignKey(x=>x.CinemaCenterId);
         }
     }
