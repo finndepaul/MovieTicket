@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Entitis;
+using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Extensions;
 
 namespace MovieTicket.Infrastructure.Database.AppDbContexts;
@@ -78,7 +80,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Đăng:
-        optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+        //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
         // Trung:
         //optionsBuilder.UseSqlServer("Data Source=ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
@@ -110,10 +112,24 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Password = Hash.EncryptPassword("abc123"),
             Role = Domain.Enums.AccountRole.Admin, // 1, 2, or 3
             Avatar = $"avatar1.png",
-            Name = "ClientTest",
+            Name = "AdminTest",
             Address = $"Address 1",
             Phone = "000-000-000",
             Email = "azusachan307@gmail.com",
+            Status = Domain.Enums.AccountStatus.Active, // 0 or 1
+            CreateDate = new DateTime(2023, 8, 1).AddDays(10)
+        });
+        accounts.Add(new Account()
+        {
+            Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+            Username = "Client",
+            Password = Hash.EncryptPassword("abc123"),
+            Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
+            Avatar = $"avatar2.png",
+            Name = "ClientTest",
+            Address = $"Address 2",
+            Phone = "000-000-000",
+            Email = "azusachan309@gmail.com",
             Status = Domain.Enums.AccountStatus.Active, // 0 or 1
             CreateDate = new DateTime(2023, 8, 1).AddDays(10)
         });
@@ -139,7 +155,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 
         var membership = new Membership()
         {
-            Id = Guid.Parse("fd36705c-0610-4c30-9cfb-e5827b3f3d78"),
+            Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
             Point = 0,
             Status = Domain.Enums.MembershipStatus.Active,
         };
@@ -258,7 +274,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         List<CinemaType> cinemaTypes = new List<CinemaType>() {
         new CinemaType
         {
-            Id = Guid.Parse("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+            Id = Guid.Parse("e85df49a-e99d-4727-917f-28ca67bf33ec"),
             Name = "2D"
         },
         new CinemaType
@@ -272,7 +288,112 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Name = "Premium Class"
         }};
         modelBuilder.Entity<CinemaType>().HasData(cinemaTypes);
-        //
+        //Schedule
+        List<Schedule> schedules = new List<Schedule>();
+        for (int i = 1; i <= 30; i++)
+        {
+            Schedule schedule = new Schedule
+            {
+                Id = Guid.NewGuid(),
+                FilmId = films[i - 1].Id,
+                StartDate = new DateTime(2023, 8, 1).AddDays(i),
+                EndDate = new DateTime(2023, 8, 1).AddDays(i + 1),
+                Type = (ScheduleType)Enum.GetValues(typeof(ScheduleType)).GetValue(random.Next(0, Enum.GetValues(typeof(ScheduleType)).Length)),
+                Status = ScheduleStatus.Showing
+            };
+            schedules.Add(schedule);
+        }
+        modelBuilder.Entity<Schedule>().HasData(schedules);
+        //ScreenType
+        List<ScreenType> screenTypes = new List<ScreenType>() {
+            new ScreenType
+            {
+                Id = Guid.Parse("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                Type = "2D"
+            },
+            new ScreenType
+            {
+                Id = Guid.Parse("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                Type = "3D"
+            },
+            new ScreenType
+            {
+                Id = Guid.Parse("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                Type = "IMAX"
+            }
+        };
+        modelBuilder.Entity<ScreenType>().HasData(screenTypes);
+        //TicketPrice
+        List<TicketPrice> ticketPrice = new List<TicketPrice>();
+        for (int i = 1; i <= 30; i++)
+        {
+            TicketPrice ticket = new TicketPrice
+            {
+                Id = Guid.NewGuid(),
+                Price = (i % 10) * 10000,
+                SeatTypeId = seatTypes[random.Next(0, seatTypes.Count)].Id,
+                ScreeningDayId = screeningDays[random.Next(0, screeningDays.Count)].Id,
+                CinemaTypeId = cinemaTypes[random.Next(0, cinemaTypes.Count)].Id,
+                ScreenTypeId = screenTypes[random.Next(0, screenTypes.Count)].Id,              
+            };
+            ticketPrice.Add(ticket);
+        }
+        modelBuilder.Entity<TicketPrice>().HasData(ticketPrice);
+        //TranslationType
+        List<TranslationType> translationTypes = new List<TranslationType>() {
+            new TranslationType
+            {
+                Id = Guid.Parse("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30"),
+                Type = "Phụ đề"
+            },
+            new TranslationType
+            {
+                Id = Guid.Parse("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf"),
+                Type = "Phụ đề và Lồng tiếng"
+            }
+        };
+        modelBuilder.Entity<TranslationType>().HasData(translationTypes);  
+        //Cinema
+        List<Cinema> cinemas = new List<Cinema>();
+        for (int i = 1; i <= 30; i++)
+        {
+            Cinema cinema = new Cinema
+            {
+                Id = Guid.NewGuid(),
+                CinemaTypeId = cinemaTypes[random.Next(0, cinemaTypes.Count)].Id,
+                CinemaCenterId = cinemaCenters[random.Next(0, cinemaCenters.Count)].Id,
+                Name = $"Cinema {i}",
+                Column = 10,
+                Row = 10,
+                MaxSeatCapacity = 100,
+                Description = $"Description for Cinema {i}"
+            };
+            cinemas.Add(cinema);
+        }
+        modelBuilder.Entity<Cinema>().HasData(cinemas);
+        //ShowTime
+        List<ShowTime> showTimes = new List<ShowTime>();
+        for (int i = 1; i <= 30; i++)
+        {
+            ShowTime showTime = new ShowTime
+            {
+                Id = Guid.NewGuid(),
+                FilmId = films[i - 1].Id,
+                ScheduleId = schedules[i - 1].Id,
+                CinemaCenterId = cinemaCenters[random.Next(0, cinemaCenters.Count)].Id,
+                CinemaId = cinemas[random.Next(0, cinemas.Count)].Id,
+                ScreenTypeId = screenTypes[random.Next(0, screenTypes.Count)].Id,
+                TranslationTypeId = translationTypes[random.Next(0, translationTypes.Count)].Id,
+                StartTime = new DateTime(2023, 8, 1).AddDays(i),
+                EndTime = new DateTime(2023, 8, 1).AddDays(i).AddHours(2),
+                Desciption = $"Description for ShowTime {i}",
+                Status = ShowtimeStatus.Showing
+            };
+            showTimes.Add(showTime);
+        }
+        modelBuilder.Entity<ShowTime>().HasData(showTimes);
+
     }
+
 
 }

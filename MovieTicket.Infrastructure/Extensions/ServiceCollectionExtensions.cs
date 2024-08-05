@@ -3,8 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
-using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Infrastructure.Implements.Repositories.ReadOnly;
 using MovieTicket.Infrastructure.Implements.Repositories.ReadWrite;
 

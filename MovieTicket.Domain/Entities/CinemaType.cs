@@ -9,6 +9,6 @@ public class CinemaType
 
     public string? Name { get; set; }
 
-    public virtual Cinema? Cinema { get; set; }
+    public virtual ICollection<Cinema>? Cinema { get; set; }
     public virtual ICollection<TicketPrice>? TicketPrices { get; set; }
 }
