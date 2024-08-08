@@ -27,6 +27,8 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<IFilmReadOnlyRepository, FilmReadOnlyRepostitory>();
             services.AddTransient<IAccountPasswordRepository, AccountPasswordRepository>();
             services.AddTransient<ISendEmailRepository, SendEmailRepository>();
+            services.AddTransient<ITicketPriceReadOnlyRepository, TicketPriceReadOnlyReponsitory>();
+            services.AddTransient<ITicketPriceReadWriteReponsitory, TicketPriceReadWriteReponsitory>();
 
             return services;
         }
