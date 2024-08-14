@@ -27,10 +27,24 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _mapper = mapper;
         }
 
-        public async Task<TicketPriceDto> GetByIdAsync(Guid id)
+        public async Task<ResponseObject<TicketPriceDto>> GetByIdAsync(Guid id)
         {
             var query = await _context.TicketPrices.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            return _mapper.Map<TicketPriceDto>(query);
+            if (query == null)
+            {
+                return new ResponseObject<TicketPriceDto>()
+                {
+                    Data = null,
+                    Message = "Get ticket price fail",
+                    Status = StatusCodes.Status404NotFound
+                };
+            }
+            return new ResponseObject<TicketPriceDto>()
+            {
+                Data = _mapper.Map<TicketPriceDto>(query),
+                Message = "Get ticket price success",
+                Status = StatusCodes.Status200OK
+            };
         }
 
         public async Task<IQueryable<TicketPriceDto>> GetListAsync(TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)

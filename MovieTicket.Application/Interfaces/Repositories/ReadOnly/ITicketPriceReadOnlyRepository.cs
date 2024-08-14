@@ -1,5 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
     public interface ITicketPriceReadOnlyRepository
     {
         Task<IQueryable<TicketPriceDto>> GetListAsync(TicketPriceWithPaginationRequest request,CancellationToken cancellationToken);
-        Task<TicketPriceDto> GetByIdAsync(Guid id);
+        Task<ResponseObject<TicketPriceDto>> GetByIdAsync(Guid id);
     }
 }

@@ -29,6 +29,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         public async Task<ResponseObject<TicketPriceCreateRequest>> Create(TicketPriceCreateRequest request, CancellationToken cancellationToken)
         {
             var ticketPrice = _map.Map<TicketPrice>(request);
+            ticketPrice.Status = TicketPriceStatus.Active;
             await _dbContext.TicketPrices.AddAsync(ticketPrice);
             await _dbContext.SaveChangesAsync();
             return new ResponseObject<TicketPriceCreateRequest>
