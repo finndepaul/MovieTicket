@@ -1,4 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs;
+﻿using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;

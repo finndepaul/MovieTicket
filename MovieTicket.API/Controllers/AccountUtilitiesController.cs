@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MovieTicket.Application.DataTransferObjs.Account;
+using MovieTicket.Application.DataTransferObjs.Account.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Enums;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
@@ -12,10 +12,10 @@ namespace MovieTicket.API.Controllers
     [ApiController]
     public class AccountUtilitiesController : ControllerBase
     {
-        private readonly IAccountPasswordRepository _accountService;
-        private readonly ISendEmailRepository _emailService;
+        private readonly IAccountReadWriteRepository _accountService;
+        private readonly IEmailSenderReadWriteRepository _emailService;
 
-        public AccountUtilitiesController(IAccountPasswordRepository accountService, ISendEmailRepository emailService)
+        public AccountUtilitiesController(IAccountReadWriteRepository accountService, IEmailSenderReadWriteRepository emailService)
         {
             _accountService = accountService;
             _emailService = emailService;

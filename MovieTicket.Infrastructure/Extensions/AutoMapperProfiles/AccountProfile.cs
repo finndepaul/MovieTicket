@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MovieTicket.Application.DataTransferObjs.Account;
+using MovieTicket.Application.DataTransferObjs.Account.Request;
 using MovieTicket.Domain.Entities;
 using System;
 using System.Collections.Generic;
