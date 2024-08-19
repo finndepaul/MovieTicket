@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieTicket.Application.DataTransferObjs
+namespace MovieTicket.Application.DataTransferObjs.Film
 {
     public class FilmCreateRequest
     {
