@@ -29,8 +29,26 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
         public async Task<ResponseObject<TicketPriceDto>> GetByIdAsync(Guid id)
         {
-            var query = await _context.TicketPrices.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if (query == null)
+			var query = await (from tp in _context.TicketPrices
+						 join sd in _context.ScreeningDays on tp.ScreeningDayId equals sd.Id
+						 join set in _context.SeatTypes on tp.SeatTypeId equals set.Id
+						 join sct in _context.ScreenTypes on tp.ScreenTypeId equals sct.Id
+						 join ct in _context.CinemaTypes on tp.CinemaTypeId equals ct.Id
+						 select new TicketPriceDto
+						 {
+							 Id = tp.Id,
+							 SeatTypeId = tp.SeatTypeId,
+							 ScreeningDayId = tp.ScreeningDayId,
+							 CinemaTypeId = tp.CinemaTypeId,
+							 ScreenTypeId = tp.ScreenTypeId,
+							 Price = tp.Price,
+							 Day = sd.Day,
+							 NameCinema = ct.Name,
+							 NameSeat = set.Name,
+							 Type = sct.Type,
+							 Status = tp.Status
+						 }).AsNoTracking().FirstOrDefaultAsync(x=>x.Id == id);
+			if (query == null)
             {
                 return new ResponseObject<TicketPriceDto>()
                 {
@@ -41,33 +59,56 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             }
             return new ResponseObject<TicketPriceDto>()
             {
-                Data = _mapper.Map<TicketPriceDto>(query),
+                Data = query,
                 Message = "Get ticket price success",
                 Status = StatusCodes.Status200OK
             };
         }
 
-        public async Task<IQueryable<TicketPriceDto>> GetListAsync(TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
-        {
-            var query = _context.TicketPrices.AsNoTracking();
-            if (request.ScreeningDayId.HasValue)
-            {
-                query = query.Where(x => x.ScreeningDayId == request.ScreeningDayId);
-            }
-            if (request.SeatTypeId.HasValue)
-            {
-                query = query.Where(x => x.SeatTypeId == request.SeatTypeId);
-            }
-            if (request.ScreenTypeId.HasValue)
-            {
-                query = query.Where(x => x.ScreenTypeId == request.ScreenTypeId);
-            }
-            if (request.CinemaTypeId.HasValue)
-            {
-                query = query.Where(x => x.CinemaTypeId == request.CinemaTypeId);
-            }
-            var mapping = await Task.FromResult(_mapper.Map<List<TicketPriceDto>>(query.ToList()));
-            return mapping.AsQueryable();
-        }
+		public async Task<IQueryable<TicketPriceDto>> GetListAsync(TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
+		{
+			var query = (from tp in _context.TicketPrices
+							   join sd in _context.ScreeningDays on tp.ScreeningDayId equals sd.Id
+							   join set in _context.SeatTypes on tp.SeatTypeId equals set.Id
+							   join sct in _context.ScreenTypes on tp.ScreenTypeId equals sct.Id
+							   join ct in _context.CinemaTypes on tp.CinemaTypeId equals ct.Id
+							   select new TicketPriceDto
+							   {
+								   Id = tp.Id,
+								   SeatTypeId = tp.SeatTypeId,
+								   ScreeningDayId = tp.ScreeningDayId,
+								   CinemaTypeId = tp.CinemaTypeId,
+								   ScreenTypeId = tp.ScreenTypeId,
+								   Price = tp.Price,
+								   Day = sd.Day,
+								   NameCinema = ct.Name,
+								   NameSeat = set.Name,
+								   Type = sct.Type,
+								   Status = tp.Status
+							   }).AsNoTracking();
+
+
+			if (request.ScreeningDayId.HasValue)
+			{
+				query = query.Where(x => x.ScreeningDayId == request.ScreeningDayId);
+			}
+			if (request.SeatTypeId.HasValue)
+			{
+				query = query.Where(x => x.SeatTypeId == request.SeatTypeId);
+			}
+			if (request.ScreenTypeId.HasValue)
+			{
+				query = query.Where(x => x.ScreenTypeId == request.ScreenTypeId);
+			}
+			if (request.CinemaTypeId.HasValue)
+			{
+				query = query.Where(x => x.CinemaTypeId == request.CinemaTypeId);
+			}
+			if (request.Status.HasValue)
+			{
+				query = query.Where(x => x.Status == request.Status);
+			}
+			return query.AsQueryable();
+		}
     }
 }

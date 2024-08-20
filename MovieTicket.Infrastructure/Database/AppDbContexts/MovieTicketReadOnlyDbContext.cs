@@ -334,8 +334,9 @@ public class MovieTicketReadOnlyDbContext : DbContext
                 SeatTypeId = seatTypes[random.Next(0, seatTypes.Count)].Id,
                 ScreeningDayId = screeningDays[random.Next(0, screeningDays.Count)].Id,
                 CinemaTypeId = cinemaTypes[random.Next(0, cinemaTypes.Count)].Id,
-                ScreenTypeId = screenTypes[random.Next(0, screenTypes.Count)].Id,              
-            };
+                ScreenTypeId = screenTypes[random.Next(0, screenTypes.Count)].Id,
+				Status = TicketPriceStatus.Active
+			};
             ticketPrice.Add(ticket);
         }
         modelBuilder.Entity<TicketPrice>().HasData(ticketPrice);

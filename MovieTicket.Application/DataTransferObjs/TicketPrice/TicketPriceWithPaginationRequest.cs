@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace MovieTicket.Application.DataTransferObjs.TicketPrice
         public Guid? ScreeningDayId { get; set; }
 
         public Guid? CinemaTypeId { get; set; }
-    }
+		public TicketPriceStatus? Status { get; set; }
+
+	}
 }
