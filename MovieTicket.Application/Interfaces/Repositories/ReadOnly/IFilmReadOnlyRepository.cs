@@ -1,4 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs;
+﻿using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Domain.Entities;
 using System;
 using System.Collections.Generic;

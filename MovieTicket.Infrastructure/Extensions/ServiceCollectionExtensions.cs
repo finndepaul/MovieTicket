@@ -3,8 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
-using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Infrastructure.Implements.Repositories.ReadOnly;
 using MovieTicket.Infrastructure.Implements.Repositories.ReadWrite;
 
@@ -25,11 +23,12 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<ILoginReadWriteRepository, LoginReadWriteRepository>();
             services.AddScoped<IFilmReadWriteRepository, FilmReadWriteRepository>();
             services.AddScoped<IFilmReadOnlyRepository, FilmReadOnlyRepostitory>();
-            services.AddTransient<IAccountPasswordRepository, AccountPasswordRepository>();
-            services.AddTransient<ISendEmailRepository, SendEmailRepository>();
+            services.AddTransient<IEmailSenderReadWriteRepository, EmailSenderRepository>();
             services.AddScoped<ICinemaCenterReadOnlyRepository, CinemaCenterReadOnlyRepository>();
             services.AddScoped<ICinemaCenterReadWriteRepository, CinemaCenterReadWriteRepository>();
             services.AddScoped<IAccountReadWriteRepository, AccountReadWriteRepository>();
+
+            services.AddScoped<IAccountReadOnlyRepository, AccountReadOnlyRepository>();
             services.AddScoped<IScheduleReadOnlyRepository, ScheduleReadOnlyRepository>();
             services.AddScoped<IScheduleReadWriteRepository, ScheduleReadWriteRepository>();
             return services;

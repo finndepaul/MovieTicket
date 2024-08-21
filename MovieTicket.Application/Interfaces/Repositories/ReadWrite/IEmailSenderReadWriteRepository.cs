@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
-    public interface ISendEmailRepository
+    public interface IEmailSenderReadWriteRepository
     {
         Task<bool> SendEmail(string email, EmailType type, CancellationToken cancellationToken);
     }
