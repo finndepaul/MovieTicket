@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.Bill
 {
-    public class BillWithComboRequest
+    public class BillDtoGetById
     {
         public Guid Id { get; set; }
         //public Guid? MembershipId { get; set; }
@@ -21,7 +21,6 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
         public string? BarCode { get; set; }
 
         public BillStatus? Status { get; set; }
-        public List<ComboDto> Combos { get; set; } = new List<ComboDto>();
+        public List<ComboDto>? Combos { get; set; } = new List<ComboDto>();
     }
-
 }

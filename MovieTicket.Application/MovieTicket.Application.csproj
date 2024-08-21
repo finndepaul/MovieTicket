@@ -10,6 +10,7 @@
     <Compile Remove="Interfaces\Services\**" />
     <EmbeddedResource Remove="Interfaces\Services\**" />
     <None Remove="Interfaces\Services\**" />
+    <Folder Include="DataTransferObjs\Account\Request\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Bill;
+using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 using System;
@@ -22,87 +26,106 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             this.mapper = mapper;
         }
 
-        public async Task<BillDto> CreateAsync(CreateBillRequest createBillRequest)
+        public async Task<ResponseObject<BillDto>> CreateAsync(CreateBillRequest createBillRequest)
         {
-            if (createBillRequest == null)
+            try
             {
-                throw new ArgumentNullException(nameof(createBillRequest), "CreateBillRequest cannot be null.");
+                var billEntity = mapper.Map<Bill>(createBillRequest);
+                await dbContext.Bills.AddAsync(billEntity);
+                await dbContext.SaveChangesAsync();
+
+                var billDto = mapper.Map<BillDto>(billEntity);
+                return new ResponseObject<BillDto>
+                {
+                    Data = billDto,
+                    Status = StatusCodes.Status201Created,
+                    Message = "Bill created successfully"
+                };
             }
-
-            var bill = mapper.Map<Bill>(createBillRequest);
-            if (bill == null)
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Mapping resulted in a null Bill entity.");
+                return new ResponseObject<BillDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = $"An error occurred while creating the bill: {ex.Message}"
+                };
             }
-
-            await dbContext.Bills.AddAsync(bill);
-            await dbContext.SaveChangesAsync();
-
-            // Thêm các BillCombo mới
-            var billCombos = createBillRequest.ComboIds.Select(comboId => new BillCombo
-            {
-                Bill = bill,
-                ComboId = comboId
-            }).ToList();
-            await dbContext.BillCombos.AddRangeAsync(billCombos); 
-            await dbContext.SaveChangesAsync();
-
-            return mapper.Map<BillDto>(bill) ?? throw new InvalidOperationException("Mapping resulted in a null BillDto.");
         }
 
-        public async Task<BillDto?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest)
+        public async Task<ResponseObject<BillDto>?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest)
         {
-            if (id == Guid.Empty)
+            try
             {
-                throw new ArgumentException("Invalid ID.", nameof(id));
+                var billEntity = await dbContext.Bills.FindAsync(id);
+                if (billEntity == null)
+                {
+                    return new ResponseObject<BillDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status404NotFound,
+                        Message = "Bill not found"
+                    };
+                }
+
+                mapper.Map(updateBillRequest, billEntity);
+                dbContext.Bills.Update(billEntity);
+                await dbContext.SaveChangesAsync();
+
+                var billDto = mapper.Map<BillDto>(billEntity);
+                return new ResponseObject<BillDto>
+                {
+                    Data = billDto,
+                    Status = StatusCodes.Status200OK,
+                    Message = "Bill updated successfully"
+                };
             }
-
-            if (updateBillRequest == null)
+            catch (Exception ex)
             {
-                throw new ArgumentNullException(nameof(updateBillRequest), "UpdateBillRequest cannot be null.");
+                return new ResponseObject<BillDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = $"An error occurred while updating the bill: {ex.Message}"
+                };
             }
-
-            var result = await dbContext.Bills.FindAsync(id);
-            if (result == null)
-            {
-                return null;
-            }
-
-            // Xóa các BillCombo hiện tại
-            var existingBillCombos = dbContext.BillCombos.Where(bc => bc.BillId == id);
-            dbContext.BillCombos.RemoveRange(existingBillCombos);
-
-            // Thêm các BillCombo mới
-            var billCombos = updateBillRequest.ComboIds.Select(comboId => new BillCombo
-            {
-                Bill = result,
-                ComboId = comboId
-            }).ToList();
-            await dbContext.BillCombos.AddRangeAsync(billCombos);
-
-            // Cập nhật các thuộc tính khác của Bill
-            mapper.Map(updateBillRequest, result);
-            await dbContext.SaveChangesAsync();
-
-            return mapper.Map<BillDto>(result);
         }
 
-        public async Task<BillDto?> DeleteAsync(Guid id)
+        public async Task<ResponseObject<BillDto>?> DeleteAsync(Guid id)
         {
-            if (id == Guid.Empty)
+            try
             {
-                throw new ArgumentException("Invalid ID.", nameof(id));
-            }
+                var billEntity = await dbContext.Bills.FindAsync(id);
+                if (billEntity == null)
+                {
+                    return new ResponseObject<BillDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status404NotFound,
+                        Message = "Bill not found"
+                    };
+                }
 
-            var result = await dbContext.Bills.FindAsync(id);
-            if (result == null)
+                dbContext.Bills.Remove(billEntity);
+                await dbContext.SaveChangesAsync();
+
+                var billDto = mapper.Map<BillDto>(billEntity);
+                return new ResponseObject<BillDto>
+                {
+                    Data = billDto,
+                    Status = StatusCodes.Status200OK,
+                    Message = "Bill deleted successfully"
+                };
+            }
+            catch (Exception ex)
             {
-                return null;
+                return new ResponseObject<BillDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = $"An error occurred while deleting the bill: {ex.Message}"
+                };
             }
-
-            dbContext.Bills.Remove(result);
-            await dbContext.SaveChangesAsync();
-            return mapper.Map<BillDto>(result);
         }
     }
 

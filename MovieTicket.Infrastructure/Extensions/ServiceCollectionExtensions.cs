@@ -27,7 +27,10 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<ICinemaCenterReadOnlyRepository, CinemaCenterReadOnlyRepository>();
             services.AddScoped<ICinemaCenterReadWriteRepository, CinemaCenterReadWriteRepository>();
             services.AddScoped<IAccountReadWriteRepository, AccountReadWriteRepository>();
+
             services.AddScoped<IAccountReadOnlyRepository, AccountReadOnlyRepository>();
+            services.AddScoped<IScheduleReadOnlyRepository, ScheduleReadOnlyRepository>();
+            services.AddScoped<IScheduleReadWriteRepository, ScheduleReadWriteRepository>();
             return services;
         }
     }

@@ -22,7 +22,6 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
         public string? BarCode { get; set; }
 
         public BillStatus? Status { get; set; }
-        public virtual ICollection<BillCombo> BillCombos { get; set; } = new List<BillCombo>();
     }
 
 }
