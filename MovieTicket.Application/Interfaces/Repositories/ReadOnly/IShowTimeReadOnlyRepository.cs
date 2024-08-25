@@ -1,4 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs.CinemaCenter;
+﻿using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using System;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
-    public interface ICinemaCenterReadOnlyRepository
+    public interface IShowTimeReadOnlyRepository
     {
-        Task<IQueryable<CinemaCenterDto>> GetAll(CinemaCenterSearch search);
-        Task<ResponseObject<CinemaCenter>> GetById(Guid id);
+        Task<IQueryable<ShowTimeDto>> GetAll(string? name);
+        Task<ResponseObject<ShowTimeDto>> GetById(Guid id);
     }
 }

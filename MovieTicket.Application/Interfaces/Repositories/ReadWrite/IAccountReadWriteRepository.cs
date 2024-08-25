@@ -1,4 +1,5 @@
-﻿using MovieTicket.Domain.Entities;
+﻿using MovieTicket.Application.ValueObjs.ViewModels;
+using MovieTicket.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
     public interface IAccountReadWriteRepository
     {
-        Task<Account> Register(Account account);
+        Task<ResponseObject<Account>> Register(Account account);
     }
 }
