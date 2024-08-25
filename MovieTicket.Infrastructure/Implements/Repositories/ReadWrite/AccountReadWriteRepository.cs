@@ -198,7 +198,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             return false;
         }
 
-        public async Task<Account> Register(Account account)
+        public async Task<ResponseObject<Account>> Register(Account account)
         {
             var accountItem = await _db.Accounts.FirstOrDefaultAsync(x=> x.Email == account.Email || x.Phone == account.Phone);
             if (accountItem != null)
