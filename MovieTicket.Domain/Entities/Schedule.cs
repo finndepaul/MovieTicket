@@ -17,6 +17,7 @@ public  class Schedule
     public ScheduleType? Type { get; set; }
 
     public ScheduleStatus? Status { get; set; }
+    //public bool? ActivationStatus { get; set; }
 
     public virtual Film? Film { get; set; }
     public virtual ICollection<ShowTime>? ShowTimes { get; set; }

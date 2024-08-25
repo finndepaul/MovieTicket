@@ -24,8 +24,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             this.mapper = mapper;
         }
 
+        // Phương thức bất đồng bộ để lấy tất cả các Bill dưới dạng IQueryable<BillDto>
         public async Task<IQueryable<BillDto>> GetAllAsync()
         {
+            // Lấy danh sách các Bill từ dbContext và chuyển đổi sang BillDto
             var bills = dbContext.Bills
                 .Select(bill => new BillDto
                 {
@@ -36,6 +38,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Status = bill.Status
                 });
 
+            // Nếu không có Bill nào, ném ra ngoại lệ
             if (!bills.Any())
             {
                 throw new InvalidOperationException("No bills found.");
@@ -44,13 +47,16 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             return bills;
         }
 
+        // Phương thức bất đồng bộ để lấy Bill theo ID
         public async Task<BillDtoGetById?> GetByIdAsync(Guid id)
         {
+            // Kiểm tra nếu ID là rỗng, ném ra ngoại lệ
             if (id == Guid.Empty)
             {
                 throw new ArgumentException("Invalid ID.", nameof(id));
             }
 
+            // Lấy Bill từ dbContext theo ID và chuyển đổi sang BillDtoGetById
             var bill = await dbContext.Bills
                 .Where(b => b.Id == id)
                 .Select(bill => new BillDtoGetById
@@ -64,6 +70,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 })
                 .FirstOrDefaultAsync();
 
+            // Nếu không tìm thấy Bill, ném ra ngoại lệ
             if (bill == null)
             {
                 throw new InvalidOperationException($"No bill found with ID {id}.");
