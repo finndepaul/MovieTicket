@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Domain.Entitis;
+using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,7 @@ public  class TicketPrice
     public Guid? CinemaTypeId { get; set; }
 
     public decimal? Price { get; set; }
+    public TicketPriceStatus Status { get; set; }
 
     public virtual Ticket? Ticket { get; set; }
     public virtual ScreeningDay? ScreeningDay { get; set; }
