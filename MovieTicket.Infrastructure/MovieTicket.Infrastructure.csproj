@@ -14,6 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Extensions\AutoMapperProfiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.7.1.1" />
     <PackageReference Include="AutoMapper.Extensions.ExpressionMapping" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

@@ -34,44 +34,56 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
         public async Task<ResponseObject<LoginDto>> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
         {
-            var account = await _dbContext.Accounts.SingleOrDefaultAsync(x => x.Username.ToLower() == loginRequest.Username.Trim().ToLower(), cancellationToken);
-            if (account == null)
+            try
+            {
+                var account = await _dbContext.Accounts.SingleOrDefaultAsync(x => x.Username.ToLower() == loginRequest.Username.Trim().ToLower(), cancellationToken);
+                if (account == null)
+                {
+                    return new ResponseObject<LoginDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Không tìm thấy username !!!"
+                    };
+                }
+                if (account.Status.ToString() == AccountStatus.Inactive.ToString())
+                {
+                    return new ResponseObject<LoginDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Tài khoản chưa được xác thực !!!"
+                    };
+                }
+                if (Hash.DecryptPassword(account.Password) != loginRequest.Password)
+                {
+                    return new ResponseObject<LoginDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Sai mật khẩu"
+                    };
+                }
+                return new ResponseObject<LoginDto>
+                {
+                    Data = new LoginDto
+                    {
+                        AccessToken = GetJwtToken(account, cancellationToken).Result.AccessToken,
+                        RefreshToken = GetJwtToken(account, cancellationToken).Result.RefreshToken,
+                    },
+                    Status = StatusCodes.Status200OK,
+                    Message = "Đăng nhập thành công"
+                };
+            }
+            catch (Exception ex)
             {
                 return new ResponseObject<LoginDto>
                 {
                     Data = null,
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Không tìm thấy username !!!"
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = "Error" + ex.Message
                 };
             }
-            if (account.Status.ToString() == AccountStatus.Inactive.ToString())
-            {
-                return new ResponseObject<LoginDto>
-                {
-                    Data = null,
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Tài khoản chưa được xác thực !!!"
-                };
-            }
-            if (Hash.DecryptPassword(account.Password) != loginRequest.Password)
-            {
-                return new ResponseObject<LoginDto>
-                {
-                    Data = null,
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Sai mật khẩu"
-                };
-            }
-            return new ResponseObject<LoginDto>
-            {
-                Data = new LoginDto
-                {
-                    AccessToken = GetJwtToken(account, cancellationToken).Result.AccessToken,
-                    RefreshToken = GetJwtToken(account, cancellationToken).Result.RefreshToken,
-                },
-                Status = StatusCodes.Status200OK,
-                Message = "Đăng nhập thành công"
-            };
         }
         #region Private Method
         private JwtSecurityToken GetToken(List<Claim> lstClaims)
@@ -127,6 +139,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 RefreshToken = refreshToken,
             };
         }
+        
+        
         #endregion
     }
 }

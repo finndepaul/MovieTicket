@@ -24,9 +24,9 @@ namespace MovieTicket.API.Controllers
             this.mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var billModels = billReadOnly.GetAllAsync();
+            var billModels = await billReadOnly.GetAllAsync();
             return Ok(billModels);
         }
         [HttpGet]
@@ -34,12 +34,6 @@ namespace MovieTicket.API.Controllers
         {
             var billModel = await billReadOnly.GetByIdAsync(id);
             return Ok(billModel);
-        }
-        [HttpGet]
-        public IActionResult GetAllBillWithCombo()
-        {
-            var billModels = billReadOnly.GetAllWithCombosAsync();
-            return Ok(billModels);
         }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBillRequest createBillRequest)
