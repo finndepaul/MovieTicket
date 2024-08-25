@@ -24,9 +24,9 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(comboReadOnly.GetAllAsync());
+            return Ok( await comboReadOnly.GetAllAsync());
         }
 
         [HttpGet]

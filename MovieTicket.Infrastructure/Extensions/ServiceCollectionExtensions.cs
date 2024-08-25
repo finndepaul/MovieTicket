@@ -23,13 +23,16 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<ILoginReadWriteRepository, LoginReadWriteRepository>();
             services.AddScoped<IFilmReadWriteRepository, FilmReadWriteRepository>();
             services.AddScoped<IFilmReadOnlyRepository, FilmReadOnlyRepostitory>();
-            services.AddTransient<IAccountPasswordRepository, AccountPasswordRepository>();
-            services.AddTransient<ISendEmailRepository, SendEmailRepository>();
+            services.AddTransient<ITicketPriceReadOnlyRepository, TicketPriceReadOnlyReponsitory>();
+            services.AddTransient<ITicketPriceReadWriteReponsitory, TicketPriceReadWriteReponsitory>();
+            services.AddTransient<IEmailSenderReadWriteRepository, EmailSenderRepository>();
             services.AddScoped<ICinemaCenterReadOnlyRepository, CinemaCenterReadOnlyRepository>();
             services.AddScoped<ICinemaCenterReadWriteRepository, CinemaCenterReadWriteRepository>();
             services.AddScoped<IAccountReadWriteRepository, AccountReadWriteRepository>();
-            services.AddScoped<IShowTimeReadOnlyRepository, ShowTimeReadOnlyRepository>();
-            services.AddScoped<IShowTimeReadWriteRepository, ShowTimeReadWriteRepository>();
+            services.AddScoped<IAccountReadOnlyRepository, AccountReadOnlyRepository>();
+            services.AddScoped<IScheduleReadOnlyRepository, ScheduleReadOnlyRepository>();
+            services.AddScoped<IScheduleReadWriteRepository, ScheduleReadWriteRepository>();
+
             return services;
         }
     }

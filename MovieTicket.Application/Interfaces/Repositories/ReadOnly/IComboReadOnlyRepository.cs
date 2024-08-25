@@ -10,7 +10,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
     public interface IComboReadOnlyRepository
     {
-        IQueryable<ComboDto> GetAllAsync();
+        Task<IQueryable<ComboDto>> GetAllAsync();
         Task<ComboDto?> GetByIdAsync(Guid id);
     }
 

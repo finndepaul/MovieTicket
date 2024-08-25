@@ -24,7 +24,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             this.mapper = mapper;
         }
 
-        public IQueryable<ComboDto> GetAllAsync()
+        public async Task<IQueryable<ComboDto>> GetAllAsync()
         {
             var comboModel = dbContext.Combos.AsQueryable();
             if (!comboModel.Any()) // Kiểm tra có ít nhát 1 combo không

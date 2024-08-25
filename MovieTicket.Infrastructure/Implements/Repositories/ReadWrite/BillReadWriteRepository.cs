@@ -1,13 +1,24 @@
 ﻿using AutoMapper;
+using IronBarCode;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Bill;
+using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZXing;
+using ZXing.Common;
+using ZXing.QrCode;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -22,87 +33,152 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             this.mapper = mapper;
         }
 
-        public async Task<BillDto> CreateAsync(CreateBillRequest createBillRequest)
+        // Phương thức tạo mới một hóa đơn
+        public async Task<ResponseObject<BillDto>> CreateAsync(CreateBillRequest createBillRequest)
         {
-            if (createBillRequest == null)
+            try
             {
-                throw new ArgumentNullException(nameof(createBillRequest), "CreateBillRequest cannot be null.");
+                // Ánh xạ CreateBillRequest sang Bill entity
+                var billEntity = mapper.Map<Bill>(createBillRequest);
+                // Thiết lập thời gian tạo và trạng thái ban đầu cho hóa đơn
+                billEntity.CreateTime = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute);
+                billEntity.Status = BillStatus.Pending;
+                // Tạo mã vạch cho hóa đơn
+                billEntity.BarCode = GenerateBarcode(billEntity.Id.ToString());
+                // Thêm hóa đơn vào cơ sở dữ liệu
+                await dbContext.Bills.AddAsync(billEntity);
+                await dbContext.SaveChangesAsync();
+
+                // Ánh xạ Bill entity sang BillDto
+                var billDto = mapper.Map<BillDto>(billEntity);
+                return new ResponseObject<BillDto>
+                {
+                    Data = billDto,
+                    Status = StatusCodes.Status201Created,
+                    Message = "Bill created successfully"
+                };
             }
-
-            var bill = mapper.Map<Bill>(createBillRequest);
-            if (bill == null)
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Mapping resulted in a null Bill entity.");
+                return new ResponseObject<BillDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = $"An error occurred while creating the bill: {ex.Message}"
+                };
             }
-
-            await dbContext.Bills.AddAsync(bill);
-            await dbContext.SaveChangesAsync();
-
-            // Thêm các BillCombo mới
-            var billCombos = createBillRequest.ComboIds.Select(comboId => new BillCombo
-            {
-                Bill = bill,
-                ComboId = comboId
-            }).ToList();
-            await dbContext.BillCombos.AddRangeAsync(billCombos); 
-            await dbContext.SaveChangesAsync();
-
-            return mapper.Map<BillDto>(bill) ?? throw new InvalidOperationException("Mapping resulted in a null BillDto.");
         }
 
-        public async Task<BillDto?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest)
+        // Phương thức cập nhật một hóa đơn
+        public async Task<ResponseObject<BillDto>?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest)
         {
-            if (id == Guid.Empty)
+            try
             {
-                throw new ArgumentException("Invalid ID.", nameof(id));
+                // Tìm hóa đơn theo id
+                var billEntity = await dbContext.Bills.FindAsync(id);
+                if (billEntity == null)
+                {
+                    return new ResponseObject<BillDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status404NotFound,
+                        Message = "Bill not found"
+                    };
+                }
+
+                // Ánh xạ UpdateBillRequest sang Bill entity
+                mapper.Map(updateBillRequest, billEntity);
+                // Thiết lập lại thời gian tạo và trạng thái cho hóa đơn
+                billEntity.CreateTime = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute);
+                billEntity.Status = BillStatus.Pending;
+                // Cập nhật hóa đơn trong cơ sở dữ liệu
+                dbContext.Bills.Update(billEntity);
+                await dbContext.SaveChangesAsync();
+
+                // Ánh xạ Bill entity sang BillDto
+                var billDto = mapper.Map<BillDto>(billEntity);
+                return new ResponseObject<BillDto>
+                {
+                    Data = billDto,
+                    Status = StatusCodes.Status200OK,
+                    Message = "Bill updated successfully"
+                };
             }
-
-            if (updateBillRequest == null)
+            catch (Exception ex)
             {
-                throw new ArgumentNullException(nameof(updateBillRequest), "UpdateBillRequest cannot be null.");
+                return new ResponseObject<BillDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = $"An error occurred while updating the bill: {ex.Message}"
+                };
             }
-
-            var result = await dbContext.Bills.FindAsync(id);
-            if (result == null)
-            {
-                return null;
-            }
-
-            // Xóa các BillCombo hiện tại
-            var existingBillCombos = dbContext.BillCombos.Where(bc => bc.BillId == id);
-            dbContext.BillCombos.RemoveRange(existingBillCombos);
-
-            // Thêm các BillCombo mới
-            var billCombos = updateBillRequest.ComboIds.Select(comboId => new BillCombo
-            {
-                Bill = result,
-                ComboId = comboId
-            }).ToList();
-            await dbContext.BillCombos.AddRangeAsync(billCombos);
-
-            // Cập nhật các thuộc tính khác của Bill
-            mapper.Map(updateBillRequest, result);
-            await dbContext.SaveChangesAsync();
-
-            return mapper.Map<BillDto>(result);
         }
 
-        public async Task<BillDto?> DeleteAsync(Guid id)
+        // Phương thức xóa một hóa đơn
+        public async Task<ResponseObject<BillDto>?> DeleteAsync(Guid id)
         {
-            if (id == Guid.Empty)
+            try
             {
-                throw new ArgumentException("Invalid ID.", nameof(id));
-            }
+                // Tìm hóa đơn theo id
+                var billEntity = await dbContext.Bills.FindAsync(id);
+                if (billEntity == null)
+                {
+                    return new ResponseObject<BillDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status404NotFound,
+                        Message = "Bill not found"
+                    };
+                }
 
-            var result = await dbContext.Bills.FindAsync(id);
-            if (result == null)
+                // Xóa hóa đơn khỏi cơ sở dữ liệu
+                dbContext.Bills.Remove(billEntity);
+                await dbContext.SaveChangesAsync();
+
+                // Ánh xạ Bill entity sang BillDto
+                var billDto = mapper.Map<BillDto>(billEntity);
+                return new ResponseObject<BillDto>
+                {
+                    Data = billDto,
+                    Status = StatusCodes.Status200OK,
+                    Message = "Bill deleted successfully"
+                };
+            }
+            catch (Exception ex)
             {
-                return null;
+                return new ResponseObject<BillDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status500InternalServerError,
+                    Message = $"An error occurred while deleting the bill: {ex.Message}"
+                };
             }
+        }
 
-            dbContext.Bills.Remove(result);
-            await dbContext.SaveChangesAsync();
-            return mapper.Map<BillDto>(result);
+        // Phương thức tạo mã vạch cho hóa đơn
+        private string GenerateBarcode(string data)
+        {
+            var barcodeWriter = new BarcodeWriterPixelData
+            {
+                Format = BarcodeFormat.CODE_128,
+                Options = new ZXing.Common.EncodingOptions
+                {
+                    Height = 150,
+                    Width = 300
+                }
+            };
+
+            var pixelData = barcodeWriter.Write(data.Substring(0, 12));
+            using (var bitmap = new Bitmap(pixelData.Width, pixelData.Height))
+            {
+                using (var ms = new MemoryStream())
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+                    var imageBytes = ms.ToArray();
+                    return Convert.ToBase64String(imageBytes);
+                }
+            }
         }
     }
 

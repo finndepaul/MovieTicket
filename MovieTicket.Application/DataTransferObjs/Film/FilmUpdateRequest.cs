@@ -1,15 +1,15 @@
 ﻿using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieTicket.Application.DataTransferObjs
+namespace MovieTicket.Application.DataTransferObjs.Film
 {
-    public class FilmDto
+    public class FilmUpdateRequest
     {
-        public Guid Id { get; set; }
 
         public string? Name { get; set; }
 
@@ -45,6 +45,6 @@ namespace MovieTicket.Application.DataTransferObjs
 
         public string? Language { get; set; }
 
-        public DateTime? CreatDate { get; set; }
+
     }
 }

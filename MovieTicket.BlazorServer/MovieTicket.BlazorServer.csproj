@@ -6,10 +6,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  
+  <ItemGroup>
+    <Folder Include="Components\Pages\User\" />
+    <Folder Include="Services\Implements\" />
+    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.3" />
-    <PackageReference Include="MudBlazor" Version="6.*" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <ProjectReference Include="..\MovieTicket.API\MovieTicket.API.csproj" />
+    <ProjectReference Include="..\MovieTicket.Application\MovieTicket.Application.csproj" />
+    <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
+    <ProjectReference Include="..\MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

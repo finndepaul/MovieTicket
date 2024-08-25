@@ -14,11 +14,11 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
-    public class SendEmailRepository : ISendEmailRepository
+    public class EmailSenderRepository : IEmailSenderReadWriteRepository
     {
         private readonly MovieTicketReadWriteDbContext _db;
 
-        public SendEmailRepository(MovieTicketReadWriteDbContext db)
+        public EmailSenderRepository(MovieTicketReadWriteDbContext db)
         {
             _db = db;
         }

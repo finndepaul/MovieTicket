@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Bill;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,9 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
     public interface IBillReadWriteRepository
     {
-        Task<BillDto> CreateAsync(CreateBillRequest createBillRequest);
-        Task<BillDto?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest);
-        Task<BillDto?> DeleteAsync(Guid id);
+        Task<ResponseObject<BillDto>> CreateAsync(CreateBillRequest createBillRequest);
+        Task<ResponseObject<BillDto>?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest);
+        Task<ResponseObject<BillDto>?> DeleteAsync(Guid id);
     }
 
 }

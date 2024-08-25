@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Domain", "Movie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Infrastructure", "MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj", "{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{67EFD188-1C58-457F-9033-0FB46C778869}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{350341B6-A79C-4DF7-BB20-E3C694E45ABF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67EFD188-1C58-457F-9033-0FB46C778869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67EFD188-1C58-457F-9033-0FB46C778869}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67EFD188-1C58-457F-9033-0FB46C778869}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67EFD188-1C58-457F-9033-0FB46C778869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

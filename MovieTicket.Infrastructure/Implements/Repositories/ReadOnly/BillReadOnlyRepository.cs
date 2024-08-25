@@ -24,15 +24,42 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             this.mapper = mapper;
         }
 
-        public IQueryable<BillDto> GetAllAsync()
+        // Phương thức bất đồng bộ để lấy tất cả các Bill dưới dạng IQueryable<BillDto>
+        public async Task<IQueryable<BillDto>> GetAllAsync()
         {
-            return dbContext.Bills.AsNoTracking().Select(bill => mapper.Map<BillDto>(bill)!);
+            // Lấy danh sách các Bill từ dbContext và chuyển đổi sang BillDto
+            var bills = dbContext.Bills
+                .Select(bill => new BillDto
+                {
+                    Id = bill.Id,
+                    TotalMoney = bill.TotalMoney,
+                    CreateTime = bill.CreateTime,
+                    BarCode = bill.BarCode,
+                    Status = bill.Status
+                });
+
+            // Nếu không có Bill nào, ném ra ngoại lệ
+            if (!bills.Any())
+            {
+                throw new InvalidOperationException("No bills found.");
+            }
+
+            return bills;
         }
 
-        public IQueryable<BillWithComboRequest> GetAllWithCombosAsync()
+        // Phương thức bất đồng bộ để lấy Bill theo ID
+        public async Task<BillDtoGetById?> GetByIdAsync(Guid id)
         {
-            var bills = dbContext.Bills
-                .Select(bill => new BillWithComboRequest
+            // Kiểm tra nếu ID là rỗng, ném ra ngoại lệ
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid ID.", nameof(id));
+            }
+
+            // Lấy Bill từ dbContext theo ID và chuyển đổi sang BillDtoGetById
+            var bill = await dbContext.Bills
+                .Where(b => b.Id == id)
+                .Select(bill => new BillDtoGetById
                 {
                     Id = bill.Id,
                     TotalMoney = bill.TotalMoney,
@@ -40,20 +67,16 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     BarCode = bill.BarCode,
                     Status = bill.Status,
                     Combos = bill.BillCombos.Select(bc => mapper.Map<ComboDto>(bc.Combo)!).ToList()
-                });
+                })
+                .FirstOrDefaultAsync();
 
-            return bills;
-        }
-
-        public async Task<BillDto?> GetByIdAsync(Guid Id)
-        {
-            var billModel = await dbContext.Bills.FirstOrDefaultAsync(x => x.Id == Id);
-            if (billModel == null)
+            // Nếu không tìm thấy Bill, ném ra ngoại lệ
+            if (bill == null)
             {
-                return null;
+                throw new InvalidOperationException($"No bill found with ID {id}.");
             }
-            var billDto = mapper.Map<BillDto>(billModel);
-            return billDto;
+
+            return bill;
         }
     }
 

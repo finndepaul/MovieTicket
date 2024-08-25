@@ -20,7 +20,9 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
         public MovieTicketReadWriteDbContext()
         {
         }
+
         #region DbSet
+
         public virtual DbSet<Account> Accounts { get; set; }
 
         public virtual DbSet<Bill> Bills { get; set; }
@@ -74,7 +76,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
         public virtual DbSet<VoucherDetail> VoucherDetails { get; set; }
         public virtual DbSet<BillSeat> BillSeats { get; set; }
 
-        #endregion
+        #endregion DbSet
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -99,6 +101,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
             SeedingData(modelBuilder);
         }
+
         private void SeedingData(ModelBuilder modelBuilder)
         {
             //Account
@@ -112,7 +115,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 Role = Domain.Enums.AccountRole.Admin, // 1, 2, or 3
                 Avatar = $"avatar1.png",
                 Name = "AdminTest",
-                Address = $"Address 1",
                 Phone = "000-000-000",
                 Email = "azusachan307@gmail.com",
                 Status = Domain.Enums.AccountStatus.Active, // 0 or 1
@@ -126,7 +128,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
                 Avatar = $"avatar2.png",
                 Name = "ClientTest",
-                Address = $"Address 2",
                 Phone = "000-000-000",
                 Email = "azusachan309@gmail.com",
                 Status = Domain.Enums.AccountStatus.Active, // 0 or 1
@@ -142,7 +143,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                     Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
                     Avatar = $"avatar{i}.png",
                     Name = $"User {i}",
-                    Address = $"Address {i}",
                     Phone = $"123-456-789{i}",
                     Email = $"user{i}@example.com",
                     Status = Domain.Enums.AccountStatus.Active, // 0 or 1
@@ -159,7 +159,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 Status = Domain.Enums.MembershipStatus.Active,
             };
             modelBuilder.Entity<Membership>().HasData(membership);
-            //Film 
+            //Film
             List<Film> films = new List<Film>();
 
             for (int i = 1; i <= 30; i++)
@@ -204,7 +204,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 cinemaCenters.Add(cinemaCenter);
             }
             modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
-            //Combo 
+            //Combo
             List<Combo> combos = new List<Combo>();
             for (int i = 1; i <= 30; i++)
             {
@@ -230,7 +230,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 promotions.Add(promotion);
             }
             modelBuilder.Entity<Promotion>().HasData(promotions);
-            //ScreeningDay 
+            //ScreeningDay
             List<ScreeningDay> screeningDays = new List<ScreeningDay>() {
             new ScreeningDay
             {
@@ -334,6 +334,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                     ScreeningDayId = screeningDays[random.Next(0, screeningDays.Count)].Id,
                     CinemaTypeId = cinemaTypes[random.Next(0, cinemaTypes.Count)].Id,
                     ScreenTypeId = screenTypes[random.Next(0, screenTypes.Count)].Id,
+                    Status = TicketPriceStatus.Active
                 };
                 ticketPrice.Add(ticket);
             }
@@ -391,8 +392,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 showTimes.Add(showTime);
             }
             modelBuilder.Entity<ShowTime>().HasData(showTimes);
-
         }
-
     }
 }
