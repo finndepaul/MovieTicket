@@ -19,6 +19,7 @@ public class Bill
     public string? BarCode { get; set; }
 
     public BillStatus? Status { get; set; }
+    public bool? ActivationStatus { get; set; }
 
     public virtual Membership? Membership { get; set; }
 
