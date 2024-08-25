@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
@@ -26,9 +27,9 @@ namespace MovieTicket.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public ActionResult<IQueryable<CinemaCenterDto>> GetAll()
+        public ActionResult<IQueryable<CinemaCenterDto>> GetAll([FromQuery] CinemaCenterSearch search)
         {
-            var cinemaCenterDto = _centerReadOnlyRepository.GetAll();
+            var cinemaCenterDto = _centerReadOnlyRepository.GetAll(search);
             return Ok(cinemaCenterDto);
         }
 

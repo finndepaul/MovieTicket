@@ -203,14 +203,24 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             var accountItem = await _db.Accounts.FirstOrDefaultAsync(x=> x.Email == account.Email || x.Phone == account.Phone);
             if (accountItem != null)
             {
-                return null;
+                return new ResponseObject<Account>
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = "Account is exist",
+                    Data = null
+                };
             }
             account.CreateDate = DateTime.Now;
             account.Role = AccountRole.User;
             account.Status = AccountStatus.Active;
             await _db.Accounts.AddAsync(account);
             await _db.SaveChangesAsync();
-            return account;
+            return new ResponseObject<Account> 
+            {
+                Status = StatusCodes.Status200OK,
+                Message = "Register success",
+                Data = account
+            };
         }
 
         #region Validate Method
