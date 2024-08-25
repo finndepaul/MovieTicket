@@ -12,7 +12,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
     public interface IAccountReadWriteRepository
     {
-        Task<Account> Register(Account account);
+        Task<ResponseObject<Account>> Register(Account account);
         Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken);
         Task<bool> ChangePasswordAsync(ChangePasswordRequest request, CancellationToken cancellationToken);
         Task<ResponseObject<AccountDto>> CreateNewAccount(AccountCreateRequest request, CancellationToken cancellationToken);

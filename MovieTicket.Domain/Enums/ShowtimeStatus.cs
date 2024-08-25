@@ -8,8 +8,8 @@ namespace MovieTicket.Domain.Enums
 {
     public enum ShowtimeStatus
     {
-        ComingSoon = 1,
-        Showing = 2,
-        Ended = 3,
+        ComingSoon = 1, // Sắp ra mắt
+        Showing = 2, // Đang chiếu
+        Ended = 3, // Đã kết thúc
     }
 }
