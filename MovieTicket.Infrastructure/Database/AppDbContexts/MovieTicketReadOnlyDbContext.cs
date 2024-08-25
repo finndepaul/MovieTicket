@@ -89,7 +89,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
         // Vũ:
-        optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+        //optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
         // Đông:
         //optionsBuilder.UseSqlServer("Data Source=DESKTOP-V6M0EF7\\SQLEXPRESS;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
@@ -113,7 +113,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Role = Domain.Enums.AccountRole.Admin, // 1, 2, or 3
             Avatar = $"avatar1.png",
             Name = "AdminTest",
-            Address = $"Address 1",
             Phone = "000-000-000",
             Email = "azusachan307@gmail.com",
             Status = Domain.Enums.AccountStatus.Active, // 0 or 1
@@ -127,7 +126,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
             Avatar = $"avatar2.png",
             Name = "ClientTest",
-            Address = $"Address 2",
             Phone = "000-000-000",
             Email = "azusachan309@gmail.com",
             Status = Domain.Enums.AccountStatus.Active, // 0 or 1
@@ -143,7 +141,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
                 Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
                 Avatar = $"avatar{i}.png",
                 Name = $"User {i}",
-                Address = $"Address {i}",
                 Phone = $"123-456-789{i}",
                 Email = $"user{i}@example.com",
                 Status = Domain.Enums.AccountStatus.Active, // 0 or 1
