@@ -1,4 +1,128 @@
-﻿<h3>RevenueByMovie</h3>
+﻿@page "/revenuebymovie"
+
+<div class="content">
+    <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mr-15">
+            <label for="start" class="mr-2 mb-0">Từ ngày:</label>
+            <input type="date" id="start" name="start-date" class="form-control form-control-sm" style="width: 150px;" onchange="UpdateEndDate">
+        </div>
+
+        <div class="d-flex align-items-center mr-15">
+            <label for="end" class="mr-2 mb-0">Đến ngày:</label>
+            <input type="date" id="end" name="end-date" class="form-control form-control-sm" style="width: 150px;">
+        </div>
+
+        <div class="d-flex align-items-center">
+            <button class="btn btn-primary btn-sm w-auto mr-15">Load dữ liệu</button>
+            <button class="btn btn-success btn-sm w-auto">Xuất báo cáo</button>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container">
+                <p class="text-center">Số vé bán ra theo phim</p>
+                <canvas id="ticketChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-container">
+                <p class="text-center">Doanh thu theo phim</p>
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Tên phim</th>
+                    <th>Tổng vé bán ra</th>
+                    <th>Tổng doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SUGA | Agust D TOUR "D-DAY" The Movie</td>
+                    <td>32</td>
+                    <td>8,677,300</td>
+                </tr>
+                <tr>
+                    <td>Kung Fu Panda 4</td>
+                    <td>11</td>
+                    <td>4,282,000</td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .mr-15 {
+        margin-right: 15px !important;
+    }
+
+    .chart-container {
+        height: 400px;
+    }
+</style>
+
+<script>
+
+        var ticketCtx = document.getElementById('ticketChart').getContext('2d');
+        var revenueCtx = document.getElementById('revenueChart').getContext('2d');
+
+        new Chart(ticketCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Phim 1', 'Phim 2', 'Phim 3', 'Phim 4'],
+                datasets: [{
+                    label: 'Số vé bán ra',
+                    data: [32, 11, 26, 8],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Phim 1', 'Phim 2', 'Phim 3', 'Phim 4'],
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: [8677300, 4282000, 7791000, 2671000],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    function UpdateEndDate() {
+        var startDate = document.getElementById('start').value;
+        document.getElementById('end').min = startDate;
+    }
+</script>
 
 @code {
 
