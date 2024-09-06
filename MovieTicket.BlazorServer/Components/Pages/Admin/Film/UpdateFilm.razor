@@ -1,0 +1,115 @@
+﻿@page "/update-film"
+
+<div class="container-fluid">
+    <div class="d-flex mb-3">
+        <button class="btn btn-outline-secondary">Quay lại</button>
+        <button class="btn btn-danger ms-3">Xóa phim</button>
+        <button type="submit" class="btn btn-primary ms-3">Cập nhật</button>
+    </div>
+    <form>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="movieTitle" class="form-label">Tên phim</label>
+                <input type="text" class="form-control" id="movieTitle" placeholder="Tên phim" value="Furiosa: Câu Chuyện Từ Max Điên">
+            </div>
+            <div class="col-md-6">
+                <label for="screeningFormat" class="form-label">Hình thức chiếu</label>
+                <select class="form-select" id="screeningFormat">
+                    <option selected>2D</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="movieTitleEnglish" class="form-label">Tên phim (tiếng anh)</label>
+                <input type="text" class="form-control" id="movieTitleEnglish" placeholder="Tên phim (tiếng anh)" value="Furiosa: A Mad Max Saga">
+            </div>
+            <div class="col-md-6">
+                <label for="subtitleOption" class="form-label">Hình thức dịch</label>
+                <select class="form-select" id="subtitleOption">
+                    <option selected>Phụ đề</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="trailerLink" class="form-label">Trailer</label>
+                <input type="text" class="form-control" id="trailerLink" placeholder="URL của trailer" value="https://www.youtube.com/embed/Yz96EBNwMGw?si=Q6ipYZPKhUdAHGsd">
+            </div>
+            <div class="col-md-6">
+                <label for="ageRating" class="form-label">Độ tuổi xem phim</label>
+                <select class="form-select" id="ageRating">
+                    <option selected>T16</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="movieDescription" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="movieDescription" rows="3">Câu chuyện bắt đầu từ lúc Thế giới sụp đổ, Furiosa phải tự cứu lấy mình để trở về nhà. Một cuộc phiêu lưu hành động độc lập khốc liệt, tiên truyện về Max Điên.</textarea>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="genre" class="form-label">Thể loại</label>
+                <select multiple class="form-select" id="genre">
+                    <option selected>Khoa học - Viễn tưởng</option>
+                    <option selected>Gây cấn</option>
+                    <option selected>Hành động</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="director" class="form-label">Đạo diễn</label>
+                <input type="text" class="form-control" id="director" placeholder="Đạo diễn" value="Anya Taylor-Joy">
+            </div>
+            <div class="col-md-4">
+                <label for="actors" class="form-label">Diễn viên</label>
+                <input type="text" class="form-control" id="actors" placeholder="Diễn viên" value="Nathan Jones, Chris Hemsworth, Alyla Browne, Goran D. Kleut, Tom Burke, Lachy Hulme, Angus Sampson, C.J. Bloomfield, Daniel Webber">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="releaseDate" class="form-label">Ngày chiếu</label>
+                <input type="date" class="form-control" id="releaseDate" value="2024-05-17">
+            </div>
+            <div class="col-md-4">
+                <label for="releaseYear" class="form-label">Năm phát hành</label>
+                <input type="text" class="form-control" id="releaseYear" placeholder="2024" value="2024">
+            </div>
+            <div class="col-md-4">
+                <label for="duration" class="form-label">Thời lượng phim (phút)</label>
+                <input type="number" class="form-control" id="duration" placeholder="100" value="100">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="status" class="form-label">Trạng thái</label>
+                <select class="form-select" id="status">
+                    <option selected>Công khai</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="country" class="form-label">Quốc gia</label>
+                <select class="form-select" id="country">
+                    <option selected>Mỹ</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="movieImage" class="form-label">Hình ảnh</label>
+            <div class="d-flex align-items-center">
+                <img src="your-image-link.png" alt="Movie Image" class="img-thumbnail" style="width: 100%; height: auto;">
+                <button type="button" class="btn btn-primary ms-3">Thay đổi ảnh phim</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@code {
+
+}
