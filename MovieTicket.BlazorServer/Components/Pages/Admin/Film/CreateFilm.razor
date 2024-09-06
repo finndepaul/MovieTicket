@@ -1,0 +1,115 @@
+﻿@page "/create-film"
+
+<div class="container-fluid">
+    <button class="btn btn-outline-secondary mb-3">Quay lại</button>
+    <button class="btn btn-primary mb-3">+ Tạo phim</button>
+
+    <form>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tenPhim" class="form-label">Tên phim</label>
+                <input type="text" class="form-control" id="tenPhim" placeholder="Enter name">
+            </div>
+            <div class="col-md-6">
+                <label for="hinhThucChieu" class="form-label">Hình thức chiếu</label>
+                <select class="form-select" id="hinhThucChieu">
+                    <option selected>Select a graphics</option>
+                    <!-- Options -->
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="tenPhimEng" class="form-label">Tên phim (tiếng anh)</label>
+                <input type="text" class="form-control" id="tenPhimEng" placeholder="Enter english name">
+            </div>
+            <div class="col-md-6">
+                <label for="hinhThucDich" class="form-label">Hình thức dịch</label>
+                <select class="form-select" id="hinhThucDich">
+                    <option selected>Select a graphics</option>
+                    <!-- Options -->
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="trailer" class="form-label">Trailer</label>
+                <input type="text" class="form-control" id="trailer" placeholder="Enter trailer">
+            </div>
+            <div class="col-md-6">
+                <label for="doTuoi" class="form-label">Độ tuổi xem phim</label>
+                <select class="form-select" id="doTuoi">
+                    <option selected>Select an age</option>
+                    <!-- Options -->
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="moTa" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="moTa" rows="3" placeholder="Enter description"></textarea>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="theLoai" class="form-label">Thể loại</label>
+                <select class="form-select" id="theLoai">
+                    <option selected>Select genres</option>
+                    <!-- Options -->
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="daoDien" class="form-label">Đạo diễn</label>
+                <select class="form-select" id="daoDien">
+                    <option selected>Select directors</option>
+                    <!-- Options -->
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="dienVien" class="form-label">Diễn viên</label>
+                <select class="form-select" id="dienVien">
+                    <option selected>Select actors</option>
+                    <!-- Options -->
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="ngayChieu" class="form-label">Ngày chiếu</label>
+                <input type="date" class="form-control" id="ngayChieu">
+            </div>
+            <div class="col-md-4">
+                <label for="namPhatHanh" class="form-label">Năm phát hành</label>
+                <input type="text" class="form-control" id="namPhatHanh" placeholder="Enter release year">
+            </div>
+            <div class="col-md-4">
+                <label for="thoiLuong" class="form-label">Thời lượng phim (phút)</label>
+                <input type="text" class="form-control" id="thoiLuong" placeholder="Enter duration">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="trangThai" class="form-label">Trạng thái</label>
+                <select class="form-select" id="trangThai">
+                    <option selected>Nháp</option>
+                    <!-- Options -->
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="quocGia" class="form-label">Quốc gia</label>
+                <select class="form-select" id="quocGia">
+                    <option selected>Select a country</option>
+                    <!-- Options -->
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+
+@code {
+
+}
