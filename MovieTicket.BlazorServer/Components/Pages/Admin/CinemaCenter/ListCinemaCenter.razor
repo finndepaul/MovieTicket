@@ -1,7 +1,60 @@
 ﻿@page "/cinema-center"
 
-<h3>List Cinema Center</h3>
+<div class="container mt-4">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh sách rạp phim</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a class="btn btn-success" href="/create-cinema-center">Tạo Rạp Chiếu</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên Rạp Chiếu</th>
+                <th scope="col">Địa Chỉ</th>
+                <th scope="col">Ngày Tạo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i <= 10; i++)
+            {
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>Rạp @($"ABC {i}")</td>
+                    <td>@($"123 Đường A, Quận {i}")</td>
+                    <td>@DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination (Phân trang) -->
+    <div class="pagination-wrapper">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Trước</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Tiếp</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<style>
+    .pagination-wrapper {
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
 
 @code {
-
+    private string PageTitle = "Danh Sách Rạp Chiếu Phim";
 }
