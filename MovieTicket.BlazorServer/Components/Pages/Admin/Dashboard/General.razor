@@ -1,5 +1,242 @@
-﻿<h3>General</h3>
+﻿@page "/general"
+<div class="container-fluid">
+	<div class="row">
+		<div class="col m-2 p-3"
+			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                transition: 0.3s;border-radius: 10px;
+		  ">
+			<div class="card-body">
+				<h5 class="card-title">Doanh thu trong ngày</h5>
+				<p class="card-text fs-1 fw-semibold">100,000</p>
+			</div>
+		</div>
+		<div class="col m-2 p-3"
+			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;border-radius: 10px;
+	  ">
+			<div class="card-body">
+				<h5 class="card-title">Khách hàng mới</h5>
+				<p class="card-text fs-1 fw-semibold">0</p>
+			</div>
+		</div>
+		<div class="col m-2 p-3"
+			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;border-radius: 10px;
+	  ">
+			<div class="card-body">
+				<h5 class="card-title">Tổng vé bán ra (9/2024)</h5>
+				<p class="card-text fs-1 fw-semibold">100</p>
+			</div>
+		</div>
+		<div class="col m-2 p-3"
+			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;border-radius: 10px;
+	  ">
+			<div class="card-body">
+				<h5 class="card-title">Tổng doanh thu (9/2024)</h5>
+				<p class="card-text fs-1 fw-semibold">1,990,500</p>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="width: 100%;">
+		<div class="w-50 col">
+			<h2 class="fw-bold" style="text-align:center">Top bài viết được xem nhiều nhất</h2>
+			<canvas id="topArticle"></canvas>
+		</div>
+		<div class="w-50 col">
+			<h2 class="fw-bold" style="text-align:center">Doanh thu theo tháng</h2>
+			<canvas id="topRevenue"></canvas>
+		</div>
+	</div>
+	<hr class="m-5"/>
+
+	<div class="row">
+		<div class="w-50 col">
+			<div class="d-flex justify-content-between">
+				<h2 class="fw-bold">Doanh thu theo Phim</h2>
+				<a class="icon-link icon-link-hover fs-3" href="#">
+					Xem tất cả
+				</a>
+			</div>
+			<div>
+				<table class="table table-hover">
+					<thead class="table-light">
+						<tr>
+							<th scope="col">STT</th>
+							<th class="col-6">Tên phim</th>
+							<th scope="col">Doanh thu</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row">1</th>
+							<td>Phim 1</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">2</th>
+							<td>Phim 2</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">3</th>
+							<td>Phim 3</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">4</th>
+							<td>Phim 4</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">5</th>
+							<td>Phim 5</td>
+							<td>100,000</td>
+						</tr>
+					</tbody>
+				</table>
+				<nav class="d-flex justify-content-end" aria-label="Page navigation example">
+					<ul class="pagination">
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<div class="w-50 col">
+			<div class="d-flex justify-content-between">
+				<h2 class="fw-bold">Doanh thu theo Rạp</h2>
+				<a class="icon-link icon-link-hover fs-3" href="#">
+					Xem tất cả
+				</a>
+			</div>
+			<div>
+				<table class="table table-hover">
+					<thead class="table-light">
+						<tr>
+							<th scope="col">STT</th>
+							<th scope="col">Tên rạp</th>
+							<th scope="col">Doanh thu</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row">1</th>
+							<td>CGV</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">2</th>
+							<td>Galaxy</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">3</th>
+							<td>Lotter</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">4</th>
+							<td>BHD</td>
+							<td>100,000</td>
+						</tr>
+						<tr>
+							<th scope="row">5</th>
+							<td>CGV</td>
+							<td>100,000</td>
+						</tr>
+					</tbody>
+				</table>
+				<nav class="d-flex justify-content-end" aria-label="Page navigation example">
+					<ul class="pagination">
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item">
+							<a class="page-link" href="#" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
 
 @code {
 
 }
+<script>
+	var articleTop = document.getElementById('topArticle');
+	var revenueTop = document.getElementById('topRevenue');
+	var labels = ['DeadPool', 'Conan Movie 27', '15 phim...', 'Top 10 phim bộ', 'Top 10 phim lẻ'];
+	var currentMonthIndex = new Date().getMonth();
+
+	var months = [
+		'Tháng 1',
+		'Tháng 2',
+		'Tháng 3',
+		'Tháng 4',
+		'Tháng 5',
+		'Tháng 6',
+		'Tháng 7',
+		'Tháng 8',
+		'Tháng 9',
+		'Tháng 10',
+		'Tháng 11',
+		'Tháng 12'
+	];
+
+	// Tạo mảng để lưu 5 tháng trước
+	var lastFiveMonths = [];
+
+	// Lặp để lấy 5 tháng trước
+	for (let i = 1; i <= 5; i++) {
+		var monthIndex = (currentMonthIndex - i + 12) % 12; // Xử lý trường hợp tháng âm
+		lastFiveMonths.push(months[monthIndex]);
+	}
+
+	new Chart(articleTop, {
+		type: 'bar',
+		data: {
+			labels: labels,
+			datasets: [{
+				label: 'Lượt xem',
+				data: [25, 19, 17, 17, 15],
+				borderWidth: 1
+			}]
+		},
+	});
+
+	new Chart(revenueTop, {
+		type: 'line',
+		data: {
+			labels: lastFiveMonths,
+			datasets: [{
+				label: 'Doanh thu',
+				data: [20000000, 40000000, 70000000, 10000000, 90000000],
+				fill: false,
+				borderColor: 'rgb(75, 192, 192)',
+				tension: 0.1
+			}]
+		}
+	});
+</script>
