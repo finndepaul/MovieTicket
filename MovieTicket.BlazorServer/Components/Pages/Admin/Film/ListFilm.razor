@@ -1,0 +1,55 @@
+﻿@page "/ListFilm"
+
+<div class="container-fluid">
+    <button class="btn btn-outline-secondary mb-3">Quay lại</button>
+    <button class="btn btn-primary mb-3">+ Tạo phim</button>
+
+    <!-- Movie Table -->
+    <div class="table-responsive mb-3">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Tên phim</th>
+                    <th scope="col">Năm phát hành</th>
+                    <th scope="col">Thể loại</th>
+                    <th scope="col">Lịch chiếu</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Ngày tạo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example Row -->
+                <tr>
+                    <td><a href="#" class="text-decoration-none">Furiosa: Câu Chuyện Từ Max Điên</a></td>
+                    <td>2024</td>
+                    <td>
+                        <span class="badge bg-primary">Hành động</span>
+                        <span class="badge bg-secondary">Gay cấn</span>
+                        <span class="badge bg-info">Khoa học - Viễn tưởng</span>
+                    </td>
+                    <td class="text-danger">17-05-2024</td>
+                    <td><span class="badge bg-success">Công khai</span></td>
+                    <td>13-04-2024</td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+
+}

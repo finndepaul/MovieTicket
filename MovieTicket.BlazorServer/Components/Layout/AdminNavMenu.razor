@@ -13,12 +13,29 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-
+        
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Film">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Film
+            <NavLink class="nav-link" href="/ListFilm" @onclick="() => expandSubMenu = !expandSubMenu">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> List Film
             </NavLink>
+            @if (expandSubMenu)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/CreateFilm">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Create Film
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/UpdateFilm">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Updated Film
+                        </NavLink>
+                    </li>
+                </ul>
+                
+            }
         </div>
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="CinemaCenter">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Cinema Center
@@ -62,3 +79,6 @@
     </nav>
 </div>
 
+@code {
+    private bool expandSubMenu;
+}
