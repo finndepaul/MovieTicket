@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar" style="background-color: #3c8dbc;">
+<div class="top-row ps-3 navbar navbar" style="background-color: #3c8dbc;">
+
 	<div class="container-fluid">
 		<a class="navbar-brand text-white" href="">Admin</a>
 	</div>
@@ -9,27 +10,28 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()" style="background-color: #031529;">
 	<nav class="flex-column">
 		<div class="nav-item px-3">
-				<NavLink class="nav-link"
-				   data-bs-toggle="collapse"
-				   href="#collapseExample"
-				   aria-expanded="false"
-				   aria-controls="collapseExample">
+
+			<NavLink class="nav-link"
+					 data-bs-toggle="collapse"
+					 href="#collapseExample"
+					 aria-expanded="false"
+					 aria-controls="collapseExample">
 				<span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-				</NavLink>		
+			</NavLink>
 			<div class="collapse" id="collapseExample">
 				<ul class="">
 					<li class="" aria-current="true">
-						<NavLink class="nav-link" href="general">
+						<NavLink class="nav-link" href="">
 							<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> General
 						</NavLink>
 					</li>
 					<li class="">
-						<NavLink class="nav-link" href="revenuebyfilm">
+						<NavLink class="nav-link" href="revenue-by-movie">
 							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Revenue By Film
 						</NavLink>
 					</li>
 					<li class="">
-						<NavLink class="nav-link" href="revenuebycinema">
+						<NavLink class="nav-link" href="revenue-by-cinema">
 							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Revenue By Cinema
 						</NavLink>
 					</li>		
@@ -37,9 +39,32 @@
 			</div>
 		</div>
 		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="film">
-				<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Film
+			<NavLink class="nav-link"
+					 data-bs-toggle="collapse"
+					 href="#collapseFilm"
+					 aria-expanded="false"
+					 aria-controls="collapseFilm">
+				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Film
 			</NavLink>
+			<div class="collapse" id="collapseFilm">
+				<ul class="">
+					<li class="" aria-current="true">
+						<NavLink class="nav-link" href="list-film">
+							<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> List Film
+						</NavLink>
+					</li>
+					<li class="">
+						<NavLink class="nav-link" href="create-film">
+							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Create Film
+						</NavLink>
+					</li>
+					<li class="">
+						<NavLink class="nav-link" href="update-film">
+							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Update Film
+						</NavLink>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div class="nav-item px-3">
 			<NavLink class="nav-link" href="cinema-center">
@@ -82,6 +107,4 @@
 			</NavLink>
 		</div>
 	</nav>
-
 </div>
-
