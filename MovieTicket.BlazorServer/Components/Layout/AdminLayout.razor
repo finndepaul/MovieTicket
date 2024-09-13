@@ -1,20 +1,22 @@
 ﻿@inherits LayoutComponentBase
-
-<div class="page">
+@using Microsoft.AspNetCore.Components.Routing
+@using static MovieTicket.BlazorServer.Components.BreadCrumb
+@inject NavigationManager Navigation
+<div class="page" >
     <div class="sidebar">
         <AdminNavMenu/>
     </div>
-
     <main>
-        <div class="navbar-brand">
+        <div class="navbar-brand py-1" style="position: relative">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="button" class="btn btn-outline-danger btn-lg" id="logoutBtn">Đăng xuất</button>
+				<button type="button" class="btn btn-outline-danger btn-lg" @onclick="NavigationLogout">Đăng xuất</button>
             </div>
         </div>
-        
-
-        <article class="content px-4">
-            @Body
+        <article class="content scrollable" style="background-color: rgb(245, 245, 245)">
+           <BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
+            <div class="bg-white p-4 rounded-4" style="min-height: calc(100vh - 115px);">
+                @Body
+            </div>
         </article>
     </main>
 </div>
@@ -24,3 +26,38 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+<style>
+    .scrollable {
+        max-height: calc(100vh - 56px); /* 56px là chiều cao của navbar */
+        overflow-y: scroll; /* Cuộn dọc */
+      
+    }
+</style>
+@code {
+    private List<BreadcrumbItem> GetBreadcrumbItems()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var segments = uri.Segments.Where(s => !string.IsNullOrEmpty(s)).ToList();
+
+        var items = new List<BreadcrumbItem>();
+        string path = "";
+
+        foreach (var segment in segments)
+        {
+            path += segment;
+            if (segment.Length > 1)
+            {
+                items.Add(new BreadcrumbItem
+                {
+                    Title = char.ToUpper(segment[0]) + segment.Substring(1).Replace("-", " "),
+                    Link = path
+                });
+            }
+        }
+        return items;
+    }
+    private void NavigationLogout()
+	{
+		Navigation.NavigateTo("/home-user");
+	}
+}
