@@ -1,5 +1,143 @@
-﻿<h3>UserLayout</h3>
+﻿@inject NavigationManager NavigationManager
+@inherits LayoutComponentBase
 
-@code {
+<div class="page">
+    @* <div class="sidebar">
+        <AdminNavMenu />
+    </div> *@
+        <main>
+            <div class="navbar-brand">
+                <!-- Trigger the modal with a button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-primary btn-lg" id="loginBtn">Đăng nhập</button>
+                    <button class="btn btn-secondary btn-lg me-md-2" type="button" id="regisBtn">Đăng ký</button>
+                    @* <button><a href="general">Admin</a></button> *@ <!-- Added button for redirecting to admin layout -->
+                </div>
 
-}
+                <!-- Login Modal -->
+                <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Đăng nhập</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="usrname" class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="usrname" placeholder="Nhập email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="psw" class="form-label">Mật khẩu</label>
+                                        <input type="password" class="form-control" id="psw" placeholder="Nhập mật khẩu">
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="rememberMe" checked>
+                                        <label class="form-check-label" for="rememberMe">Lưu thông tin đăng nhập</label>
+                                    </div>
+                                    <div class="text-center"><button type="submit" class="btn btn-primary">Đăng nhập</button></div>
+
+                                </form>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <div >
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                <div >
+                                    <p><a id="regis" data-bs-toggle="modal" data-bs-target="#regisModal" href="#">Đăng ký</a></p>
+                                    <p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Modal -->
+                <div class="modal fade" id="regisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Đăng ký</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Nhập email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Mật khẩu</label>
+                                        <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu">
+                                    </div>
+                                    <div class="text-center"><button type="submit" class="btn btn-primary">Đăng ký</button></div>
+                                </form>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <div>
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                                <div>
+                                <p><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</a></p>
+                                    <p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forgot Password Modal -->
+                <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Quên mật khẩu</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" placeholder="Nhập email">
+                                    </div>
+                                    <div class="text-center"><button type="submit" class="btn btn-primary">Gửi yêu cầu</button></div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <article class="content px-4">
+            @Body
+            </article>
+        </main>
+    </div>
+
+@* <div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div> *@
+<script>
+    //mở modal login khi click Đăng nhập
+    var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    document.getElementById('loginBtn').addEventListener('click', function () {
+        loginModal.show();
+    });
+
+
+    //mở modal register khi click Đăng ký từ navbar
+    var regisModal = new bootstrap.Modal(document.getElementById('regisModal'));
+    document.getElementById('regisBtn').addEventListener('click', function () {
+        regisModal.show();
+    });
+</script>
