@@ -1,0 +1,169 @@
+﻿@page "/voucher"
+
+<div class="container-fluid">
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addVoucherModal">+ Tạo khuyến mại</button>
+    <button class="btn btn-outline-secondary mb-3">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+    </button>
+
+    <!-- Movie Table -->
+    <div class="table-responsive mb-3">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Mã khuyến mại</th>
+                    <th scope="col">Phần trăm giảm giá</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Đã sử dụng</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thời gian áp dụng</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example Row -->
+                <tr>
+                    <td>HELLO</td>
+                    <td>20%</td>
+                    <td>40</td>
+                    <td>0</td>
+                    <td>
+                        <span class="badge text-bg-success">Kích hoạt</span>
+                    </td>
+                    <td>01/01/2021 - 01/01/2022</td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editVoucherModal">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>THONGNHAT</td>
+                    <td>20%</td>
+                    <td>40</td>
+                    <td>0</td>
+                    <td>
+                        <span class="badge text-bg-secondary">Ẩn</span>
+                    </td>
+                    <td>30/04/2024 - 05/05/2024</td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editVoucherModal">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Modal thêm voucher -->
+<div class="modal fade" id="addVoucherModal" tabindex="-1" aria-labelledby="addVoucherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addVoucherModalLabel">Thêm Khuyến Mại Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="voucherCode" class="form-label">Mã Khuyến Mại</label>
+                        <input type="text" class="form-control" id="voucherCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="discountPercentage" class="form-label">Phần Trăm Giảm Giá</label>
+                        <input type="number" class="form-control" id="discountPercentage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Số Lượng</label>
+                        <input type="number" class="form-control" id="quantity" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Trạng Thái</label>
+                        <select class="form-select" id="status" required>
+                            <option value="active">Kích hoạt</option>
+                            <option value="inactive">Ẩn</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="validityPeriod" class="form-label">Thời Gian Áp Dụng</label>
+                        <input type="text" class="form-control" id="validityPeriod" placeholder="dd/mm/yyyy - dd/mm/yyyy" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu Thay Đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal cập nhật voucher -->
+<div class="modal fade" id="editVoucherModal" tabindex="-1" aria-labelledby="editVoucherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editVoucherModalLabel">Chỉnh Sửa Khuyến Mại</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="editVoucherCode" class="form-label">Mã Khuyến Mại</label>
+                        <input type="text" class="form-control" id="editVoucherCode" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDiscountPercentage" class="form-label">Phần Trăm Giảm Giá</label>
+                        <input type="number" class="form-control" id="editDiscountPercentage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editQuantity" class="form-label">Số Lượng</label>
+                        <input type="number" class="form-control" id="editQuantity" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editStatus" class="form-label">Trạng Thái</label>
+                        <select class="form-select" id="editStatus" required>
+                            <option value="active">Kích hoạt</option>
+                            <option value="inactive">Ẩn</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editValidityPeriod" class="form-label">Thời Gian Áp Dụng</label>
+                        <input type="text" class="form-control" id="editValidityPeriod" placeholder="dd/mm/yyyy - dd/mm/yyyy" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu Thay Đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+}

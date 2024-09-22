@@ -1,0 +1,100 @@
+﻿@page "/combo"
+
+<h3>Danh Sách Combo</h3>
+
+<div class="container mt-4">
+    <!-- Button Tạo mới combo -->
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createComboModal">
+            <i class="fa-solid fa-plus"></i> Tạo mới combo
+        </button>
+    </div>
+
+    <!-- Table danh sách combo -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tên Combo</th>
+                <th scope="col">Giá</th>
+                <th scope="col">Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i <= 5; i++)
+            {
+                <tr>
+                    <th scope="row">@i</th>
+                    <td>Combo @($"A{i}")</td>
+                    <td>@($"{i * 100}.000 VND")</td>
+                    <td>
+                        <!-- Button Sửa combo -->
+                        <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editComboModal">
+                            <i class="fa-solid fa-pen"></i> Sửa
+                        </button>
+                        <!-- Button Xóa combo -->
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fa-solid fa-trash"></i> Xóa
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Modal Tạo mới combo -->
+    <div class="modal fade" id="createComboModal" tabindex="-1" aria-labelledby="createComboModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createComboModalLabel">Tạo mới combo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="comboName">Tên Combo</label>
+                        <input type="text" class="form-control" id="comboName" placeholder="Nhập tên combo">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="comboPrice">Giá Combo</label>
+                        <input type="text" class="form-control" id="comboPrice" placeholder="Nhập giá combo">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Sửa combo -->
+    <div class="modal fade" id="editComboModal" tabindex="-1" aria-labelledby="editComboModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editComboModalLabel">Sửa combo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="editComboName">Tên Combo</label>
+                        <input type="text" class="form-control" id="editComboName" value="Combo A1">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="editComboPrice">Giá Combo</label>
+                        <input type="text" class="form-control" id="editComboPrice" value="100.000 VND">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    // Bạn có thể quản lý dữ liệu của combo tại đây.
+}
