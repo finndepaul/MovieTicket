@@ -1,0 +1,47 @@
+﻿@page "/bill-detail"
+<h3>Bill Detail</h3>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a class="btn btn-outline-secondary" href="/bill-list">Quay lại</a>
+    </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Chi tiết hóa đơn</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Mã hóa đơn: Id</h5>
+                <p class="card-text">Ngày tạo: CreatedDate</p>
+                <p class="card-text">Khách hàng: CustomerName</p>
+                <p class="card-text">Tổng tiền: TotalAmount</p>
+
+                <h5 class="mt-4">Chi tiết sản phẩm</h5>
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn giá</th>
+                            <th scope="col">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                            <tr>
+                                <th scope="row">Index</th>
+                                <td>ProductName</td>
+                                <td>Quantity</td>
+                                <td>UnitPrice</td>
+                                <td>TotalPrice</td>
+                            </tr>
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+</div>
+@code {
+
+}
