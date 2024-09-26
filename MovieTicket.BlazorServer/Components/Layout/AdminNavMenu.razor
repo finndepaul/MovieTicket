@@ -108,3 +108,11 @@
 		</div>
 	</nav>
 </div>
+<script>
+	$(function() {
+  $('.nav-link').on('click', function() {
+    $('.nav-link').removeClass('active');
+    $(this).toggleClass("active");
+  });
+  
+});</script>
