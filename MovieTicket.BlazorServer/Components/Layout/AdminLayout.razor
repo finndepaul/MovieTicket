@@ -2,19 +2,19 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using static MovieTicket.BlazorServer.Components.BreadCrumb
 @inject NavigationManager Navigation
-<div class="page" >
+<div class="page">
     <div class="sidebar">
-        <AdminNavMenu/>
+        <AdminNavMenu />
     </div>
     <main>
         <div class="navbar-brand py-1" style="position: relative">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-				<button type="button" class="btn btn-outline-danger btn-lg" @onclick="NavigationLogout">Đăng xuất</button>
+                <button type="button" class="btn btn-outline-danger btn-lg" @onclick="NavigationLogout">Đăng xuất</button>
             </div>
         </div>
-        <article class="content scrollable" style="background-color: rgb(245, 245, 245)">
-           <BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
-            <div class="bg-white p-4 rounded-4" style="min-height: calc(100vh - 115px);">
+        <article class="content" style="background-color: rgb(245, 245, 245)">
+            <BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
+            <div class="bg-white px-4 pt-4 rounded-3 scrollable" style="min-height: calc(100vh - 115px);">
                 @Body
             </div>
         </article>
@@ -28,9 +28,12 @@
 </div>
 <style>
     .scrollable {
-        max-height: calc(100vh - 56px); /* 56px là chiều cao của navbar */
+        max-height: calc(100vh - 50px); /* 56px là chiều cao của navbar */
         overflow-y: scroll; /* Cuộn dọc */
-      
+    }
+
+    .container-fluid {
+        padding-bottom: 4rem;
     }
 </style>
 @code {
@@ -48,16 +51,16 @@
             if (segment.Length > 1)
             {
                 items.Add(new BreadcrumbItem
-                {
-                    Title = char.ToUpper(segment[0]) + segment.Substring(1).Replace("-", " "),
-                    Link = path
-                });
+                    {
+                        Title = char.ToUpper(segment[0]) + segment.Substring(1).Replace("-", " "),
+                        Link = path
+                    });
             }
         }
         return items;
     }
     private void NavigationLogout()
-	{
-		Navigation.NavigateTo("/home-user");
-	}
+    {
+        Navigation.NavigateTo("/home-user");
+    }
 }

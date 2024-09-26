@@ -1,6 +1,6 @@
 <div class="top-row ps-3 navbar navbar" style="background-color: #3c8dbc;">
 
-	<div class="container-fluid">
+	<div class="container">
 		<a class="navbar-brand text-white" href="">Admin</a>
 	</div>
 </div>
@@ -10,14 +10,15 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()" style="background-color: #031529;">
 	<nav class="flex-column">
 		<div class="nav-item px-3">
+
 			<NavLink class="nav-link"
 					 data-bs-toggle="collapse"
-					 href="#collapseExample"
+					 href="#collapseHome"
 					 aria-expanded="false"
-					 aria-controls="collapseExample">
+					 aria-controls="collapseHome">
 				<span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
 			</NavLink>
-			<div class="collapse" id="collapseExample">
+			<div class="collapse" id="collapseHome">
 				<ul class="">
 					<li class="" aria-current="true">
 						<NavLink class="nav-link" href="">
@@ -33,7 +34,7 @@
 						<NavLink class="nav-link" href="revenue-by-cinema">
 							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Revenue By Cinema
 						</NavLink>
-					</li>		
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -86,9 +87,22 @@
 			</NavLink>
 		</div>
 		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="ticket-price">
+			<NavLink class="nav-link"
+					 data-bs-toggle="collapse"
+					 href="#collapseTicketPrice"
+					 aria-expanded="false"
+					 aria-controls="collapseTicketPrice">
 				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Ticket Price
 			</NavLink>
+			<div class="collapse" id="collapseTicketPrice">
+				<ul class="">
+					<li class="" aria-current="true">
+						<NavLink class="nav-link" href="ticket-price">
+							<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Basic Ticket Price
+						</NavLink>
+					</li>
+				</ul>
+			</div>
 		</div>
 		<div class="nav-item px-3">
 			<NavLink class="nav-link" href="combo">

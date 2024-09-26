@@ -1,47 +1,122 @@
 ﻿@page "/bill-detail"
-<h3>Bill Detail</h3>
+
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a class="btn btn-outline-secondary" href="/bill-list">Quay lại</a>
-    </div>
+	<div class="mb-2">
+		<button class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</button>
+	</div>
+	<div class="row">
+		<!-- Thông tin đơn hàng -->
+		<div class="col-md-6 mb-3">
+			<div class="row">
+				<div class="col-md-6 mb-3">
+					<div class="py-2 mb-4 border-bottom"><h5>Thông tin đơn hàng</h5></div>
+					<p><strong>Mã đơn hàng:</strong> 96175515</p>
+					<div><strong>Phim:</strong><span class="text-primary"> Chú thuật sư (Phần cuối)</span></div>
+					<p><strong>Giờ chiếu:</strong> <span class="badge bg-danger">20:25 - 22:20</span></p>
+					<p><strong>Ngày chiếu:</strong> 06-05-2024</p>
+					<p><strong>Phòng chiếu:</strong> IMAX</p>
+					<p><strong>Rạp chiếu:</strong><span class="text-primary"> HCinema Aeon Hà Đông</span></p>
+					<p><strong>Ngày đặt:</strong> 06-05-2024</p>
+				</div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>Chi tiết hóa đơn</h3>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">Mã hóa đơn: Id</h5>
-                <p class="card-text">Ngày tạo: CreatedDate</p>
-                <p class="card-text">Khách hàng: CustomerName</p>
-                <p class="card-text">Tổng tiền: TotalAmount</p>
+				<!-- Thông tin khách hàng -->
+				<div class="col-md-6 mb-3">
+					<div class="py-2 mb-4 border-bottom">
+						<h5>Thông tin khách hàng</h5>
+					</div>
+					<p><strong>Khách hàng:</strong> Bùi Duy Đông</p>
+					<p><strong>Điện thoại:</strong> 093668888</p>
+					<p><strong>Email:</strong> dong@gmail.com</p>
+					<p><strong>Trạng thái:</strong> <span class="badge bg-success">Đã xác nhận</span></p>
+					<p><strong>Thành tiền:</strong> 1,066,000</p>
+					<p><strong>Giảm giá:</strong> 0</p>
+					<p><strong>Tổng tiền:</strong> 1,066,000</p>
+				</div>
+				
+			</div><div class="">
+				<img src="https://tritonstore.com.au/wp-content/uploads/MSI-Plessey.webp" width="100%" height="200" class="object-fit-contain border rounded" />
+			</div>
+		</div>
 
-                <h5 class="mt-4">Chi tiết sản phẩm</h5>
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tên sản phẩm</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Đơn giá</th>
-                            <th scope="col">Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                            <tr>
-                                <th scope="row">Index</th>
-                                <td>ProductName</td>
-                                <td>Quantity</td>
-                                <td>UnitPrice</td>
-                                <td>TotalPrice</td>
-                            </tr>
-                       
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
+		<!-- Ghế & Dịch vụ -->
+		<div class="col-md-6 mb-3">
+			<div class="py-2 mb-3 border-bottom">
+				<h5>Ghế & Dịch vụ</h5>
+			</div>
+			<!-- Thông tin ghế -->
+			<table class="table align-middle mb-5">
+				<thead class="table-secondary">
+					<tr>
+						<th>Thông tin ghế</th>
+						<th>Loại ghế</th>
+						<th>Giá tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>A1</td>
+						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
+						<td>100,000</td>
+					</tr>
+					<tr>
+						<td>C2</td>
+						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
+						<td>100,000</td>
+					</tr>
+					<tr>
+						<td>C3</td>
+						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
+						<td>100,000</td>
+					</tr>
+					<tr>
+						<td>C4</td>
+						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
+						<td>100,000</td>
+					</tr>
+					<tr>
+						<td>D4</td>
+						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
+						<td>100,000</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- Dịch vụ -->
+			<table class="table align-middle">
+				<thead class="table-secondary">
+					<tr>
+						<th>Tên dịch vụ</th>
+						<th>Số lượng</th>
+						<th>Đơn giá</th>
+						<th>Tổng tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>HCinema Combo</td>
+						<td>1</td>
+						<td>113,000</td>
+						<td>113,000</td>
+					</tr>
+					<tr>
+						<td>My Combo</td>
+						<td>1</td>
+						<td>87,000</td>
+						<td>87,000</td>
+					</tr>
+					<tr>
+						<td>Ladies Love Set</td>
+						<td>2</td>
+						<td>183,000</td>
+						<td>366,000</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
+
 @code {
 
 }

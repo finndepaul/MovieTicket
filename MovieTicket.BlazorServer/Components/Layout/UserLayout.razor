@@ -7,10 +7,10 @@
     </div> *@
         <main>
             <div class="navbar-brand">
-                <!-- Trigger the modal with a button -->
+                <!-- Mở modal khi click -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button type="button" class="btn btn-primary btn-lg" id="loginBtn">Đăng nhập</button>
-                    <button class="btn btn-secondary btn-lg me-md-2" type="button" id="regisBtn">Đăng ký</button>
+                <button type="button" class="btn btn-primary btn-lg" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+                <button class="btn btn-secondary btn-lg me-md-2" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
                     @* <button><a href="general">Admin</a></button> *@ <!-- Added button for redirecting to admin layout -->
                 </div>
 
@@ -127,7 +127,7 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div> *@
-<script>
+@* <script>
     //mở modal login khi click Đăng nhập
     var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
     document.getElementById('loginBtn').addEventListener('click', function () {
@@ -140,4 +140,4 @@
     document.getElementById('regisBtn').addEventListener('click', function () {
         regisModal.show();
     });
-</script>
+</script> *@
