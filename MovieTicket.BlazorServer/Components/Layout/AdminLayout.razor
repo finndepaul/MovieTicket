@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using static MovieTicket.BlazorServer.Components.BreadCrumb
 @inject NavigationManager Navigation
+<div style="overflow: hidden;  height: 100vh;">
 <div class="page">
     <div class="sidebar">
         <AdminNavMenu />
@@ -25,6 +26,7 @@
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
+	</div>
 </div>
 <style>
     .scrollable {
@@ -61,6 +63,6 @@
     }
     private void NavigationLogout()
     {
-        Navigation.NavigateTo("/home-user");
+        Navigation.NavigateTo("/");
     }
 }

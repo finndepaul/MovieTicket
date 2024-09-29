@@ -1,5 +1,197 @@
-﻿<h3>UserNavMenu</h3>
+﻿<div class="navbar-brand">
+	<!-- Login Modal -->
+	<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Đăng nhập</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="usrname" class="form-label">Email</label>
+							<input type="text" class="form-control" id="usrname" placeholder="Nhập email">
+						</div>
+						<div class="mb-3">
+							<label for="psw" class="form-label">Mật khẩu</label>
+							<input type="password" class="form-control" id="psw" placeholder="Nhập mật khẩu">
+						</div>
+						<div class="mb-3 form-check">
+							<input type="checkbox" class="form-check-input" id="rememberMe" checked>
+							<label class="form-check-label" for="rememberMe">Lưu thông tin đăng nhập</label>
+						</div>
+						<div class="text-center"><button type="submit" class="btn btn-primary">Đăng nhập</button></div>
 
-@code {
+					</form>
+				</div>
+				<div class="modal-footer d-flex justify-content-between">
+					<div>
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+					</div>
+					<div>
+						<p><a id="regis" data-bs-toggle="modal" data-bs-target="#regisModal" href="#">Đăng ký</a></p>
+						<p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-}
+	<!-- Register Modal -->
+	<div class="modal fade" id="regisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Đăng ký</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label>
+							<input type="email" class="form-control" id="email" placeholder="Nhập email">
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">Mật khẩu</label>
+							<input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu">
+						</div>
+						<div class="mb-3">
+							<label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+							<input type="password" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu">
+						</div>
+						<div class="text-center"><button type="submit" class="btn btn-primary">Đăng ký</button></div>
+					</form>
+				</div>
+				<div class="modal-footer d-flex justify-content-between">
+					<div>
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+					</div>
+					<div>
+						<p><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</a></p>
+						<p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Forgot Password Modal -->
+	<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Quên mật khẩu</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="email" class="form-label">Email</label>
+							<input type="email" class="form-control" id="email" placeholder="Nhập email">
+						</div>
+						<div class="text-center"><button type="submit" class="btn btn-primary">Gửi yêu cầu</button></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Đặt nav vào trong một container để căn giữa -->
+<div class="navbar-container">
+	<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+		<div class="container">
+			<a class="navbar-brand" href="#">
+				<img src="img/logo.png" alt="Logo" height="70" width="80" />
+			</a>
+
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+				<ul class="navbar-nav mb-2 mb-lg-0">
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/lichchieurap">LỊCH CHIẾU THEO RẠP</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/phim">PHIM</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/rap">RẠP</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/giave">GIÁ VÉ</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/tinmoiuudai">TIN MỚI VÀ ƯU ĐÃI</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/nhuongquyen">NHƯỢNG QUYỀN</NavLink>
+					</li>
+					<li class="nav-item">
+						<NavLink class="nav-link" href="/thanhvien">THÀNH VIÊN</NavLink>
+					</li>
+				</ul>
+			</div>
+			<div class="auth-buttons ">
+				<button type="button" class="btn btn-outline-success me-2" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+				<button class="btn btn-outline-success me-2" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
+			</div>
+		</div>
+	</nav>
+</div>
+
+<style>
+	/* Đặt navbar cố định và luôn hiển thị ở đầu */
+	.navbar-container nav {
+		position: fixed;
+		top: 0;
+		width: 100%;
+		z-index: 1000;
+	}
+
+	/* Đặt container giới hạn chiều rộng và căn giữa nội dung */
+	
+	/* Thêm khoảng cách cho nội dung phía dưới navbar */
+	body {
+		padding-top: 70px; /* Điều chỉnh theo chiều cao của navbar */
+	}
+
+	/* Điều chỉnh giao diện của navbar */
+	.navbar-nav {
+		display: flex;
+		justify-content: center;
+		gap: 15px;
+	}
+
+	.navbar-light .nav-link {
+		font-weight: bold;
+		color: black;
+	}
+
+		.navbar-light .nav-link.active {
+			color: #FF5733;
+		}
+
+		.navbar-light .nav-link:hover {
+			color: red;
+		}
+
+	/* Ô tìm kiếm */
+	.form-control {
+		border-radius: 5px;
+		margin-left: 10px;
+	}
+
+	.btn-outline-dark {
+		border-radius: 5px;
+	}
+	.nav-link{
+		font-size: 18px;
+	}
+</style>
