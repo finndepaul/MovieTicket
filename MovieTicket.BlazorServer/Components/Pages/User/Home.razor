@@ -1,7 +1,368 @@
-﻿@page "/home-user"
+﻿@page "/"
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
-
 <PageTitle>Home</PageTitle>
 
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+	<div class="carousel-indicators">
+		<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+		<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" aria-label="Slide 2"></button>
+		<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" aria-label="Slide 3"></button>
+	</div>
+	<div class="carousel-inner">
+		<div class="carousel-item active">
+			<img src="https://files.betacorp.vn/media/images/2024/09/27/1702x621-19-161327-270924-72.jpg" class="d-block w-100" alt="Slide 1">
 
-<h1>RẠP CHIẾU PHIM</h1>
+		</div>
+		<div class="carousel-item">
+			<img src="https://iguov8nhvyobj.vcdn.cloud/media/banner/cache/1/b58515f018eb873dafa430b6f9ae0c1e/9/8/980x448_14__4.jpg" class="d-block w-100" alt="Slide 2">
+
+		</div>
+		<div class="carousel-item">
+			<img src="https://iguov8nhvyobj.vcdn.cloud/media/banner/cache/1/b58515f018eb873dafa430b6f9ae0c1e/9/8/980x448_15__2.jpg" class="d-block w-100" alt="Slide 3">
+
+		</div>
+	</div>
+	<button class="left carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Previous</span>
+	</button>
+	<button class="right carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span>
+		<span class="visually-hidden">Next</span>
+	</button>
+</div>
+
+<div class="container ">
+	<div class="tab my-5 d-flex justify-content-center border-bottom">
+		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
+		<button class="tablinks" onclick="openCity(event, 'DangChieu')" id="defaultOpen">PHIM ĐANG CHIẾU</button>
+		<button class="tablinks" onclick="openCity(event, 'Dacbiet')">SUẤT CHIẾU ĐẶC BIỆT</button>
+	</div>
+	<div class="m-5">
+		<!-- Tab content -->
+		<div id="SapChieu" class="tabcontent">
+			<div class="row ">
+				<!-- Movie 1 -->
+				@for (int i = 0; i < 5; i++)
+				{
+					<div class="col-lg-3 mb-5">
+						<div class="movie-card">
+							<img src="https://files.betacorp.vn/media%2fimages%2f2024%2f09%2f19%2f400x633%2D143913%2D190924%2D45.png" alt="Movie Poster">
+							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-16.png" /></span>
+							<span class="sticker sticker-new"></span>
+
+							<div class="movie-info">
+								<h5 class="text-primary">Cô Dâu Hào Môn</h5>
+								<p><strong>Thể loại:</strong> Tâm lý</p>
+								<p><strong>Thời lượng:</strong> 120 phút</p>
+								<p><strong>Ngày khởi chiếu:</strong> 18/10/2024</p>
+							</div>
+
+						</div>
+					</div>
+				}
+
+			</div>
+		</div>
+
+		<div id="DangChieu" class="tabcontent">
+			<div class="row">
+				<!-- Movie 1 -->
+				@for (int i = 0; i < 7; i++)
+				{
+					<div class="col-lg-3 mb-5">
+						<div class="movie-card">
+							<img src="https://files.betacorp.vn/media%2fimages%2f2024%2f09%2f19%2f400x633%2D143913%2D190924%2D45.png" alt="Movie Poster">
+							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-18.png" /></span>
+							<span class="sticker sticker-new"></span>
+
+							<div class="movie-info">
+								<h5 class="text-primary">Cô Dâu Hào Môn</h5>
+								<p><strong>Thể loại:</strong> Tâm lý</p>
+								<p><strong>Thời lượng:</strong> 120 phút</p>
+							</div>
+							<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+								<span><i class="bi bi-ticket-perforated"></i></span>
+								MUA VÉ
+							</a>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+
+		<div id="Dacbiet" class="tabcontent">
+			<div class="row">
+				@for (int i = 0; i < 3; i++)
+				{
+					<div class="col-lg-3 mb-5">
+						<div class="movie-card">
+							<img src="https://files.betacorp.vn/media%2fimages%2f2024%2f09%2f19%2f400x633%2D143913%2D190924%2D45.png" alt="Movie Poster">
+							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-18.png" /></span>
+							<span class="sticker sticker-new"></span>
+
+							<div class="movie-info">
+								<h5 class="text-primary">Cô Dâu Hào Môn</h5>
+								<p><strong>Thể loại:</strong> Tâm lý</p>
+								<p><strong>Thời lượng:</strong> 120 phút</p>
+							</div>
+							<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+								<span><i class="bi bi-ticket-perforated"></i></span>
+								MUA VÉ
+							</a>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+</div>
+<div id="myModalBuyTicket" class="modal-buy">
+	<div class="modal-size">
+		<div class="modal-content-buy d-flex justify-content-between border-bottom ">
+			<span class="close-modal-btn" onclick="closeModal()">&times;</span>
+			<h5>LỊCH CHIẾU - Cô Dâu Hào Môn</h5>
+		</div>
+		<div ></div>
+		
+	</div>
+</div>
+<style>
+	/* Chỉnh phần movie-card để căn giữa */
+	
+
+	.col-lg-3 {
+		flex: 0 0 25%; /* Đặt chiều rộng mỗi cột là 25% (tương đương với 3 cột trên một hàng) */
+		max-width: 25%;
+	}
+
+	.carousel-item img {
+		width: 100%;
+		height: 700px;
+		object-fit: cover;
+	}
+	/* Hover effect for prev/next buttons */
+
+
+	.carousel-control.left {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 5%;
+		text-align: center;
+		opacity: 0.5;
+		background: none;
+		border: none;
+	}
+
+	.carousel-control.right {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 5%;
+		opacity: 0.5;
+		text-align: center;
+		background: none;
+		border: none;
+	}
+
+		.carousel-control.left:hover, .carousel-control.right:hover, .carousel-control.left:focus, .carousel-control.right:focus {
+			background-image: -webkit-linear-gradient(left, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
+			background-image: -o-linear-gradient(left, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
+			background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0.5)), to(rgba(0,0,0,0.0001)));
+			background-image: linear-gradient(to right, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
+		}
+
+	.movie-card {
+		position: relative;
+		margin: 0 auto; /* Căn giữa phần tử */
+		width: 200px;
+		text-align: center; /* Căn giữa nội dung bên trong */
+	}
+
+		.movie-card img {
+			width: 100%;
+			border-radius: 10px;
+		}
+
+
+
+	.movie-info {
+		text-align: center; /* Căn giữa thông tin phim */
+		padding: 10px;
+	}
+
+		.movie-info h5 {
+			font-size: 16px;
+			font-weight: bold;
+		}
+
+		.movie-info p {
+			margin: 0;
+		}
+
+	.sticker {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 63px !important;
+		height: 63px !important;
+	}
+
+	.sticker-new {
+		background: url(https://betacinemas.vn/assets/frontend/layout/img/hot.png) no-repeat;
+		left: auto;
+		right: 0;
+	}
+	/* Style the tab */
+	.tab {
+		width: 100%;
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		background: none;
+	}
+	
+		/* Style the buttons that are used to open the tab content */
+		.tab button {
+			background: none;
+			float: left;
+			border: none;
+			width: 300px;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			transition: 0.3s;
+			color: black;
+			font-size: 25px;
+			width: 300px;
+			font-weight: bold;
+			transition: transform 0.2s;
+		}
+
+			/* Change background color of buttons on hover */
+			/* 	.tab button:hover {
+									border-bottom: 2px solid blue;
+								} */
+
+			/* Create an active/current tablink class */
+			.tab button.active {
+				padding-top: 3px;
+				color: rgb(56, 172, 239);
+				border-bottom: 3px solid rgb(56, 172, 239);
+			}
+
+	.btn-mua-ve2 {
+		/*padding: 10px 70px;*/
+		position: relative;
+		font-size: large;
+		border: none;
+		font-weight: bold;
+		color: #fff;
+		background-color: rgb(19, 113, 180);
+		border-radius: 4px !important;
+		transition: transform 0.2s ease-in-out;
+	}
+
+		.btn-mua-ve2:hover {
+			background-image: linear-gradient(to right, #0a64a7 0%, #258dcf 51%, #3db1f3 100%) !important;
+			color: #fff;
+		}
+
+	.mr3 {
+		font-size: 70px;
+		position: absolute;
+		left: -10px;
+		opacity: 0.5;
+		color: #fff;
+	}
+
+	.open-modal-btn {
+		background-color: #007bff;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 16px;
+	}
+
+	/* Định dạng cho modal */
+	.modal-buy {
+		display: none; /* Ẩn modal mặc định */
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+		justify-content: center;
+		align-items: center;
+	}
+	.modal-size{
+		width: 50%;
+		min-height: 50%;
+		background-color: #fff;
+	}
+	/* Nội dung của modal */
+	.modal-content-buy {
+		background-color: #fff;
+		padding: 20px;
+		border-radius: 5px;
+		position: relative;
+
+	}
+
+	/* Nút đóng modal */
+	.close-modal-btn {
+		position: absolute;
+		top: 10px;
+		right: 15px;
+		color: #333;
+		font-size: 20px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+</style>
+<script>
+	document.getElementById("defaultOpen").click();
+	function openCity(evt, cityName) {
+		// Declare all variables
+		var i, tabcontent, tablinks;
+
+		// Get all elements with class="tabcontent" and hide them
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+
+		// Get all elements with class="tablinks" and remove the class "active"
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+
+		// Show the current tab, and add an "active" class to the button that opened the tab
+		document.getElementById(cityName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+	function openModal() {
+		document.getElementById('myModalBuyTicket').style.display = 'flex';
+	}
+
+	// Đóng modal
+	function closeModal() {
+		document.getElementById('myModalBuyTicket').style.display = 'none';
+	}
+
+	// Đóng modal khi nhấn ngoài modal
+	window.onclick = function (event) {
+		if (event.target === document.getElementById('myModalBuyTicket')) {
+			closeModal();
+		}
+	}
+</script>
