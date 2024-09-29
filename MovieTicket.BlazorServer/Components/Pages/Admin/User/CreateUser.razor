@@ -1,0 +1,50 @@
+﻿@page "/create-user"
+<div class="container-fluid">
+    <form>
+        <div class="mb-3">
+            <a type="button" class="btn btn-light me-2" href="/list-user">Quay lại</a>
+            <a type="submit" class="btn btn-primary me-2" href="#">+ Tạo mới</a>
+        </div>
+
+        <div class="mb-3">
+            <label for="fullname" class="form-label">Họ tên</label>
+            <input type="text" class="form-control" id="fullname">
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email">
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input type="text" class="form-control" id="phone">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mật khẩu</label>
+            <input type="password" class="form-control" id="password">
+        </div>
+
+        
+        <div class="mb-3">
+            <label for="role" class="form-label">Quyền</label>
+            <select class="form-select" id="role">
+                <option selected>USER</option>
+                <option>ADMIN</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Trạng thái</label>
+            <select class="form-select" id="status">
+                <option selected>Kích hoạt</option>
+                <option>Chưa kích hoạt</option>
+            </select>
+        </div>
+
+        
+    </form>
+</div>
+@code {
+
+}
