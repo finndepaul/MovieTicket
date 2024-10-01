@@ -16,7 +16,7 @@ namespace MovieTicket.Application.DataTransferObjs.UserHome
         public string? Name { get; set; }
 
         public string? Gerne { get; set; }
-
         public int? RunningTime { get; set; }
-    }
+		public ScheduleType? SType { get; set; }
+	}
 }
