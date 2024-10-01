@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Domain.Enums;
+using System.Threading;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -16,7 +18,7 @@ namespace MovieTicket.API.Controllers
         }
         [HttpGet]
         public async Task<ActionResult> GetAllFilmForUserHome()
-        {
+		{
             var films = await _userHomeReadOnly.GetAllFilmForUserHome();
             return Ok(films);
         }

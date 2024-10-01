@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.DataTransferObjs.UserHome;
+using MovieTicket.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

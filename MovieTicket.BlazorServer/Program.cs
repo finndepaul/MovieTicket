@@ -1,4 +1,6 @@
 using MovieTicket.BlazorServer.Components;
+using MovieTicket.BlazorServer.Services.Implements;
+using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer
 {
@@ -11,8 +13,9 @@ namespace MovieTicket.BlazorServer
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-
-            var app = builder.Build();
+            builder.Services.AddHttpClient();
+			builder.Services.AddScoped<IUserHomeService, UserHomeService>();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

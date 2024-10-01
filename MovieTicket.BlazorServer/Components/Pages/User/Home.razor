@@ -1,5 +1,10 @@
 ﻿@page "/"
+@using MovieTicket.Application.DataTransferObjs.UserHome
+@using MovieTicket.BlazorServer.Services.Interfaces
+@using MovieTicket.Domain.Enums
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+@inject IUserHomeService _service;
+@inject NavigationManager _navigationManager;
 <PageTitle>Home</PageTitle>
 
 <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
@@ -43,23 +48,24 @@
 		<div id="SapChieu" class="tabcontent">
 			<div class="row ">
 				<!-- Movie 1 -->
-				@for (int i = 0; i < 5; i++)
-				{
+				@foreach(var item in listObj){
+					@if(item.SType == ScheduleType.Early){
 					<div class="col-lg-3 mb-5">
 						<div class="movie-card">
-							<img src="https://files.betacorp.vn/media%2fimages%2f2024%2f09%2f19%2f400x633%2D143913%2D190924%2D45.png" alt="Movie Poster">
+							<img src="img/@item.Poster" alt="Movie Poster">
 							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-16.png" /></span>
 							<span class="sticker sticker-new"></span>
 
 							<div class="movie-info">
-								<h5 class="text-primary">Cô Dâu Hào Môn</h5>
-								<p><strong>Thể loại:</strong> Tâm lý</p>
-								<p><strong>Thời lượng:</strong> 120 phút</p>
+								<h5 class="text-primary">@item.Name</h5>
+								<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+								<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 								<p><strong>Ngày khởi chiếu:</strong> 18/10/2024</p>
 							</div>
 
 						</div>
 					</div>
+					}
 				}
 
 			</div>
@@ -68,18 +74,20 @@
 		<div id="DangChieu" class="tabcontent">
 			<div class="row">
 				<!-- Movie 1 -->
-				@for (int i = 0; i < 7; i++)
+				@foreach (var item in listObj)
 				{
+					@if (item.SType == ScheduleType.Regular)
+					{
 					<div class="col-lg-3 mb-5">
 						<div class="movie-card">
-							<img src="https://files.betacorp.vn/media%2fimages%2f2024%2f09%2f19%2f400x633%2D143913%2D190924%2D45.png" alt="Movie Poster">
-							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-18.png" /></span>
+							<img src="img/@item.Poster" alt="Movie Poster">
+							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-16.png" /></span>
 							<span class="sticker sticker-new"></span>
 
 							<div class="movie-info">
-								<h5 class="text-primary">Cô Dâu Hào Môn</h5>
-								<p><strong>Thể loại:</strong> Tâm lý</p>
-								<p><strong>Thời lượng:</strong> 120 phút</p>
+								<h5 class="text-primary">@item.Name</h5>
+								<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+								<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 							</div>
 							<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
 								<span><i class="bi bi-ticket-perforated"></i></span>
@@ -87,24 +95,27 @@
 							</a>
 						</div>
 					</div>
+					}
 				}
 			</div>
 		</div>
 
 		<div id="Dacbiet" class="tabcontent">
 			<div class="row">
-				@for (int i = 0; i < 3; i++)
+				@foreach (var item in listObj)
 				{
+					@if (item.SType == ScheduleType.Special)
+					{
 					<div class="col-lg-3 mb-5">
 						<div class="movie-card">
-							<img src="https://files.betacorp.vn/media%2fimages%2f2024%2f09%2f19%2f400x633%2D143913%2D190924%2D45.png" alt="Movie Poster">
-							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-18.png" /></span>
+							<img src="img/@item.Poster" alt="Movie Poster">
+							<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icon/c-16.png" /></span>
 							<span class="sticker sticker-new"></span>
 
 							<div class="movie-info">
-								<h5 class="text-primary">Cô Dâu Hào Môn</h5>
-								<p><strong>Thể loại:</strong> Tâm lý</p>
-								<p><strong>Thời lượng:</strong> 120 phút</p>
+								<h5 class="text-primary">@item.Name</h5>
+								<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+								<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 							</div>
 							<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
 								<span><i class="bi bi-ticket-perforated"></i></span>
@@ -112,6 +123,7 @@
 							</a>
 						</div>
 					</div>
+					}
 				}
 			</div>
 		</div>
@@ -191,8 +203,8 @@
 
 
 	.movie-info {
-		text-align: center; /* Căn giữa thông tin phim */
-		padding: 10px;
+		text-align: left; /* Căn giữa thông tin phim */
+		margin: 3px;
 	}
 
 		.movie-info h5 {
@@ -327,6 +339,7 @@
 		font-weight: bold;
 		cursor: pointer;
 	}
+
 </style>
 <script>
 	document.getElementById("defaultOpen").click();
@@ -366,3 +379,13 @@
 		}
 	}
 </script>
+
+@code{
+	private List<UserHomeDto> listObj = new List<UserHomeDto>();
+	
+	protected async override Task OnInitializedAsync()
+	{
+		listObj = await _service.GetAllFilmForUserHome();
+	}
+	
+}
