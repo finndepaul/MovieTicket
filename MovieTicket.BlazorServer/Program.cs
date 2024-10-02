@@ -1,4 +1,6 @@
 using MovieTicket.BlazorServer.Components;
+using MovieTicket.BlazorServer.Services.Implements;
+using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer
 {
@@ -9,10 +11,12 @@ namespace MovieTicket.BlazorServer
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-
-            var app = builder.Build();
+            builder.Services.AddHttpClient();
+			builder.Services.AddScoped<IUserHomeService, UserHomeService>();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -21,6 +25,8 @@ namespace MovieTicket.BlazorServer
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
 
             app.UseHttpsRedirection();
 
