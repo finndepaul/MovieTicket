@@ -1,4 +1,4 @@
-@page "/"
+@page "/admin"
 <div class="container-fluid">
 	<div class="row my-3">
 		<div class="col mx-2 p-3"
@@ -54,9 +54,9 @@
 		<div class="w-50 col">
 			<div class="d-flex justify-content-between">
 				<h2 class="fw-bold">Doanh thu theo Phim</h2>
-				<a class="icon-link icon-link-hover fs-3" href="#">
+				<NavLink href="revenue-by-movie" class="icon-link icon-link-hover fs-4">
 					Xem tất cả
-				</a>
+				</NavLink>
 			</div>
 			<div>
 				<table class="table table-hover">
@@ -103,9 +103,9 @@
 		<div class="w-50 col">
 			<div class="d-flex justify-content-between">
 				<h2 class="fw-bold">Doanh thu theo Rạp</h2>
-				<a class="icon-link icon-link-hover fs-3" href="#">
+				<NavLink class="icon-link fs-4 icon-link-hover" href="revenue-by-cinema">
 					Xem tất cả
-				</a>
+				</NavLink>
 			</div>
 			<div>
 				<table class="table table-hover">

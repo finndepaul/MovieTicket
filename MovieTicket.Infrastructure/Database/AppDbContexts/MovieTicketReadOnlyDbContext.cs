@@ -126,7 +126,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
             Avatar = $"avatar2.png",
             Name = "ClientTest",
-            Phone = "000-000-000",
+            Phone = "000-000-000",  
             Email = "azusachan309@gmail.com",
             Status = Domain.Enums.AccountStatus.Active, // 0 or 1
             CreateDate = new DateTime(2023, 8, 1).AddDays(10)
@@ -148,17 +148,17 @@ public class MovieTicketReadOnlyDbContext : DbContext
             });
         }
         modelBuilder.Entity<Account>().HasData(accounts);
-        //Membership
+		//Membership
 
-        var membership = new Membership()
-        {
-            Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
-            Point = 0,
-            Status = Domain.Enums.MembershipStatus.Active,
-        };
-        modelBuilder.Entity<Membership>().HasData(membership);
-        //Film 
-        List<Film> films = new List<Film>();
+		var membership = new Membership()
+		{
+			Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+			Point = 0,
+			Status = Domain.Enums.MembershipStatus.Active,
+		};
+		modelBuilder.Entity<Membership>().HasData(membership);
+		//Film 
+		List<Film> films = new List<Film>();
 
         for (int i = 1; i <= 30; i++)
         {
@@ -180,7 +180,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
                 RunningTime = (i % 120) + 60,
                 Status = Domain.Enums.FilmStatus.NowShowing,
                 Nation = i % 2 == 0 ? "USA" : "Japan",
-                Poster = $"https://example.com/poster{i}.jpg",
+                Poster = $"film_fake.jpg",
                 Language = i % 2 == 0 ? "English" : "Japanese",
                 CreatDate = new DateTime(2023, 8, 1).AddDays(i)
             };
@@ -390,8 +390,25 @@ public class MovieTicketReadOnlyDbContext : DbContext
             showTimes.Add(showTime);
         }
         modelBuilder.Entity<ShowTime>().HasData(showTimes);
-
-    }
+		//Ticket
+		List<Bill> bills = new List<Bill>();
+		for (int i = 1; i <= 30; i++)
+		{
+			Bill bill = new Bill
+			{
+				Id = Guid.NewGuid(),
+				TotalMoney = (i % 10) * 10000,
+				CreateTime = new DateTime(2024, 10, 1).AddDays(i),
+				BarCode = $"barcode{i}.jpg",
+				Status = BillStatus.Paid,
+				ActivationStatus = true,
+				MembershipId = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+				VoucherId = null,
+			};
+			bills.Add(bill);
+		}
+        modelBuilder.Entity<Bill>().HasData(bills);
+	}
 
 
 }
