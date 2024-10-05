@@ -1,4 +1,4 @@
-﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using MovieTicket.Application.DataTransferObjs.Auth
 @using MovieTicket.BlazorServer.Components.Pages
 @inject NavigationManager Navigation
@@ -44,6 +44,7 @@
 						<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
 					</div>
 					<div>
+						<p><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</a></p>
 						<p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
 					</div>
 				</div>
@@ -177,8 +178,7 @@
 	.btn-outline-dark {
 		border-radius: 5px;
 	}
-
-	.nav-link {
+	.nav-link{
 		font-size: 18px;
 	}
 </style>

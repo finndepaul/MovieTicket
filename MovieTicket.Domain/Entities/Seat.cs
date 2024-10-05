@@ -10,7 +10,7 @@ public class Seat
 
     public Guid? CinemaId { get; set; }
 
-    public int? Position { get; set; }
+    public string? Position { get; set; }
 
     public SeatStatus? Status { get; set; }
 

@@ -1,0 +1,59 @@
+﻿@page "/list-user"
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <a class="btn btn-primary me-2" href="/create-user">+ Tạo user</a>
+                <a class="btn btn-info">Refresh</a>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table table-hover table-stripted">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Quyền</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <tr>
+                        <td><img src="https://cly.1cdn.vn/2022/05/10/anh-nen-avatar-dep_021652403.jpg" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
+                        <td>Nguyen Van A</td>
+                        <td>nguyenvana@gmail.com</td>
+                        <td>0123456789</td>
+                        <td><span class="badge bg-danger">User</span></td>
+                        <td><span class="badge bg-success">Kích hoạt</span></td>
+                        <td>13-04-2024</td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="/update-detail-user">View</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://i.pinimg.com/736x/b7/91/44/b79144e03dc4996ce319ff59118caf65.jpg" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
+                        <td>Nguyen Van A</td>
+                        <td>nguyenvana@gmail.com</td>
+                        <td>0123456789</td>
+                        <td><span class="badge bg-danger">User</span></td>
+                        <td><span class="badge bg-success">Kích hoạt</span></td>
+                        <td>13-04-2024</td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="/update-detail-user">View</a>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@code {
+
+}

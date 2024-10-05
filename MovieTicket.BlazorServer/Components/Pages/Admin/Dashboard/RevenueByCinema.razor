@@ -1,20 +1,23 @@
-﻿@page "/revenue-by-cinema"
+@page "/revenue-by-cinema"
 @attribute [Authorize(Roles ="Admin")]
+@using MovieTicket.Application.DataTransferObjs.AdminHome
+@using MovieTicket.BlazorServer.Services.Interfaces
+@inject IAdminHomeService _ser;
 
 <div class="content">
     <div class="d-flex align-items-center">
         <div class="d-flex align-items-center mr-15">
             <label for="start" class="mr-2 mb-0">Từ ngày:</label>
-            <input type="date" id="start" name="start-date" class="form-control form-control-sm" style="width: 150px;" onchange="UpdateEndDate">
+            <input type="date" id="start" name="start-date" @bind="@startDate" class="form-control form-control-sm" style="width: 150px;">
         </div>
 
         <div class="d-flex align-items-center mr-15">
             <label for="end" class="mr-2 mb-0">Đến ngày:</label>
-            <input type="date" id="end" name="end-date" class="form-control form-control-sm" style="width: 150px;">
+            <input type="date" id="end" name="end-date" @bind="@endDate" class="form-control form-control-sm" style="width: 150px;">
         </div>
 
         <div class="d-flex align-items-center">
-            <button class="btn btn-primary btn-sm w-auto mr-15">Load dữ liệu</button>
+            <button class="btn btn-primary btn-sm w-auto mr-15" @onclick="Reload">Load dữ liệu</button>
             <button class="btn btn-success btn-sm w-auto">Xuất báo cáo</button>
         </div>
     </div>
@@ -46,19 +49,34 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>SUGA | Agust D TOUR "D-DAY" The Movie</td>
-                    <td>32</td>
-                    <td>8,677,300</td>
-                </tr>
-                <tr>
-                    <td>Kung Fu Panda 4</td>
-                    <td>11</td>
-                    <td>4,282,000</td>
-                </tr>
+                @foreach (var item in revenueByCinemaDtos)
+                {
+                    <tr>
+                        <th scope="row">@item.Name</th>
+                        <td>@item.TotalTicket</td>
+                        <td>@item.TotalRevenue</td>
+                    </tr>
+                }
                 <!-- Add more rows as needed -->
             </tbody>
         </table>
+        <nav class="d-flex justify-content-end" aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 
@@ -126,5 +144,19 @@
 </script>
 
 @code {
+    private List<RevenueByCinemaDto> revenueByCinemaDtos = new List<RevenueByCinemaDto>();
+    private int totalUsers;
+    private int currentPage = 1;
+    private int pageSize = 10;
 
+    private DateTime startDate = new DateTime(DateTime.Now.Year,DateTime.Now.Month,1);
+    private DateTime endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+    protected async override Task OnInitializedAsync()
+    {
+        revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(startDate,endDate);
+    }
+    private async void Reload()
+    {
+        revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(startDate, endDate);
+    }
 }
