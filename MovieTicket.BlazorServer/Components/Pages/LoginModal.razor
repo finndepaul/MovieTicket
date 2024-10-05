@@ -29,7 +29,7 @@
         CustomeUserClaims claims = DecryptJWTService.DecryptToken(response.JWTToken);
         if(claims.Role == "Admin")
         {
-            NavigationManager.NavigateTo("/general", forceLoad: true);
+            NavigationManager.NavigateTo("/admin", forceLoad: true);
         }
         else
         {
