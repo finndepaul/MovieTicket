@@ -2,11 +2,6 @@
 using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {

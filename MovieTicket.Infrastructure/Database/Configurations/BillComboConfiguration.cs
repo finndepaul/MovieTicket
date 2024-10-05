@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MovieTicket.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Database.Configurations
 {
@@ -13,10 +8,9 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<BillCombo> builder)
         {
-            builder.HasKey(x => new { x.ComboId,x.BillId });
+            builder.HasKey(x => new { x.ComboId, x.BillId });
             builder.HasOne(x => x.Bill).WithMany(x => x.BillCombos).HasForeignKey(x => x.BillId);
             builder.HasOne(x => x.Combo).WithMany(x => x.BillCombos).HasForeignKey(x => x.ComboId);
-
         }
     }
 }

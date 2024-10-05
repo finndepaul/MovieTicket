@@ -3,13 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Domain.Entities;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -79,5 +73,4 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             return bill;
         }
     }
-
 }

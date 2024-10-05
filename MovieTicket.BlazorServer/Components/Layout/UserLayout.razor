@@ -1,143 +1,152 @@
 ﻿@inject NavigationManager NavigationManager
+
+
 @inherits LayoutComponentBase
 
 <div class="page">
-    @* <div class="sidebar">
-        <AdminNavMenu />
-    </div> *@
-        <main>
-            <div class="navbar-brand">
-                <!-- Mở modal khi click -->
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="button" class="btn btn-primary btn-lg" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
-                <button class="btn btn-secondary btn-lg me-md-2" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
-                    @* <button><a href="general">Admin</a></button> *@ <!-- Added button for redirecting to admin layout -->
-                </div>
+	<main>
+		<div class="nav-menu">
+			<UserNavMenu />
+		</div>
+		<article class="content">
+			@Body
+		</article>
+		<footer>
+			<div class="footer-container">
+				<div class="footer-column">
+					<a href="#"><img src="img/logo.jpg" alt="Logo" class="footer-logo" style="height: 70px; width: 70px; margin-top: -10px;" /></a>
+					<ul>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Tuyển dụng</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Giới thiệu</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Liên hệ</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">F.A.Q</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Hoạt động xã hội</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Điều khoản sử dụng</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Chính sách thanh toán, đổi trả - hoàn vé</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Liên hệ quảng cáo</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Điều khoản bảo mật</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Hướng dẫn đặt vé online</a></li>
+					</ul>
+				</div>
 
-                <!-- Login Modal -->
-                <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Đăng nhập</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="usrname" class="form-label">Email</label>
-                                        <input type="text" class="form-control" id="usrname" placeholder="Nhập email">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="psw" class="form-label">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="psw" placeholder="Nhập mật khẩu">
-                                    </div>
-                                    <div class="mb-3 form-check">
-                                        <input type="checkbox" class="form-check-input" id="rememberMe" checked>
-                                        <label class="form-check-label" for="rememberMe">Lưu thông tin đăng nhập</label>
-                                    </div>
-                                    <div class="text-center"><button type="submit" class="btn btn-primary">Đăng nhập</button></div>
+				<div class="footer-column">
+					<h3>CỤM RẠP BETA</h3>
+					<ul>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Cinemas Ung Văn Khiêm, TP Hồ Chí Minh - Hotline 0969 874 873</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Cinemas Lào Cai - Hotline 0358 968 970</a></li>
+						<li><i class="bi bi-chevron-right"></i><a href="#">Cinemas Trần Quang Khải, TP Hồ Chí Minh - Hotline 1900 633 362</a></li>
+					</ul>
+				</div>
 
-                                </form>
-                            </div>
-                            <div class="modal-footer d-flex justify-content-between">
-                                <div >
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                    </div>
-                                <div >
-                                    <p><a id="regis" data-bs-toggle="modal" data-bs-target="#regisModal" href="#">Đăng ký</a></p>
-                                    <p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				<div class="footer-column">
+					<h3>KẾT NỐI VỚI CHÚNG TÔI</h3>
+					<div class="social-media">
+						<a href="#"><img src="img/iconfacebook.png" alt="Facebook" style="width: 28px; height: 28px" /></a>
+						<a href="#"><img src="img/iconyoutube.png" alt="YouTube" style="width: 28px; height: 28px" /></a>
+						<a href="#"><img src="img/icontiktok.png" alt="TikTok" style="width: 28px; height: 28px" /></a>
+						<a href="#"><img src="img/iconinstagram.jpg" alt="Instagram" style="width: 28px; height: 28px" /></a>
+					</div>
+					<img src="img/dathongbao.png" alt="Bộ Công Thương" / style="width: 180px; height: 68px">
+				</div>
 
-                <!-- Register Modal -->
-                <div class="modal fade" id="regisModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Đăng ký</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" placeholder="Nhập email">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="password" class="form-label">Mật khẩu</label>
-                                        <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
-                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu">
-                                    </div>
-                                    <div class="text-center"><button type="submit" class="btn btn-primary">Đăng ký</button></div>
-                                </form>
-                            </div>
-                            <div class="modal-footer d-flex justify-content-between">
-                                <div>
-                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                                <div>
-                                <p><a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</a></p>
-                                    <p><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Quên mật khẩu?</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+				<div class="footer-column">
+					<h3>LIÊN HỆ</h3>
+					<p>
+						CÔNG TY CỔ PHẦN BETA MEDIA<br />
+						Giấy chứng nhận ĐKKD số: 0106633482 - Đăng ký lần đầu ngày 08/09/2014 tại Sở KHĐT Hà Nội.<br />
+						Địa chỉ: Tầng 3, số 595, Giải Phóng, Hoàng Mai, Hà Nội<br />
+						Hotline: 1900 636807 / 0934632682<br />
+						Email: mkt@betacinemas.vn
+					</p>
+					<p>
+						Liên hệ hợp tác kinh doanh:<br />
+						Email: bachtx@betagroup.vn
+					</p>
+				</div>
+			</div>
+		</footer>
+	</main>
+</div>
+<style>
+	/* css footer */
+	footer {
+		background-color: #fff; /* Nền trắng */
+		padding: 40px 0;
+		color: #000; /* Chữ đen */
+		font-family: Arial, sans-serif;
+		border-top: 1px solid rgba(0, 0, 0, 0.1); /* Thanh kẻ ngang mờ mờ */
+	}
 
-                <!-- Forgot Password Modal -->
-                <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Quên mật khẩu</h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" placeholder="Nhập email">
-                                    </div>
-                                    <div class="text-center"><button type="submit" class="btn btn-primary">Gửi yêu cầu</button></div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+	.footer-container {
+		display: flex;
+		justify-content: space-between;
+		max-width: 1200px;
+		margin: 0 auto;
+		flex-wrap: wrap;
+	}
 
-            <article class="content px-4">
-            @Body
-            </article>
-        </main>
-    </div>
+	.footer-column {
+		width: 25%;
+		padding: 0 15px;
+		box-sizing: border-box;
+	}
 
-@* <div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div> *@
-@* <script>
-    //mở modal login khi click Đăng nhập
-    var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-    document.getElementById('loginBtn').addEventListener('click', function () {
-        loginModal.show();
-    });
+		.footer-column h3 {
+			font-size: 18px; /* Giảm kích thước chữ tiêu đề */
+			color: #000; /* Chữ đen */
+			margin-bottom: 15px;
+			font-weight: bold; /* Độ đậm của tiêu đề */
+		}
 
+		.footer-column ul {
+			list-style-type: none;
+			padding: 0;
+		}
 
-    //mở modal register khi click Đăng ký từ navbar
-    var regisModal = new bootstrap.Modal(document.getElementById('regisModal'));
-    document.getElementById('regisBtn').addEventListener('click', function () {
-        regisModal.show();
-    });
-</script> *@
+			.footer-column ul li {
+				margin-bottom: 10px;
+				font-size: 14px; /* Giảm kích thước chữ */
+				font-weight: bold; /* Làm đậm chữ trong danh sách */
+				color: #000; /* Chữ đen */
+			}
+
+				.footer-column ul li a {
+					text-decoration: none;
+					color: #000; /* Chữ đen */
+					font-size: 14px; /* Giảm kích thước chữ liên kết */
+					font-weight: bold; /* Làm đậm chữ liên kết */
+				}
+
+					.footer-column ul li a:hover {
+						color: red; /* Thay đổi màu khi hover thành màu đỏ */
+					}
+
+	.footer-logo {
+		max-width: 100%;
+		height: auto;
+		margin-bottom: 20px;
+	}
+
+	.social-media a img {
+		width: 40px; /* Kích thước icon mạng xã hội */
+		margin-right: 10px;
+	}
+
+	.footer-column p {
+		font-size: 14px; /* Giảm kích thước chữ trong đoạn văn */
+		color: #000; /* Chữ đen */
+		font-weight: bold; /* Làm đậm đoạn văn */
+		line-height: 1.6;
+	}
+
+	.footer-column img {
+		margin-top: 20px;
+	}
+
+	/* Cụm rạp */
+	.footer-column ul li {
+		font-size: 13px; /* Giảm kích thước chữ phần cụm rạp */
+		font-weight: bold; /* Làm đậm chữ phần cụm rạp */
+		color: #000; /* Chữ đen */
+	}
+</style>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
+﻿using Microsoft.EntityFrameworkCore;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Entitis;
 using MovieTicket.Domain.Enums;
@@ -13,14 +10,15 @@ public class MovieTicketReadOnlyDbContext : DbContext
 {
     public MovieTicketReadOnlyDbContext()
     {
-
     }
 
     public MovieTicketReadOnlyDbContext(DbContextOptions<MovieTicketReadOnlyDbContext> options)
         : base(options)
     {
     }
+
     #region DbSet
+
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Bill> Bills { get; set; }
@@ -74,8 +72,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
     public virtual DbSet<VoucherDetail> VoucherDetails { get; set; }
     public virtual DbSet<BillSeat> BillSeats { get; set; }
 
-
-    #endregion
+    #endregion DbSet
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -83,7 +80,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
         // Trung:
-        //optionsBuilder.UseSqlServer("Data Source=ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+        optionsBuilder.UseSqlServer("Data Source=ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
         // Toản:
         //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
@@ -100,6 +97,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
         SeedingData(modelBuilder);
     }
+
     private void SeedingData(ModelBuilder modelBuilder)
     {
         //Account
@@ -157,7 +155,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Status = Domain.Enums.MembershipStatus.Active,
         };
         modelBuilder.Entity<Membership>().HasData(membership);
-        //Film 
+        //Film
         List<Film> films = new List<Film>();
 
         for (int i = 1; i <= 30; i++)
@@ -202,7 +200,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
             cinemaCenters.Add(cinemaCenter);
         }
         modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
-        //Combo 
+        //Combo
         List<Combo> combos = new List<Combo>();
         for (int i = 1; i <= 30; i++)
         {
@@ -228,7 +226,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
             promotions.Add(promotion);
         }
         modelBuilder.Entity<Promotion>().HasData(promotions);
-        //ScreeningDay 
+        //ScreeningDay
         List<ScreeningDay> screeningDays = new List<ScreeningDay>() {
             new ScreeningDay
             {
@@ -332,8 +330,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
                 ScreeningDayId = screeningDays[random.Next(0, screeningDays.Count)].Id,
                 CinemaTypeId = cinemaTypes[random.Next(0, cinemaTypes.Count)].Id,
                 ScreenTypeId = screenTypes[random.Next(0, screenTypes.Count)].Id,
-				Status = TicketPriceStatus.Active
-			};
+                Status = TicketPriceStatus.Active
+            };
             ticketPrice.Add(ticket);
         }
         modelBuilder.Entity<TicketPrice>().HasData(ticketPrice);
@@ -350,7 +348,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
                 Type = "Phụ đề và Lồng tiếng"
             }
         };
-        modelBuilder.Entity<TranslationType>().HasData(translationTypes);  
+        modelBuilder.Entity<TranslationType>().HasData(translationTypes);
         //Cinema
         List<Cinema> cinemas = new List<Cinema>();
         for (int i = 1; i <= 30; i++)
@@ -390,8 +388,5 @@ public class MovieTicketReadOnlyDbContext : DbContext
             showTimes.Add(showTime);
         }
         modelBuilder.Entity<ShowTime>().HasData(showTimes);
-
     }
-
-
 }

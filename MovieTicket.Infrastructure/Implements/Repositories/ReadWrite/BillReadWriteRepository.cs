@@ -1,24 +1,14 @@
 ﻿using AutoMapper;
-using IronBarCode;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Bill;
-using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZXing;
-using ZXing.Common;
-using ZXing.QrCode;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -181,5 +171,4 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
         }
     }
-
 }

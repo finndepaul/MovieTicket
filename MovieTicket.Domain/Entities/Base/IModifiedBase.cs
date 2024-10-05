@@ -5,6 +5,5 @@
         public DateTimeOffset ModifiedTime { get; set; }
 
         public Guid? ModifiedBy { get; set; }
-
     }
 }

@@ -1,11 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs.Combo;
-using MovieTicket.Domain.Entities;
-using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.Application.DataTransferObjs.Bill
 {
@@ -23,5 +16,4 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 
         public BillStatus? Status { get; set; }
     }
-
 }

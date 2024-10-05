@@ -1,5 +1,6 @@
 ﻿@page "/scheduel"
 @inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "Admin")]
 <div class="container-fluid">
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-start" >

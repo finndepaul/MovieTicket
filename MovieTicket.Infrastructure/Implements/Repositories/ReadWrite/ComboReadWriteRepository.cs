@@ -3,23 +3,18 @@ using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
     public class ComboReadWriteRepository : IComboReadWriteRepository
     {
         private readonly MovieTicketReadWriteDbContext dbContext;
-        private readonly IMapper mapper; 
+        private readonly IMapper mapper;
 
         public ComboReadWriteRepository(MovieTicketReadWriteDbContext dbContext, IMapper mapper)
         {
-            this.dbContext = dbContext; 
-            this.mapper = mapper; 
+            this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         public async Task<ComboDto> CreateAsync(CreateComboRequest addComboRequest)
@@ -36,7 +31,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
 
             await dbContext.Combos.AddAsync(combo);
-            await dbContext.SaveChangesAsync(); 
+            await dbContext.SaveChangesAsync();
 
             return mapper.Map<ComboDto>(combo) ?? throw new InvalidOperationException("Mapping resulted in a null ComboDto."); // Ánh xạ từ Combo sang ComboDto và trả về, nếu null thì ném ra ngoại lệ
         }
@@ -55,8 +50,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
 
             dbContext.Combos.Remove(result);
-            await dbContext.SaveChangesAsync(); 
-            return mapper.Map<ComboDto>(result); 
+            await dbContext.SaveChangesAsync();
+            return mapper.Map<ComboDto>(result);
         }
 
         public async Task<ComboDto?> UpdateAsync(Guid id, UpdateComboRequest updateComboRequest)
@@ -78,9 +73,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
 
             mapper.Map(updateComboRequest, result);
-            await dbContext.SaveChangesAsync(); 
-            return mapper.Map<ComboDto>(result); 
+            await dbContext.SaveChangesAsync();
+            return mapper.Map<ComboDto>(result);
         }
     }
-
 }

@@ -20,6 +20,7 @@ namespace MovieTicket.API.Controllers
             _readOnly = readOnly;
             _readWrite = readWrite;
         }
+
         [HttpGet]
         public ActionResult<IQueryable<ShowTimeDto>> GetAll(string? name)
         {
