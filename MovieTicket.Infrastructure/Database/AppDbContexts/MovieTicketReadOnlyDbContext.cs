@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Entitis;
 using MovieTicket.Domain.Enums;
@@ -13,14 +10,15 @@ public class MovieTicketReadOnlyDbContext : DbContext
 {
     public MovieTicketReadOnlyDbContext()
     {
-
     }
 
     public MovieTicketReadOnlyDbContext(DbContextOptions<MovieTicketReadOnlyDbContext> options)
         : base(options)
     {
     }
+
     #region DbSet
+
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<Bill> Bills { get; set; }
@@ -74,8 +72,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
     public virtual DbSet<VoucherDetail> VoucherDetails { get; set; }
     public virtual DbSet<BillSeat> BillSeats { get; set; }
 
-
-    #endregion
+    #endregion DbSet
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -100,6 +97,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
         SeedingData(modelBuilder);
     }
+
 	private void SeedingData(ModelBuilder modelBuilder)
 	{
 		//Account

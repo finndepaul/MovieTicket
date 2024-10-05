@@ -1,5 +1,10 @@
-﻿<div class="navbar-brand">
-	<!-- Login Modal -->
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using MovieTicket.Application.DataTransferObjs.Auth
+@using MovieTicket.BlazorServer.Components.Pages
+@inject NavigationManager Navigation
+
+<div class="navbar-brand">
+	<!-- Login modal -->
 	<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -8,22 +13,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form>
-						<div class="mb-3">
-							<label for="usrname" class="form-label">Email</label>
-							<input type="text" class="form-control" id="usrname" placeholder="Nhập email">
-						</div>
-						<div class="mb-3">
-							<label for="psw" class="form-label">Mật khẩu</label>
-							<input type="password" class="form-control" id="psw" placeholder="Nhập mật khẩu">
-						</div>
-						<div class="mb-3 form-check">
-							<input type="checkbox" class="form-check-input" id="rememberMe" checked>
-							<label class="form-check-label" for="rememberMe">Lưu thông tin đăng nhập</label>
-						</div>
-						<div class="text-center"><button type="submit" class="btn btn-primary">Đăng nhập</button></div>
-
-					</form>
+					<MovieTicket.BlazorServer.Components.Pages.LoginModal />
 				</div>
 				<div class="modal-footer d-flex justify-content-between">
 					<div>
@@ -47,21 +37,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form>
-						<div class="mb-3">
-							<label for="email" class="form-label">Email</label>
-							<input type="email" class="form-control" id="email" placeholder="Nhập email">
-						</div>
-						<div class="mb-3">
-							<label for="password" class="form-label">Mật khẩu</label>
-							<input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu">
-						</div>
-						<div class="mb-3">
-							<label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
-							<input type="password" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu">
-						</div>
-						<div class="text-center"><button type="submit" class="btn btn-primary">Đăng ký</button></div>
-					</form>
+					<MovieTicket.BlazorServer.Components.Pages.User.RegisterModal />
 				</div>
 				<div class="modal-footer d-flex justify-content-between">
 					<div>
@@ -139,8 +115,19 @@
 				</ul>
 			</div>
 			<div class="auth-buttons d-flex justify-content-end">
-				<button type="button" class="btn btn-outline-success me-2" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
-				<button class="btn btn-outline-success me-2" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
+				<div>
+					<AuthorizeView>
+						<Authorized>
+							<p>Xin chào, @context.User.Identity.Name</p>
+							<a href="logout">Đăng xuất</a>
+						</Authorized>
+						<NotAuthorized>
+							<p>Xin chào, Khách</p>
+							<button type="button" class="btn btn-primary btn-lg justify-content-md-end" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+							<button class="btn btn-outline-success me-2" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
+						</NotAuthorized>
+					</AuthorizeView>
+				</div>
 			</div>
 		</div>
 	</nav>
@@ -156,7 +143,7 @@
 	}
 
 	/* Đặt container giới hạn chiều rộng và căn giữa nội dung */
-	
+
 	/* Thêm khoảng cách cho nội dung phía dưới navbar */
 	body {
 		padding-top: 70px; /* Điều chỉnh theo chiều cao của navbar */

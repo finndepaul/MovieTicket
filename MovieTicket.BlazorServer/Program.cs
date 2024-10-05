@@ -1,6 +1,14 @@
+using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using MovieTicket.BlazorServer.Authentication;
 using MovieTicket.BlazorServer.Components;
 using MovieTicket.BlazorServer.Services.Implements;
 using MovieTicket.BlazorServer.Services.Interfaces;
+using System.ComponentModel;
+using System.Text;
 
 namespace MovieTicket.BlazorServer
 {
@@ -14,11 +22,18 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-            builder.Services.AddHttpClient();
-			builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:/44382") });
-			builder.Services.AddScoped<IUserHomeService, UserHomeService>();
-			builder.Services.AddScoped<IAdminHomeService, AdminHomeService>();
-			var app = builder.Build();
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+            builder.Services.AddScoped<IAuthenService, AuthenService>();
+            builder.Services.AddAuthentication()
+    .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
+            builder.Services.AddSingleton<AppState>();
+            //builder.Services.AddTransient<ILoginReadWriteRepository, LoginReadWriteRepository>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868") });
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -31,9 +46,11 @@ namespace MovieTicket.BlazorServer
 
 
             app.UseHttpsRedirection();
+            app.UseRouting();
 
-            app.UseStaticFiles();
+            app.UseAuthorization();
             app.UseAntiforgery();
+            app.UseStaticFiles();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();

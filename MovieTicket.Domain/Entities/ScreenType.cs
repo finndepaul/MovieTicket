@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace MovieTicket.Domain.Entities;
 
-namespace MovieTicket.Domain.Entities;
-
-public  class ScreenType
+public class ScreenType
 {
     public Guid? Id { get; set; }
 
@@ -11,5 +8,4 @@ public  class ScreenType
     public virtual ICollection<ShowTime>? ShowTime { get; set; }
     public virtual ICollection<TicketPrice>? TicketPrices { get; set; }
     public virtual ICollection<FilmScreenType>? FilmScreenTypes { get; set; }
-
 }

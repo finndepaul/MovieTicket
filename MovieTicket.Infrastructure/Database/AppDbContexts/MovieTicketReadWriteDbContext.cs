@@ -1,13 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Entitis;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Database.AppDbContexts
 {

@@ -1,16 +1,9 @@
 ﻿using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.Film
 {
     public class FilmUpdateRequest
     {
-
         public string? Name { get; set; }
 
         public string? EnglishName { get; set; }
@@ -44,7 +37,5 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public string? Poster { get; set; }
 
         public string? Language { get; set; }
-
-
     }
 }

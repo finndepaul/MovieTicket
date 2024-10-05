@@ -1,10 +1,4 @@
-﻿using MovieTicket.Domain.Entities;
-using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.Application.DataTransferObjs.Schedule
 {
@@ -23,6 +17,5 @@ namespace MovieTicket.Application.DataTransferObjs.Schedule
         public ScheduleStatus? Status { get; set; }
 
         public string? FilmName { get; set; }
-
     }
 }
