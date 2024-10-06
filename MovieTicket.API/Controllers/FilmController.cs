@@ -6,7 +6,6 @@ using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MovieTicket.API.Controllers
@@ -18,12 +17,14 @@ namespace MovieTicket.API.Controllers
         private readonly IFilmReadWriteRepository _filmReadWriteRepository;
         private readonly IFilmReadOnlyRepository _filmReadOnlyRepository;
         private readonly IMapper _mapper;
-        public FilmController(IFilmReadWriteRepository filmReadWriteRepository,IMapper mapper,IFilmReadOnlyRepository filmReadOnlyRepository)
-        {   
+
+        public FilmController(IFilmReadWriteRepository filmReadWriteRepository, IMapper mapper, IFilmReadOnlyRepository filmReadOnlyRepository)
+        {
             this._filmReadOnlyRepository = filmReadOnlyRepository;
             this._filmReadWriteRepository = filmReadWriteRepository;
             this._mapper = mapper;
         }
+
         // GET: api/<FilmController>
         [HttpGet]
         public async Task<ActionResult> GetAll()
@@ -52,7 +53,7 @@ namespace MovieTicket.API.Controllers
         [HttpPut]
         public async Task<ActionResult> Update(Guid id, [FromBody] FilmUpdateRequest film)
         {
-            var data = await _filmReadWriteRepository.UpdateFilm(id,_mapper.Map<Film>(film));
+            var data = await _filmReadWriteRepository.UpdateFilm(id, _mapper.Map<Film>(film));
             return Ok(data);
         }
 

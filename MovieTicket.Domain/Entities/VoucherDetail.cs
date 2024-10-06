@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace MovieTicket.Domain.Entities;
 
-namespace MovieTicket.Domain.Entities;
-
-public  class VoucherDetail
+public class VoucherDetail
 {
     public Guid Id { get; set; }
 

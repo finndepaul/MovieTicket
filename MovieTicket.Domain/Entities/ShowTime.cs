@@ -1,12 +1,8 @@
-﻿using MovieTicket.Domain.Entities;
-using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.Domain.Entities;
 
-public  class ShowTime
+public class ShowTime
 {
     public Guid Id { get; set; }
     public Guid? FilmId { get; set; }
@@ -17,8 +13,8 @@ public  class ShowTime
     public Guid? TranslationTypeId { get; set; }
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
-	public DateTime? ShowtimeDate { get; set; } // Ngày chiếu dự trên lịch chiếu
-	public string? Desciption { get; set; }
+    public DateTime? ShowtimeDate { get; set; } // Ngày chiếu dự trên lịch chiếu
+    public string? Desciption { get; set; }
     public ShowtimeStatus? Status { get; set; }
 
     public virtual Cinema? Cinema { get; set; }
