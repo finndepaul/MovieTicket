@@ -13,7 +13,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
 		}
 		public async Task<List<UserHomeDto>> GetAllFilmForUserHome()
 		{
-			var result = await _http.GetFromJsonAsync<List<UserHomeDto>>($"https://localhost:44382/api/UserHome/GetAllFilmForUserHome");
+			var result = await _http.GetFromJsonAsync<List<UserHomeDto>>($"api/UserHome/GetAllFilmForUserHome");
 			return result;
 		}
 	}

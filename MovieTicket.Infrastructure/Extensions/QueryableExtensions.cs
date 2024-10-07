@@ -12,7 +12,7 @@ public static class QueryableExtensions
         this IQueryable<TSourceEntity> queryable, PaginationRequest request,
         CancellationToken cancellationToken)
     {
-        // Force to sort by CreateTime asc 
+        // Force to sort by CreateTime asc
         IQueryable<TSourceEntity> finalQuery = queryable;
 
         // Hit to the db to get data back to client side
@@ -36,7 +36,7 @@ public static class QueryableExtensions
         this IQueryable<TSourceEntity> queryable, PaginationRequest request, IMapper mapper,
         CancellationToken cancellationToken) where TSourceEntity : ICreatedBase
     {
-        // Force to sort by CreateTime asc 
+        // Force to sort by CreateTime asc
         IQueryable<TSourceEntity> finalQuery = queryable.OrderByDescending(x => x.CreatedTime);
 
         // Hit to the db to get data back to client side

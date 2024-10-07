@@ -6,6 +6,7 @@ namespace MovieTicket.Infrastructure.Extensions
     public class Hash
     {
         private const string Key = "h4mX#u2Dv@9s8FHg";
+
         // mã hóa
         public static string EncryptPassword(string password)
         {

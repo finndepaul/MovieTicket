@@ -1,25 +1,21 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
     public class FilmReadOnlyRepostitory : IFilmReadOnlyRepository
     {
         private MovieTicketReadWriteDbContext context;
+
         public FilmReadOnlyRepostitory()
         {
             context = new MovieTicketReadWriteDbContext();
         }
+
         public async Task<IQueryable<FilmDto>> GetAllFilm()
-        {   
+        {
             var films = context.Films.Where(films => films.Status != FilmStatus.Ended).Select(film => new FilmDto
             {
                 Id = film.Id,

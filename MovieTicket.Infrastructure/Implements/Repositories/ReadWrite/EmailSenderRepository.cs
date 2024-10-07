@@ -1,16 +1,9 @@
-﻿using Azure.Core;
-using MailKit.Security;
+﻿using MailKit.Security;
 using MimeKit;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -28,7 +21,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             var account = _db.Accounts.FirstOrDefault(x => x.Email == email);
             if (account != null)
             {
-
                 var mail = "dangnguyen300708@gmail.com";
                 var appPassword = "fkab oshv bwin jyay"; // Mã xác thực một lần tạo từ tài khoản Gmail của bạn
                 var emailMessage = new MimeMessage();
@@ -48,7 +40,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 </a>";
 
                     emailMessage.Body = bodyBuilder.ToMessageBody();
-
                 }
                 if (type == EmailType.ForgotPassword)
                 {
@@ -73,7 +64,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     await _db.SaveChangesAsync();
                 }
 
-
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
                     client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
@@ -85,6 +75,5 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
             return false;
         }
-
     }
 }

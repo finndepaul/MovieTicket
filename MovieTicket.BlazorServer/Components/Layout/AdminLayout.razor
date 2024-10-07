@@ -1,17 +1,29 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Routing
 @using static MovieTicket.BlazorServer.Components.BreadCrumb
 @inject NavigationManager Navigation
+                    
 <div style="overflow: hidden;  height: 100vh;">
 <div class="page">
     <div class="sidebar">
-        <AdminNavMenu />
+        <AuthorizeView>
+            <Authorized>
+                <AdminNavMenu />
+            </Authorized>
+        </AuthorizeView>
+        
     </div>
     <main>
         <div class="navbar-brand py-1" style="position: relative">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="button" class="btn btn-outline-danger btn-lg" @onclick="NavigationLogout">Đăng xuất</button>
-            </div>
+            <AuthorizeView>
+                <Authorized>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <p class="text-end">Xin chào, @context.User.Identity.Name</p>
+                        <a href="logout">Đăng xuất</a>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+            
         </div>
         <article class="content" style="background-color: rgb(245, 245, 245)">
             <BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />

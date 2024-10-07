@@ -1,11 +1,9 @@
 ﻿using MovieTicket.Domain.Entitis;
 using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
 
-public  class TicketPrice
+public class TicketPrice
 {
     public Guid Id { get; set; }
 

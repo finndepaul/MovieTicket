@@ -1,8 +1,10 @@
 @page "/admin"
+@attribute [Authorize(Roles = "Admin")]
 @using Microsoft.AspNetCore.Authorization
 @using MovieTicket.Application.DataTransferObjs.AdminHome
 @using MovieTicket.BlazorServer.Services.Interfaces
 @inject IAdminHomeService _ser;
+
 <div class="container-fluid">
 	<div class="row my-3">
 		<div class="col mx-2 p-3"
@@ -159,8 +161,8 @@
 	protected override async Task OnInitializedAsync()
 	{
 		generalDto = await _ser.GetAdminGeneralAsync();
-		revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year,date.Month,1),new DateTime(date.Year,date.Month,DateTime.DaysInMonth(date.Year,date.Month)));
-		revenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
+		// revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year,date.Month,1),new DateTime(date.Year,date.Month,DateTime.DaysInMonth(date.Year,date.Month)));
+		//revenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
 	}
 }
 <script>

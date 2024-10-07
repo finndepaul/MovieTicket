@@ -1,16 +1,13 @@
-﻿using MovieTicket.Application.DataTransferObjs.Auth;
+﻿using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Auth.Requests;
-using MovieTicket.Application.ValueObjs.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
-    public interface ILoginReadWriteRepository
-    {
-        Task<ResponseObject<LoginDto>> Login(LoginRequest loginRequest, CancellationToken cancellationToken);
-    }
+	public interface ILoginReadWriteRepository
+	{
+		Task<LoginRespone> LoginAsync(LoginDTO loginModel);
+
+		LoginRespone RefreshToken(UserSession userSession);
+	}
 }

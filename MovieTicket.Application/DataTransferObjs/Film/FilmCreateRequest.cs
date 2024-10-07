@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieTicket.Application.DataTransferObjs.Film
+﻿namespace MovieTicket.Application.DataTransferObjs.Film
 {
     public class FilmCreateRequest
     {
@@ -41,7 +35,5 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public string? Poster { get; set; }
 
         public string? Language { get; set; }
-
-
     }
 }

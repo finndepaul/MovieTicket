@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Enums;
@@ -7,7 +6,6 @@ using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
 {
-
     [Route(API_Route.DEFAULT_CONTROLLER_ROUTE)]
     [ApiController]
     public class AccountUtilitiesController : ControllerBase
@@ -22,21 +20,23 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request,CancellationToken cancellationToken)
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request, CancellationToken cancellationToken)
         {
-           await _accountService.ChangePasswordAsync(request,cancellationToken);
+            await _accountService.ChangePasswordAsync(request, cancellationToken);
             return Ok();
         }
+
         [HttpPut]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request,CancellationToken cancellationToken)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request, CancellationToken cancellationToken)
         {
-            await _accountService.ForgotPasswordAsync(request,cancellationToken);
+            await _accountService.ForgotPasswordAsync(request, cancellationToken);
             return Ok();
         }
+
         [HttpPost]
-        public async Task<IActionResult> SendEmail(string email,EmailType type,CancellationToken cancellationToken)
+        public async Task<IActionResult> SendEmail(string email, EmailType type, CancellationToken cancellationToken)
         {
-           var result = await _emailService.SendEmail(email,type,cancellationToken);
+            var result = await _emailService.SendEmail(email, type, cancellationToken);
             return Ok(result);
         }
     }

@@ -1,0 +1,39 @@
+﻿@page "/login"
+@using MovieTicket.Application.DataTransferObjs.Auth
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+   <DataAnnotationsValidator />
+   <ValidationSummary />
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <InputText id="username" class="form-control" @bind-Value="loginModel.Username" />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+@code {
+    private LoginDTO loginModel = new ();
+
+    private async Task HandleLogin()
+    {
+        LoginRespone response = await AuthenService.LoginAsync(loginModel);
+        if(!response.Flag)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+        var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
+        customState.UpdateAuthenticationState(response.JWTToken);
+        CustomeUserClaims claims = DecryptJWTService.DecryptToken(response.JWTToken);
+        if(claims.Role == "Admin")
+        {
+            NavigationManager.NavigateTo("/admin", forceLoad: true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

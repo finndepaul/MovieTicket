@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MovieTicket.Domain.Entities;
 using MovieTicket.Application.DataTransferObjs.Film;
+using MovieTicket.Domain.Entities;
 
 namespace MovieTicket.Infrastructure.Extensions.AutoMapperProfiles
 {

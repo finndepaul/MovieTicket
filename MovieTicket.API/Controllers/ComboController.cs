@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
-using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -26,7 +25,7 @@ namespace MovieTicket.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok( await comboReadOnly.GetAllAsync());
+            return Ok(await comboReadOnly.GetAllAsync());
         }
 
         [HttpGet]
@@ -57,5 +56,4 @@ namespace MovieTicket.API.Controllers
             return Ok(comboDTOs);
         }
     }
-
 }
