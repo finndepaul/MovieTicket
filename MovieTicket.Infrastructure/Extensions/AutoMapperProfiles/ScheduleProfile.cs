@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MovieTicket.Application.DataTransferObjs.Schedule;
+using MovieTicket.Application.DataTransferObjs.Schedule.Request;
 using MovieTicket.Domain.Entities;
 using System;
 using System.Collections.Generic;

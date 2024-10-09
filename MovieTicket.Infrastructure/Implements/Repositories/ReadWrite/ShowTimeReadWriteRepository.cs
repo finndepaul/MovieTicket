@@ -34,12 +34,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					   .FirstOrDefaultAsync();
 			// Tìm thời gian bắt đầu và kết thúc của lịch chiếu phim
 			var dateTime = await _db.Schedules
-						.Where(x => x.FilmId == showTime.FilmId && x.Status.Value == ScheduleStatus.ComingSoon || x.Status.Value == ScheduleStatus.Showing)
+						.Where(x => x.FilmId == showTime.FilmId && x.Status == ScheduleStatus.ComingSoon || x.Status == ScheduleStatus.Showing)
 						.FirstOrDefaultAsync();
 			// Tìm suất chiếu có thời gian bắt đầu và kết thúc trùng nhau
 			var showTimeExist = await _db.ShowTimes
 					   .Where(st => st.CinemaId == showTime.CinemaId && st.ScreenTypeId == showTime.ScreenTypeId && st.ShowtimeDate.Value == DateTime.Today)
-					   .FirstOrDefaultAsync();
+					   .FirstOrDefaultAsync();	
 			//Check null
 			if (!showTime.FilmId.HasValue || !showTime.ScheduleId.HasValue ||
 				!showTime.CinemaCenterId.HasValue || !showTime.CinemaId.HasValue ||

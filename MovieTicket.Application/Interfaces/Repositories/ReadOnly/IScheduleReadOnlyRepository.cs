@@ -13,5 +13,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
         Task<IQueryable<ScheduleDto>> GetAllAsync();
         Task<ScheduleDto?> GetByIdAsync(Guid id);
         Task<IQueryable<ScheduleDto>> GetByFilmIdAsync(Guid filmId);
+        Task<IQueryable<FilmForCreateDto>> GetFilmForCreateAsync();
     }
 }

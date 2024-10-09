@@ -16,6 +16,7 @@ namespace MovieTicket.BlazorServer
                 .AddInteractiveServerComponents();
             builder.Services.AddHttpClient();
 			builder.Services.AddScoped<IUserHomeService, UserHomeService>();
+			builder.Services.AddScoped<IScheduelService, ScheduelService>();
 			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
