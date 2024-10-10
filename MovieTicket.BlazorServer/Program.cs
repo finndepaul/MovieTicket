@@ -1,6 +1,12 @@
 using MovieTicket.BlazorServer.Components;
 using MovieTicket.BlazorServer.Services.Implements;
+using MovieTicket.BlazorServer.Services.Implements.FilmService;
+using MovieTicket.BlazorServer.Services.Implements.ScreenTypeService;
+using MovieTicket.BlazorServer.Services.Implements.TranslationTypeService;
 using MovieTicket.BlazorServer.Services.Interfaces;
+using MovieTicket.BlazorServer.Services.Interfaces.IFilmService;
+using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService;
+using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService;
 
 namespace MovieTicket.BlazorServer
 {
@@ -16,8 +22,12 @@ namespace MovieTicket.BlazorServer
                 .AddInteractiveServerComponents();
             builder.Services.AddHttpClient();
 			builder.Services.AddScoped<IUserHomeService, UserHomeService>();
-			var app = builder.Build();
-
+			builder.Services.AddScoped<IFilmService, FilmService>();
+            builder.Services.AddScoped<IScreenTypeService, ScreenTypeService>();
+            builder.Services.AddScoped<ITranslationTypeService, TranslationTypeService>();
+            builder.Services.AddScoped<IFileUpload, FileUpload>();
+            var app = builder.Build();
+            
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

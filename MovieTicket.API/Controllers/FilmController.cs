@@ -6,9 +6,6 @@ using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace MovieTicket.API.Controllers
 {
     [Route(API_Route.DEFAULT_CONTROLLER_ROUTE)]
@@ -17,12 +14,10 @@ namespace MovieTicket.API.Controllers
     {
         private readonly IFilmReadWriteRepository _filmReadWriteRepository;
         private readonly IFilmReadOnlyRepository _filmReadOnlyRepository;
-        private readonly IMapper _mapper;
-        public FilmController(IFilmReadWriteRepository filmReadWriteRepository,IMapper mapper,IFilmReadOnlyRepository filmReadOnlyRepository)
+        public FilmController(IFilmReadWriteRepository filmReadWriteRepository,IFilmReadOnlyRepository filmReadOnlyRepository)
         {   
-            this._filmReadOnlyRepository = filmReadOnlyRepository;
-            this._filmReadWriteRepository = filmReadWriteRepository;
-            this._mapper = mapper;
+            _filmReadOnlyRepository = filmReadOnlyRepository;
+            _filmReadWriteRepository = filmReadWriteRepository;
         }
         // GET: api/<FilmController>
         [HttpGet]
@@ -44,7 +39,7 @@ namespace MovieTicket.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] FilmCreateRequest film)
         {
-            var data = await _filmReadWriteRepository.CreateFilm(_mapper.Map<Film>(film));
+            var data = await _filmReadWriteRepository.CreateFilm(film);
             return Ok(data);
         }
 
@@ -52,7 +47,7 @@ namespace MovieTicket.API.Controllers
         [HttpPut]
         public async Task<ActionResult> Update(Guid id, [FromBody] FilmUpdateRequest film)
         {
-            var data = await _filmReadWriteRepository.UpdateFilm(id,_mapper.Map<Film>(film));
+            var data = await _filmReadWriteRepository.UpdateFilm(id, film);
             return Ok(data);
         }
 

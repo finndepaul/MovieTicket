@@ -1,115 +1,220 @@
-﻿@page "/update-film"
-
+﻿@page "/film/update/{Id:guid}"
+@using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.DataTransferObjs.ScreenType
+@using MovieTicket.Application.DataTransferObjs.TranslationType
+@using MovieTicket.BlazorServer.Services.Interfaces.IFilmService
+@using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService
+@using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService
+@using MovieTicket.Domain.Enums
+@inject IFilmService FilmService
+@inject NavigationManager NavigationManager
+@inject IFileUpload FileUploadService
+@inject IJSRuntime _JSRuntime
+@inject ITranslationTypeService TranslationTypeService
+@inject IScreenTypeService ScreenTypeService
 <div class="container-fluid">
-    <div class="d-flex mb-3">
-        <button class="btn btn-outline-secondary">Quay lại</button>
-        <button type="submit" class="btn btn-primary ms-1">Cập nhật</button>
-        <button class="btn btn-danger ms-1">Xóa phim</button>
-    </div>
-    <form>
+    <button class="btn btn-outline-secondary mb-3" @onclick="GoBack">Quay lại</button>
+
+    <EditForm Model="filmUpdateRequest" OnValidSubmit="HandleFilmUpdate">
+        <DataAnnotationsValidator />
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="movieTitle" class="form-label">Tên phim</label>
-                <input type="text" class="form-control" id="movieTitle" placeholder="Tên phim" value="Furiosa: Câu Chuyện Từ Max Điên">
+                <label for="tenPhim" class="form-label">Tên phim</label>
+                <input type="text" class="form-control" id="tenPhim" @bind="filmUpdateRequest.Name" placeholder="Enter name">
+                <ValidationMessage For="@(() => filmUpdateRequest.Name)" />
             </div>
             <div class="col-md-6">
-                <label for="screeningFormat" class="form-label">Hình thức chiếu</label>
-                <select class="form-select" id="screeningFormat">
-                    <option selected>2D</option>
-                </select>
+                <label for="hinhThucChieu" class="form-label">Hình thức chiếu</label>
+                <InputSelect class="form-control" id="hinhThucChieu" @bind-Value="@selectedScreenTypeId">
+                    @foreach (var screenType in screenTypes)
+                    {
+                        <option value="@screenType.Id">@screenType.Type</option>
+                    }
+                </InputSelect>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="movieTitleEnglish" class="form-label">Tên phim (tiếng anh)</label>
-                <input type="text" class="form-control" id="movieTitleEnglish" placeholder="Tên phim (tiếng anh)" value="Furiosa: A Mad Max Saga">
+                <label for="tenPhimEng" class="form-label">Tên phim (tiếng anh)</label>
+                <input type="text" class="form-control" id="tenPhimEng" @bind="filmUpdateRequest.EnglishName" placeholder="Enter english name">
+                <ValidationMessage For="@(() => filmUpdateRequest.EnglishName)" />
             </div>
             <div class="col-md-6">
-                <label for="subtitleOption" class="form-label">Hình thức dịch</label>
-                <select class="form-select" id="subtitleOption">
-                    <option selected>Phụ đề</option>
-                </select>
+                <label for="hinhThucDich" class="form-label">Hình thức dịch</label>
+                <InputSelect  class="form-control" id="hinhThucDich" @bind-Value="filmUpdateRequest.TranslationTypeIds">
+                    @foreach (var translationType in translationTypes)
+                    {
+                        <option value="@translationType.Id">@translationType.Type</option>
+                    }
+                    @if (filmUpdateRequest.TranslationTypeIds != null)
+                    {
+                        <option selected value="">TranslationTypeName</option>
+                    }
+                </InputSelect>
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="trailerLink" class="form-label">Trailer</label>
-                <input type="text" class="form-control" id="trailerLink" placeholder="URL của trailer" value="https://www.youtube.com/embed/Yz96EBNwMGw?si=Q6ipYZPKhUdAHGsd">
+                <label for="trailer" class="form-label">Trailer</label>
+                <input type="text" class="form-control" id="trailer" @bind="filmUpdateRequest.Trailer" placeholder="Enter trailer">
+                <ValidationMessage For="@(() => filmUpdateRequest.Trailer)" />
             </div>
             <div class="col-md-6">
-                <label for="ageRating" class="form-label">Độ tuổi xem phim</label>
-                <select class="form-select" id="ageRating">
-                    <option selected>T16</option>
-                </select>
+                <label for="doTuoi" class="form-label">Độ tuổi xem phim</label>
+                <input type="number" class="form-control" id="doTuoi" @bind="filmUpdateRequest.Rating" placeholder="Enter rating">
+                <ValidationMessage For="@(() => filmUpdateRequest.Rating)" />
             </div>
         </div>
 
         <div class="mb-3">
-            <label for="movieDescription" class="form-label">Mô tả</label>
-            <textarea class="form-control" id="movieDescription" rows="3">Câu chuyện bắt đầu từ lúc Thế giới sụp đổ, Furiosa phải tự cứu lấy mình để trở về nhà. Một cuộc phiêu lưu hành động độc lập khốc liệt, tiên truyện về Max Điên.</textarea>
+            <label for="moTa" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="moTa" @bind="filmUpdateRequest.Description" rows="3" placeholder="Enter description"></textarea>
+            <ValidationMessage For="@(() => filmUpdateRequest.Description)" />
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="genre" class="form-label">Thể loại</label>
-                <select multiple class="form-select" id="genre">
-                    <option selected>Khoa học - Viễn tưởng</option>
-                    <option selected>Gây cấn</option>
-                    <option selected>Hành động</option>
-                </select>
+                <label for="theLoai" class="form-label">Thể loại</label>
+                <input type="text" class="form-control" id="theLoai" @bind="filmUpdateRequest.Gerne" placeholder="Enter genre">
+                <ValidationMessage For="@(() => filmUpdateRequest.Gerne)" />
             </div>
             <div class="col-md-4">
-                <label for="director" class="form-label">Đạo diễn</label>
-                <input type="text" class="form-control" id="director" placeholder="Đạo diễn" value="Anya Taylor-Joy">
+                <label for="daoDien" class="form-label">Đạo diễn</label>
+                <input type="text" class="form-control" id="daoDien" @bind="filmUpdateRequest.Director" placeholder="Enter director">
+                <ValidationMessage For="@(() => filmUpdateRequest.Director)" />
             </div>
             <div class="col-md-4">
-                <label for="actors" class="form-label">Diễn viên</label>
-                <input type="text" class="form-control" id="actors" placeholder="Diễn viên" value="Nathan Jones, Chris Hemsworth, Alyla Browne, Goran D. Kleut, Tom Burke, Lachy Hulme, Angus Sampson, C.J. Bloomfield, Daniel Webber">
+                <label for="dienVien" class="form-label">Diễn viên</label>
+                <input type="text" class="form-control" id="dienVien" @bind="filmUpdateRequest.Cast" placeholder="Enter cast">
+                <ValidationMessage For="@(() => filmUpdateRequest.Cast)" />
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="releaseDate" class="form-label">Ngày chiếu</label>
-                <input type="date" class="form-control" id="releaseDate" value="2024-05-17">
+                <label for="ngayChieu" class="form-label">Lịch chiếu</label>
+                <input type="date" class="form-control" id="ngayChieu" @bind="filmUpdateRequest.StartDate">
+                <ValidationMessage For="@(() => filmUpdateRequest.StartDate)" />
             </div>
             <div class="col-md-4">
-                <label for="releaseYear" class="form-label">Năm phát hành</label>
-                <input type="text" class="form-control" id="releaseYear" placeholder="2024" value="2024">
+                <label for="namPhatHanh" class="form-label">Năm phát hành</label>
+                <input type="number" class="form-control" id="namPhatHanh" @bind="filmUpdateRequest.ReleaseYear" placeholder="Enter release year">
+                <ValidationMessage For="@(() => filmUpdateRequest.ReleaseYear)" />
             </div>
             <div class="col-md-4">
-                <label for="duration" class="form-label">Thời lượng phim (phút)</label>
-                <input type="number" class="form-control" id="duration" placeholder="100" value="100">
+                <label for="thoiLuong" class="form-label">Thời lượng phim (phút)</label>
+                <input type="number" class="form-control" id="thoiLuong" @bind="filmUpdateRequest.RunningTime" placeholder="Enter duration">
+                <ValidationMessage For="@(() => filmUpdateRequest.RunningTime)" />
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="status" class="form-label">Trạng thái</label>
-                <select class="form-select" id="status">
-                    <option selected>Công khai</option>
+                <label for="trangThai" class="form-label">Trạng thái</label>
+                <select class="form-select" id="trangThai" @bind="filmUpdateRequest.Status">
+                    <option selected>Select a status</option>
+                    @foreach (var Item in Enum.GetValues(typeof(FilmStatus)))
+                    {
+                        <option value="@Item">@Item</option>
+                    }
                 </select>
             </div>
             <div class="col-md-6">
-                <label for="country" class="form-label">Quốc gia</label>
-                <select class="form-select" id="country">
-                    <option selected>Mỹ</option>
-                </select>
+                <label for="quocGia" class="form-label">Quốc gia</label>
+                <input type="text" class="form-control" id="quocGia" @bind="filmUpdateRequest.Nation" placeholder="Enter nation">
+                <ValidationMessage For="@(() => filmUpdateRequest.Nation)" />
             </div>
         </div>
 
-        <div class="mb-3">
-            <label for="movieImage" class="form-label">Hình ảnh</label>
-            <div class="d-flex align-items-center">
-                <img src="https://homepage.momocdn.net/blogscontents/momo-upload-api-200903144136-637347408969132628.jpg" alt="Movie Image" class="img-thumbnail object-fit-contain" style="width: 400px; height: 400px;">
-                <button type="button" class="btn btn-primary ms-3">Thay đổi ảnh phim</button>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="language" class="form-label">Ngôn ngữ</label>
+                <input type="text" class="form-control" id="language" @bind="filmUpdateRequest.Language" placeholder="Enter language">
+                <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
+            </div>
+            <div class="col-md-6">
+                <label for="poster" class="form-label">Poster</label>
+                <InputFile OnChange="OnInputFileChange" class="form-control" />
             </div>
         </div>
-    </form>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
 </div>
 
 @code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private FilmUpdateRequest filmUpdateRequest = new FilmUpdateRequest();
+    private FilmDto filmDto = new FilmDto();
+    private IBrowserFile? posterFile;
+    //Lấy danh sách hình thức chiếu và dịch
+    private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
+    private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
+    private Guid selectedScreenTypeId;
+    private Guid selectedTranslationTypeId;
+    protected async override Task OnInitializedAsync()
+    {
+        //Lấy thông tin phim theo id
+        filmDto = await FilmService.GetById(Id);
+        //Gọi API lấy danh sách hình thức chiếu và dịch
+        screenTypes = await ScreenTypeService.GetAllScreenTypes();
+        translationTypes = await TranslationTypeService.GetAllTranslationTypes();
+        filmUpdateRequest = new FilmUpdateRequest()
+            {
+                Name = filmDto.Name,
+                EnglishName = filmDto.EnglishName,
+                Description = filmDto.Description,
+                Gerne = filmDto.Gerne,
+                Director = filmDto.Director,
+                Cast = filmDto.Cast,
+                StartDate = filmDto.StartDate,
+                ReleaseYear = filmDto.ReleaseYear,
+                RunningTime = filmDto.RunningTime,
+                Status = filmDto.Status,
+                Nation = filmDto.Nation,
+                Language = filmDto.Language,
+                Poster = filmDto.Poster,
+                Trailer = filmDto.Trailer,
+                Rating = filmDto.Rating,
+                ScreenTypeIds = filmDto.ScreenTypeIds,
+                TranslationTypeIds = filmDto.TranslationTypeIds,
+            };
+        selectedScreenTypeId = filmDto.ScreenTypeIds.FirstOrDefault();
+        selectedTranslationTypeId = filmDto.TranslationTypeIds.FirstOrDefault();
+        
+    }
 
+    private async Task HandleFilmUpdate()
+    {
+        if (posterFile != null)
+        {
+            filmUpdateRequest.Poster = await FileUploadService.UploadFile(posterFile);
+        }
+
+        filmUpdateRequest.ScreenTypeIds = new List<Guid> { selectedScreenTypeId };
+        filmUpdateRequest.TranslationTypeIds = new List<Guid> { selectedTranslationTypeId };
+
+        var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
+        if (response != null)
+        {
+            await _JSRuntime.ToastrSuccess("Update film successfully");
+            NavigationManager.NavigateTo("/list-film");
+        }
+        else
+        {
+            await _JSRuntime.ToastrError("Update film failed");
+        }
+
+    }
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        posterFile = e.File;
+    }
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/list-film");
+    }
 }
