@@ -1,0 +1,78 @@
+﻿@page "/add-scheduel"
+@using MovieTicket.Application.DataTransferObjs.Schedule
+@using MovieTicket.Application.DataTransferObjs.Schedule.Request
+@using MovieTicket.BlazorServer.Services.Interfaces
+@inject NavigationManager _navigationManager;
+@inject IScheduelService _scheduleService;
+
+<EditForm Model="request" OnValidSubmit="HandleAddScheduel">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="selectFilm">Phim chiếu</label>
+        <select class="form-select" id="selectFilm" @onchange="OnFilmSelected">
+            <option disabled selected>Select a film...</option>
+            @if (Films != null)
+            {
+                @foreach (var film in Films)
+                {
+                    <option value="@film.Id">@film.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="date">Thời gian khởi chiếu</label>
+        <input type="date" class="form-control" name="date" disabled value="@SelectedFilmReleaseDate" />
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="startDate">Ngày bắt đầu</label>
+        <input type="date" class="form-control" id="startDate" @bind-value="request.StartDate" />
+    </div>
+
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="endDate">Ngày kết thúc</label>
+        <input type="date" class="form-control" id="endDate" @bind-value="request.EndDate" />
+    </div>
+    <div class="text-center"><button type="submit" class="btn btn-primary">Lưu</button></div>
+</EditForm>
+
+@code {
+    private CreateScheduleRequest request = new CreateScheduleRequest();
+    private IQueryable<FilmForCreateDto> Films { get; set; }
+    private string SelectedFilmReleaseDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
+    string selectedFilmId;
+
+    private async Task HandleAddScheduel()
+    {
+        request.FilmId = Guid.Parse(selectedFilmId);
+        var result = await _scheduleService.CreateAsync(request);
+        if (result)
+        {
+            _navigationManager.NavigateTo("/scheduel", forceLoad: true);
+        }
+        else
+        {
+            throw new Exception("Failed to add scheduel");
+        }
+    }
+
+    private void OnFilmSelected(ChangeEventArgs e)
+    {
+        selectedFilmId = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(selectedFilmId))
+        {
+            var selectedFilm = Films.FirstOrDefault(f => f.Id.ToString() == selectedFilmId);
+            if (selectedFilm != null)
+            {
+                SelectedFilmReleaseDate = selectedFilm.StartDate.ToString("yyyy-MM-dd");
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Films = await _scheduleService.GetFilmAsync();
+    }
+}
