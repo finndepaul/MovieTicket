@@ -1,12 +1,20 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using MovieTicket.Application.DataTransferObjs.Bill;
+using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.DataTransferObjs.Schedule;
+using MovieTicket.Application.DataTransferObjs.Schedule.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -73,12 +81,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         }
 
         // Phương thức cập nhật một lịch chiếu
-        public async Task<ResponseObject<ScheduleDto?>> UpdateAsync(Guid id, UpdateScheduleRequest updateScheduleRequest)
+        public async Task<ResponseObject<ScheduleDto?>> UpdateAsync(UpdateScheduleRequest updateScheduleRequest)
         {
             try
             {
                 // Tìm lịch chiếu theo id
-                var scheduleEntity = await dbContext.Schedules.FindAsync(id);
+                var scheduleEntity = await dbContext.Schedules.FindAsync(updateScheduleRequest.Id);
                 if (scheduleEntity == null)
                 {
                     return new ResponseObject<ScheduleDto?>
@@ -86,24 +94,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Data = null,
                         Status = StatusCodes.Status404NotFound,
                         Message = "Schedule not found"
-                    };
-                }
-
-                // Kiểm tra trùng lặp lịch chiếu
-                bool isDuplicate = await dbContext.Schedules.AnyAsync(s =>
-                    s.Id != id &&
-                    s.FilmId == updateScheduleRequest.FilmId &&
-                    ((updateScheduleRequest.StartDate >= s.StartDate && updateScheduleRequest.StartDate <= s.EndDate) ||
-                    (updateScheduleRequest.EndDate >= s.StartDate && updateScheduleRequest.EndDate <= s.EndDate) ||
-                    (updateScheduleRequest.StartDate <= s.StartDate && updateScheduleRequest.EndDate >= s.EndDate)));
-
-                if (isDuplicate)
-                {
-                    return new ResponseObject<ScheduleDto?>
-                    {
-                        Data = null,
-                        Status = StatusCodes.Status400BadRequest,
-                        Message = "Schedule for the given film and date range already exists."
                     };
                 }
 
