@@ -1,20 +1,36 @@
 ﻿@page "/create-film"
+@using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.DataTransferObjs.ScreenType
+@using MovieTicket.Application.DataTransferObjs.TranslationType
+@using MovieTicket.BlazorServer.Services.Interfaces.IFilmService
+@using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService
+@using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService
+@using MovieTicket.Domain.Enums
+@inject IFilmService FilmService
+@inject IFileUpload FileUploadService
+@inject IScreenTypeService ScreenTypeService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime _JSRuntime
+@inject ITranslationTypeService TranslationTypeService
 
 <div class="container-fluid">
-    <button class="btn btn-outline-secondary mb-3">Quay lại</button>
-    <button class="btn btn-primary mb-3">+ Tạo phim</button>
-
-    <form>
+    <button class="btn btn-outline-secondary mb-3" @onclick="GoBack">Quay lại</button>
+    <EditForm Model="filmCreateRequest" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="tenPhim" class="form-label">Tên phim</label>
-                <input type="text" class="form-control" id="tenPhim" placeholder="Enter name">
+                <input type="text" class="form-control" id="tenPhim" @bind="filmCreateRequest.Name" placeholder="Enter name">
+                <ValidationMessage For="@(() => filmCreateRequest.Name)" />
             </div>
             <div class="col-md-6">
                 <label for="hinhThucChieu" class="form-label">Hình thức chiếu</label>
-                <select class="form-select" id="hinhThucChieu">
-                    <option selected>Select a graphics</option>
-                    <!-- Options -->
+                <select class="form-select" id="hinhThucChieu" @bind="selectedScreenTypeId">
+                    <option selected>Select a screen type</option>
+                    @foreach (var screenType in screenTypes)
+                    {
+                        <option value="@screenType.Id">@screenType.Type</option>
+                    }
                 </select>
             </div>
         </div>
@@ -22,13 +38,17 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="tenPhimEng" class="form-label">Tên phim (tiếng anh)</label>
-                <input type="text" class="form-control" id="tenPhimEng" placeholder="Enter english name">
+                <input type="text" class="form-control" id="tenPhimEng" @bind="filmCreateRequest.EnglishName" placeholder="Enter english name">
+                <ValidationMessage For="@(() => filmCreateRequest.EnglishName)" />
             </div>
             <div class="col-md-6">
                 <label for="hinhThucDich" class="form-label">Hình thức dịch</label>
-                <select class="form-select" id="hinhThucDich">
-                    <option selected>Select a graphics</option>
-                    <!-- Options -->
+                <select class="form-select" id="hinhThucChieu" @bind="translationTypeId">
+                    <option selected>Select a translation type</option>
+                    @foreach (var translationType in translationTypes)
+                    {
+                        <option value="@translationType.Id">@translationType.Type</option>
+                    }
                 </select>
             </div>
         </div>
@@ -36,80 +56,128 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="trailer" class="form-label">Trailer</label>
-                <input type="text" class="form-control" id="trailer" placeholder="Enter trailer">
+                <input type="text" class="form-control" id="trailer" @bind="filmCreateRequest.Trailer" placeholder="Enter trailer">
+                <ValidationMessage For="@(() => filmCreateRequest.Trailer)" />
             </div>
             <div class="col-md-6">
                 <label for="doTuoi" class="form-label">Độ tuổi xem phim</label>
-                <select class="form-select" id="doTuoi">
-                    <option selected>Select an age</option>
-                    <!-- Options -->
-                </select>
+                <input type="number" class="form-control" id="doTuoi" @bind="filmCreateRequest.Rating" placeholder="Enter rating">
+                <ValidationMessage For="@(() => filmCreateRequest.Rating)" />
             </div>
         </div>
 
         <div class="mb-3">
             <label for="moTa" class="form-label">Mô tả</label>
-            <textarea class="form-control" id="moTa" rows="3" placeholder="Enter description"></textarea>
+            <textarea class="form-control" id="moTa" @bind="filmCreateRequest.Description" rows="3" placeholder="Enter description"></textarea>
+            <ValidationMessage For="@(() => filmCreateRequest.Description)" />
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="theLoai" class="form-label">Thể loại</label>
-                <select class="form-select" id="theLoai">
-                    <option selected>Select genres</option>
-                    <!-- Options -->
-                </select>
+                <input type="text" class="form-control" id="theLoai" @bind="filmCreateRequest.Gerne" placeholder="Enter genre">
+                <ValidationMessage For="@(() => filmCreateRequest.Gerne)" />
             </div>
             <div class="col-md-4">
                 <label for="daoDien" class="form-label">Đạo diễn</label>
-                <select class="form-select" id="daoDien">
-                    <option selected>Select directors</option>
-                    <!-- Options -->
-                </select>
+                <input type="text" class="form-control" id="daoDien" @bind="filmCreateRequest.Director" placeholder="Enter director">
+                <ValidationMessage For="@(() => filmCreateRequest.Director)" />
             </div>
             <div class="col-md-4">
                 <label for="dienVien" class="form-label">Diễn viên</label>
-                <select class="form-select" id="dienVien">
-                    <option selected>Select actors</option>
-                    <!-- Options -->
-                </select>
+                <input type="text" class="form-control" id="dienVien" @bind="filmCreateRequest.Cast" placeholder="Enter cast">
+                <ValidationMessage For="@(() => filmCreateRequest.Cast)" />
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="ngayChieu" class="form-label">Ngày chiếu</label>
-                <input type="date" class="form-control" id="ngayChieu">
+                <label for="ngayChieu" class="form-label">Lịch chiếu</label>
+                <input type="date" class="form-control" id="ngayChieu" @bind="filmCreateRequest.StartDate">
+                <ValidationMessage For="@(() => filmCreateRequest.StartDate)" />
             </div>
             <div class="col-md-4">
                 <label for="namPhatHanh" class="form-label">Năm phát hành</label>
-                <input type="text" class="form-control" id="namPhatHanh" placeholder="Enter release year">
+                <input type="number" class="form-control" id="namPhatHanh" @bind="filmCreateRequest.ReleaseYear" placeholder="Enter release year">
+                <ValidationMessage For="@(() => filmCreateRequest.ReleaseYear)" />
             </div>
             <div class="col-md-4">
                 <label for="thoiLuong" class="form-label">Thời lượng phim (phút)</label>
-                <input type="text" class="form-control" id="thoiLuong" placeholder="Enter duration">
+                <input type="number" class="form-control" id="thoiLuong" @bind="filmCreateRequest.RunningTime" placeholder="Enter duration">
+                <ValidationMessage For="@(() => filmCreateRequest.RunningTime)" />
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="trangThai" class="form-label">Trạng thái</label>
-                <select class="form-select" id="trangThai">
-                    <option selected>Nháp</option>
-                    <!-- Options -->
+                <select class="form-select" id="trangThai" @bind="filmCreateRequest.Status">
+                    <option selected>Select a Status</option>
+                    @foreach (var Item in Enum.GetValues(typeof(FilmStatus)))
+                    {
+                        <option value="@Item">@Item</option>
+                    }
                 </select>
             </div>
             <div class="col-md-6">
                 <label for="quocGia" class="form-label">Quốc gia</label>
-                <select class="form-select" id="quocGia">
-                    <option selected>Select a country</option>
-                    <!-- Options -->
-                </select>
+                <input type="text" class="form-control" id="quocGia" @bind="filmCreateRequest.Nation" placeholder="Enter nation">
+                <ValidationMessage For="@(() => filmCreateRequest.Nation)" />
             </div>
         </div>
-    </form>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="language" class="form-label">Ngôn ngữ</label>
+                <input type="text" class="form-control" id="language" @bind="filmCreateRequest.Language" placeholder="Enter language">
+                <ValidationMessage For="@(() => filmCreateRequest.Language)" />
+            </div>
+            <div class="col-md-6">
+                <label for="poster" class="form-label">Poster</label>
+                <InputFile OnChange="OnInputFileChange" class="form-control" />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
 </div>
 
 @code {
+    private FilmCreateRequest filmCreateRequest = new FilmCreateRequest();
+    private IBrowserFile? posterFile;
+    private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
+    private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
+
+    private Guid selectedScreenTypeId;
+    private Guid translationTypeId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        screenTypes = await ScreenTypeService.GetAllScreenTypes();
+        translationTypes = await TranslationTypeService.GetAllTranslationTypes();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+
+        if (posterFile != null)
+        {
+            filmCreateRequest.Poster = await FileUploadService.UploadFile(posterFile);
+        }
+        filmCreateRequest.ScreenTypeIds = new List<Guid> { selectedScreenTypeId };
+        filmCreateRequest.TranslationTypeIds = new List<Guid> { translationTypeId };
+        await FilmService.CreateFilm(filmCreateRequest);
+        await _JSRuntime.ToastrSuccess("Create film successfully");
+        NavigationManager.NavigateTo("/list-film");
+
+    }
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        posterFile = e.File;
+    }
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/list-film");
+    }
 
 }

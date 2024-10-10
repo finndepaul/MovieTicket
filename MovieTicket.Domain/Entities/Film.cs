@@ -20,10 +20,6 @@ public class Film
 
     public string? Cast { get; set; }
 
-    public Guid? ScreenTypeId { get; set; }
-
-    public Guid? TranslationTypeId { get; set; }
-
     public int? Rating { get; set; }
 
     public DateTime StartDate { get; set; }
