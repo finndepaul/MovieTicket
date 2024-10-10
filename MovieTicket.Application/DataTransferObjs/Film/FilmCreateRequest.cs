@@ -55,7 +55,7 @@ namespace MovieTicket.Application.DataTransferObjs.Film
 
         [StringLength(255, ErrorMessage = "Language must not exceed 255 characters.")]
         public string? Language { get; set; }
-        
+
         public List<Guid>? ScreenTypeIds { get; set; } = new List<Guid>();
 
         public List<Guid>? TranslationTypeIds { get; set; } = new List<Guid>();

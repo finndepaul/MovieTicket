@@ -1,13 +1,7 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -19,8 +13,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         {
             _context = movieTicketReadOnlyDbContext;
         }
+
         public async Task<IQueryable<FilmDto>> GetAllFilm()
-        {// getall film
+        {
+            // getall film
             var films = _context.Films.Select(film => new FilmDto
             {
                 Id = film.Id,

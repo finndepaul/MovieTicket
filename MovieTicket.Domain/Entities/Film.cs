@@ -1,6 +1,4 @@
 ﻿using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
 
@@ -24,7 +22,7 @@ public class Film
 
     public int? Rating { get; set; }
 
-    public DateTime? StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
     public int? ReleaseYear { get; set; }
 

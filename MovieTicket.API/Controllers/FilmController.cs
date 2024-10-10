@@ -14,11 +14,13 @@ namespace MovieTicket.API.Controllers
     {
         private readonly IFilmReadWriteRepository _filmReadWriteRepository;
         private readonly IFilmReadOnlyRepository _filmReadOnlyRepository;
+
         public FilmController(IFilmReadWriteRepository filmReadWriteRepository,IFilmReadOnlyRepository filmReadOnlyRepository)
         {   
             _filmReadOnlyRepository = filmReadOnlyRepository;
             _filmReadWriteRepository = filmReadWriteRepository;
         }
+
         // GET: api/<FilmController>
         [HttpGet]
         public async Task<ActionResult> GetAll()

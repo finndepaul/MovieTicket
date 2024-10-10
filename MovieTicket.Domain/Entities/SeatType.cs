@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace MovieTicket.Domain.Entities;
 
-namespace MovieTicket.Domain.Entities;
-
-public  class SeatType
+public class SeatType
 {
     public Guid Id { get; set; }
 
@@ -11,5 +8,4 @@ public  class SeatType
 
     public virtual ICollection<Seat> Seats { get; set; } = new List<Seat>();
     public virtual ICollection<TicketPrice>? TicketPrices { get; set; }
-
 }

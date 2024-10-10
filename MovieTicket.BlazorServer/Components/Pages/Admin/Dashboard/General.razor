@@ -1,4 +1,10 @@
 @page "/admin"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using MovieTicket.Application.DataTransferObjs.AdminHome
+@using MovieTicket.BlazorServer.Services.Interfaces
+@inject IAdminHomeService _ser;
+
 <div class="container-fluid">
 	<div class="row my-3">
 		<div class="col mx-2 p-3"
@@ -7,7 +13,7 @@
 		  ">
 			<div class="card-body">
 				<h5 class="card-title">Doanh thu trong ngày</h5>
-				<p class="card-text fs-1 fw-semibold">100,000</p>
+				<p class="card-text fs-1 fw-semibold">@generalDto.DailyRevenue</p>
 			</div>
 		</div>
 		<div class="col mx-2 p-3"
@@ -16,7 +22,7 @@
 	  ">
 			<div class="card-body">
 				<h5 class="card-title">Khách hàng mới</h5>
-				<p class="card-text fs-1 fw-semibold">0</p>
+				<p class="card-text fs-1 fw-semibold">@generalDto.NewCustomer</p>
 			</div>
 		</div>
 		<div class="col mx-2 p-3"
@@ -24,8 +30,8 @@
             transition: 0.3s;border-radius: 10px;
 	  ">
 			<div class="card-body">
-				<h5 class="card-title">Tổng vé bán ra (9/2024)</h5>
-				<p class="card-text fs-1 fw-semibold">100</p>
+				<h5 class="card-title">Tổng vé bán ra (@date.Month/@date.Year)</h5>
+				<p class="card-text fs-1 fw-semibold">@generalDto.TotalTicketsSold</p>
 			</div>
 		</div>
 		<div class="col mx-2 p-3"
@@ -33,8 +39,8 @@
             transition: 0.3s;border-radius: 10px;
 	  ">
 			<div class="card-body">
-				<h5 class="card-title">Tổng doanh thu (9/2024)</h5>
-				<p class="card-text fs-1 fw-semibold">1,990,500</p>
+				<h5 class="card-title">Tổng doanh thu (@date.Month/@date.Year)</h5>
+				<p class="card-text fs-1 fw-semibold">@generalDto.TotalRevenue</p>
 			</div>
 		</div>
 	</div>
@@ -62,23 +68,21 @@
 				<table class="table table-hover">
 					<thead class="table-light">
 						<tr>
-							<th scope="col">STT</th>
 							<th class="col-6">Tên phim</th>
+							<th scope="col">Tổng số vé bán ra</th>
 							<th scope="col">Doanh thu</th>
-
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>Phim 1</td>
-							<td>100,000</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>Phim 2</td>
-							<td>100,000</td>
-						</tr>
+						@foreach (var item in revenueByMovieDtos.Take(2))
+						{
+							<tr>
+								<th scope="row">@item.FilmName</th>
+								<td>@item.TotalTicket</td>
+								<td>@item.TotalRevenue</td>
+							</tr>
+						}
+						
 					</tbody>
 				</table>
 				<nav class="d-flex justify-content-end" aria-label="Page navigation example">
@@ -111,22 +115,20 @@
 				<table class="table table-hover">
 					<thead class="table-light">
 						<tr>
-							<th scope="col">STT</th>
 							<th scope="col">Tên rạp</th>
+							<th scope="col">Tổng số vé bán ra</th>
 							<th scope="col">Doanh thu</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>CGV</td>
-							<td>100,000</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>Galaxy</td>
-							<td>100,000</td>
-						</tr>
+						@foreach (var item in revenueByCinemaDtos.Take(2))
+						{
+							<tr>
+								<th scope="row">@item.Name</th>
+								<td>@item.TotalTicket</td>
+								<td>@item.TotalRevenue</td>
+							</tr>
+						}
 					</tbody>
 				</table>
 				<nav class="d-flex justify-content-end" aria-label="Page navigation example">
@@ -152,7 +154,16 @@
 </div>
 
 @code {
-
+	private GeneralDto generalDto = new GeneralDto();
+	private List<RevenueByCinemaDto> revenueByCinemaDtos = new List<RevenueByCinemaDto>();
+	private List<RevenueByMovieDto> revenueByMovieDtos = new List<RevenueByMovieDto>();
+	private DateTime date = DateTime.Now;
+	protected override async Task OnInitializedAsync()
+	{
+		generalDto = await _ser.GetAdminGeneralAsync();
+		// revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year,date.Month,1),new DateTime(date.Year,date.Month,DateTime.DaysInMonth(date.Year,date.Month)));
+		//revenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
+	}
 }
 <script>
 	var articleTop = document.getElementById('topArticle');

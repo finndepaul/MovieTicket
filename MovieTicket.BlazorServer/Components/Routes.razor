@@ -1,19 +1,22 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.AdminLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-    @* <notfound>
-            <cascadingauthenticationstate>
-                <redirecttologin />
-            </cascadingauthenticationstate>
-        </notfound> *@
-</Router>
-@* @code {
-    [Inject] NavigationManager Navigation { get; set; }
+﻿@using Microsoft.AspNetCore.Components.Authorization
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Layout.AdminLayout) ">
+                <Authorizing>
+                    <p>Đang xác thực...</p>
+                    </Authorizing>
+                <NotAuthorized>
+                @if (context.User.Identity?.IsAuthenticated != true || context.User.IsInRole("Admin") != true)
+                {
+                    NavigationManager.NavigateTo("login", forceLoad: true);
+                }
+                else
+                {
+                    <p role="alert">You are not authorized to access this resource.</p>
+                }
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+    </Router>
 
-    protected override void OnInitialized()
-    {
-        Navigation.NavigateTo("/Login");
-    }
-} *@

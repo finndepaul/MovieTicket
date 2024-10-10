@@ -8,22 +8,20 @@ using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 using MovieTicket.Infrastructure.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
     public class AccountReadWriteRepository : IAccountReadWriteRepository
     {
         private readonly MovieTicketReadWriteDbContext _db;
+
         public AccountReadWriteRepository(MovieTicketReadWriteDbContext db)
         {
             _db = db;
         }
+
         public async Task<bool> ChangePasswordAsync(ChangePasswordRequest request, CancellationToken cancellationToken)
         {
             var account = await _db.Accounts.FirstOrDefaultAsync(x => x.Id == request.Id);
@@ -128,6 +126,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 };
             }
         }
+
         public async Task<ResponseObject<AccountDto>> UpdateAccount(AccountUpdateRequest request, CancellationToken cancellationToken)
         {
             try
@@ -178,6 +177,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 };
             }
         }
+
         public async Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken)
         {
             var confirmEmail = await _db.ConfirmedEmails.FirstOrDefaultAsync(x => x.AccountId == request.AccountId && !x.IsConfirmed);
@@ -198,55 +198,65 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             return false;
         }
 
-        public async Task<ResponseObject<Account>> Register(Account account)
+        public async Task<RegisterResponse> RegisterAsync(Account account)
         {
-            var accountItem = await _db.Accounts.FirstOrDefaultAsync(x=> x.Email == account.Email || x.Phone == account.Phone);
+            var accountItem = await _db.Accounts.FirstOrDefaultAsync(x => x.Email == account.Email || x.Phone == account.Phone);
             if (accountItem != null)
             {
-                return new ResponseObject<Account>
+                return new RegisterResponse
                 {
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Account is exist",
-                    Data = null
+                    Flag = false,
+                    Message = "Email hoặc số điện thoại đã tồn tại"
                 };
             }
             account.CreateDate = DateTime.Now;
             account.Role = AccountRole.User;
             account.Status = AccountStatus.Active;
+            account.Password = Hash.EncryptPassword(account.Password);
             await _db.Accounts.AddAsync(account);
             await _db.SaveChangesAsync();
-            return new ResponseObject<Account> 
+            //return new ResponseObject<Account>
+            //{
+            //    Status = StatusCodes.Status200OK,
+            //    Message = "Register success",
+            //    Data = account
+            //};
+            return new RegisterResponse
             {
-                Status = StatusCodes.Status200OK,
-                Message = "Register success",
-                Data = account
+                Flag = true,
+                Message = "Đăng ký thành công"
             };
         }
 
         #region Validate Method
+
         private bool CheckUsernameExist(string username)
         {
             return _db.Accounts.Any(x => x.Username == username);
         }
+
         private bool CheckPhoneExist(string phone)
         {
             return _db.Accounts.Any(x => x.Phone == phone);
         }
+
         private bool CheckEmailExist(string email)
         {
             return _db.Accounts.Any(x => x.Email == email);
         }
+
         private bool IsEmailVaild(string email)
         {
             string emailPattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
-            return Regex.IsMatch(email,emailPattern);
+            return Regex.IsMatch(email, emailPattern);
         }
+
         private bool IsPhoneVaild(string phone)
         {
             string phonePattern = @"^0\d{9}$";
             return Regex.IsMatch(phone, phonePattern);
         }
-        #endregion
-    }
 
+        #endregion Validate Method
+    }
 }

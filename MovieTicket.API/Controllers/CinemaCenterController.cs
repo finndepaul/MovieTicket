@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
@@ -26,6 +25,7 @@ namespace MovieTicket.API.Controllers
             _centerReadWriteRepository = centerReadWriteRepository;
             _mapper = mapper;
         }
+
         [HttpGet]
         public ActionResult<IQueryable<CinemaCenterDto>> GetAll([FromQuery] CinemaCenterSearch search)
         {
@@ -58,7 +58,7 @@ namespace MovieTicket.API.Controllers
 
         [HttpDelete]
         public async Task<ActionResult> Delete(Guid id)
-        {          
+        {
             await _centerReadWriteRepository.Delete(id);
             return Ok("Xóa thành công");
         }

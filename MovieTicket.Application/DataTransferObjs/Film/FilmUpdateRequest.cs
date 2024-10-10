@@ -11,7 +11,6 @@ namespace MovieTicket.Application.DataTransferObjs.Film
 {
     public class FilmUpdateRequest
     {
-        
         [Required(ErrorMessage = "Name is required.")]
         [StringLength(255, ErrorMessage = "Name must be between 1 and 255 characters.")]
         public string? Name { get; set; }
@@ -56,7 +55,7 @@ namespace MovieTicket.Application.DataTransferObjs.Film
 
         [StringLength(255, ErrorMessage = "Language must not exceed 255 characters.")]
         public string? Language { get; set; }
-
+      
         public List<Guid>? ScreenTypeIds { get; set; } = new List<Guid>();
 
         public List<Guid>? TranslationTypeIds { get; set; } = new List<Guid>();

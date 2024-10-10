@@ -1,6 +1,4 @@
 ﻿using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
 
@@ -29,6 +27,4 @@ public class Account
     public virtual Membership? Membership { get; set; }
     public virtual ICollection<ConfirmedEmail>? ConfirmedEmails { get; set; }
     public virtual ICollection<RefreshToken>? RefreshTokens { get; set; }
-
-
 }

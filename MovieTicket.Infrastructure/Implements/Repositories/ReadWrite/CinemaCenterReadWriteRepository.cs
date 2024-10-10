@@ -5,11 +5,6 @@ using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -21,6 +16,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         {
             _movieTicket = movieTicket;
         }
+
         public async Task<ResponseObject<CinemaCenter>> Create(CinemaCenter cinemaCenter)
         {
             // Check tồn tại
@@ -35,7 +31,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 };
             }
             // Check tồn tại
-			if (cinemaCenterItem != null)
+            if (cinemaCenterItem != null)
             {
                 return new ResponseObject<CinemaCenter>
                 {
@@ -46,10 +42,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
             await _movieTicket.AddAsync(cinemaCenter);
             await _movieTicket.SaveChangesAsync();
-            return new ResponseObject<CinemaCenter> 
-            { 
-                Status = StatusCodes.Status200OK, 
-                Message = "Create Cinema Center success", 
+            return new ResponseObject<CinemaCenter>
+            {
+                Status = StatusCodes.Status200OK,
+                Message = "Create Cinema Center success",
                 Data = cinemaCenter
             };
         }
@@ -59,7 +55,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
             if (cinemaCenter == null)
             {
-                return new ResponseObject<CinemaCenter> 
+                return new ResponseObject<CinemaCenter>
                 {
                     Data = null,
                     Status = StatusCodes.Status400BadRequest,
@@ -68,7 +64,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
             _movieTicket.CinemaCenters.Remove(cinemaCenter);
             await _movieTicket.SaveChangesAsync();
-            return new ResponseObject<CinemaCenter> 
+            return new ResponseObject<CinemaCenter>
             {
                 Data = cinemaCenter,
                 Status = StatusCodes.Status200OK,
@@ -93,10 +89,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             cinemaCenterItem.Address = cinemaCenter.Address;
             _movieTicket.CinemaCenters.Update(cinemaCenterItem);
             await _movieTicket.SaveChangesAsync();
-            return new ResponseObject<CinemaCenter> 
-            { 
-                Data = cinemaCenterItem, 
-                Status = StatusCodes.Status200OK, 
+            return new ResponseObject<CinemaCenter>
+            {
+                Data = cinemaCenterItem,
+                Status = StatusCodes.Status200OK,
                 Message = "Update Cinema Center success"
             };
         }

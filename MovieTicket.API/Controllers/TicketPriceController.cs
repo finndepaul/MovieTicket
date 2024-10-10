@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
@@ -26,30 +25,33 @@ namespace MovieTicket.API.Controllers
             var result = await _ticketPriceReadOnlyRepository.GetByIdAsync(id);
             return Ok(result);
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetListTicketPrice([FromQuery]TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetListTicketPrice([FromQuery] TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
         {
             var result = await _ticketPriceReadOnlyRepository.GetListAsync(request, cancellationToken);
             return Ok(result);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateTicketPrice(TicketPriceCreateRequest request, CancellationToken cancellationToken)
         {
             var result = await _ticketPriceReadWriteRepository.Create(request, cancellationToken);
             return Ok(result);
         }
+
         [HttpPut]
         public async Task<IActionResult> UpdateTicketPrice(TicketPriceUpdateRequest request, CancellationToken cancellationToken)
         {
             var result = await _ticketPriceReadWriteRepository.Update(request, cancellationToken);
             return Ok(result);
         }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteTicketPrice(Guid id, CancellationToken cancellationToken)
         {
             var result = await _ticketPriceReadWriteRepository.Delete(id, cancellationToken);
             return Ok(result);
         }
-        
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieTicket.Application.DataTransferObjs.Combo
+﻿namespace MovieTicket.Application.DataTransferObjs.Combo
 {
     public class ComboDto
     {
@@ -14,5 +8,4 @@ namespace MovieTicket.Application.DataTransferObjs.Combo
 
         public decimal? Price { get; set; }
     }
-
 }

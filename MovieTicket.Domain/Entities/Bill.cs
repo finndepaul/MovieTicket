@@ -1,6 +1,4 @@
 ﻿using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace MovieTicket.Domain.Entities;
 
@@ -14,14 +12,14 @@ public class Bill
 
     public decimal? TotalMoney { get; set; }
 
-    public DateTime? CreateTime { get; set; }
+    public DateTime CreateTime { get; set; }
 
     public string? BarCode { get; set; }
 
     public BillStatus? Status { get; set; }
-    public bool? ActivationStatus { get; set; }
+    public bool? ActivationStatus { get; set; } //Vé đã được kích hoạt hay chưa
 
-    public virtual Membership? Membership { get; set; }
+	public virtual Membership? Membership { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     public virtual Voucher? Voucher { get; set; }

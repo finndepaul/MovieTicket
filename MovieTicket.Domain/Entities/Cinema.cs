@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-
-namespace MovieTicket.Domain.Entities;
+﻿namespace MovieTicket.Domain.Entities;
 
 public class Cinema
 {
@@ -27,5 +23,5 @@ public class Cinema
     public virtual ICollection<Seat> Seats { get; set; } = new List<Seat>();
 
     public virtual ICollection<ShowTime> ShowTimes { get; set; } = new List<ShowTime>();
-    public virtual CinemaType? CinemaType { get; set; } 
+    public virtual CinemaType? CinemaType { get; set; }
 }
