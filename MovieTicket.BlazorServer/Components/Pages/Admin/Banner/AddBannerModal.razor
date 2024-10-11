@@ -1,5 +1,6 @@
 ﻿@page "/banner/create-banner"
 @attribute [Authorize(Roles = "Admin")]
+
 <div class="container d-flex">
         <EditForm Model="UploadModel" enctype="multipart/form-data" Enhance FormName="add-form" OnValidSubmit="CreateBanner">
             <DataAnnotationsValidator />
