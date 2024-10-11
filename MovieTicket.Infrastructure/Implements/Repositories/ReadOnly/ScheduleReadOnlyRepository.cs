@@ -99,7 +99,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                          EndDate = schedule.EndDate,
                                          Type = schedule.Type,
                                          Status = schedule.Status,
-                                         FilmName = film.Name // Lấy tên phim
+                                         FilmName = film.Name, // Lấy tên phim
+                                         FilmReleaseDate = film.StartDate // Lấy ngày ra mắt phim
                                      }).FirstOrDefaultAsync();
 
             // Kiểm tra nếu không có lịch chiếu nào cho Id thì ném ra ngoại lệ
