@@ -152,8 +152,9 @@
     {
         revenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(startDate, endDate);
     }
-    private async void Reload()
+    private async Task Reload()
     {
         revenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(startDate, endDate);
+        StateHasChanged();
     }
 }

@@ -8,7 +8,7 @@ using MovieTicket.Infrastructure.Database.AppDbContexts;
 
 #nullable disable
 
-namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
+namespace MovieTicket.Infrastructure.Migrations
 {
     [DbContext(typeof(MovieTicketReadWriteDbContext))]
     partial class MovieTicketReadWriteDbContextModelSnapshot : ModelSnapshot
@@ -88,7 +88,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("ef4b4f1e-334d-4538-9070-2e28369856d9"),
+                            Id = new Guid("dd414950-2a34-484f-a25a-070de883f701"),
                             Avatar = "avatar1.png",
                             CreateDate = new DateTime(2023, 8, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user1@example.com",
@@ -101,7 +101,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("764e8ad3-131d-461f-a2ae-7a570337b647"),
+                            Id = new Guid("25bb0474-a55b-46c5-a2d9-50b5d20f286b"),
                             Avatar = "avatar2.png",
                             CreateDate = new DateTime(2023, 8, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user2@example.com",
@@ -114,7 +114,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("443df1a4-0110-4c3e-a350-d0785782847e"),
+                            Id = new Guid("ca073c10-fd63-4f7f-a310-cdaa54d0fd35"),
                             Avatar = "avatar3.png",
                             CreateDate = new DateTime(2023, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user3@example.com",
@@ -127,7 +127,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("9f714aa4-07fa-4bcc-9cd0-4df8332da230"),
+                            Id = new Guid("598589dc-ba50-4f76-b58e-24b38bba6bee"),
                             Avatar = "avatar4.png",
                             CreateDate = new DateTime(2023, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user4@example.com",
@@ -140,7 +140,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("198affa9-700f-44e7-ad36-a8297d6a1a8d"),
+                            Id = new Guid("4ec13d6a-ee72-45f7-b2c0-037be4fec14b"),
                             Avatar = "avatar5.png",
                             CreateDate = new DateTime(2023, 8, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user5@example.com",
@@ -153,7 +153,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("8783e052-eaa9-4215-9115-8efabe3dd8b3"),
+                            Id = new Guid("db406145-5cd3-4481-921a-c024ee789f7a"),
                             Avatar = "avatar6.png",
                             CreateDate = new DateTime(2023, 8, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user6@example.com",
@@ -166,7 +166,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("3491c4fc-b94a-45be-8042-7689b3ca86dd"),
+                            Id = new Guid("8fa5e20e-a661-4d26-89e7-1b52b5e1ec04"),
                             Avatar = "avatar7.png",
                             CreateDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user7@example.com",
@@ -179,7 +179,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("c07874e9-f296-4f6f-bb5f-acd3b334ebae"),
+                            Id = new Guid("e785d229-d42c-4582-8e09-f5ebaa9a1556"),
                             Avatar = "avatar8.png",
                             CreateDate = new DateTime(2023, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user8@example.com",
@@ -192,7 +192,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("c75e0b4e-e264-47fe-b9b7-a0780ab5a92b"),
+                            Id = new Guid("3573ff87-4f2d-4e88-9df6-de71d55cb2c9"),
                             Avatar = "avatar9.png",
                             CreateDate = new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user9@example.com",
@@ -205,7 +205,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("e93e7f12-57a5-40bd-b03f-b092f037260f"),
+                            Id = new Guid("47d92172-3ade-48c9-8e47-f56efc92b861"),
                             Avatar = "avatar10.png",
                             CreateDate = new DateTime(2023, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user10@example.com",
@@ -218,7 +218,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("ddb9baa0-5bcb-47f9-af78-c5df34863b7a"),
+                            Id = new Guid("cfb37859-b663-496a-83ea-e0f154c4fa60"),
                             Avatar = "avatar11.png",
                             CreateDate = new DateTime(2023, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user11@example.com",
@@ -231,7 +231,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("69efc8d9-5def-4698-8869-bfb77af5df25"),
+                            Id = new Guid("865ca3fe-9c60-41bf-8613-11790fd58784"),
                             Avatar = "avatar12.png",
                             CreateDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user12@example.com",
@@ -244,7 +244,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("e8faf264-ba55-4df8-88ef-0bd8c61003f8"),
+                            Id = new Guid("109fba4e-3eb1-4fa2-aeab-27ee8d71a4b1"),
                             Avatar = "avatar13.png",
                             CreateDate = new DateTime(2023, 8, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user13@example.com",
@@ -257,7 +257,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("86c23ef2-7604-4fa2-bfbc-a91fbcd120cc"),
+                            Id = new Guid("0501f29c-2f1e-406c-a2ad-1c653b217346"),
                             Avatar = "avatar14.png",
                             CreateDate = new DateTime(2023, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user14@example.com",
@@ -270,7 +270,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("fdcb4ec3-cde9-48f1-bb2d-e091c5299185"),
+                            Id = new Guid("75745a41-db7a-484e-87e3-c4b9c5a0759a"),
                             Avatar = "avatar15.png",
                             CreateDate = new DateTime(2023, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user15@example.com",
@@ -283,7 +283,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("2cdb5f7c-df46-4a3b-95af-86648600fe4d"),
+                            Id = new Guid("8360035b-4347-4849-bbfd-6c540cd63545"),
                             Avatar = "avatar16.png",
                             CreateDate = new DateTime(2023, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user16@example.com",
@@ -296,7 +296,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("dff3bd32-4956-4e09-b0b6-97ae3424f896"),
+                            Id = new Guid("30537e29-c05c-46cc-bc0b-2f7f4d2116e8"),
                             Avatar = "avatar17.png",
                             CreateDate = new DateTime(2023, 8, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user17@example.com",
@@ -309,7 +309,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("efaba4df-b7b5-4cbd-8fec-64d41dcba16e"),
+                            Id = new Guid("c4c1d6d9-d5e4-49a6-9222-6ae64461de2f"),
                             Avatar = "avatar18.png",
                             CreateDate = new DateTime(2023, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user18@example.com",
@@ -322,7 +322,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("6e5c5705-384a-4511-8e4f-dcbda20f2140"),
+                            Id = new Guid("c06e8376-a9ac-451a-a43b-a68fcae15f80"),
                             Avatar = "avatar19.png",
                             CreateDate = new DateTime(2023, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user19@example.com",
@@ -335,7 +335,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("b501e07d-b7d0-463e-b0e9-a351da4b4af0"),
+                            Id = new Guid("0e1c2940-342c-4db3-bd26-f6746ee5d108"),
                             Avatar = "avatar20.png",
                             CreateDate = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user20@example.com",
@@ -348,7 +348,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("1181c91b-1232-45de-ab04-455487c5b53f"),
+                            Id = new Guid("7fe1d789-f42d-462a-a722-e022587f5d4d"),
                             Avatar = "avatar21.png",
                             CreateDate = new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user21@example.com",
@@ -361,7 +361,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("84c8d688-4b12-44a2-b244-18e36bfde139"),
+                            Id = new Guid("5c607db7-430f-41bc-a33f-3ca944c9a7ea"),
                             Avatar = "avatar22.png",
                             CreateDate = new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user22@example.com",
@@ -374,7 +374,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("38182ab7-7807-4c2c-bfb7-0b2b43c92c8f"),
+                            Id = new Guid("0e12e8dd-1223-4599-9841-5168f93f1f08"),
                             Avatar = "avatar23.png",
                             CreateDate = new DateTime(2023, 8, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user23@example.com",
@@ -387,7 +387,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("3b2a890d-2f93-4859-a4e4-e6c7da8f8b7f"),
+                            Id = new Guid("9aaa8e13-6c3b-4773-a460-7ce20b29b0e6"),
                             Avatar = "avatar24.png",
                             CreateDate = new DateTime(2023, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user24@example.com",
@@ -400,7 +400,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("faa55da3-8261-45c2-9167-4f151471df95"),
+                            Id = new Guid("a1e0f8fd-561d-46a3-b925-a251cb48bf8e"),
                             Avatar = "avatar25.png",
                             CreateDate = new DateTime(2023, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user25@example.com",
@@ -413,7 +413,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("1b847c0c-617b-49fb-9a67-5641bf9df6bb"),
+                            Id = new Guid("513de07b-5258-40d0-a2d9-302293ebde6d"),
                             Avatar = "avatar26.png",
                             CreateDate = new DateTime(2023, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user26@example.com",
@@ -426,7 +426,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("b0cfe23c-c85d-4755-816f-84f04e460d6f"),
+                            Id = new Guid("d595bae7-7a79-48f3-90c8-00d949ce7c06"),
                             Avatar = "avatar27.png",
                             CreateDate = new DateTime(2023, 8, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user27@example.com",
@@ -439,7 +439,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("625c3dec-d580-4831-96bc-c7ee7bb16832"),
+                            Id = new Guid("d3f26ab7-7220-4a23-a396-1800efdcd041"),
                             Avatar = "avatar28.png",
                             CreateDate = new DateTime(2023, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user28@example.com",
@@ -452,7 +452,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("1f0b8e9b-bf5a-4a61-ba42-e8a53d7313e0"),
+                            Id = new Guid("8869f6f1-a78d-45b8-8711-f2fd016ea2a8"),
                             Avatar = "avatar29.png",
                             CreateDate = new DateTime(2023, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user29@example.com",
@@ -465,7 +465,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("13beddf5-4fce-4275-89a6-63fc38a209c0"),
+                            Id = new Guid("400437ce-55a3-4349-9b69-2f44c79ec377"),
                             Avatar = "avatar30.png",
                             CreateDate = new DateTime(2023, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user30@example.com",
@@ -476,6 +476,34 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Status = 1,
                             Username = "user30"
                         });
+                });
+
+            modelBuilder.Entity("MovieTicket.Domain.Entities.Banner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
                 });
 
             modelBuilder.Entity("MovieTicket.Domain.Entities.Bill", b =>
@@ -516,7 +544,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("441f10e6-c4c0-45f3-8d37-7df17559fe54"),
+                            Id = new Guid("08fe7553-3742-495a-a9ab-439c492bd04e"),
                             ActivationStatus = true,
                             BarCode = "barcode1.jpg",
                             CreateTime = new DateTime(2024, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -526,7 +554,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("7affd4b3-b810-4a25-a17b-83da6df6106e"),
+                            Id = new Guid("bb7f79f8-abbe-4e6e-a197-793daf127506"),
                             ActivationStatus = true,
                             BarCode = "barcode2.jpg",
                             CreateTime = new DateTime(2024, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -536,7 +564,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("f04e9bd6-c140-4c88-9139-706540b45aa2"),
+                            Id = new Guid("384fbbf2-26c2-4752-8542-0a9fa68d48e1"),
                             ActivationStatus = true,
                             BarCode = "barcode3.jpg",
                             CreateTime = new DateTime(2024, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -546,7 +574,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("0aded26a-67c9-4649-b785-078f972e4c02"),
+                            Id = new Guid("ed49eb90-c66c-4ef2-ba6b-318b16a9c3f3"),
                             ActivationStatus = true,
                             BarCode = "barcode4.jpg",
                             CreateTime = new DateTime(2024, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -556,7 +584,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("a7b791b7-084f-4305-8015-a5350204abf6"),
+                            Id = new Guid("f5a6985c-5607-46e6-8918-22abd0c7b05c"),
                             ActivationStatus = true,
                             BarCode = "barcode5.jpg",
                             CreateTime = new DateTime(2024, 10, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -566,7 +594,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("b2e1f581-0d47-4d1e-8b75-8a505731c66a"),
+                            Id = new Guid("aa609b27-d614-465a-8fe3-0abc9aea6253"),
                             ActivationStatus = true,
                             BarCode = "barcode6.jpg",
                             CreateTime = new DateTime(2024, 10, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -576,7 +604,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("95181f5b-30e8-491b-8872-847a598c90af"),
+                            Id = new Guid("176e363d-1567-450b-8420-3ab44c53f27a"),
                             ActivationStatus = true,
                             BarCode = "barcode7.jpg",
                             CreateTime = new DateTime(2024, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -586,7 +614,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("bdaf1fc7-a71d-416d-a960-e39c46aceef0"),
+                            Id = new Guid("fccd1383-373e-4839-be51-68a60abba242"),
                             ActivationStatus = true,
                             BarCode = "barcode8.jpg",
                             CreateTime = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -596,7 +624,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("c802ec6b-e6c4-4aeb-b8ea-06af953d643d"),
+                            Id = new Guid("6a8d56e6-94ce-4f12-9722-9b82a17228f0"),
                             ActivationStatus = true,
                             BarCode = "barcode9.jpg",
                             CreateTime = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -606,7 +634,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("67b209b3-9c5c-4d96-96ab-b764c6962c10"),
+                            Id = new Guid("67d6d47c-d4ae-477f-b801-04e73a7fe53b"),
                             ActivationStatus = true,
                             BarCode = "barcode10.jpg",
                             CreateTime = new DateTime(2024, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -616,7 +644,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("b49d57cb-0eeb-4f33-a2d3-ad69a04f2efe"),
+                            Id = new Guid("78088d71-b3af-402c-95a6-92243189e69d"),
                             ActivationStatus = true,
                             BarCode = "barcode11.jpg",
                             CreateTime = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -626,7 +654,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("0f43f5cd-b359-4b8e-8b2f-82808b60efef"),
+                            Id = new Guid("4df1da33-4569-457f-bd37-f9df4809e12b"),
                             ActivationStatus = true,
                             BarCode = "barcode12.jpg",
                             CreateTime = new DateTime(2024, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -636,7 +664,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("10aa65e8-69ac-4c4f-a24c-e6ee3776c06f"),
+                            Id = new Guid("dc4b0965-1048-4c48-beac-b4814cfc8bef"),
                             ActivationStatus = true,
                             BarCode = "barcode13.jpg",
                             CreateTime = new DateTime(2024, 10, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -646,7 +674,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("d512da42-ede6-4fc7-b895-b41359193abc"),
+                            Id = new Guid("212bc07a-d805-440c-9717-2f1e1020fc92"),
                             ActivationStatus = true,
                             BarCode = "barcode14.jpg",
                             CreateTime = new DateTime(2024, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -656,7 +684,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("d04ef227-7f23-4f62-8dbd-0c57702885d0"),
+                            Id = new Guid("9b2f3bb4-9be9-4a0a-aa57-f7cf6ccbb1fa"),
                             ActivationStatus = true,
                             BarCode = "barcode15.jpg",
                             CreateTime = new DateTime(2024, 10, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -666,7 +694,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("92e9faba-6f4f-4ee0-ab2f-f29b996d82a5"),
+                            Id = new Guid("75ec3bdb-d382-4b40-a1ed-1a046a92c8f2"),
                             ActivationStatus = true,
                             BarCode = "barcode16.jpg",
                             CreateTime = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -676,7 +704,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("50e640dd-814d-4d54-b56c-ed221f2793c0"),
+                            Id = new Guid("84069f21-455a-4baf-9eff-159454500436"),
                             ActivationStatus = true,
                             BarCode = "barcode17.jpg",
                             CreateTime = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -686,7 +714,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("6f5052b0-ce1f-46fe-ba06-af930da1e24e"),
+                            Id = new Guid("cab547d1-bd0d-458d-9a34-c52e43ccb424"),
                             ActivationStatus = true,
                             BarCode = "barcode18.jpg",
                             CreateTime = new DateTime(2024, 10, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -696,7 +724,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("2206d17f-b71c-4bba-86c7-112b8f8216fb"),
+                            Id = new Guid("3d144ab3-384d-4273-9081-7a053b4001aa"),
                             ActivationStatus = true,
                             BarCode = "barcode19.jpg",
                             CreateTime = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -706,7 +734,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("44fd8c5d-7ec3-413f-a66b-8a7edc0f042f"),
+                            Id = new Guid("400fbc87-4b42-4d83-8d44-635b4da23cac"),
                             ActivationStatus = true,
                             BarCode = "barcode20.jpg",
                             CreateTime = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -716,7 +744,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("88ac530e-249d-4cef-b7a3-2b3753ef3bc0"),
+                            Id = new Guid("997826c2-3adc-47ea-9839-219e955fe461"),
                             ActivationStatus = true,
                             BarCode = "barcode21.jpg",
                             CreateTime = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -726,7 +754,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("f904aa25-4dde-4405-9b7e-23659edd24f9"),
+                            Id = new Guid("0cac3169-9cc9-4f34-98fb-ed9dc6deba0c"),
                             ActivationStatus = true,
                             BarCode = "barcode22.jpg",
                             CreateTime = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -736,7 +764,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("72477574-e7b6-499e-b67f-ac6d59f394b7"),
+                            Id = new Guid("c9bcb6d2-c37f-4dc3-a487-9b2f57e17c12"),
                             ActivationStatus = true,
                             BarCode = "barcode23.jpg",
                             CreateTime = new DateTime(2024, 10, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -746,7 +774,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("e84940fa-f17c-4ddd-99de-b54b213164fc"),
+                            Id = new Guid("f9402347-4fa0-4ca1-8553-fc6bc0a08c30"),
                             ActivationStatus = true,
                             BarCode = "barcode24.jpg",
                             CreateTime = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -756,7 +784,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("288433f0-cf58-4dcd-a682-e8afa7b307ef"),
+                            Id = new Guid("fc40291a-c164-4e23-9d72-f330676a383c"),
                             ActivationStatus = true,
                             BarCode = "barcode25.jpg",
                             CreateTime = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -766,7 +794,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("9a70b4af-8263-41c4-84d8-931eb85b8db1"),
+                            Id = new Guid("5b13aeda-0e57-4f88-9830-fa75d8dee144"),
                             ActivationStatus = true,
                             BarCode = "barcode26.jpg",
                             CreateTime = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -776,7 +804,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("7401c5f1-bbf5-436c-a2f3-0ea0dd66664c"),
+                            Id = new Guid("fe6cfcc6-d410-4277-b234-6fd72e17f882"),
                             ActivationStatus = true,
                             BarCode = "barcode27.jpg",
                             CreateTime = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -786,7 +814,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("cba5ee8a-ca9b-4b0a-b0d3-84042d358718"),
+                            Id = new Guid("af135110-2a5a-432f-9bc9-4dfe19bbc3df"),
                             ActivationStatus = true,
                             BarCode = "barcode28.jpg",
                             CreateTime = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -796,7 +824,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("be5f0dc7-7f5d-495f-b9d4-b8c9148bd956"),
+                            Id = new Guid("16494580-36ae-4e88-9856-5cde6dfd9acf"),
                             ActivationStatus = true,
                             BarCode = "barcode29.jpg",
                             CreateTime = new DateTime(2024, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -806,7 +834,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("ca5f8cef-4a02-4891-9d00-f1cd29927794"),
+                            Id = new Guid("9b32b3b6-d128-42be-b67b-c39aa9237012"),
                             ActivationStatus = true,
                             BarCode = "barcode30.jpg",
                             CreateTime = new DateTime(2024, 10, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -884,8 +912,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
-                            CinemaCenterId = new Guid("713d97e0-456c-4e33-ab26-203625e4ebf7"),
+                            Id = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
+                            CinemaCenterId = new Guid("34607b9c-adfd-46ea-80e2-d6688e710f74"),
                             CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 1",
@@ -895,9 +923,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("7f50f725-3177-43cc-bdc9-f4a0d50723d0"),
-                            CinemaCenterId = new Guid("aba76668-45cf-4a71-8c04-d03a22604d8d"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("49ddf0e3-97a8-4989-a519-1376e7d0c5a1"),
+                            CinemaCenterId = new Guid("e12faaf4-8a95-42a1-bd92-8d50beada41c"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 2",
                             MaxSeatCapacity = 100,
@@ -906,9 +934,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("3ffd7564-bd1b-46d0-99db-230e1ddb6ce1"),
-                            CinemaCenterId = new Guid("a7fe53d1-c4e3-4d98-a6ad-bad2cd2c90fd"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("ca8f85a4-ccc6-40d0-b4ee-5d3720eba50e"),
+                            CinemaCenterId = new Guid("78680907-7923-4966-b950-9c2494bb47bb"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 3",
                             MaxSeatCapacity = 100,
@@ -917,8 +945,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("eb152661-bf42-4655-a699-6aa9f89fb12a"),
-                            CinemaCenterId = new Guid("6062cd97-0dbf-42a4-88cc-4e870ad66f2b"),
+                            Id = new Guid("7276cfb2-159c-4d6f-ad32-0c47af1118ce"),
+                            CinemaCenterId = new Guid("5eba8de2-4492-44ac-8a4b-80e5c10ad326"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 4",
@@ -928,9 +956,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("dff19976-0960-4544-9f23-fa6e468cb5c9"),
-                            CinemaCenterId = new Guid("c70f5021-d95c-4168-b488-90cad88042ce"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Id = new Guid("e0a4782a-c594-42a5-a4c4-47f0aee15d40"),
+                            CinemaCenterId = new Guid("8e393bed-2b22-4b17-872b-da53b8ff75ad"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 5",
                             MaxSeatCapacity = 100,
@@ -939,9 +967,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("9bc3fe53-5e19-4447-b6f6-49b3d3aa6b99"),
-                            CinemaCenterId = new Guid("c389e092-7635-49b9-80ed-2e966606e152"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Id = new Guid("33bf015f-b3a0-409b-8695-a0095867d0f6"),
+                            CinemaCenterId = new Guid("a80c70d7-65e3-4d74-a743-73c766c8e8ae"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 6",
                             MaxSeatCapacity = 100,
@@ -950,9 +978,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("964014ed-a801-4559-a365-c84a8904b58e"),
-                            CinemaCenterId = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("e81ff048-14f3-4188-a377-efffd431c9ae"),
+                            CinemaCenterId = new Guid("e163e949-7e92-4d1f-a602-341faf1f3d7f"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 7",
                             MaxSeatCapacity = 100,
@@ -961,9 +989,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("e3e244ab-8e8e-4341-81e1-3e2eafef99fe"),
-                            CinemaCenterId = new Guid("3378ec63-e87d-4d8c-8739-ccd64ff4a053"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("81706ee3-c0b3-4116-9e1d-812f6f8f5463"),
+                            CinemaCenterId = new Guid("ee8b9b21-fe0e-4add-816a-52b1a822b6ac"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 8",
                             MaxSeatCapacity = 100,
@@ -972,9 +1000,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("f8053902-8714-4ec0-bd6a-ffc268ee6186"),
-                            CinemaCenterId = new Guid("78b6c6b0-212e-4582-9c31-68d15056d3ec"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("0a783862-3298-4dce-a1f3-caff5d7a0f1f"),
+                            CinemaCenterId = new Guid("96bb5b79-1a11-4ef6-b6cf-2fc72ab74461"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 9",
                             MaxSeatCapacity = 100,
@@ -983,9 +1011,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("b3d39eda-1560-428f-8225-7e587936960c"),
-                            CinemaCenterId = new Guid("799559d7-7c44-43b6-80ba-6d5bcc012934"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Id = new Guid("ee4a39ac-e048-4fc0-aaa7-75122c9aa7d7"),
+                            CinemaCenterId = new Guid("26ef9fd2-5b34-4bd1-b91a-f6cbf23b50c3"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 10",
                             MaxSeatCapacity = 100,
@@ -994,9 +1022,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("cb354c2c-76bc-4ee6-8f3d-0d58fab80933"),
-                            CinemaCenterId = new Guid("f727c7c2-313f-40e6-9cba-bc33a0a4896d"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("f8fe6028-1fc9-42e0-b58d-575e7550e307"),
+                            CinemaCenterId = new Guid("774bb7be-c62c-4a07-b962-5032015c0411"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 11",
                             MaxSeatCapacity = 100,
@@ -1005,9 +1033,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("7619a7e4-1dd0-4946-83f7-499c4e004220"),
-                            CinemaCenterId = new Guid("d67c6d99-0ff9-4426-90f7-aad61ad3f313"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Id = new Guid("34f74fda-a941-43ed-8a14-bd16685aeafb"),
+                            CinemaCenterId = new Guid("a11ba9fe-9ebc-44fa-8db0-3cd0d10270c6"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 12",
                             MaxSeatCapacity = 100,
@@ -1016,8 +1044,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("556e25f2-7ea6-49a7-8417-0bf1a5c8e349"),
-                            CinemaCenterId = new Guid("ae2be624-42ba-4371-ae06-f36766b74a1a"),
+                            Id = new Guid("2650b463-4c73-46d2-a601-528c837ff24e"),
+                            CinemaCenterId = new Guid("0eedc93b-b2a9-4c09-9ba6-34f4532af50c"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 13",
@@ -1027,9 +1055,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("f4a7ad7b-ada8-42d6-93f9-b334d8bec1ab"),
-                            CinemaCenterId = new Guid("0740e6ae-a711-41c2-8515-1e743d7b4682"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("21133506-7eef-4a5b-8532-fc0266330180"),
+                            CinemaCenterId = new Guid("8269c479-9bd9-4fd8-b0c4-f573a8631af4"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 14",
                             MaxSeatCapacity = 100,
@@ -1038,9 +1066,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("9a98571b-3977-4dba-8b4b-50794946f2e2"),
-                            CinemaCenterId = new Guid("dbdf57c7-b24f-492a-8547-a7a1b6c059a7"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("49cbdff1-0eaf-4f3e-939c-58da6cb64209"),
+                            CinemaCenterId = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 15",
                             MaxSeatCapacity = 100,
@@ -1049,8 +1077,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("60214384-01a7-49d5-b610-4c81b1e25afe"),
-                            CinemaCenterId = new Guid("2f2b8c56-c334-4dc8-b125-5c8fc81aa75a"),
+                            Id = new Guid("4dd44dc3-d454-4ffd-b95a-f11057dc1cd6"),
+                            CinemaCenterId = new Guid("f4c196de-ad5a-424c-94b6-80a4097afec1"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 16",
@@ -1060,9 +1088,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("27622177-ed08-44fa-afe8-9c46e89ee6e8"),
-                            CinemaCenterId = new Guid("75ae46ab-bb42-48a0-ac95-ac5b7f72289e"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("11796c6d-6a2f-4740-9d40-3fd1fde1390a"),
+                            CinemaCenterId = new Guid("2134060d-6ad6-42bc-b406-d1e381371abe"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 17",
                             MaxSeatCapacity = 100,
@@ -1071,8 +1099,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("6889322a-df97-4349-be4f-5fdfc59d028d"),
-                            CinemaCenterId = new Guid("b2408ebd-0143-4fe9-9197-0306a750e952"),
+                            Id = new Guid("7c1cf3f1-7fa8-4e0a-8118-656750f2d10f"),
+                            CinemaCenterId = new Guid("a8817eda-abab-4bff-a3a5-82a1460ae416"),
                             CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 18",
@@ -1082,8 +1110,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("06306ba2-b3e8-44cd-8786-c08a2e2d5ada"),
-                            CinemaCenterId = new Guid("d0718ece-1e1c-41fe-8e2d-fe043626f3b6"),
+                            Id = new Guid("dea4f05c-d8bf-43d3-8bae-784cb7aeade3"),
+                            CinemaCenterId = new Guid("72e94f44-6348-428a-89c7-7808e0aca9ab"),
                             CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 19",
@@ -1093,9 +1121,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("e62d783e-6ddb-4c0e-94df-776f0e76f236"),
-                            CinemaCenterId = new Guid("374ccabe-cae4-4389-ac12-a1b327c912ff"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("88aa20e0-08d9-43c4-bc34-af6c4c7a2a58"),
+                            CinemaCenterId = new Guid("244ffcea-6b2b-4025-a043-eee24f165a05"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 20",
                             MaxSeatCapacity = 100,
@@ -1104,8 +1132,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("aa78626e-a41e-47ef-b31e-8f0ae92aea3b"),
-                            CinemaCenterId = new Guid("a231f257-80fa-45b4-bdbd-178ca5c4cbb9"),
+                            Id = new Guid("0e46cbaf-c555-4066-a8c9-e209694ab5fb"),
+                            CinemaCenterId = new Guid("986557b4-114c-4668-bd0e-02b416e99954"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 21",
@@ -1115,9 +1143,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("f1b523f0-4663-4a4c-8cf6-5b2087a4797c"),
-                            CinemaCenterId = new Guid("7b6669ba-5dc7-46b5-8731-93bdf681f358"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("a51c195c-3446-453d-8870-24e921d3f360"),
+                            CinemaCenterId = new Guid("65215a44-8f91-4e7a-aea2-46afb1dc083a"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 22",
                             MaxSeatCapacity = 100,
@@ -1126,8 +1154,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("84f5062b-579b-49cf-b903-0bd00472f6d2"),
-                            CinemaCenterId = new Guid("562703b6-f408-4340-9651-780c11395069"),
+                            Id = new Guid("bc0f96c2-283b-476b-b59e-9ae20b6f3ad0"),
+                            CinemaCenterId = new Guid("b37ce504-e51d-4259-a0aa-a8d0584c9530"),
                             CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 23",
@@ -1137,9 +1165,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("1fca244b-748e-4aa7-b3fa-44cceff604c8"),
-                            CinemaCenterId = new Guid("9915451c-1ab7-447e-8427-fa87158c3911"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Id = new Guid("00ed026a-d4f0-4b56-95d4-9db923d7223b"),
+                            CinemaCenterId = new Guid("e6d3f6dd-929b-497c-bd54-454d317dea41"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 24",
                             MaxSeatCapacity = 100,
@@ -1148,8 +1176,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("6a8ff52a-86d3-4435-b8d6-cbf625d77be8"),
-                            CinemaCenterId = new Guid("8fe002c4-d845-4ee0-8d55-29212c6618ef"),
+                            Id = new Guid("bcb24e36-fc89-4f3c-9ae1-4784bee73016"),
+                            CinemaCenterId = new Guid("ae97ec2f-870c-4940-8679-65b362488677"),
                             CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 25",
@@ -1159,9 +1187,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("c4641c03-beb1-4bc2-baa0-ed7bb4f175be"),
-                            CinemaCenterId = new Guid("b33761ea-2f8f-46ae-8a72-923adb87001f"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("b7af75e8-8aae-493a-b2ca-b61c290bc736"),
+                            CinemaCenterId = new Guid("b6a9896f-c9c6-4e97-a793-e18cfb55e1f7"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 26",
                             MaxSeatCapacity = 100,
@@ -1170,9 +1198,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("7f147b06-d13d-47eb-99e5-0751c89ccd8c"),
-                            CinemaCenterId = new Guid("72ce0538-77cb-4738-86a4-db5f74a79f2e"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Id = new Guid("6858c450-98ef-4e03-97e7-d7ca3b3d8ce9"),
+                            CinemaCenterId = new Guid("8bda5cc0-4f7f-4242-b23e-415fe3e3498f"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 27",
                             MaxSeatCapacity = 100,
@@ -1181,9 +1209,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("9df8dd15-0024-4015-b768-55e6fe2cf376"),
-                            CinemaCenterId = new Guid("94a99957-ebfa-46b3-af5f-877e6116b5df"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("bf34348b-0f36-4474-be13-08b6d78f9dca"),
+                            CinemaCenterId = new Guid("9993c899-8956-4441-ae4a-fe06c32c6e02"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Column = 10,
                             Description = "Description for Cinema 28",
                             MaxSeatCapacity = 100,
@@ -1192,9 +1220,9 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("505eeda1-bff3-4b04-9b6d-6de7f69b6cfd"),
-                            CinemaCenterId = new Guid("9586d3ff-46f6-4058-9bdc-cba2f987d645"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("345ead0f-cd0f-4a65-a2ba-88bf4b5bf413"),
+                            CinemaCenterId = new Guid("e58ec98d-2eba-40a6-a7c9-ac4228c635f1"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Column = 10,
                             Description = "Description for Cinema 29",
                             MaxSeatCapacity = 100,
@@ -1203,8 +1231,8 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("11806a9b-27a7-41eb-a6bb-4fd80352d1ec"),
-                            CinemaCenterId = new Guid("d0566c92-c9d5-45c8-9d3b-a632f7c5e874"),
+                            Id = new Guid("0ec16764-f7c5-4a4f-ba58-e06ca36f663f"),
+                            CinemaCenterId = new Guid("855605f0-f1bf-4791-b36d-37e10dd8c523"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Column = 10,
                             Description = "Description for Cinema 30",
@@ -1233,181 +1261,181 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("713d97e0-456c-4e33-ab26-203625e4ebf7"),
+                            Id = new Guid("34607b9c-adfd-46ea-80e2-d6688e710f74"),
                             Address = "Address 1",
                             Name = "Cinema Center 1"
                         },
                         new
                         {
-                            Id = new Guid("aba76668-45cf-4a71-8c04-d03a22604d8d"),
+                            Id = new Guid("e12faaf4-8a95-42a1-bd92-8d50beada41c"),
                             Address = "Address 2",
                             Name = "Cinema Center 2"
                         },
                         new
                         {
-                            Id = new Guid("a7fe53d1-c4e3-4d98-a6ad-bad2cd2c90fd"),
+                            Id = new Guid("78680907-7923-4966-b950-9c2494bb47bb"),
                             Address = "Address 3",
                             Name = "Cinema Center 3"
                         },
                         new
                         {
-                            Id = new Guid("6062cd97-0dbf-42a4-88cc-4e870ad66f2b"),
+                            Id = new Guid("5eba8de2-4492-44ac-8a4b-80e5c10ad326"),
                             Address = "Address 4",
                             Name = "Cinema Center 4"
                         },
                         new
                         {
-                            Id = new Guid("c70f5021-d95c-4168-b488-90cad88042ce"),
+                            Id = new Guid("8e393bed-2b22-4b17-872b-da53b8ff75ad"),
                             Address = "Address 5",
                             Name = "Cinema Center 5"
                         },
                         new
                         {
-                            Id = new Guid("c389e092-7635-49b9-80ed-2e966606e152"),
+                            Id = new Guid("a80c70d7-65e3-4d74-a743-73c766c8e8ae"),
                             Address = "Address 6",
                             Name = "Cinema Center 6"
                         },
                         new
                         {
-                            Id = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
+                            Id = new Guid("e163e949-7e92-4d1f-a602-341faf1f3d7f"),
                             Address = "Address 7",
                             Name = "Cinema Center 7"
                         },
                         new
                         {
-                            Id = new Guid("3378ec63-e87d-4d8c-8739-ccd64ff4a053"),
+                            Id = new Guid("ee8b9b21-fe0e-4add-816a-52b1a822b6ac"),
                             Address = "Address 8",
                             Name = "Cinema Center 8"
                         },
                         new
                         {
-                            Id = new Guid("78b6c6b0-212e-4582-9c31-68d15056d3ec"),
+                            Id = new Guid("96bb5b79-1a11-4ef6-b6cf-2fc72ab74461"),
                             Address = "Address 9",
                             Name = "Cinema Center 9"
                         },
                         new
                         {
-                            Id = new Guid("799559d7-7c44-43b6-80ba-6d5bcc012934"),
+                            Id = new Guid("26ef9fd2-5b34-4bd1-b91a-f6cbf23b50c3"),
                             Address = "Address 10",
                             Name = "Cinema Center 10"
                         },
                         new
                         {
-                            Id = new Guid("f727c7c2-313f-40e6-9cba-bc33a0a4896d"),
+                            Id = new Guid("774bb7be-c62c-4a07-b962-5032015c0411"),
                             Address = "Address 11",
                             Name = "Cinema Center 11"
                         },
                         new
                         {
-                            Id = new Guid("d67c6d99-0ff9-4426-90f7-aad61ad3f313"),
+                            Id = new Guid("a11ba9fe-9ebc-44fa-8db0-3cd0d10270c6"),
                             Address = "Address 12",
                             Name = "Cinema Center 12"
                         },
                         new
                         {
-                            Id = new Guid("ae2be624-42ba-4371-ae06-f36766b74a1a"),
+                            Id = new Guid("0eedc93b-b2a9-4c09-9ba6-34f4532af50c"),
                             Address = "Address 13",
                             Name = "Cinema Center 13"
                         },
                         new
                         {
-                            Id = new Guid("0740e6ae-a711-41c2-8515-1e743d7b4682"),
+                            Id = new Guid("8269c479-9bd9-4fd8-b0c4-f573a8631af4"),
                             Address = "Address 14",
                             Name = "Cinema Center 14"
                         },
                         new
                         {
-                            Id = new Guid("dbdf57c7-b24f-492a-8547-a7a1b6c059a7"),
+                            Id = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
                             Address = "Address 15",
                             Name = "Cinema Center 15"
                         },
                         new
                         {
-                            Id = new Guid("2f2b8c56-c334-4dc8-b125-5c8fc81aa75a"),
+                            Id = new Guid("f4c196de-ad5a-424c-94b6-80a4097afec1"),
                             Address = "Address 16",
                             Name = "Cinema Center 16"
                         },
                         new
                         {
-                            Id = new Guid("75ae46ab-bb42-48a0-ac95-ac5b7f72289e"),
+                            Id = new Guid("2134060d-6ad6-42bc-b406-d1e381371abe"),
                             Address = "Address 17",
                             Name = "Cinema Center 17"
                         },
                         new
                         {
-                            Id = new Guid("b2408ebd-0143-4fe9-9197-0306a750e952"),
+                            Id = new Guid("a8817eda-abab-4bff-a3a5-82a1460ae416"),
                             Address = "Address 18",
                             Name = "Cinema Center 18"
                         },
                         new
                         {
-                            Id = new Guid("d0718ece-1e1c-41fe-8e2d-fe043626f3b6"),
+                            Id = new Guid("72e94f44-6348-428a-89c7-7808e0aca9ab"),
                             Address = "Address 19",
                             Name = "Cinema Center 19"
                         },
                         new
                         {
-                            Id = new Guid("374ccabe-cae4-4389-ac12-a1b327c912ff"),
+                            Id = new Guid("244ffcea-6b2b-4025-a043-eee24f165a05"),
                             Address = "Address 20",
                             Name = "Cinema Center 20"
                         },
                         new
                         {
-                            Id = new Guid("a231f257-80fa-45b4-bdbd-178ca5c4cbb9"),
+                            Id = new Guid("986557b4-114c-4668-bd0e-02b416e99954"),
                             Address = "Address 21",
                             Name = "Cinema Center 21"
                         },
                         new
                         {
-                            Id = new Guid("7b6669ba-5dc7-46b5-8731-93bdf681f358"),
+                            Id = new Guid("65215a44-8f91-4e7a-aea2-46afb1dc083a"),
                             Address = "Address 22",
                             Name = "Cinema Center 22"
                         },
                         new
                         {
-                            Id = new Guid("562703b6-f408-4340-9651-780c11395069"),
+                            Id = new Guid("b37ce504-e51d-4259-a0aa-a8d0584c9530"),
                             Address = "Address 23",
                             Name = "Cinema Center 23"
                         },
                         new
                         {
-                            Id = new Guid("9915451c-1ab7-447e-8427-fa87158c3911"),
+                            Id = new Guid("e6d3f6dd-929b-497c-bd54-454d317dea41"),
                             Address = "Address 24",
                             Name = "Cinema Center 24"
                         },
                         new
                         {
-                            Id = new Guid("8fe002c4-d845-4ee0-8d55-29212c6618ef"),
+                            Id = new Guid("ae97ec2f-870c-4940-8679-65b362488677"),
                             Address = "Address 25",
                             Name = "Cinema Center 25"
                         },
                         new
                         {
-                            Id = new Guid("b33761ea-2f8f-46ae-8a72-923adb87001f"),
+                            Id = new Guid("b6a9896f-c9c6-4e97-a793-e18cfb55e1f7"),
                             Address = "Address 26",
                             Name = "Cinema Center 26"
                         },
                         new
                         {
-                            Id = new Guid("72ce0538-77cb-4738-86a4-db5f74a79f2e"),
+                            Id = new Guid("8bda5cc0-4f7f-4242-b23e-415fe3e3498f"),
                             Address = "Address 27",
                             Name = "Cinema Center 27"
                         },
                         new
                         {
-                            Id = new Guid("94a99957-ebfa-46b3-af5f-877e6116b5df"),
+                            Id = new Guid("9993c899-8956-4441-ae4a-fe06c32c6e02"),
                             Address = "Address 28",
                             Name = "Cinema Center 28"
                         },
                         new
                         {
-                            Id = new Guid("9586d3ff-46f6-4058-9bdc-cba2f987d645"),
+                            Id = new Guid("e58ec98d-2eba-40a6-a7c9-ac4228c635f1"),
                             Address = "Address 29",
                             Name = "Cinema Center 29"
                         },
                         new
                         {
-                            Id = new Guid("d0566c92-c9d5-45c8-9d3b-a632f7c5e874"),
+                            Id = new Guid("855605f0-f1bf-4791-b36d-37e10dd8c523"),
                             Address = "Address 30",
                             Name = "Cinema Center 30"
                         });
@@ -1463,181 +1491,181 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2c6981ca-c46b-463b-b59f-9cc2a665731a"),
+                            Id = new Guid("cd77f79a-74cb-4cbb-a6ca-746c32ac73e3"),
                             Name = "Combo 1",
                             Price = 10000m
                         },
                         new
                         {
-                            Id = new Guid("b764b804-0e28-49e5-84f2-64824c4f1c33"),
+                            Id = new Guid("6d9ed912-eb20-4ec1-9c62-79921192881f"),
                             Name = "Combo 2",
                             Price = 20000m
                         },
                         new
                         {
-                            Id = new Guid("c38f791a-6d87-4b71-8f47-276c0df6a41a"),
+                            Id = new Guid("c3c0d041-cbe9-48bd-806f-8b9b5074c273"),
                             Name = "Combo 3",
                             Price = 30000m
                         },
                         new
                         {
-                            Id = new Guid("ff47e751-7347-4a64-bf46-288500ce8d53"),
+                            Id = new Guid("bbbb9a46-f14d-41af-bb2d-7a9e49e77f3d"),
                             Name = "Combo 4",
                             Price = 40000m
                         },
                         new
                         {
-                            Id = new Guid("f7cd643f-0a76-4788-afe4-dfa2b2778b03"),
+                            Id = new Guid("9d76674e-88b9-451b-84af-23c81a3bbd1a"),
                             Name = "Combo 5",
                             Price = 50000m
                         },
                         new
                         {
-                            Id = new Guid("b8684907-a50b-4b87-a3cf-1d23b754d057"),
+                            Id = new Guid("9f8a7372-7432-49b7-b4f6-db93971db271"),
                             Name = "Combo 6",
                             Price = 60000m
                         },
                         new
                         {
-                            Id = new Guid("325c02c3-25c2-41b8-a80b-ff83fc25f630"),
+                            Id = new Guid("baf7b75d-4828-4134-bbfc-7696156eba10"),
                             Name = "Combo 7",
                             Price = 70000m
                         },
                         new
                         {
-                            Id = new Guid("4ac882d2-168d-43d3-8283-1746278172e3"),
+                            Id = new Guid("66a05a13-fbdd-4947-8519-ce54e8f692db"),
                             Name = "Combo 8",
                             Price = 80000m
                         },
                         new
                         {
-                            Id = new Guid("73bf0989-d589-410d-8f41-d0215b550eb4"),
+                            Id = new Guid("75b01116-13e2-4dc9-9acf-fd478f9acf62"),
                             Name = "Combo 9",
                             Price = 90000m
                         },
                         new
                         {
-                            Id = new Guid("58c1e54f-eb5d-41cd-8853-32b17a93dd8e"),
+                            Id = new Guid("36e6a46a-d014-4fd6-8b21-d9cd4d1c646c"),
                             Name = "Combo 10",
                             Price = 0m
                         },
                         new
                         {
-                            Id = new Guid("75044332-37b9-4200-806e-4fe0131f52a3"),
+                            Id = new Guid("0f741091-18be-4f5d-a271-d2d7b771a642"),
                             Name = "Combo 11",
                             Price = 10000m
                         },
                         new
                         {
-                            Id = new Guid("bd53492c-ec1b-42b0-a095-433ffc8c98b8"),
+                            Id = new Guid("cef31171-ed36-4e09-869b-57a621c1f146"),
                             Name = "Combo 12",
                             Price = 20000m
                         },
                         new
                         {
-                            Id = new Guid("7a95e2f8-35d2-4c1a-95b2-f5c294b46d00"),
+                            Id = new Guid("3839e50d-4872-4b0d-8134-adbb233d1181"),
                             Name = "Combo 13",
                             Price = 30000m
                         },
                         new
                         {
-                            Id = new Guid("c9113f9c-6e9c-4f90-befb-d1f16ab50889"),
+                            Id = new Guid("a93853b9-3a82-4078-9496-cb67745c95e9"),
                             Name = "Combo 14",
                             Price = 40000m
                         },
                         new
                         {
-                            Id = new Guid("1faeff73-88ef-4b83-932f-54e528c16332"),
+                            Id = new Guid("8b68b58e-c257-4f32-9962-c0e99e13f31b"),
                             Name = "Combo 15",
                             Price = 50000m
                         },
                         new
                         {
-                            Id = new Guid("9338d499-c412-4644-b669-0c2686e0122b"),
+                            Id = new Guid("94029caa-ea3c-42a2-b431-db77dcf72398"),
                             Name = "Combo 16",
                             Price = 60000m
                         },
                         new
                         {
-                            Id = new Guid("8cef5b4e-ec02-4f07-a7ec-0e146523f0c3"),
+                            Id = new Guid("b365f3f3-3c44-41bb-8b4a-d118771b7fd8"),
                             Name = "Combo 17",
                             Price = 70000m
                         },
                         new
                         {
-                            Id = new Guid("0b948319-5f77-439e-ae6c-cea50a122a17"),
+                            Id = new Guid("ac2fd984-f00e-4286-a068-e2b87cd88167"),
                             Name = "Combo 18",
                             Price = 80000m
                         },
                         new
                         {
-                            Id = new Guid("7da7fdaa-669e-4136-b195-cf5124634ce0"),
+                            Id = new Guid("5d736597-1e04-4af4-841d-8be14bb947fa"),
                             Name = "Combo 19",
                             Price = 90000m
                         },
                         new
                         {
-                            Id = new Guid("1a3d6868-b3ac-4c52-8ef0-45de0ea05893"),
+                            Id = new Guid("c69abb85-98e6-4c94-8999-9413db23adac"),
                             Name = "Combo 20",
                             Price = 0m
                         },
                         new
                         {
-                            Id = new Guid("d2ead2c2-704b-41b3-a335-b6895a7682aa"),
+                            Id = new Guid("46d38ae4-c6a5-423d-96c4-c4eea56194ac"),
                             Name = "Combo 21",
                             Price = 10000m
                         },
                         new
                         {
-                            Id = new Guid("9fc9a923-61fa-422b-971b-9261e2aff2d4"),
+                            Id = new Guid("53282f34-dbe1-4df2-9ed5-6f7d485a6cff"),
                             Name = "Combo 22",
                             Price = 20000m
                         },
                         new
                         {
-                            Id = new Guid("12fed860-0940-40c6-afe0-49717f9fa027"),
+                            Id = new Guid("84d7e09f-6b5b-4f35-b109-434756033a6c"),
                             Name = "Combo 23",
                             Price = 30000m
                         },
                         new
                         {
-                            Id = new Guid("4b5e2b04-398b-4617-9a58-55569f82be5a"),
+                            Id = new Guid("bd182a47-a15f-460e-b9fc-644d86123c40"),
                             Name = "Combo 24",
                             Price = 40000m
                         },
                         new
                         {
-                            Id = new Guid("0a5e059e-3f6e-4960-bb18-b5eb49f34dd7"),
+                            Id = new Guid("df537010-99ef-46bf-89b0-9849cca8d711"),
                             Name = "Combo 25",
                             Price = 50000m
                         },
                         new
                         {
-                            Id = new Guid("c372c08c-9b39-4ba2-a7d1-167eaaa68396"),
+                            Id = new Guid("04384de5-233e-4fc9-a3f5-cb320e465f55"),
                             Name = "Combo 26",
                             Price = 60000m
                         },
                         new
                         {
-                            Id = new Guid("cdc48a92-3fcf-433d-a7fc-58840a29f879"),
+                            Id = new Guid("43d1a8bc-7eaf-418f-a750-3832c184ebe8"),
                             Name = "Combo 27",
                             Price = 70000m
                         },
                         new
                         {
-                            Id = new Guid("b61c9ab8-e51d-49f2-a499-f40a01e3997b"),
+                            Id = new Guid("b1eea8c2-303b-4425-a3b0-ba964b52ed84"),
                             Name = "Combo 28",
                             Price = 80000m
                         },
                         new
                         {
-                            Id = new Guid("2e4caadc-cc9d-4c1c-8d8c-42ef7b42ded3"),
+                            Id = new Guid("3c4aec6c-f45e-4a05-b357-f56d82708d90"),
                             Name = "Combo 29",
                             Price = 90000m
                         },
                         new
                         {
-                            Id = new Guid("64b55597-7e87-4c7c-9dee-28a68cae0c42"),
+                            Id = new Guid("ec9ee5a9-1925-424b-b924-8f3a006d0158"),
                             Name = "Combo 30",
                             Price = 0m
                         });
@@ -1736,7 +1764,7 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("39847e7b-a7f9-473c-8e69-359451cdad2e"),
+                            Id = new Guid("d7b64f5e-f2d6-43c5-9949-d5ec83b7af0d"),
                             Cast = "Actor 1, Actress 1",
                             CreatDate = new DateTime(2023, 8, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 1.",
@@ -1750,15 +1778,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 2,
                             ReleaseYear = 2023,
                             RunningTime = 61,
-                            ScreenTypeId = new Guid("2daa5da4-4568-4067-bd0d-815ba5f39f2d"),
+                            ScreenTypeId = new Guid("9b829ca1-9090-4e6f-b163-89e99b733a56"),
                             StartDate = new DateTime(2023, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer1.mp4",
-                            TranslationTypeId = new Guid("80f0b303-07bc-4843-b4d0-5be3cc22c9b7")
+                            TranslationTypeId = new Guid("dfd3af60-be25-4f9f-9034-fba084a848a0")
                         },
                         new
                         {
-                            Id = new Guid("9810291e-4391-40ee-bc0d-f4cf84318fb5"),
+                            Id = new Guid("58d617d6-4605-41eb-983a-7f8b08902762"),
                             Cast = "Actor 2, Actress 2",
                             CreatDate = new DateTime(2023, 8, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 2.",
@@ -1772,15 +1800,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 3,
                             ReleaseYear = 2023,
                             RunningTime = 62,
-                            ScreenTypeId = new Guid("fec36de5-86c3-440e-86e4-c809690be6be"),
+                            ScreenTypeId = new Guid("96259071-b4e6-4605-ac00-14f4993b0038"),
                             StartDate = new DateTime(2023, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer2.mp4",
-                            TranslationTypeId = new Guid("afc1534f-6421-4913-bebf-29b5b3294bee")
+                            TranslationTypeId = new Guid("03f14455-84fb-48f7-bd28-2d0391a84f9e")
                         },
                         new
                         {
-                            Id = new Guid("433fa649-d62d-499a-94e3-63454e4d2170"),
+                            Id = new Guid("b6d6f92f-2048-4279-8cf1-a749f4684404"),
                             Cast = "Actor 3, Actress 3",
                             CreatDate = new DateTime(2023, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 3.",
@@ -1794,15 +1822,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 4,
                             ReleaseYear = 2023,
                             RunningTime = 63,
-                            ScreenTypeId = new Guid("f9b83fbc-3c8e-4900-bfa1-e19027c78432"),
+                            ScreenTypeId = new Guid("05410a3f-65a0-4e47-b654-f33fa7f044aa"),
                             StartDate = new DateTime(2023, 4, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer3.mp4",
-                            TranslationTypeId = new Guid("b3a0580b-6c29-4f10-b39b-86e7ba87fc18")
+                            TranslationTypeId = new Guid("8e1bb721-fb4c-440f-9ae7-66257f58319d")
                         },
                         new
                         {
-                            Id = new Guid("24b33fd3-c227-48d4-8304-b01f9e977e0b"),
+                            Id = new Guid("329c8514-2ddb-4554-998d-3bef7068423e"),
                             Cast = "Actor 4, Actress 4",
                             CreatDate = new DateTime(2023, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 4.",
@@ -1816,15 +1844,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 5,
                             ReleaseYear = 2023,
                             RunningTime = 64,
-                            ScreenTypeId = new Guid("fdca0f20-376e-43fb-92dc-208eded31b6f"),
+                            ScreenTypeId = new Guid("83522ed2-8661-4e7c-86cb-ff82b4cddb5a"),
                             StartDate = new DateTime(2023, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer4.mp4",
-                            TranslationTypeId = new Guid("4c152535-2870-46f7-bec8-b84c8c1b7e4d")
+                            TranslationTypeId = new Guid("27f025f7-0785-4b17-af3f-7cc7b03ab2f4")
                         },
                         new
                         {
-                            Id = new Guid("7247b4ae-8e10-4012-81fb-0146ef3a1adf"),
+                            Id = new Guid("1bac7698-bc3e-4e0c-b052-d5a6f87a0c05"),
                             Cast = "Actor 5, Actress 5",
                             CreatDate = new DateTime(2023, 8, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 5.",
@@ -1838,15 +1866,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 1,
                             ReleaseYear = 2023,
                             RunningTime = 65,
-                            ScreenTypeId = new Guid("c3d2d8c2-d697-4ce4-98c1-35b2f64f78a0"),
+                            ScreenTypeId = new Guid("8f31c439-5372-4641-9516-d5ee08f2db08"),
                             StartDate = new DateTime(2023, 6, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer5.mp4",
-                            TranslationTypeId = new Guid("6f7a486a-9dc9-4115-8464-fa6f66263113")
+                            TranslationTypeId = new Guid("5ad30636-a2db-442f-9fe5-6719f2ea50fe")
                         },
                         new
                         {
-                            Id = new Guid("073e9f64-7da6-41f9-81bc-734e1b063143"),
+                            Id = new Guid("f9e358a5-63a9-4264-af67-5c9c9a05e719"),
                             Cast = "Actor 6, Actress 6",
                             CreatDate = new DateTime(2023, 8, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 6.",
@@ -1860,15 +1888,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 2,
                             ReleaseYear = 2023,
                             RunningTime = 66,
-                            ScreenTypeId = new Guid("24a5e083-becb-4f78-824c-a881c0e146cd"),
+                            ScreenTypeId = new Guid("87e006f3-159d-4eea-a3b1-c23a4577e903"),
                             StartDate = new DateTime(2023, 7, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer6.mp4",
-                            TranslationTypeId = new Guid("67c16729-c2ee-41ab-9238-fc35178597b3")
+                            TranslationTypeId = new Guid("8ca92f18-fd52-45de-8fa1-4b50ab940d7e")
                         },
                         new
                         {
-                            Id = new Guid("3c1bac2e-6287-44c8-9c5c-22bfb0f76a57"),
+                            Id = new Guid("19b092c9-91df-4cea-92c0-d54e76f92572"),
                             Cast = "Actor 7, Actress 7",
                             CreatDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 7.",
@@ -1882,15 +1910,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 3,
                             ReleaseYear = 2023,
                             RunningTime = 67,
-                            ScreenTypeId = new Guid("9ad4a057-270f-42be-b1fb-9c2b89fc0871"),
+                            ScreenTypeId = new Guid("ece5862c-a5da-4444-ad34-813eb134d093"),
                             StartDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer7.mp4",
-                            TranslationTypeId = new Guid("2f8bc44c-1418-4b32-b84c-88a75afa376c")
+                            TranslationTypeId = new Guid("6c31377d-261f-4a87-8620-61bb8030cdd8")
                         },
                         new
                         {
-                            Id = new Guid("c352e249-845a-4a65-92dc-096718447df8"),
+                            Id = new Guid("39d30d8b-9d1c-4028-bf26-22f152c4370f"),
                             Cast = "Actor 8, Actress 8",
                             CreatDate = new DateTime(2023, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 8.",
@@ -1904,15 +1932,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 4,
                             ReleaseYear = 2023,
                             RunningTime = 68,
-                            ScreenTypeId = new Guid("347b8784-c355-44da-8f5d-12bb77e7cd73"),
+                            ScreenTypeId = new Guid("da47e008-02cb-4071-a94e-32340beaeed6"),
                             StartDate = new DateTime(2023, 9, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer8.mp4",
-                            TranslationTypeId = new Guid("40a6d98a-daa1-4d28-bf6a-ed142f06a336")
+                            TranslationTypeId = new Guid("cd56dc3a-e8f4-4e5e-a84f-733fb8738311")
                         },
                         new
                         {
-                            Id = new Guid("b7fd5c99-8da1-4086-8af7-8dc2eab178a4"),
+                            Id = new Guid("7e0b812e-435d-4f68-b589-cde23aa4e249"),
                             Cast = "Actor 9, Actress 9",
                             CreatDate = new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 9.",
@@ -1926,15 +1954,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 5,
                             ReleaseYear = 2023,
                             RunningTime = 69,
-                            ScreenTypeId = new Guid("7370be17-6e7d-471a-8cce-ef0b4a8553be"),
+                            ScreenTypeId = new Guid("e6e4a8b4-69fd-4411-a06b-ad74e7f498c4"),
                             StartDate = new DateTime(2023, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer9.mp4",
-                            TranslationTypeId = new Guid("f8741c5d-f9a7-4979-b5bf-f8e45c9b0953")
+                            TranslationTypeId = new Guid("b790edd5-6842-4f62-bb8b-4d8abe18e615")
                         },
                         new
                         {
-                            Id = new Guid("2e433041-aca1-438d-b491-ab19f072ae56"),
+                            Id = new Guid("80688243-3577-4281-9550-c0f55295c0ac"),
                             Cast = "Actor 10, Actress 10",
                             CreatDate = new DateTime(2023, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 10.",
@@ -1948,15 +1976,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 1,
                             ReleaseYear = 2023,
                             RunningTime = 70,
-                            ScreenTypeId = new Guid("2b1a29ac-f311-4449-b389-7f57e6624bdc"),
+                            ScreenTypeId = new Guid("159f78e9-ee5f-460f-9418-a4bc8e0efc0d"),
                             StartDate = new DateTime(2023, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer10.mp4",
-                            TranslationTypeId = new Guid("1d9f3747-963f-47e9-ae50-edea69dd6826")
+                            TranslationTypeId = new Guid("5ca517f5-790d-4c49-b68b-0ec29b35d664")
                         },
                         new
                         {
-                            Id = new Guid("8cf13b57-c89b-4aa1-93e5-6fbc6e725c98"),
+                            Id = new Guid("39831169-ef3a-42fd-b391-272857bab717"),
                             Cast = "Actor 11, Actress 11",
                             CreatDate = new DateTime(2023, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 11.",
@@ -1970,15 +1998,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 2,
                             ReleaseYear = 2023,
                             RunningTime = 71,
-                            ScreenTypeId = new Guid("120dab7b-a20b-4753-bedf-6c719f97555f"),
+                            ScreenTypeId = new Guid("c61f017f-4df1-4968-9c3b-43f99cbbb218"),
                             StartDate = new DateTime(2023, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer11.mp4",
-                            TranslationTypeId = new Guid("f2e6ab2f-2073-4307-9103-558433c50374")
+                            TranslationTypeId = new Guid("1c8115d9-3b3f-4b18-895f-c50823fb3a60")
                         },
                         new
                         {
-                            Id = new Guid("34728e79-06aa-4979-9a73-18878eae0856"),
+                            Id = new Guid("604c7c77-37de-4a1c-bb8c-67313cb82b3c"),
                             Cast = "Actor 12, Actress 12",
                             CreatDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 12.",
@@ -1992,15 +2020,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 3,
                             ReleaseYear = 2023,
                             RunningTime = 72,
-                            ScreenTypeId = new Guid("516c6f71-0a4e-4654-9733-867aa07d79a0"),
+                            ScreenTypeId = new Guid("ba376416-a98b-4fa8-b2f9-cf2d25449413"),
                             StartDate = new DateTime(2023, 1, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer12.mp4",
-                            TranslationTypeId = new Guid("7dd6a27b-08c5-473d-9985-c5e290b4c9c2")
+                            TranslationTypeId = new Guid("152d9e8b-01b9-43c2-b854-f3207d5ea81f")
                         },
                         new
                         {
-                            Id = new Guid("ae216a68-1c4d-4d4f-806d-854935e1c5a0"),
+                            Id = new Guid("f10220ed-1241-41bf-826e-ba2f99519c50"),
                             Cast = "Actor 13, Actress 13",
                             CreatDate = new DateTime(2023, 8, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 13.",
@@ -2014,15 +2042,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 4,
                             ReleaseYear = 2023,
                             RunningTime = 73,
-                            ScreenTypeId = new Guid("d5690ec4-eba5-4c29-a8dd-f35650b9f3cb"),
+                            ScreenTypeId = new Guid("827f6b0c-48b4-4cdb-9172-8710c9fdbd03"),
                             StartDate = new DateTime(2023, 2, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer13.mp4",
-                            TranslationTypeId = new Guid("8114bd2a-1613-453e-ac1b-47c82c8405c7")
+                            TranslationTypeId = new Guid("3d077bf2-a137-4eef-b53a-0a9cc105b40e")
                         },
                         new
                         {
-                            Id = new Guid("5168145c-4cbb-4a8d-bdea-3639e2f0b6df"),
+                            Id = new Guid("7ab3a193-9841-4afd-9975-21f495a4b7c2"),
                             Cast = "Actor 14, Actress 14",
                             CreatDate = new DateTime(2023, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 14.",
@@ -2036,15 +2064,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 5,
                             ReleaseYear = 2023,
                             RunningTime = 74,
-                            ScreenTypeId = new Guid("15c899e9-7e38-4888-af8f-6bc4ab12abf2"),
+                            ScreenTypeId = new Guid("250d44cd-5ca7-406a-b92e-139d5d62df08"),
                             StartDate = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer14.mp4",
-                            TranslationTypeId = new Guid("cb48410a-7d95-4fd0-88a1-738ab03fbd32")
+                            TranslationTypeId = new Guid("94e07f4c-098e-4af2-b0f0-b33d76765250")
                         },
                         new
                         {
-                            Id = new Guid("96a1c7af-2a5f-41a2-a4cc-f91dbca8daac"),
+                            Id = new Guid("4af96ed7-3784-4f4f-9c4a-070363f90f5f"),
                             Cast = "Actor 15, Actress 15",
                             CreatDate = new DateTime(2023, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 15.",
@@ -2058,15 +2086,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 1,
                             ReleaseYear = 2023,
                             RunningTime = 75,
-                            ScreenTypeId = new Guid("b49f06df-4e1f-46fd-b9d5-57a1777729d8"),
+                            ScreenTypeId = new Guid("a8c8f3ad-622b-4a2c-ad1c-66ee2279c97e"),
                             StartDate = new DateTime(2023, 4, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer15.mp4",
-                            TranslationTypeId = new Guid("dce45936-cfea-4e01-8dad-1ad991c3ee17")
+                            TranslationTypeId = new Guid("f1744c09-60f5-46ca-866f-da4edd8bf00f")
                         },
                         new
                         {
-                            Id = new Guid("649aeb7d-632c-4f53-97e2-0c7f827fe5d5"),
+                            Id = new Guid("d6790789-26e6-47f0-bf21-409eb084037c"),
                             Cast = "Actor 16, Actress 16",
                             CreatDate = new DateTime(2023, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 16.",
@@ -2080,15 +2108,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 2,
                             ReleaseYear = 2023,
                             RunningTime = 76,
-                            ScreenTypeId = new Guid("46fe4942-80dc-4985-b0fa-e44806d3d978"),
+                            ScreenTypeId = new Guid("1f519b83-b5cb-4adb-8bc1-c2f812aa92bc"),
                             StartDate = new DateTime(2023, 5, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer16.mp4",
-                            TranslationTypeId = new Guid("308eee2f-a35c-4cc0-a042-e2ccee5af2ee")
+                            TranslationTypeId = new Guid("3db9cf3c-63ba-43d0-a425-1cfba6cd4466")
                         },
                         new
                         {
-                            Id = new Guid("e59fc7dd-f635-4109-b090-1d4150483b95"),
+                            Id = new Guid("c89867e6-e84b-4630-9739-87f643b7bc83"),
                             Cast = "Actor 17, Actress 17",
                             CreatDate = new DateTime(2023, 8, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 17.",
@@ -2102,15 +2130,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 3,
                             ReleaseYear = 2023,
                             RunningTime = 77,
-                            ScreenTypeId = new Guid("75aa1ea1-87ee-4129-aeb1-6f9a0ea2a949"),
+                            ScreenTypeId = new Guid("69754509-3d42-49c8-8663-81520f182ca0"),
                             StartDate = new DateTime(2023, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer17.mp4",
-                            TranslationTypeId = new Guid("2538bb34-f89d-498e-9836-dde6218a4674")
+                            TranslationTypeId = new Guid("4fbea739-76e5-411c-a0ca-10b252a39c29")
                         },
                         new
                         {
-                            Id = new Guid("6e3fd909-246d-47be-a2b9-c3169ea18d60"),
+                            Id = new Guid("72bd7490-85de-4192-b486-586b189277db"),
                             Cast = "Actor 18, Actress 18",
                             CreatDate = new DateTime(2023, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 18.",
@@ -2124,15 +2152,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 4,
                             ReleaseYear = 2023,
                             RunningTime = 78,
-                            ScreenTypeId = new Guid("8081f230-5a36-4cd8-89c2-6f4e51910161"),
+                            ScreenTypeId = new Guid("9b7fe4c3-d52e-4263-8852-3c965d5263cf"),
                             StartDate = new DateTime(2023, 7, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer18.mp4",
-                            TranslationTypeId = new Guid("e8ad11fe-38b6-4302-b6b1-7763d2aabb0a")
+                            TranslationTypeId = new Guid("41fcef0c-85b8-4324-8a85-af44ff874311")
                         },
                         new
                         {
-                            Id = new Guid("18fea777-3726-4a22-890a-f7e6aeb52d45"),
+                            Id = new Guid("c144ac5a-15bc-4394-8871-80c5d3944f85"),
                             Cast = "Actor 19, Actress 19",
                             CreatDate = new DateTime(2023, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 19.",
@@ -2146,15 +2174,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 5,
                             ReleaseYear = 2023,
                             RunningTime = 79,
-                            ScreenTypeId = new Guid("06db104f-aade-471f-ad66-d7604edc97c2"),
+                            ScreenTypeId = new Guid("2382b781-a779-4a9c-b558-9c3c794b5f33"),
                             StartDate = new DateTime(2023, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer19.mp4",
-                            TranslationTypeId = new Guid("a1815b66-3484-46fc-952f-1fc15c3cf807")
+                            TranslationTypeId = new Guid("ee0e9d9b-9795-48b9-b812-db2a8ce55165")
                         },
                         new
                         {
-                            Id = new Guid("8efe2a39-72a1-4e76-951f-06dba87f7256"),
+                            Id = new Guid("fff70a8c-d5db-4191-b5c4-7d259aaad696"),
                             Cast = "Actor 20, Actress 20",
                             CreatDate = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 20.",
@@ -2168,15 +2196,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 1,
                             ReleaseYear = 2023,
                             RunningTime = 80,
-                            ScreenTypeId = new Guid("3d85248f-5628-49fc-bd62-f208338d731b"),
+                            ScreenTypeId = new Guid("51b73f50-45ed-45d0-9ab8-51925e08ed9a"),
                             StartDate = new DateTime(2023, 9, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer20.mp4",
-                            TranslationTypeId = new Guid("4879de4d-cffe-442b-bef3-66c0d2a21978")
+                            TranslationTypeId = new Guid("ee12a2fe-9a10-4c78-8b9b-db9fa1344b46")
                         },
                         new
                         {
-                            Id = new Guid("faabedb7-6f8f-47ac-bdff-6a9f1ecb6d53"),
+                            Id = new Guid("ff0a25f5-2719-45af-ad6f-e2adf5b65b5f"),
                             Cast = "Actor 21, Actress 21",
                             CreatDate = new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 21.",
@@ -2190,15 +2218,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 2,
                             ReleaseYear = 2023,
                             RunningTime = 81,
-                            ScreenTypeId = new Guid("c952a2f4-ea7e-4bf3-ab3e-1d24b95011e9"),
+                            ScreenTypeId = new Guid("755d8694-7ee3-4546-a68c-7d5103079b86"),
                             StartDate = new DateTime(2023, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer21.mp4",
-                            TranslationTypeId = new Guid("4a4e9495-90a8-446b-88bd-c7ed574f0ee2")
+                            TranslationTypeId = new Guid("4ce0094c-e896-4fd1-9299-4467f6e948f3")
                         },
                         new
                         {
-                            Id = new Guid("7822c70d-8e8c-4b36-b4b8-065eb2d82a3e"),
+                            Id = new Guid("a0f2822b-f398-4cb9-9941-5562fb355874"),
                             Cast = "Actor 22, Actress 22",
                             CreatDate = new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 22.",
@@ -2212,15 +2240,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 3,
                             ReleaseYear = 2023,
                             RunningTime = 82,
-                            ScreenTypeId = new Guid("59ed6f91-84f2-4264-a7ea-215d87fbb48b"),
+                            ScreenTypeId = new Guid("2be3c1e4-a427-409c-a815-d3affa1ece5e"),
                             StartDate = new DateTime(2023, 11, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer22.mp4",
-                            TranslationTypeId = new Guid("a6c89aa7-5226-4804-97f7-a95ad972a4dc")
+                            TranslationTypeId = new Guid("a88e1058-b505-493b-85e9-bc5af0f5a5ad")
                         },
                         new
                         {
-                            Id = new Guid("9bceb03a-a2f2-40b0-bc55-bfb55e4e8690"),
+                            Id = new Guid("e621fade-b458-48b9-a9c9-24e39464c48d"),
                             Cast = "Actor 23, Actress 23",
                             CreatDate = new DateTime(2023, 8, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 23.",
@@ -2234,15 +2262,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 4,
                             ReleaseYear = 2023,
                             RunningTime = 83,
-                            ScreenTypeId = new Guid("afc124e4-1815-4859-9ed9-6c96059a7d0b"),
+                            ScreenTypeId = new Guid("1f143a35-8cb6-4aae-8e60-1db4d7d525b2"),
                             StartDate = new DateTime(2023, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer23.mp4",
-                            TranslationTypeId = new Guid("0dbf5d95-d9e1-4793-b0fa-73435ab7a1dd")
+                            TranslationTypeId = new Guid("ecafa3bf-6e31-4f2f-9bca-89e8f1a245f2")
                         },
                         new
                         {
-                            Id = new Guid("5d9910f7-57dd-49fa-983c-0d655e08744a"),
+                            Id = new Guid("453228a9-8ee3-4739-b69d-336ce46a181a"),
                             Cast = "Actor 24, Actress 24",
                             CreatDate = new DateTime(2023, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 24.",
@@ -2256,15 +2284,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 5,
                             ReleaseYear = 2023,
                             RunningTime = 84,
-                            ScreenTypeId = new Guid("9a287a86-63c1-4c2a-81f9-0a238ad938b1"),
+                            ScreenTypeId = new Guid("64aa1e1e-66d0-4cdd-82d7-ddac997380fe"),
                             StartDate = new DateTime(2023, 1, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer24.mp4",
-                            TranslationTypeId = new Guid("aa807fe8-a7fb-4644-9a9e-4811b3c29bc9")
+                            TranslationTypeId = new Guid("933d3424-436a-400b-ba7c-1052a8201a77")
                         },
                         new
                         {
-                            Id = new Guid("3b28a9f2-7d94-467d-9caa-a755ff685ee8"),
+                            Id = new Guid("47b88ede-70f2-4074-856a-dcea6a9f4ec7"),
                             Cast = "Actor 25, Actress 25",
                             CreatDate = new DateTime(2023, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 25.",
@@ -2278,15 +2306,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 1,
                             ReleaseYear = 2023,
                             RunningTime = 85,
-                            ScreenTypeId = new Guid("5add65ad-f465-4ab4-a935-3543d8ca0b86"),
+                            ScreenTypeId = new Guid("db4c0893-400c-4e45-a696-02d6baeace1f"),
                             StartDate = new DateTime(2023, 2, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer25.mp4",
-                            TranslationTypeId = new Guid("f9170efd-4889-4801-8c08-11e9b5bbea50")
+                            TranslationTypeId = new Guid("bd05bdeb-8397-4687-8d9b-5541262c33b4")
                         },
                         new
                         {
-                            Id = new Guid("22b245ce-e209-4039-8779-d5742f05a8af"),
+                            Id = new Guid("a44c3cdb-9840-4e5e-b972-7f31b10b23fe"),
                             Cast = "Actor 26, Actress 26",
                             CreatDate = new DateTime(2023, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 26.",
@@ -2300,15 +2328,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 2,
                             ReleaseYear = 2023,
                             RunningTime = 86,
-                            ScreenTypeId = new Guid("47287e10-fb35-4934-947c-738e027559cd"),
+                            ScreenTypeId = new Guid("6a0a86e4-2e84-41f4-a25a-3b6417d556e2"),
                             StartDate = new DateTime(2023, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer26.mp4",
-                            TranslationTypeId = new Guid("a8295ed1-91d6-4f5d-aaf9-23b169013e95")
+                            TranslationTypeId = new Guid("8a69f465-e3ca-47b6-92ba-b5ff05051169")
                         },
                         new
                         {
-                            Id = new Guid("bfbacdf7-1e08-4627-9dea-1211792009e6"),
+                            Id = new Guid("2435bfc4-79ee-4ec6-ae6f-439ff5044428"),
                             Cast = "Actor 27, Actress 27",
                             CreatDate = new DateTime(2023, 8, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 27.",
@@ -2322,15 +2350,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 3,
                             ReleaseYear = 2023,
                             RunningTime = 87,
-                            ScreenTypeId = new Guid("caa9381a-56a2-4677-ac25-30f909c8de71"),
+                            ScreenTypeId = new Guid("e610fd1b-2742-4b57-9902-e2c99fde0863"),
                             StartDate = new DateTime(2023, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer27.mp4",
-                            TranslationTypeId = new Guid("5789641b-98d3-4de8-bcba-79f9cffde35f")
+                            TranslationTypeId = new Guid("5e735696-57b4-4d47-8883-ad92836d1051")
                         },
                         new
                         {
-                            Id = new Guid("2b269958-33b6-4b80-966a-9bff4f77aaff"),
+                            Id = new Guid("5c86d655-14be-47b4-ba05-020167df03b8"),
                             Cast = "Actor 28, Actress 28",
                             CreatDate = new DateTime(2023, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 28.",
@@ -2344,15 +2372,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 4,
                             ReleaseYear = 2023,
                             RunningTime = 88,
-                            ScreenTypeId = new Guid("a8997304-017d-41a7-955c-6a97eeac70b6"),
+                            ScreenTypeId = new Guid("f19a5850-34bc-4bd4-b2a8-8e1491ca4f80"),
                             StartDate = new DateTime(2023, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer28.mp4",
-                            TranslationTypeId = new Guid("6e27ed47-ece8-4fa4-b0ca-6078d381c026")
+                            TranslationTypeId = new Guid("6f8325f5-9387-4179-999a-695a0750664d")
                         },
                         new
                         {
-                            Id = new Guid("c5d31102-c217-4989-99d0-2e7da5a26e12"),
+                            Id = new Guid("d0a3a0f1-660f-46c0-8d40-317c3a1ef86f"),
                             Cast = "Actor 29, Actress 29",
                             CreatDate = new DateTime(2023, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 29.",
@@ -2366,15 +2394,15 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 5,
                             ReleaseYear = 2023,
                             RunningTime = 89,
-                            ScreenTypeId = new Guid("044ba5ed-e5dd-4ade-bd54-9cb519e8dcf4"),
+                            ScreenTypeId = new Guid("2c4187d2-ed73-4928-9236-1612d4aa492b"),
                             StartDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer29.mp4",
-                            TranslationTypeId = new Guid("b953ad0c-ab5c-442d-9c4d-04d09cc957bb")
+                            TranslationTypeId = new Guid("5ff4e4c8-3176-48d4-bdde-67408501e183")
                         },
                         new
                         {
-                            Id = new Guid("b9e71344-3a19-49b2-80f2-4b6869616657"),
+                            Id = new Guid("c48ae736-d6bd-436b-baa9-b318ee7cb246"),
                             Cast = "Actor 30, Actress 30",
                             CreatDate = new DateTime(2023, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This is a description for Film 30.",
@@ -2388,11 +2416,11 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                             Rating = 1,
                             ReleaseYear = 2023,
                             RunningTime = 90,
-                            ScreenTypeId = new Guid("0b6b0444-802e-4db1-80b1-29169a7f5e81"),
+                            ScreenTypeId = new Guid("aa3659f7-66be-42ee-9957-056bc0fd5531"),
                             StartDate = new DateTime(2023, 7, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             Trailer = "https://example.com/trailer30.mp4",
-                            TranslationTypeId = new Guid("41403a14-8b97-4d62-a5ef-dca1fcb29192")
+                            TranslationTypeId = new Guid("5f0258dc-2e5f-411c-92d9-32ea1ce79367")
                         });
                 });
 
@@ -2466,152 +2494,152 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2431c0dd-c0fe-4ee7-8dd4-db976227f2fd"),
+                            Id = new Guid("f199bcfa-533e-4c85-b54d-9492207ab134"),
                             Title = "Title 1"
                         },
                         new
                         {
-                            Id = new Guid("80b2f269-55f8-462b-bc86-a0d5088fc14b"),
+                            Id = new Guid("94dd3916-2556-42cb-b147-e9efd01d34d8"),
                             Title = "Title 2"
                         },
                         new
                         {
-                            Id = new Guid("2dd9d284-3066-4da2-b643-b96780747f4f"),
+                            Id = new Guid("d833567a-cc66-4fb0-8575-23b17ac2dd25"),
                             Title = "Title 3"
                         },
                         new
                         {
-                            Id = new Guid("e640aac9-ae41-437e-8d52-c56c426b0b61"),
+                            Id = new Guid("f6707da4-b906-43ca-bf32-5c0875e58961"),
                             Title = "Title 4"
                         },
                         new
                         {
-                            Id = new Guid("553f18b5-fbc0-4e3c-953b-87fe8c27ab25"),
+                            Id = new Guid("49c886ca-7397-482f-97ef-02becb5e629a"),
                             Title = "Title 5"
                         },
                         new
                         {
-                            Id = new Guid("0705c484-1554-4e7e-9f23-4f5029195d65"),
+                            Id = new Guid("0b40c89c-895b-4de5-a822-855567708f1b"),
                             Title = "Title 6"
                         },
                         new
                         {
-                            Id = new Guid("42458d9b-17b8-4084-9ad6-cbd01c7205ad"),
+                            Id = new Guid("d13971e7-d88f-40d1-a5ff-ab9e8b630888"),
                             Title = "Title 7"
                         },
                         new
                         {
-                            Id = new Guid("86bd1bf8-e0dc-4060-95ee-9426e41b7023"),
+                            Id = new Guid("bdf3bd6c-affc-4104-8a08-ea477b48965b"),
                             Title = "Title 8"
                         },
                         new
                         {
-                            Id = new Guid("13f24496-987d-4676-8a62-f63003250fa6"),
+                            Id = new Guid("5c2242f3-2dcf-44fc-a408-62e98a3eb989"),
                             Title = "Title 9"
                         },
                         new
                         {
-                            Id = new Guid("17f86fcf-3a5a-407c-b25c-59da31d165b0"),
+                            Id = new Guid("c9cdb7bb-4c44-4e2b-bc9a-29ff442356e7"),
                             Title = "Title 10"
                         },
                         new
                         {
-                            Id = new Guid("20339814-8e18-4c79-adb5-bc15729c4420"),
+                            Id = new Guid("12c8e148-0f5a-483b-ba57-c4a0b8c19753"),
                             Title = "Title 11"
                         },
                         new
                         {
-                            Id = new Guid("b9a673e8-4675-48c0-b5fa-f60c1ef3b952"),
+                            Id = new Guid("ba385f90-bf88-4801-bffb-c7d7d08fd0ed"),
                             Title = "Title 12"
                         },
                         new
                         {
-                            Id = new Guid("b7fad5d6-5653-447b-80fa-b19a9a5aa0d2"),
+                            Id = new Guid("2d254f11-8c30-46f3-9cd7-2fb6e0d6a1b0"),
                             Title = "Title 13"
                         },
                         new
                         {
-                            Id = new Guid("ff6ed476-a56f-478f-a556-51ed9aea8302"),
+                            Id = new Guid("b76c66f2-3b37-47fc-af44-464f580915c9"),
                             Title = "Title 14"
                         },
                         new
                         {
-                            Id = new Guid("eaca3f7a-84db-43cd-869e-c8e3cce89847"),
+                            Id = new Guid("6a16ffb2-3b37-45b4-9074-5ed1739b42a1"),
                             Title = "Title 15"
                         },
                         new
                         {
-                            Id = new Guid("7ad3f9e1-6e43-45a7-95af-4dfadeae05fd"),
+                            Id = new Guid("70b920fb-3075-4000-ac60-136153aa8d11"),
                             Title = "Title 16"
                         },
                         new
                         {
-                            Id = new Guid("dbb2a4ea-64de-474f-aa6e-e1a5b7369e78"),
+                            Id = new Guid("4640ebf3-b363-4928-a46d-5a3048368af3"),
                             Title = "Title 17"
                         },
                         new
                         {
-                            Id = new Guid("2c876ebc-56cb-42a9-aa7f-7d03d34d4878"),
+                            Id = new Guid("b8349e79-9b22-4147-a4a2-4bb9804c4e82"),
                             Title = "Title 18"
                         },
                         new
                         {
-                            Id = new Guid("43663dd0-c21f-405d-9d6f-1321aa0349f7"),
+                            Id = new Guid("57c0ba57-ef8e-4536-8ca9-767373780ac3"),
                             Title = "Title 19"
                         },
                         new
                         {
-                            Id = new Guid("6f59fae1-b72b-4446-a2bf-5d911128b1cb"),
+                            Id = new Guid("85f07551-40f0-4a9c-b575-ce96fafbb8a2"),
                             Title = "Title 20"
                         },
                         new
                         {
-                            Id = new Guid("f1f79992-e1f2-4fbc-9aa0-845054022916"),
+                            Id = new Guid("86d5d854-87fb-442a-9062-aa5978663aad"),
                             Title = "Title 21"
                         },
                         new
                         {
-                            Id = new Guid("86b0f84b-ea31-4960-8a55-42366f64fe3c"),
+                            Id = new Guid("998b7704-daa0-475f-bc6b-083434396828"),
                             Title = "Title 22"
                         },
                         new
                         {
-                            Id = new Guid("6824c3eb-8185-4618-a2de-9f78f8b8657a"),
+                            Id = new Guid("bed4b5c2-0adc-4087-916c-683ef86b0b5c"),
                             Title = "Title 23"
                         },
                         new
                         {
-                            Id = new Guid("85c45197-4afe-4580-9b6d-389ef1f15cf5"),
+                            Id = new Guid("44b2fb7e-b630-4821-a2a0-e344f7491e8e"),
                             Title = "Title 24"
                         },
                         new
                         {
-                            Id = new Guid("126e1105-7622-414d-bf88-770c72fb03b2"),
+                            Id = new Guid("a6c87c50-f44c-4a92-8503-c0c7192d2c50"),
                             Title = "Title 25"
                         },
                         new
                         {
-                            Id = new Guid("dde5bbd9-9290-4140-a1ed-b3e8dfc124f0"),
+                            Id = new Guid("7f90a472-deda-4084-a8c3-bb770c5b9a6b"),
                             Title = "Title 26"
                         },
                         new
                         {
-                            Id = new Guid("aeb508d4-5446-436e-a576-1371d8d3efcf"),
+                            Id = new Guid("7d497a5d-00ae-41a1-ab36-43df8499fd4a"),
                             Title = "Title 27"
                         },
                         new
                         {
-                            Id = new Guid("abd25612-2420-4d29-913a-3a52a2a82ec6"),
+                            Id = new Guid("19690a81-292e-477a-be82-bda714911b0e"),
                             Title = "Title 28"
                         },
                         new
                         {
-                            Id = new Guid("192a7aed-c170-46e3-8a0f-5b7676bc1359"),
+                            Id = new Guid("b738c16f-89ab-4ceb-acbd-571131b465e1"),
                             Title = "Title 29"
                         },
                         new
                         {
-                            Id = new Guid("dc801d3e-6f0c-4714-81ac-93f058356126"),
+                            Id = new Guid("641e23d2-1c32-4bd4-9b3a-1704045aa8d1"),
                             Title = "Title 30"
                         });
                 });
@@ -2685,273 +2713,273 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("05c1d5c6-b2f8-472e-91f5-51686fdad516"),
+                            Id = new Guid("b1585ce9-6c05-4395-b67d-0100395cff73"),
                             EndDate = new DateTime(2023, 8, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("39847e7b-a7f9-473c-8e69-359451cdad2e"),
+                            FilmId = new Guid("d7b64f5e-f2d6-43c5-9949-d5ec83b7af0d"),
                             StartDate = new DateTime(2023, 8, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 2
+                            Type = 1
                         },
                         new
                         {
-                            Id = new Guid("3ca8bfd1-bb30-4b81-a325-0fb10b9cb2ff"),
+                            Id = new Guid("d992c3e8-e1fe-40ac-a4ab-feba8f2cfc11"),
                             EndDate = new DateTime(2023, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("9810291e-4391-40ee-bc0d-f4cf84318fb5"),
+                            FilmId = new Guid("58d617d6-4605-41eb-983a-7f8b08902762"),
                             StartDate = new DateTime(2023, 8, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 1
                         },
                         new
                         {
-                            Id = new Guid("60646501-70f7-4660-b86c-3d828ccb9024"),
+                            Id = new Guid("29b69d23-3bf6-44b3-9cb8-b73b87b5a1ec"),
                             EndDate = new DateTime(2023, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("433fa649-d62d-499a-94e3-63454e4d2170"),
+                            FilmId = new Guid("b6d6f92f-2048-4279-8cf1-a749f4684404"),
                             StartDate = new DateTime(2023, 8, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 1
+                            Type = 2
                         },
                         new
                         {
-                            Id = new Guid("12b01a89-6f50-4876-bf67-26a12ef8eaa7"),
+                            Id = new Guid("7b80eac5-4ba9-46a1-8361-00e5f77fc802"),
                             EndDate = new DateTime(2023, 8, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("24b33fd3-c227-48d4-8304-b01f9e977e0b"),
+                            FilmId = new Guid("329c8514-2ddb-4554-998d-3bef7068423e"),
                             StartDate = new DateTime(2023, 8, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 2
                         },
                         new
                         {
-                            Id = new Guid("64b2cb82-6104-4da1-8e93-397026a2a3ea"),
+                            Id = new Guid("4a2a1d48-9cd4-4cc7-b5d3-8dbde5075180"),
                             EndDate = new DateTime(2023, 8, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("7247b4ae-8e10-4012-81fb-0146ef3a1adf"),
+                            FilmId = new Guid("1bac7698-bc3e-4e0c-b052-d5a6f87a0c05"),
                             StartDate = new DateTime(2023, 8, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("0780cd4c-aac7-45de-8917-a07f8c34de2c"),
+                            EndDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("f9e358a5-63a9-4264-af67-5c9c9a05e719"),
+                            StartDate = new DateTime(2023, 8, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 1
                         },
                         new
                         {
-                            Id = new Guid("2c21db2f-7c44-4df2-afbe-0249a95b6f4a"),
-                            EndDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("073e9f64-7da6-41f9-81bc-734e1b063143"),
-                            StartDate = new DateTime(2023, 8, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = new Guid("7e085d92-f989-4790-99b6-7ee060e6634d"),
+                            Id = new Guid("0ccd0fdc-b377-442c-8f35-5fc03384455b"),
                             EndDate = new DateTime(2023, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("3c1bac2e-6287-44c8-9c5c-22bfb0f76a57"),
+                            FilmId = new Guid("19b092c9-91df-4cea-92c0-d54e76f92572"),
                             StartDate = new DateTime(2023, 8, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 2
+                            Type = 1
                         },
                         new
                         {
-                            Id = new Guid("a84527da-d1c2-4e05-9bd5-b697c574bf17"),
+                            Id = new Guid("7263497e-9b79-4bc8-bcce-4e5da6fb7eeb"),
                             EndDate = new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("c352e249-845a-4a65-92dc-096718447df8"),
+                            FilmId = new Guid("39d30d8b-9d1c-4028-bf26-22f152c4370f"),
                             StartDate = new DateTime(2023, 8, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 2
+                            Type = 1
                         },
                         new
                         {
-                            Id = new Guid("7c67fdaa-deda-4edd-9517-1f6a2beaf70f"),
+                            Id = new Guid("af659ca2-9629-46d8-9965-712fa7d71010"),
                             EndDate = new DateTime(2023, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("b7fd5c99-8da1-4086-8af7-8dc2eab178a4"),
+                            FilmId = new Guid("7e0b812e-435d-4f68-b589-cde23aa4e249"),
                             StartDate = new DateTime(2023, 8, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 2
                         },
                         new
                         {
-                            Id = new Guid("9e82bddd-d0ca-4db6-91f4-6d0bfe91e97e"),
+                            Id = new Guid("995ce7c9-b08e-48bf-8c16-5f84e489e5a4"),
                             EndDate = new DateTime(2023, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("2e433041-aca1-438d-b491-ab19f072ae56"),
+                            FilmId = new Guid("80688243-3577-4281-9550-c0f55295c0ac"),
                             StartDate = new DateTime(2023, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("c2ca9e97-feaa-4b63-badd-728d32150e56"),
-                            EndDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("8cf13b57-c89b-4aa1-93e5-6fbc6e725c98"),
-                            StartDate = new DateTime(2023, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("64ada421-c00e-47c2-8d08-0b2f4c817943"),
-                            EndDate = new DateTime(2023, 8, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("34728e79-06aa-4979-9a73-18878eae0856"),
-                            StartDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("e84b16d0-4d63-44dd-9586-563e2406eba9"),
-                            EndDate = new DateTime(2023, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("ae216a68-1c4d-4d4f-806d-854935e1c5a0"),
-                            StartDate = new DateTime(2023, 8, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 2
-                        },
-                        new
-                        {
-                            Id = new Guid("6f95b332-b766-4b99-ab72-cdd8a7fd62b9"),
-                            EndDate = new DateTime(2023, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("5168145c-4cbb-4a8d-bdea-3639e2f0b6df"),
-                            StartDate = new DateTime(2023, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 3
                         },
                         new
                         {
-                            Id = new Guid("84ad461c-2008-4b9d-a2db-ca1f0ccf93b1"),
-                            EndDate = new DateTime(2023, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("96a1c7af-2a5f-41a2-a4cc-f91dbca8daac"),
-                            StartDate = new DateTime(2023, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("46c4eca9-d7bc-4220-ba85-e892112e59b6"),
+                            EndDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("39831169-ef3a-42fd-b391-272857bab717"),
+                            StartDate = new DateTime(2023, 8, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 2
                         },
                         new
                         {
-                            Id = new Guid("287ff4af-d81c-4a0c-a4dc-5255b3170c8f"),
+                            Id = new Guid("d2ba36bc-2173-4ef2-9e24-f2a6ad6535c5"),
+                            EndDate = new DateTime(2023, 8, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("604c7c77-37de-4a1c-bb8c-67313cb82b3c"),
+                            StartDate = new DateTime(2023, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("252fcb3b-69ab-4bb7-9b24-073efa7e23e9"),
+                            EndDate = new DateTime(2023, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("f10220ed-1241-41bf-826e-ba2f99519c50"),
+                            StartDate = new DateTime(2023, 8, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("62f2a7d7-87d8-4287-bedb-244245ffa0f7"),
+                            EndDate = new DateTime(2023, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("7ab3a193-9841-4afd-9975-21f495a4b7c2"),
+                            StartDate = new DateTime(2023, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("8357aa0b-48fd-4343-b5b6-8d5ff4a9366d"),
+                            EndDate = new DateTime(2023, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("4af96ed7-3784-4f4f-9c4a-070363f90f5f"),
+                            StartDate = new DateTime(2023, 8, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("205a4149-ddb2-44ea-9f9e-11f438fa7b66"),
                             EndDate = new DateTime(2023, 8, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("649aeb7d-632c-4f53-97e2-0c7f827fe5d5"),
+                            FilmId = new Guid("d6790789-26e6-47f0-bf21-409eb084037c"),
                             StartDate = new DateTime(2023, 8, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 3
                         },
                         new
                         {
-                            Id = new Guid("d922274a-225a-4c0e-90eb-0da2fbd325db"),
+                            Id = new Guid("6f54c038-dcad-408d-9c55-75afd7fa282d"),
                             EndDate = new DateTime(2023, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("e59fc7dd-f635-4109-b090-1d4150483b95"),
+                            FilmId = new Guid("c89867e6-e84b-4630-9739-87f643b7bc83"),
                             StartDate = new DateTime(2023, 8, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 3
+                            Type = 1
                         },
                         new
                         {
-                            Id = new Guid("efffc858-a502-4c10-a860-9b9bac3f3cb5"),
+                            Id = new Guid("84a4624e-73a4-425c-a066-d1f556aa35f6"),
                             EndDate = new DateTime(2023, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("6e3fd909-246d-47be-a2b9-c3169ea18d60"),
+                            FilmId = new Guid("72bd7490-85de-4192-b486-586b189277db"),
                             StartDate = new DateTime(2023, 8, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 2
                         },
                         new
                         {
-                            Id = new Guid("a4e4fa80-13c2-4b42-83ad-02b3a6a4a2b7"),
+                            Id = new Guid("1c59b2dc-825b-4a45-8b9e-e4de1e42ea80"),
                             EndDate = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("18fea777-3726-4a22-890a-f7e6aeb52d45"),
+                            FilmId = new Guid("c144ac5a-15bc-4394-8871-80c5d3944f85"),
                             StartDate = new DateTime(2023, 8, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("7e4be017-32de-4763-9884-1cfed585cf83"),
-                            EndDate = new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("8efe2a39-72a1-4e76-951f-06dba87f7256"),
-                            StartDate = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 3
                         },
                         new
                         {
-                            Id = new Guid("0e368e86-563c-405f-bb6c-d6e67244f020"),
+                            Id = new Guid("01236102-00aa-41c4-8a2d-d6a091156fc0"),
+                            EndDate = new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("fff70a8c-d5db-4191-b5c4-7d259aaad696"),
+                            StartDate = new DateTime(2023, 8, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("9f38c585-b966-4743-92a6-2dc8a9600f95"),
                             EndDate = new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("faabedb7-6f8f-47ac-bdff-6a9f1ecb6d53"),
+                            FilmId = new Guid("ff0a25f5-2719-45af-ad6f-e2adf5b65b5f"),
                             StartDate = new DateTime(2023, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 3
                         },
                         new
                         {
-                            Id = new Guid("5ed1b273-a900-4b84-9c13-f8e5bd27dc09"),
+                            Id = new Guid("007fbba7-4dac-4cbb-9295-d6101a57629c"),
                             EndDate = new DateTime(2023, 8, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("7822c70d-8e8c-4b36-b4b8-065eb2d82a3e"),
+                            FilmId = new Guid("a0f2822b-f398-4cb9-9941-5562fb355874"),
                             StartDate = new DateTime(2023, 8, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 2
+                            Type = 3
                         },
                         new
                         {
-                            Id = new Guid("7533e0e5-05f4-4716-bc65-c0ded11f250a"),
+                            Id = new Guid("d7b5edd3-955f-4b7b-967e-777c106edd44"),
                             EndDate = new DateTime(2023, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("9bceb03a-a2f2-40b0-bc55-bfb55e4e8690"),
+                            FilmId = new Guid("e621fade-b458-48b9-a9c9-24e39464c48d"),
                             StartDate = new DateTime(2023, 8, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 2
                         },
                         new
                         {
-                            Id = new Guid("975d0a83-23c6-4fd7-bd4a-3d0a95206265"),
+                            Id = new Guid("df299f22-0329-4f4e-a600-73c49f6ee754"),
                             EndDate = new DateTime(2023, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("5d9910f7-57dd-49fa-983c-0d655e08744a"),
+                            FilmId = new Guid("453228a9-8ee3-4739-b69d-336ce46a181a"),
                             StartDate = new DateTime(2023, 8, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 2
+                            Type = 3
                         },
                         new
                         {
-                            Id = new Guid("7d36102b-75a6-470e-961b-e1729d4a8be4"),
+                            Id = new Guid("33424ab3-28c4-4162-a78f-2546e9abf104"),
                             EndDate = new DateTime(2023, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("3b28a9f2-7d94-467d-9caa-a755ff685ee8"),
+                            FilmId = new Guid("47b88ede-70f2-4074-856a-dcea6a9f4ec7"),
                             StartDate = new DateTime(2023, 8, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
-                            Type = 1
+                            Type = 2
                         },
                         new
                         {
-                            Id = new Guid("3733e798-001d-42e3-9789-192b59fd0040"),
+                            Id = new Guid("193553e5-09d1-4992-b115-07d29ffd90a1"),
                             EndDate = new DateTime(2023, 8, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("22b245ce-e209-4039-8779-d5742f05a8af"),
+                            FilmId = new Guid("a44c3cdb-9840-4e5e-b972-7f31b10b23fe"),
                             StartDate = new DateTime(2023, 8, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("65cd7fbf-c739-41d9-92dd-caa0eb96121b"),
-                            EndDate = new DateTime(2023, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("bfbacdf7-1e08-4627-9dea-1211792009e6"),
-                            StartDate = new DateTime(2023, 8, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 1,
-                            Type = 3
-                        },
-                        new
-                        {
-                            Id = new Guid("dfe29b40-18fc-43bd-abb3-3742ea774fb7"),
-                            EndDate = new DateTime(2023, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("2b269958-33b6-4b80-966a-9bff4f77aaff"),
-                            StartDate = new DateTime(2023, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 2
                         },
                         new
                         {
-                            Id = new Guid("a8742ac1-c874-4371-8983-74a4edf130be"),
-                            EndDate = new DateTime(2023, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("c5d31102-c217-4989-99d0-2e7da5a26e12"),
-                            StartDate = new DateTime(2023, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("ed0d8b67-0a35-43c9-a46f-60366012cab0"),
+                            EndDate = new DateTime(2023, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("2435bfc4-79ee-4ec6-ae6f-439ff5044428"),
+                            StartDate = new DateTime(2023, 8, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("47eb620e-a472-4dbd-a450-6784ee503ecd"),
+                            EndDate = new DateTime(2023, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("5c86d655-14be-47b4-ba05-020167df03b8"),
+                            StartDate = new DateTime(2023, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 1
                         },
                         new
                         {
-                            Id = new Guid("8840b38f-32dd-4a1e-b7fb-87001ec975c7"),
-                            EndDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("b9e71344-3a19-49b2-80f2-4b6869616657"),
-                            StartDate = new DateTime(2023, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Id = new Guid("9608c831-64cd-489e-b90e-bd10baf3aa2e"),
+                            EndDate = new DateTime(2023, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("d0a3a0f1-660f-46c0-8d40-317c3a1ef86f"),
+                            StartDate = new DateTime(2023, 8, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 1,
                             Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("635cae6e-99c5-4a71-94ec-15542120554b"),
+                            EndDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("c48ae736-d6bd-436b-baa9-b318ee7cb246"),
+                            StartDate = new DateTime(2023, 8, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 1,
+                            Type = 2
                         });
                 });
 
@@ -3015,800 +3043,800 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dfa59234-5205-4f75-92d4-946eb311487b"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("87e425e0-01b0-4c19-8ee0-4d3a838978f1"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b336a149-e836-43e1-b276-f427e7f5770e"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("1d86f3c6-1577-4f8b-8dec-74ade2591994"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("c77a969e-cd1c-400c-8424-f22f4ec67d3d"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("5463601d-466a-49cd-98eb-9e44eab0aa9e"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("1ed83ab4-6cef-4e14-ba51-0631fdc442f2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("aa9ec930-96c1-4644-b39f-d260d0c9b57a"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("7e050289-0a53-4b07-a251-734e5d4d60b2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("0f09366a-7fd9-490b-8c77-183a03c9e6bf"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e1385b90-d5da-4ec6-a863-5287fafd9a48"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9fc15181-2665-42da-b552-706c6e9dc488"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f7f02748-d8c1-4ed3-a192-2c8e893b6056"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("02a37959-5497-4bcf-af68-4b628bb6ab71"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("fa6898f3-5106-4c87-acd9-dfd2d0e44433"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("5eb4bd4a-0a17-472a-88b3-a8b40651f360"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("ecee704d-c9c6-4302-a300-d17f6f2e3232"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("b0b08db6-a10c-4cfc-ba7b-70cc8bcbd452"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f5dc5168-b035-46b7-a37f-f20fae5ab6ac"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4273ed04-b99f-49f6-bf2f-5fe9569501bd"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "A10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("ad4ea3fd-53d4-4fd5-a2cc-e92e8b3b2e44"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("94cd2039-010b-4456-b757-7c582709b137"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("753df890-6abc-4a55-aff6-88625c3a3941"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("7708fd27-f9a4-44af-a8b3-6fa1ca46bc0e"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("7eed12f7-6021-4d87-b04c-92bc32ede9c3"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("42857e46-6b82-44ac-92d3-cae7ec652aa8"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("858a3622-38b6-4e39-b09d-f10c69993bd2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("904c501a-7272-4dcc-87bf-9b13cad0b953"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f24eee2a-f32b-4fa1-a2c7-1244ab35f6e2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("d7160e9d-3217-45e1-8994-ba6d16190e67"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("55fa66d6-e42d-420d-8dcd-d93d50c66eb4"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("d6cd8513-be53-46c1-a33d-9b7d245e8e16"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("182891cc-a820-4726-b1c7-f40c5f7685d6"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("15c49bab-3850-41cb-83ce-aa27a3aea67f"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("cb4ba9bc-49ce-4233-b917-f2d96bcbe31e"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("a16ea38f-2481-4091-a3db-2386853b39e2"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("7c4a74eb-03e2-4de4-99ab-0d82a21a6288"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("65cf57cb-93aa-416d-84c1-6bb5b6d79548"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("56e32851-d499-4fc1-8dcd-369785d885c9"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("117625e5-fd45-4b5c-8713-c72e6e589e27"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "B10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("2f6deb4f-721c-4fba-be88-d2b5eb3b0f1c"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("0ae6942b-22fc-4a07-a9b1-dc339eee80b9"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b94c0e78-2944-4b5a-89fd-dbf1d2b0eec6"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("8b9d727c-6bd6-456e-b9ab-0858aa274ee1"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("3860702a-3b9f-4d6e-bc4d-d5ddc06df198"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("e927dc29-d05e-498c-b86c-1278b9017612"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("ddccd6b9-fa83-45c8-8868-9dbf83b5344c"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("e1ae8d1f-0e34-47bf-bf56-5d75a5a0769c"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e022d212-01d9-4733-bac6-84f0439073fa"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("f3de2c91-e702-4052-a23b-b82363043d75"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("4c6713df-2054-4816-8e0f-993466b12bde"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("8070306d-bc60-43f9-aade-17f13d9c461a"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("29b439b9-67e3-4ded-802f-3f312bccdd24"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("376542f1-b326-4fc8-bcd4-3668c58c58e1"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("00960b0d-7a9b-4f81-a67d-450e0501aa2d"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4e8211a7-963b-415b-9599-23902935cf0c"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("2c40f3c0-2266-4814-a072-da98b5472478"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("08610e4c-0fdd-4336-9798-575a631a5408"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("85ac3bce-fbba-49c7-aa5b-6788075518b3"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("1afda0fd-4c5b-4a8e-90fc-ce3d283b8826"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "C10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("6c3a4790-0592-432e-8b23-68a60397424c"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("8c9373f4-c358-439c-9ede-e5202f5b9aa4"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("7b872d28-9c14-4171-a3a3-d6c44ddffa8b"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4df214a0-00f6-49e6-85e1-e000aa2e6f85"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("bd9df3cf-6916-41c0-aaff-12c828c1fc8d"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4f573ba3-cdbb-4bbf-ab5b-80455894feea"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("554664af-2ae8-4c77-b548-5761abe21bc6"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("e7b0bfe8-1de3-4e84-a34c-8d9c2d2c7a70"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("36c790a9-7356-41b3-8b3f-1b6cedc6617a"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("290a762d-c6fb-41dc-b649-2ff8d181d303"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("24bbccd1-6e85-4545-aef8-e1a33dc3938d"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("91e5e264-d009-497f-bb31-29d50499e265"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f8cefc53-a6ee-4b5b-9d4c-0537754a83ad"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("18584798-c6ff-4bce-a3fc-f1a83e1a59e1"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("97ee447c-3205-4872-bcd0-98f1835365e2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9405051a-9edb-4800-8670-2eb61aad5871"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("4ea8a774-1040-4c9c-b4df-75b64ce29f0b"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("0afed214-5f19-486e-b5a0-175e99d9cef9"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e42e188b-1cb5-487b-9f6c-3b8832bdf836"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("8ff004fb-2304-4c33-a3fe-34c9f758c301"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "D10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f6eaad67-3dd7-43e8-81df-01992d12e6bb"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("63bf0147-cbab-4716-8c10-157c52794084"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("838240da-814a-49bd-bf6a-a3cd9c355d11"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4c686e34-5209-4bd2-a968-822d3fbd1512"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e451daed-1c48-4432-8f9d-bed48e67ed0c"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("32572bf1-bf63-4c58-ad1d-fd07e099d205"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("aeb53e9b-d36d-43dc-b248-29bc3c5379d4"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("ad28ae8e-09b1-4670-aba5-d047a9ba0aef"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("519a0f35-6de2-410e-aa82-2bff8cc296a8"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("49cdc679-fc82-4f85-af83-f6f2a41ab580"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f29b6d13-7839-49a1-9873-8a50a98347c0"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("a2e99d81-efe7-4ee9-81d1-95e84636a5b8"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("23ebf585-f61d-4667-9c38-2fa2bfaa2a29"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4a7bc398-7f8e-4ebf-876c-282605b3979a"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("d6f61926-8aa5-4368-996a-c7b3b96e3b20"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("8bf3c57a-48ad-4af4-8fe7-176199a30f5c"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("dda21245-827d-43e8-8ebf-de2b23948bc9"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("557763bb-ea83-4a54-a1ca-3d2997704e27"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("267b970e-136a-492f-8f50-3140fe2bf910"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("b648c697-9cd4-45dd-9a5b-8cfe78a3bb02"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "E10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("815117fc-1f04-4ad8-aa29-2396a06ff80e"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("63c7166a-6e4c-4eaf-bfa7-0e0a59e2badd"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f9e4e19a-f3c1-44e9-91d3-69a8203c9d3f"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("901a582e-5802-461e-9065-874dca2176ca"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("8d4ef64e-d5d5-4dd1-83fb-70c2c54b075f"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("f8caa92a-3856-4028-beee-cc8593fca6ca"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("ccf4fda7-3bfd-460e-b9ff-20158ce58aac"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("d98982b4-5b0e-4ec5-9acd-51980f7dd1bd"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("359af857-b1ff-43f9-8325-cc39fd976ca2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("0c9aa588-4340-4eee-ba68-31bb67534502"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("72a0cdba-bf12-466f-8312-152f846498b7"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("050351b7-5a32-4817-8b05-719ecf21ac47"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("6d1d65ff-1b12-45cd-9853-eec68ea6f2b1"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("91655daf-0781-436d-8f9d-a986008e6262"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("26c45339-7e67-4bbb-b590-1f49e8648fa5"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("d0eb8f4a-9212-45ac-9191-bbdd00d0197d"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("bc0ee673-a170-4d6f-bc49-eefcd2defad3"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("3d8706d0-e943-4ac3-aacb-ceda86240007"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("247379e2-2a09-440e-82dc-97a79f628395"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("b076915b-0616-454f-9616-c7f6cecfdc55"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "F10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("4524fc8d-24ad-4072-8c77-7b08656c18b8"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("8c7774aa-a8b6-49a5-ad39-9d0ffb1bdc16"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("4f1479b4-867a-4be7-8c4a-86e691ad1922"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("600da20f-1d6f-4243-8673-0180e0924858"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("607b055f-333c-45ca-a69b-3dc1e74c8be5"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("004bd15d-bb99-4721-a325-6457bb467524"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("43ef6f69-9974-43d3-81b0-1fdf0054eba5"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("e7ab4bae-07bd-4a6f-89a4-5c80c363f42f"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("1ce6289a-36c1-445c-a525-0a427af467a7"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("2a76114d-91a9-4c29-9a00-b216d4399f29"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("30f879eb-ae94-4566-971e-1afd1433c1ee"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9d2ed994-d06b-4c64-a844-d4968c4a59d4"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("24f82de2-4120-421f-8842-0858aef40d8d"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("90baf860-63ed-40fa-bb3b-7542cee80882"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("78396102-2065-4dd4-b7ef-4d69d0cab383"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("4641cbe4-e036-40f1-9c54-5b988b915b2a"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e671f629-4344-4d85-88a5-bb77268f9934"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("c35f8683-a303-4360-9869-cdc15c8517b1"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("c285b7a7-74e9-4d08-b1dc-0be1e2bb49d7"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("cd910bdf-9f32-4df2-a9bf-1ac86079af3a"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "G10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("db463e87-41b3-4e52-ba40-b9c0f6d8a8ac"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("07685872-13ce-4a77-8e8b-6db85337c8f8"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("0c49a16b-354a-49e7-a2a7-7318123cc7e5"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("d1149fa5-5eb4-409c-8cf9-1c3d77f575cc"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("5364783c-54ef-4774-982d-5515b62a208e"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("376c4c8e-e0ee-494f-9732-7be307b4d07d"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("8f95ac38-a542-44e8-99df-26525be330ee"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("82b97aae-f13d-4979-9175-f2448b1dc9b7"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b57be3d7-78f9-4d13-9200-bc3379c359b1"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("91fa0f43-572e-432c-98a1-6bda1352e6a4"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("5308ef3e-04be-477b-8477-84816693ce4b"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("3fac1341-c15e-430e-8242-183df3732b2a"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("75e3fe57-ca1c-48e1-967a-712f5b14e6b7"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("0d4c5e05-f2bf-4d29-83dc-eb49e4fed174"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("53b3f557-cb04-4f04-add8-f97e9119abd8"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9b9371b1-c304-4a1e-ba46-9ce674d45f3c"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("513efb4d-4881-4dc0-84b7-5a72d53e6703"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("1fa8c461-4e1f-43ae-9730-7dc3d87a46f3"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b79f2d04-40a5-4145-b504-9c229a6976f0"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9f6674d5-7014-4584-afbe-39bb93768e1e"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "H10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("8ac624a0-d444-41a6-8dad-154dccf6fec6"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("524ef4dd-badb-430e-96a6-06059fa6eeef"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("a4b6323a-4ee9-4a70-b631-a02ee1dcbf8a"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("998beae0-c11e-43a2-aff0-5025ab881ac4"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("9a710295-2970-4b66-9d9c-25ea9d6996d8"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9c8d5b58-7892-4bf7-bdcd-81009572cca9"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("651f1fa8-219b-4185-b3ea-9813d0c7ddc6"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("a4794e5c-05be-4fdd-9332-0ee38977647b"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("0d1a6b0a-0c14-4a29-980a-768566dc91e4"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("f0290172-85fa-4fa9-96c4-e788376ec67e"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("ddaa068f-9a5b-4593-9a92-7e07c0b08d70"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("f6ff1e35-8fd9-422c-800d-f09baf0f221e"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e93d4c33-8c0d-4875-ad31-3f949549c368"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("cec9ade7-b6e5-4480-8892-603fcbadc89f"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("96d9872f-f232-4fa1-bdb9-d2c79c6ab9c2"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("7262a600-ae24-4098-8dbc-409111e20018"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b567b7b0-090d-4cb5-8643-e47dcad96802"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("5ce59c4b-5e21-4ac5-b94c-55ef2ac83199"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("671ac562-a168-40bc-bc1d-8bd22808b5f0"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("a9fdabe0-ec96-44f2-8e5d-3e87b6b8ab79"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "I10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("a64c4419-5d16-484c-b9bf-24ed93da66d4"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("c6027f91-2d8b-4dba-b215-5eaa69daa58b"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J1",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("7f30e8cd-0fc7-48d3-997d-02e0b9e01ccb"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("35aad7d7-4f03-4441-a60b-250f944a0297"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J2",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b0734d92-59f4-4412-9af3-6706972e818b"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("96343396-1514-4f15-b626-53bd8ba68c66"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J3",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("7eb72444-b56e-4f5c-9c12-ef100a2b832a"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("bc43024f-55a4-4461-bd92-5e6588464584"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J4",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("1c9bb125-84bf-47fd-868e-3d96e4962ea8"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("c80ace43-7f85-4ff4-a357-ff99ca61a279"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J5",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("4b9835d5-e2ee-4953-b283-1184ac9190d6"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("0cdecabe-631f-4090-9915-71ad3ebb45cb"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J6",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("0a6dfd9f-3249-460a-bd41-04d0cd814096"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("cdfae431-3afb-4afe-9bdf-80d7c55a95ed"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J7",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("bbaa4ff8-7e1b-422e-a944-ce871e7439f8"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("b00af439-d298-4c54-9ef9-51493410fed1"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J8",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("b9f0a759-5847-4059-b2e4-24f5f54dab07"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("93308472-1e2a-4c6c-869c-63b4bff31d11"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J9",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("35ec0745-6549-4857-b10f-f56febbc104d"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("ced6ff42-d320-4f7e-85b0-1b4e13e6215d"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Position = "J10",
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
@@ -3904,13 +3932,13 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b5e0ee80-e358-4988-81a8-eb1a066bf144"),
-                            CinemaCenterId = new Guid("713d97e0-456c-4e33-ab26-203625e4ebf7"),
-                            CinemaId = new Guid("2fc11052-f5e5-42ca-9248-7f42c2d2a5a6"),
+                            Id = new Guid("9e29b11a-658b-441e-be53-0432c01c3d78"),
+                            CinemaCenterId = new Guid("34607b9c-adfd-46ea-80e2-d6688e710f74"),
+                            CinemaId = new Guid("d7fc3872-14e3-4e9f-9ff0-93e803c0c7cb"),
                             Desciption = "Description for ShowTime 1",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("39847e7b-a7f9-473c-8e69-359451cdad2e"),
-                            ScheduleId = new Guid("05c1d5c6-b2f8-472e-91f5-51686fdad516"),
+                            FilmId = new Guid("d7b64f5e-f2d6-43c5-9949-d5ec83b7af0d"),
+                            ScheduleId = new Guid("b1585ce9-6c05-4395-b67d-0100395cff73"),
                             ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
@@ -3918,13 +3946,13 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("53a59e2e-7a8e-4e58-adeb-f7bb376fa6b8"),
-                            CinemaCenterId = new Guid("aba76668-45cf-4a71-8c04-d03a22604d8d"),
-                            CinemaId = new Guid("7f50f725-3177-43cc-bdc9-f4a0d50723d0"),
+                            Id = new Guid("c0bc35e5-4013-4bb2-a45d-7d1a73655228"),
+                            CinemaCenterId = new Guid("e12faaf4-8a95-42a1-bd92-8d50beada41c"),
+                            CinemaId = new Guid("49ddf0e3-97a8-4989-a519-1376e7d0c5a1"),
                             Desciption = "Description for ShowTime 2",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("9810291e-4391-40ee-bc0d-f4cf84318fb5"),
-                            ScheduleId = new Guid("3ca8bfd1-bb30-4b81-a325-0fb10b9cb2ff"),
+                            FilmId = new Guid("58d617d6-4605-41eb-983a-7f8b08902762"),
+                            ScheduleId = new Guid("d992c3e8-e1fe-40ac-a4ab-feba8f2cfc11"),
                             ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
@@ -3932,153 +3960,153 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("b2ee4164-d637-44bd-a35c-343923ce5bc9"),
-                            CinemaCenterId = new Guid("a7fe53d1-c4e3-4d98-a6ad-bad2cd2c90fd"),
-                            CinemaId = new Guid("3ffd7564-bd1b-46d0-99db-230e1ddb6ce1"),
+                            Id = new Guid("4c4b547b-0ae9-4602-be3e-facebd4649ec"),
+                            CinemaCenterId = new Guid("78680907-7923-4966-b950-9c2494bb47bb"),
+                            CinemaId = new Guid("ca8f85a4-ccc6-40d0-b4ee-5d3720eba50e"),
                             Desciption = "Description for ShowTime 3",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("433fa649-d62d-499a-94e3-63454e4d2170"),
-                            ScheduleId = new Guid("60646501-70f7-4660-b86c-3d828ccb9024"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("b6d6f92f-2048-4279-8cf1-a749f4684404"),
+                            ScheduleId = new Guid("29b69d23-3bf6-44b3-9cb8-b73b87b5a1ec"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("e4d2bfb1-5499-4a3d-9ed1-10d4484abf8f"),
-                            CinemaCenterId = new Guid("6062cd97-0dbf-42a4-88cc-4e870ad66f2b"),
-                            CinemaId = new Guid("eb152661-bf42-4655-a699-6aa9f89fb12a"),
+                            Id = new Guid("7a3182b5-aaac-4116-93dd-2ab859d3efbf"),
+                            CinemaCenterId = new Guid("5eba8de2-4492-44ac-8a4b-80e5c10ad326"),
+                            CinemaId = new Guid("7276cfb2-159c-4d6f-ad32-0c47af1118ce"),
                             Desciption = "Description for ShowTime 4",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("24b33fd3-c227-48d4-8304-b01f9e977e0b"),
-                            ScheduleId = new Guid("12b01a89-6f50-4876-bf67-26a12ef8eaa7"),
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            FilmId = new Guid("329c8514-2ddb-4554-998d-3bef7068423e"),
+                            ScheduleId = new Guid("7b80eac5-4ba9-46a1-8361-00e5f77fc802"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
                             StartTime = new DateTime(2024, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("1c517b36-a9ef-42e1-97a9-24d10ed9aa02"),
-                            CinemaCenterId = new Guid("c70f5021-d95c-4168-b488-90cad88042ce"),
-                            CinemaId = new Guid("dff19976-0960-4544-9f23-fa6e468cb5c9"),
+                            Id = new Guid("26f1585d-6a65-474b-9729-af0fd27c07a1"),
+                            CinemaCenterId = new Guid("8e393bed-2b22-4b17-872b-da53b8ff75ad"),
+                            CinemaId = new Guid("e0a4782a-c594-42a5-a4c4-47f0aee15d40"),
                             Desciption = "Description for ShowTime 5",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("7247b4ae-8e10-4012-81fb-0146ef3a1adf"),
-                            ScheduleId = new Guid("64b2cb82-6104-4da1-8e93-397026a2a3ea"),
+                            FilmId = new Guid("1bac7698-bc3e-4e0c-b052-d5a6f87a0c05"),
+                            ScheduleId = new Guid("4a2a1d48-9cd4-4cc7-b5d3-8dbde5075180"),
                             ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("48d89161-fbdd-44ee-928a-1522f6a6448e"),
-                            CinemaCenterId = new Guid("c389e092-7635-49b9-80ed-2e966606e152"),
-                            CinemaId = new Guid("9bc3fe53-5e19-4447-b6f6-49b3d3aa6b99"),
+                            Id = new Guid("fb5cc57e-f80a-43a3-9fa3-bf1df268f899"),
+                            CinemaCenterId = new Guid("a80c70d7-65e3-4d74-a743-73c766c8e8ae"),
+                            CinemaId = new Guid("33bf015f-b3a0-409b-8695-a0095867d0f6"),
                             Desciption = "Description for ShowTime 6",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("073e9f64-7da6-41f9-81bc-734e1b063143"),
-                            ScheduleId = new Guid("2c21db2f-7c44-4df2-afbe-0249a95b6f4a"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("f9e358a5-63a9-4264-af67-5c9c9a05e719"),
+                            ScheduleId = new Guid("0780cd4c-aac7-45de-8917-a07f8c34de2c"),
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("24ccc3ec-dee9-4d8b-9897-3cc2e297aa83"),
-                            CinemaCenterId = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
-                            CinemaId = new Guid("964014ed-a801-4559-a365-c84a8904b58e"),
+                            Id = new Guid("d28543ff-c560-4c2d-bf98-49436f329412"),
+                            CinemaCenterId = new Guid("e163e949-7e92-4d1f-a602-341faf1f3d7f"),
+                            CinemaId = new Guid("e81ff048-14f3-4188-a377-efffd431c9ae"),
                             Desciption = "Description for ShowTime 7",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("3c1bac2e-6287-44c8-9c5c-22bfb0f76a57"),
-                            ScheduleId = new Guid("7e085d92-f989-4790-99b6-7ee060e6634d"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("19b092c9-91df-4cea-92c0-d54e76f92572"),
+                            ScheduleId = new Guid("0ccd0fdc-b377-442c-8f35-5fc03384455b"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("f00a7d80-38d2-4587-94ef-00ece17e1017"),
-                            CinemaCenterId = new Guid("3378ec63-e87d-4d8c-8739-ccd64ff4a053"),
-                            CinemaId = new Guid("e3e244ab-8e8e-4341-81e1-3e2eafef99fe"),
+                            Id = new Guid("ac0b4987-a2d5-4585-8707-ff26ac07730f"),
+                            CinemaCenterId = new Guid("ee8b9b21-fe0e-4add-816a-52b1a822b6ac"),
+                            CinemaId = new Guid("81706ee3-c0b3-4116-9e1d-812f6f8f5463"),
                             Desciption = "Description for ShowTime 8",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("c352e249-845a-4a65-92dc-096718447df8"),
-                            ScheduleId = new Guid("a84527da-d1c2-4e05-9bd5-b697c574bf17"),
+                            FilmId = new Guid("39d30d8b-9d1c-4028-bf26-22f152c4370f"),
+                            ScheduleId = new Guid("7263497e-9b79-4bc8-bcce-4e5da6fb7eeb"),
                             ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("be26b807-c076-47e8-ae6a-7f4065e46dc9"),
-                            CinemaCenterId = new Guid("78b6c6b0-212e-4582-9c31-68d15056d3ec"),
-                            CinemaId = new Guid("f8053902-8714-4ec0-bd6a-ffc268ee6186"),
+                            Id = new Guid("2dd71a0d-28d2-4b10-a693-2455d155c7e0"),
+                            CinemaCenterId = new Guid("96bb5b79-1a11-4ef6-b6cf-2fc72ab74461"),
+                            CinemaId = new Guid("0a783862-3298-4dce-a1f3-caff5d7a0f1f"),
                             Desciption = "Description for ShowTime 9",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("b7fd5c99-8da1-4086-8af7-8dc2eab178a4"),
-                            ScheduleId = new Guid("7c67fdaa-deda-4edd-9517-1f6a2beaf70f"),
+                            FilmId = new Guid("7e0b812e-435d-4f68-b589-cde23aa4e249"),
+                            ScheduleId = new Guid("af659ca2-9629-46d8-9965-712fa7d71010"),
                             ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("3eccb423-3138-43b9-b105-9b783dc11f29"),
-                            CinemaCenterId = new Guid("799559d7-7c44-43b6-80ba-6d5bcc012934"),
-                            CinemaId = new Guid("b3d39eda-1560-428f-8225-7e587936960c"),
+                            Id = new Guid("1db895e8-bfb0-446a-8bd5-2506cbca010a"),
+                            CinemaCenterId = new Guid("26ef9fd2-5b34-4bd1-b91a-f6cbf23b50c3"),
+                            CinemaId = new Guid("ee4a39ac-e048-4fc0-aaa7-75122c9aa7d7"),
                             Desciption = "Description for ShowTime 10",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("2e433041-aca1-438d-b491-ab19f072ae56"),
-                            ScheduleId = new Guid("9e82bddd-d0ca-4db6-91f4-6d0bfe91e97e"),
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            FilmId = new Guid("80688243-3577-4281-9550-c0f55295c0ac"),
+                            ScheduleId = new Guid("995ce7c9-b08e-48bf-8c16-5f84e489e5a4"),
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("08f33d16-eaa1-4d40-978e-f576802b95be"),
-                            CinemaCenterId = new Guid("f727c7c2-313f-40e6-9cba-bc33a0a4896d"),
-                            CinemaId = new Guid("cb354c2c-76bc-4ee6-8f3d-0d58fab80933"),
+                            Id = new Guid("247d20c5-7d5c-4f9a-b38b-064f5e2f32de"),
+                            CinemaCenterId = new Guid("774bb7be-c62c-4a07-b962-5032015c0411"),
+                            CinemaId = new Guid("f8fe6028-1fc9-42e0-b58d-575e7550e307"),
                             Desciption = "Description for ShowTime 11",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("8cf13b57-c89b-4aa1-93e5-6fbc6e725c98"),
-                            ScheduleId = new Guid("c2ca9e97-feaa-4b63-badd-728d32150e56"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("39831169-ef3a-42fd-b391-272857bab717"),
+                            ScheduleId = new Guid("46c4eca9-d7bc-4220-ba85-e892112e59b6"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("84ebf4ae-7f1c-437f-92b2-7ad0d8e9b6c4"),
-                            CinemaCenterId = new Guid("d67c6d99-0ff9-4426-90f7-aad61ad3f313"),
-                            CinemaId = new Guid("7619a7e4-1dd0-4946-83f7-499c4e004220"),
+                            Id = new Guid("9d60f0ed-850b-42d8-bcde-ae6bd47c54b7"),
+                            CinemaCenterId = new Guid("a11ba9fe-9ebc-44fa-8db0-3cd0d10270c6"),
+                            CinemaId = new Guid("34f74fda-a941-43ed-8a14-bd16685aeafb"),
                             Desciption = "Description for ShowTime 12",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("34728e79-06aa-4979-9a73-18878eae0856"),
-                            ScheduleId = new Guid("64ada421-c00e-47c2-8d08-0b2f4c817943"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("604c7c77-37de-4a1c-bb8c-67313cb82b3c"),
+                            ScheduleId = new Guid("d2ba36bc-2173-4ef2-9e24-f2a6ad6535c5"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("5730a49d-78fa-4c58-87f8-6b54e0891b93"),
-                            CinemaCenterId = new Guid("ae2be624-42ba-4371-ae06-f36766b74a1a"),
-                            CinemaId = new Guid("556e25f2-7ea6-49a7-8417-0bf1a5c8e349"),
+                            Id = new Guid("89ac21af-d3fa-4946-bb39-5f132b8e3c51"),
+                            CinemaCenterId = new Guid("0eedc93b-b2a9-4c09-9ba6-34f4532af50c"),
+                            CinemaId = new Guid("2650b463-4c73-46d2-a601-528c837ff24e"),
                             Desciption = "Description for ShowTime 13",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("ae216a68-1c4d-4d4f-806d-854935e1c5a0"),
-                            ScheduleId = new Guid("e84b16d0-4d63-44dd-9586-563e2406eba9"),
+                            FilmId = new Guid("f10220ed-1241-41bf-826e-ba2f99519c50"),
+                            ScheduleId = new Guid("252fcb3b-69ab-4bb7-9b24-073efa7e23e9"),
                             ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
                             StartTime = new DateTime(2024, 10, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
@@ -4086,209 +4114,209 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("6c557a0e-acf5-4721-81ef-ca8a1677a441"),
-                            CinemaCenterId = new Guid("0740e6ae-a711-41c2-8515-1e743d7b4682"),
-                            CinemaId = new Guid("f4a7ad7b-ada8-42d6-93f9-b334d8bec1ab"),
+                            Id = new Guid("2f783da7-f7ab-4e1c-b6e5-24465e53058b"),
+                            CinemaCenterId = new Guid("8269c479-9bd9-4fd8-b0c4-f573a8631af4"),
+                            CinemaId = new Guid("21133506-7eef-4a5b-8532-fc0266330180"),
                             Desciption = "Description for ShowTime 14",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("5168145c-4cbb-4a8d-bdea-3639e2f0b6df"),
-                            ScheduleId = new Guid("6f95b332-b766-4b99-ab72-cdd8a7fd62b9"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("7ab3a193-9841-4afd-9975-21f495a4b7c2"),
+                            ScheduleId = new Guid("62f2a7d7-87d8-4287-bedb-244245ffa0f7"),
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("e4e78cc9-398a-4ee3-b57a-d51525bddb84"),
-                            CinemaCenterId = new Guid("dbdf57c7-b24f-492a-8547-a7a1b6c059a7"),
-                            CinemaId = new Guid("9a98571b-3977-4dba-8b4b-50794946f2e2"),
+                            Id = new Guid("6252a9d2-09bf-4a83-be2c-468af5236dba"),
+                            CinemaCenterId = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
+                            CinemaId = new Guid("49cbdff1-0eaf-4f3e-939c-58da6cb64209"),
                             Desciption = "Description for ShowTime 15",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("96a1c7af-2a5f-41a2-a4cc-f91dbca8daac"),
-                            ScheduleId = new Guid("84ad461c-2008-4b9d-a2db-ca1f0ccf93b1"),
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            FilmId = new Guid("4af96ed7-3784-4f4f-9c4a-070363f90f5f"),
+                            ScheduleId = new Guid("8357aa0b-48fd-4343-b5b6-8d5ff4a9366d"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
                             StartTime = new DateTime(2024, 10, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("77e3d6fb-149a-43b8-b9f5-c70efc0d8300"),
-                            CinemaCenterId = new Guid("2f2b8c56-c334-4dc8-b125-5c8fc81aa75a"),
-                            CinemaId = new Guid("60214384-01a7-49d5-b610-4c81b1e25afe"),
+                            Id = new Guid("fd2a0acd-ef4e-4c96-8ee2-116cfb4b20c8"),
+                            CinemaCenterId = new Guid("f4c196de-ad5a-424c-94b6-80a4097afec1"),
+                            CinemaId = new Guid("4dd44dc3-d454-4ffd-b95a-f11057dc1cd6"),
                             Desciption = "Description for ShowTime 16",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("649aeb7d-632c-4f53-97e2-0c7f827fe5d5"),
-                            ScheduleId = new Guid("287ff4af-d81c-4a0c-a4dc-5255b3170c8f"),
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            FilmId = new Guid("d6790789-26e6-47f0-bf21-409eb084037c"),
+                            ScheduleId = new Guid("205a4149-ddb2-44ea-9f9e-11f438fa7b66"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 2,
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
+                        },
+                        new
+                        {
+                            Id = new Guid("e14d7649-fb92-46b3-9c72-fcd2f84195e8"),
+                            CinemaCenterId = new Guid("2134060d-6ad6-42bc-b406-d1e381371abe"),
+                            CinemaId = new Guid("11796c6d-6a2f-4740-9d40-3fd1fde1390a"),
+                            Desciption = "Description for ShowTime 17",
+                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("c89867e6-e84b-4630-9739-87f643b7bc83"),
+                            ScheduleId = new Guid("6f54c038-dcad-408d-9c55-75afd7fa282d"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            StartTime = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("2ef00b5c-27e0-4f9f-a147-82ed6f81ed33"),
-                            CinemaCenterId = new Guid("75ae46ab-bb42-48a0-ac95-ac5b7f72289e"),
-                            CinemaId = new Guid("27622177-ed08-44fa-afe8-9c46e89ee6e8"),
-                            Desciption = "Description for ShowTime 17",
-                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("e59fc7dd-f635-4109-b090-1d4150483b95"),
-                            ScheduleId = new Guid("d922274a-225a-4c0e-90eb-0da2fbd325db"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            StartTime = new DateTime(2024, 10, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
-                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
-                        },
-                        new
-                        {
-                            Id = new Guid("97f97b0f-80f2-4adc-8919-5d1fac696b28"),
-                            CinemaCenterId = new Guid("b2408ebd-0143-4fe9-9197-0306a750e952"),
-                            CinemaId = new Guid("6889322a-df97-4349-be4f-5fdfc59d028d"),
+                            Id = new Guid("d2ba8b0d-bea0-4a76-8b6d-9945566d57d8"),
+                            CinemaCenterId = new Guid("a8817eda-abab-4bff-a3a5-82a1460ae416"),
+                            CinemaId = new Guid("7c1cf3f1-7fa8-4e0a-8118-656750f2d10f"),
                             Desciption = "Description for ShowTime 18",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("6e3fd909-246d-47be-a2b9-c3169ea18d60"),
-                            ScheduleId = new Guid("efffc858-a502-4c10-a860-9b9bac3f3cb5"),
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            FilmId = new Guid("72bd7490-85de-4192-b486-586b189277db"),
+                            ScheduleId = new Guid("84a4624e-73a4-425c-a066-d1f556aa35f6"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
+                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("5dc83cb9-a4eb-4724-83bd-b844acddca7a"),
-                            CinemaCenterId = new Guid("d0718ece-1e1c-41fe-8e2d-fe043626f3b6"),
-                            CinemaId = new Guid("06306ba2-b3e8-44cd-8786-c08a2e2d5ada"),
+                            Id = new Guid("e1ef143d-956e-4872-bb04-01f12fba6efb"),
+                            CinemaCenterId = new Guid("72e94f44-6348-428a-89c7-7808e0aca9ab"),
+                            CinemaId = new Guid("dea4f05c-d8bf-43d3-8bae-784cb7aeade3"),
                             Desciption = "Description for ShowTime 19",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("18fea777-3726-4a22-890a-f7e6aeb52d45"),
-                            ScheduleId = new Guid("a4e4fa80-13c2-4b42-83ad-02b3a6a4a2b7"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("c144ac5a-15bc-4394-8871-80c5d3944f85"),
+                            ScheduleId = new Guid("1c59b2dc-825b-4a45-8b9e-e4de1e42ea80"),
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("fd54b3b0-e4e5-4d2f-af2b-6f87a7dc047f"),
-                            CinemaCenterId = new Guid("374ccabe-cae4-4389-ac12-a1b327c912ff"),
-                            CinemaId = new Guid("e62d783e-6ddb-4c0e-94df-776f0e76f236"),
+                            Id = new Guid("eb0cacb2-f65c-4ada-bd03-4ad1e065e19f"),
+                            CinemaCenterId = new Guid("244ffcea-6b2b-4025-a043-eee24f165a05"),
+                            CinemaId = new Guid("88aa20e0-08d9-43c4-bc34-af6c4c7a2a58"),
                             Desciption = "Description for ShowTime 20",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("8efe2a39-72a1-4e76-951f-06dba87f7256"),
-                            ScheduleId = new Guid("7e4be017-32de-4763-9884-1cfed585cf83"),
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            FilmId = new Guid("fff70a8c-d5db-4191-b5c4-7d259aaad696"),
+                            ScheduleId = new Guid("01236102-00aa-41c4-8a2d-d6a091156fc0"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
-                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
-                        },
-                        new
-                        {
-                            Id = new Guid("ded26285-734f-4e10-95ae-3191f793c5a3"),
-                            CinemaCenterId = new Guid("a231f257-80fa-45b4-bdbd-178ca5c4cbb9"),
-                            CinemaId = new Guid("aa78626e-a41e-47ef-b31e-8f0ae92aea3b"),
-                            Desciption = "Description for ShowTime 21",
-                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("faabedb7-6f8f-47ac-bdff-6a9f1ecb6d53"),
-                            ScheduleId = new Guid("0e368e86-563c-405f-bb6c-d6e67244f020"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            StartTime = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
-                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
-                        },
-                        new
-                        {
-                            Id = new Guid("98da30f1-679e-48b8-9e75-c014bda349d0"),
-                            CinemaCenterId = new Guid("7b6669ba-5dc7-46b5-8731-93bdf681f358"),
-                            CinemaId = new Guid("f1b523f0-4663-4a4c-8cf6-5b2087a4797c"),
-                            Desciption = "Description for ShowTime 22",
-                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("7822c70d-8e8c-4b36-b4b8-065eb2d82a3e"),
-                            ScheduleId = new Guid("5ed1b273-a900-4b84-9c13-f8e5bd27dc09"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            StartTime = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("7cf53c63-d4bf-4fbe-83a5-c2e8bd19df50"),
-                            CinemaCenterId = new Guid("562703b6-f408-4340-9651-780c11395069"),
-                            CinemaId = new Guid("84f5062b-579b-49cf-b903-0bd00472f6d2"),
+                            Id = new Guid("6a3e34db-29ce-4848-9e30-e15caeff469e"),
+                            CinemaCenterId = new Guid("986557b4-114c-4668-bd0e-02b416e99954"),
+                            CinemaId = new Guid("0e46cbaf-c555-4066-a8c9-e209694ab5fb"),
+                            Desciption = "Description for ShowTime 21",
+                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("ff0a25f5-2719-45af-ad6f-e2adf5b65b5f"),
+                            ScheduleId = new Guid("9f38c585-b966-4743-92a6-2dc8a9600f95"),
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            StartTime = new DateTime(2024, 10, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 2,
+                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
+                        },
+                        new
+                        {
+                            Id = new Guid("92180f99-928e-421b-83cf-8c936bc09ce9"),
+                            CinemaCenterId = new Guid("65215a44-8f91-4e7a-aea2-46afb1dc083a"),
+                            CinemaId = new Guid("a51c195c-3446-453d-8870-24e921d3f360"),
+                            Desciption = "Description for ShowTime 22",
+                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("a0f2822b-f398-4cb9-9941-5562fb355874"),
+                            ScheduleId = new Guid("007fbba7-4dac-4cbb-9295-d6101a57629c"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            StartTime = new DateTime(2024, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 2,
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
+                        },
+                        new
+                        {
+                            Id = new Guid("fd9a2b6a-9ce3-477f-b180-1d344c416c21"),
+                            CinemaCenterId = new Guid("b37ce504-e51d-4259-a0aa-a8d0584c9530"),
+                            CinemaId = new Guid("bc0f96c2-283b-476b-b59e-9ae20b6f3ad0"),
                             Desciption = "Description for ShowTime 23",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("9bceb03a-a2f2-40b0-bc55-bfb55e4e8690"),
-                            ScheduleId = new Guid("7533e0e5-05f4-4716-bc65-c0ded11f250a"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("e621fade-b458-48b9-a9c9-24e39464c48d"),
+                            ScheduleId = new Guid("d7b5edd3-955f-4b7b-967e-777c106edd44"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("f6d74142-8c20-464a-8502-657c4cc75942"),
-                            CinemaCenterId = new Guid("9915451c-1ab7-447e-8427-fa87158c3911"),
-                            CinemaId = new Guid("1fca244b-748e-4aa7-b3fa-44cceff604c8"),
+                            Id = new Guid("42c503d5-9b2e-4d2a-8a5a-20b07b9a7c2d"),
+                            CinemaCenterId = new Guid("e6d3f6dd-929b-497c-bd54-454d317dea41"),
+                            CinemaId = new Guid("00ed026a-d4f0-4b56-95d4-9db923d7223b"),
                             Desciption = "Description for ShowTime 24",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("5d9910f7-57dd-49fa-983c-0d655e08744a"),
-                            ScheduleId = new Guid("975d0a83-23c6-4fd7-bd4a-3d0a95206265"),
+                            FilmId = new Guid("453228a9-8ee3-4739-b69d-336ce46a181a"),
+                            ScheduleId = new Guid("df299f22-0329-4f4e-a600-73c49f6ee754"),
                             ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             StartTime = new DateTime(2024, 10, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
-                        },
-                        new
-                        {
-                            Id = new Guid("a5c7a2cb-1f83-4a73-83fe-71fd277f0011"),
-                            CinemaCenterId = new Guid("8fe002c4-d845-4ee0-8d55-29212c6618ef"),
-                            CinemaId = new Guid("6a8ff52a-86d3-4435-b8d6-cbf625d77be8"),
-                            Desciption = "Description for ShowTime 25",
-                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("3b28a9f2-7d94-467d-9caa-a755ff685ee8"),
-                            ScheduleId = new Guid("7d36102b-75a6-470e-961b-e1729d4a8be4"),
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            StartTime = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = 2,
-                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
-                        },
-                        new
-                        {
-                            Id = new Guid("253db7d1-dc76-403f-8444-69dd44a47411"),
-                            CinemaCenterId = new Guid("b33761ea-2f8f-46ae-8a72-923adb87001f"),
-                            CinemaId = new Guid("c4641c03-beb1-4bc2-baa0-ed7bb4f175be"),
-                            Desciption = "Description for ShowTime 26",
-                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("22b245ce-e209-4039-8779-d5742f05a8af"),
-                            ScheduleId = new Guid("3733e798-001d-42e3-9789-192b59fd0040"),
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            StartTime = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
                         },
                         new
                         {
-                            Id = new Guid("4d6237fb-d91b-4c16-a092-7c6acab509aa"),
-                            CinemaCenterId = new Guid("72ce0538-77cb-4738-86a4-db5f74a79f2e"),
-                            CinemaId = new Guid("7f147b06-d13d-47eb-99e5-0751c89ccd8c"),
-                            Desciption = "Description for ShowTime 27",
+                            Id = new Guid("45455ac8-ec3c-4d6e-ac27-9df78739e842"),
+                            CinemaCenterId = new Guid("ae97ec2f-870c-4940-8679-65b362488677"),
+                            CinemaId = new Guid("bcb24e36-fc89-4f3c-9ae1-4784bee73016"),
+                            Desciption = "Description for ShowTime 25",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("bfbacdf7-1e08-4627-9dea-1211792009e6"),
-                            ScheduleId = new Guid("65cd7fbf-c739-41d9-92dd-caa0eb96121b"),
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            StartTime = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("47b88ede-70f2-4074-856a-dcea6a9f4ec7"),
+                            ScheduleId = new Guid("33424ab3-28c4-4162-a78f-2546e9abf104"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            StartTime = new DateTime(2024, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 2,
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
+                        },
+                        new
+                        {
+                            Id = new Guid("da810290-aacd-43ad-af23-14a1e71efbdc"),
+                            CinemaCenterId = new Guid("b6a9896f-c9c6-4e97-a793-e18cfb55e1f7"),
+                            CinemaId = new Guid("b7af75e8-8aae-493a-b2ca-b61c290bc736"),
+                            Desciption = "Description for ShowTime 26",
+                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("a44c3cdb-9840-4e5e-b972-7f31b10b23fe"),
+                            ScheduleId = new Guid("193553e5-09d1-4992-b115-07d29ffd90a1"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            StartTime = new DateTime(2024, 10, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("4e87d62e-ebab-4491-940f-7ae5222c9297"),
-                            CinemaCenterId = new Guid("94a99957-ebfa-46b3-af5f-877e6116b5df"),
-                            CinemaId = new Guid("9df8dd15-0024-4015-b768-55e6fe2cf376"),
+                            Id = new Guid("06031aca-d7a0-45ee-87ca-e8d9b83eecbb"),
+                            CinemaCenterId = new Guid("8bda5cc0-4f7f-4242-b23e-415fe3e3498f"),
+                            CinemaId = new Guid("6858c450-98ef-4e03-97e7-d7ca3b3d8ce9"),
+                            Desciption = "Description for ShowTime 27",
+                            EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
+                            FilmId = new Guid("2435bfc4-79ee-4ec6-ae6f-439ff5044428"),
+                            ScheduleId = new Guid("ed0d8b67-0a35-43c9-a46f-60366012cab0"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            StartTime = new DateTime(2024, 10, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = 2,
+                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
+                        },
+                        new
+                        {
+                            Id = new Guid("8bb90529-64d5-4460-a309-6c767c792b31"),
+                            CinemaCenterId = new Guid("9993c899-8956-4441-ae4a-fe06c32c6e02"),
+                            CinemaId = new Guid("bf34348b-0f36-4474-be13-08b6d78f9dca"),
                             Desciption = "Description for ShowTime 28",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("2b269958-33b6-4b80-966a-9bff4f77aaff"),
-                            ScheduleId = new Guid("dfe29b40-18fc-43bd-abb3-3742ea774fb7"),
+                            FilmId = new Guid("5c86d655-14be-47b4-ba05-020167df03b8"),
+                            ScheduleId = new Guid("47eb620e-a472-4dbd-a450-6784ee503ecd"),
                             ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
@@ -4296,28 +4324,28 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("5a095403-85bb-4434-b92e-9554dcece8a3"),
-                            CinemaCenterId = new Guid("9586d3ff-46f6-4058-9bdc-cba2f987d645"),
-                            CinemaId = new Guid("505eeda1-bff3-4b04-9b6d-6de7f69b6cfd"),
+                            Id = new Guid("c9262864-fc02-41db-9213-07ad1ae27ce7"),
+                            CinemaCenterId = new Guid("e58ec98d-2eba-40a6-a7c9-ac4228c635f1"),
+                            CinemaId = new Guid("345ead0f-cd0f-4a65-a2ba-88bf4b5bf413"),
                             Desciption = "Description for ShowTime 29",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("c5d31102-c217-4989-99d0-2e7da5a26e12"),
-                            ScheduleId = new Guid("a8742ac1-c874-4371-8983-74a4edf130be"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("d0a3a0f1-660f-46c0-8d40-317c3a1ef86f"),
+                            ScheduleId = new Guid("9608c831-64cd-489e-b90e-bd10baf3aa2e"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
-                            TranslationTypeId = new Guid("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30")
+                            TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
                         },
                         new
                         {
-                            Id = new Guid("a5357a5e-6444-4fc9-a16f-55bfb756bd39"),
-                            CinemaCenterId = new Guid("d0566c92-c9d5-45c8-9d3b-a632f7c5e874"),
-                            CinemaId = new Guid("11806a9b-27a7-41eb-a6bb-4fd80352d1ec"),
+                            Id = new Guid("94500556-c4dc-47b6-9e9d-2da205e84f5c"),
+                            CinemaCenterId = new Guid("855605f0-f1bf-4791-b36d-37e10dd8c523"),
+                            CinemaId = new Guid("0ec16764-f7c5-4a4f-ba58-e06ca36f663f"),
                             Desciption = "Description for ShowTime 30",
                             EndTime = new DateTime(2024, 10, 1, 2, 0, 0, 0, DateTimeKind.Unspecified),
-                            FilmId = new Guid("b9e71344-3a19-49b2-80f2-4b6869616657"),
-                            ScheduleId = new Guid("8840b38f-32dd-4a1e-b7fb-87001ec975c7"),
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            FilmId = new Guid("c48ae736-d6bd-436b-baa9-b318ee7cb246"),
+                            ScheduleId = new Guid("635cae6e-99c5-4a71-94ec-15542120554b"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             StartTime = new DateTime(2024, 10, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Status = 2,
                             TranslationTypeId = new Guid("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf")
@@ -4373,363 +4401,363 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f085b1a4-5418-4d48-8cb3-2ac7e186f612"),
-                            BillId = new Guid("441f10e6-c4c0-45f3-8d37-7df17559fe54"),
-                            CinemaCenterId = new Guid("8fe002c4-d845-4ee0-8d55-29212c6618ef"),
+                            Id = new Guid("64c3e6a1-f7d6-4f07-8b07-39a3a05cb6a4"),
+                            BillId = new Guid("08fe7553-3742-495a-a9ab-439c492bd04e"),
+                            CinemaCenterId = new Guid("ee8b9b21-fe0e-4add-816a-52b1a822b6ac"),
                             Description = "Description for Ticket 1",
                             Qrcode = "qrcode1.jpg",
-                            SeatId = new Guid("554664af-2ae8-4c77-b548-5761abe21bc6"),
-                            ShowTimeId = new Guid("b5e0ee80-e358-4988-81a8-eb1a066bf144"),
+                            SeatId = new Guid("998beae0-c11e-43a2-aff0-5025ab881ac4"),
+                            ShowTimeId = new Guid("9e29b11a-658b-441e-be53-0432c01c3d78"),
                             Status = 2,
-                            TicketPriceId = new Guid("06961681-885c-47db-be43-112d0b3983e8")
+                            TicketPriceId = new Guid("5f8dff09-1ce5-4a87-92bf-b8a23c0d92eb")
                         },
                         new
                         {
-                            Id = new Guid("73eed363-26c7-4b11-9011-35727e903df9"),
-                            BillId = new Guid("7affd4b3-b810-4a25-a17b-83da6df6106e"),
-                            CinemaCenterId = new Guid("a231f257-80fa-45b4-bdbd-178ca5c4cbb9"),
+                            Id = new Guid("967194e4-e430-4f07-a3a0-0ad4b0550d21"),
+                            BillId = new Guid("bb7f79f8-abbe-4e6e-a197-793daf127506"),
+                            CinemaCenterId = new Guid("34607b9c-adfd-46ea-80e2-d6688e710f74"),
                             Description = "Description for Ticket 2",
                             Qrcode = "qrcode2.jpg",
-                            SeatId = new Guid("f24eee2a-f32b-4fa1-a2c7-1244ab35f6e2"),
-                            ShowTimeId = new Guid("53a59e2e-7a8e-4e58-adeb-f7bb376fa6b8"),
+                            SeatId = new Guid("f8caa92a-3856-4028-beee-cc8593fca6ca"),
+                            ShowTimeId = new Guid("c0bc35e5-4013-4bb2-a45d-7d1a73655228"),
                             Status = 2,
-                            TicketPriceId = new Guid("3e149012-b7e3-4aa8-8986-13838abcc261")
+                            TicketPriceId = new Guid("a71612bc-c7d5-4f9c-9583-cf1305ac26ba")
                         },
                         new
                         {
-                            Id = new Guid("6d0d0260-dd7b-4092-9588-7c4ab4e499fc"),
-                            BillId = new Guid("f04e9bd6-c140-4c88-9139-706540b45aa2"),
-                            CinemaCenterId = new Guid("0740e6ae-a711-41c2-8515-1e743d7b4682"),
+                            Id = new Guid("53c6333b-0012-4354-9ed4-aad9f7d95122"),
+                            BillId = new Guid("384fbbf2-26c2-4752-8542-0a9fa68d48e1"),
+                            CinemaCenterId = new Guid("b6a9896f-c9c6-4e97-a793-e18cfb55e1f7"),
                             Description = "Description for Ticket 3",
                             Qrcode = "qrcode3.jpg",
-                            SeatId = new Guid("7eed12f7-6021-4d87-b04c-92bc32ede9c3"),
-                            ShowTimeId = new Guid("b2ee4164-d637-44bd-a35c-343923ce5bc9"),
+                            SeatId = new Guid("32572bf1-bf63-4c58-ad1d-fd07e099d205"),
+                            ShowTimeId = new Guid("4c4b547b-0ae9-4602-be3e-facebd4649ec"),
                             Status = 2,
-                            TicketPriceId = new Guid("44cae637-055d-471f-82c8-1fe76ce101dc")
+                            TicketPriceId = new Guid("d1507f4c-417c-4615-9dab-bd2f28660cc4")
                         },
                         new
                         {
-                            Id = new Guid("688b8181-2cc1-40f8-a267-08ea771aea4e"),
-                            BillId = new Guid("0aded26a-67c9-4649-b785-078f972e4c02"),
-                            CinemaCenterId = new Guid("7b6669ba-5dc7-46b5-8731-93bdf681f358"),
+                            Id = new Guid("03f7155d-21bf-45fc-88e2-e57801ecf79f"),
+                            BillId = new Guid("ed49eb90-c66c-4ef2-ba6b-318b16a9c3f3"),
+                            CinemaCenterId = new Guid("f4c196de-ad5a-424c-94b6-80a4097afec1"),
                             Description = "Description for Ticket 4",
                             Qrcode = "qrcode4.jpg",
-                            SeatId = new Guid("6d1d65ff-1b12-45cd-9853-eec68ea6f2b1"),
-                            ShowTimeId = new Guid("e4d2bfb1-5499-4a3d-9ed1-10d4484abf8f"),
+                            SeatId = new Guid("ad28ae8e-09b1-4670-aba5-d047a9ba0aef"),
+                            ShowTimeId = new Guid("7a3182b5-aaac-4116-93dd-2ab859d3efbf"),
                             Status = 2,
-                            TicketPriceId = new Guid("e815b5ab-d548-4a15-a314-62f74a0b13bf")
+                            TicketPriceId = new Guid("9f1b477f-1a9b-439d-8d47-30d0182729d7")
                         },
                         new
                         {
-                            Id = new Guid("ebdaa1c5-e0f7-40da-92b6-3b17409ca10f"),
-                            BillId = new Guid("a7b791b7-084f-4305-8015-a5350204abf6"),
-                            CinemaCenterId = new Guid("b33761ea-2f8f-46ae-8a72-923adb87001f"),
+                            Id = new Guid("d9beb6c7-ed6f-48c0-bd1f-9ec2b4fa3179"),
+                            BillId = new Guid("f5a6985c-5607-46e6-8918-22abd0c7b05c"),
+                            CinemaCenterId = new Guid("26ef9fd2-5b34-4bd1-b91a-f6cbf23b50c3"),
                             Description = "Description for Ticket 5",
                             Qrcode = "qrcode5.jpg",
-                            SeatId = new Guid("4c6713df-2054-4816-8e0f-993466b12bde"),
-                            ShowTimeId = new Guid("1c517b36-a9ef-42e1-97a9-24d10ed9aa02"),
+                            SeatId = new Guid("8ff004fb-2304-4c33-a3fe-34c9f758c301"),
+                            ShowTimeId = new Guid("26f1585d-6a65-474b-9729-af0fd27c07a1"),
                             Status = 2,
-                            TicketPriceId = new Guid("270de1b0-875f-4165-9117-ac96cd338203")
+                            TicketPriceId = new Guid("58b4504a-d07c-4d5e-9e43-373f1c9818de")
                         },
                         new
                         {
-                            Id = new Guid("141b8357-a136-4527-8fa1-4c40692d7c68"),
-                            BillId = new Guid("b2e1f581-0d47-4d1e-8b75-8a505731c66a"),
-                            CinemaCenterId = new Guid("3378ec63-e87d-4d8c-8739-ccd64ff4a053"),
+                            Id = new Guid("e228323c-fb99-4540-8588-a3d7499cab00"),
+                            BillId = new Guid("aa609b27-d614-465a-8fe3-0abc9aea6253"),
+                            CinemaCenterId = new Guid("0eedc93b-b2a9-4c09-9ba6-34f4532af50c"),
                             Description = "Description for Ticket 6",
                             Qrcode = "qrcode6.jpg",
-                            SeatId = new Guid("8f95ac38-a542-44e8-99df-26525be330ee"),
-                            ShowTimeId = new Guid("48d89161-fbdd-44ee-928a-1522f6a6448e"),
+                            SeatId = new Guid("63bf0147-cbab-4716-8c10-157c52794084"),
+                            ShowTimeId = new Guid("fb5cc57e-f80a-43a3-9fa3-bf1df268f899"),
                             Status = 2,
-                            TicketPriceId = new Guid("6790f820-0590-4a56-9f90-3a00817b40d3")
+                            TicketPriceId = new Guid("d12d3ae8-a061-4f43-9256-0fb616131973")
                         },
                         new
                         {
-                            Id = new Guid("16d802d9-da66-4763-aba4-09eb88f49695"),
-                            BillId = new Guid("95181f5b-30e8-491b-8872-847a598c90af"),
-                            CinemaCenterId = new Guid("8fe002c4-d845-4ee0-8d55-29212c6618ef"),
+                            Id = new Guid("c9be38ee-f946-4b8f-8643-72dbaa057aaa"),
+                            BillId = new Guid("176e363d-1567-450b-8420-3ab44c53f27a"),
+                            CinemaCenterId = new Guid("b37ce504-e51d-4259-a0aa-a8d0584c9530"),
                             Description = "Description for Ticket 7",
                             Qrcode = "qrcode7.jpg",
-                            SeatId = new Guid("8f95ac38-a542-44e8-99df-26525be330ee"),
-                            ShowTimeId = new Guid("24ccc3ec-dee9-4d8b-9897-3cc2e297aa83"),
+                            SeatId = new Guid("004bd15d-bb99-4721-a325-6457bb467524"),
+                            ShowTimeId = new Guid("d28543ff-c560-4c2d-bf98-49436f329412"),
                             Status = 2,
-                            TicketPriceId = new Guid("4ef17c71-1c8f-4f0a-bfc3-b958509a4cb9")
+                            TicketPriceId = new Guid("d28e72b7-8fe9-4732-ba43-e40f267e3f8b")
                         },
                         new
                         {
-                            Id = new Guid("e57ce556-928f-4fa9-a6ab-8abd7b4cbb2e"),
-                            BillId = new Guid("bdaf1fc7-a71d-416d-a960-e39c46aceef0"),
-                            CinemaCenterId = new Guid("3378ec63-e87d-4d8c-8739-ccd64ff4a053"),
+                            Id = new Guid("28142831-162f-4f0e-9229-5119d3817d96"),
+                            BillId = new Guid("fccd1383-373e-4839-be51-68a60abba242"),
+                            CinemaCenterId = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
                             Description = "Description for Ticket 8",
                             Qrcode = "qrcode8.jpg",
-                            SeatId = new Guid("75e3fe57-ca1c-48e1-967a-712f5b14e6b7"),
-                            ShowTimeId = new Guid("f00a7d80-38d2-4587-94ef-00ece17e1017"),
+                            SeatId = new Guid("8b9d727c-6bd6-456e-b9ab-0858aa274ee1"),
+                            ShowTimeId = new Guid("ac0b4987-a2d5-4585-8707-ff26ac07730f"),
                             Status = 2,
-                            TicketPriceId = new Guid("82287faa-ce55-446f-a627-3863b1fff25e")
+                            TicketPriceId = new Guid("5a1081aa-2601-41ac-b2d7-8e5e3614ae46")
                         },
                         new
                         {
-                            Id = new Guid("1d6bf618-3c3f-4bbd-a958-11b48a9c59d7"),
-                            BillId = new Guid("c802ec6b-e6c4-4aeb-b8ea-06af953d643d"),
-                            CinemaCenterId = new Guid("2f2b8c56-c334-4dc8-b125-5c8fc81aa75a"),
+                            Id = new Guid("d237b9e2-09dd-4fbe-86a3-384d8fc2bec9"),
+                            BillId = new Guid("6a8d56e6-94ce-4f12-9722-9b82a17228f0"),
+                            CinemaCenterId = new Guid("e12faaf4-8a95-42a1-bd92-8d50beada41c"),
                             Description = "Description for Ticket 9",
                             Qrcode = "qrcode9.jpg",
-                            SeatId = new Guid("e451daed-1c48-4432-8f9d-bed48e67ed0c"),
-                            ShowTimeId = new Guid("be26b807-c076-47e8-ae6a-7f4065e46dc9"),
+                            SeatId = new Guid("cec9ade7-b6e5-4480-8892-603fcbadc89f"),
+                            ShowTimeId = new Guid("2dd71a0d-28d2-4b10-a693-2455d155c7e0"),
                             Status = 2,
-                            TicketPriceId = new Guid("d72ddcb1-ebef-4b89-94e1-4ce38375a736")
+                            TicketPriceId = new Guid("e53c42be-afc3-49fe-9a00-792afcd03d4e")
                         },
                         new
                         {
-                            Id = new Guid("503fe570-8c43-4937-a197-dfd334e9dca9"),
-                            BillId = new Guid("67b209b3-9c5c-4d96-96ab-b764c6962c10"),
-                            CinemaCenterId = new Guid("b2408ebd-0143-4fe9-9197-0306a750e952"),
+                            Id = new Guid("edc01176-876e-41ab-8eee-2d8fd24a894e"),
+                            BillId = new Guid("67d6d47c-d4ae-477f-b801-04e73a7fe53b"),
+                            CinemaCenterId = new Guid("e58ec98d-2eba-40a6-a7c9-ac4228c635f1"),
                             Description = "Description for Ticket 10",
                             Qrcode = "qrcode10.jpg",
-                            SeatId = new Guid("7eb72444-b56e-4f5c-9c12-ef100a2b832a"),
-                            ShowTimeId = new Guid("3eccb423-3138-43b9-b105-9b783dc11f29"),
+                            SeatId = new Guid("a2e99d81-efe7-4ee9-81d1-95e84636a5b8"),
+                            ShowTimeId = new Guid("1db895e8-bfb0-446a-8bd5-2506cbca010a"),
                             Status = 2,
-                            TicketPriceId = new Guid("ad8f8f1d-31d8-4582-a6d4-03384fb7d46a")
+                            TicketPriceId = new Guid("751ed19d-ab70-4baf-83ef-814ad7bafe98")
                         },
                         new
                         {
-                            Id = new Guid("096f6e53-35c9-4019-a5a9-b11bda0a03d1"),
-                            BillId = new Guid("b49d57cb-0eeb-4f33-a2d3-ad69a04f2efe"),
-                            CinemaCenterId = new Guid("c389e092-7635-49b9-80ed-2e966606e152"),
+                            Id = new Guid("72d26f5c-8ae8-44fc-a191-c60f283669e7"),
+                            BillId = new Guid("78088d71-b3af-402c-95a6-92243189e69d"),
+                            CinemaCenterId = new Guid("855605f0-f1bf-4791-b36d-37e10dd8c523"),
                             Description = "Description for Ticket 11",
                             Qrcode = "qrcode11.jpg",
-                            SeatId = new Guid("f24eee2a-f32b-4fa1-a2c7-1244ab35f6e2"),
-                            ShowTimeId = new Guid("08f33d16-eaa1-4d40-978e-f576802b95be"),
+                            SeatId = new Guid("d0eb8f4a-9212-45ac-9191-bbdd00d0197d"),
+                            ShowTimeId = new Guid("247d20c5-7d5c-4f9a-b38b-064f5e2f32de"),
                             Status = 2,
-                            TicketPriceId = new Guid("3d422297-2da2-428e-b319-118f16346053")
+                            TicketPriceId = new Guid("1c614111-0f85-49d7-8e4d-daeedca63c44")
                         },
                         new
                         {
-                            Id = new Guid("c74ea7eb-418a-400e-88c5-aaac6e7ad677"),
-                            BillId = new Guid("0f43f5cd-b359-4b8e-8b2f-82808b60efef"),
-                            CinemaCenterId = new Guid("6062cd97-0dbf-42a4-88cc-4e870ad66f2b"),
+                            Id = new Guid("48a8ae22-f3e1-4e4d-9b87-40ae17ee57a2"),
+                            BillId = new Guid("4df1da33-4569-457f-bd37-f9df4809e12b"),
+                            CinemaCenterId = new Guid("8269c479-9bd9-4fd8-b0c4-f573a8631af4"),
                             Description = "Description for Ticket 12",
                             Qrcode = "qrcode12.jpg",
-                            SeatId = new Guid("b9f0a759-5847-4059-b2e4-24f5f54dab07"),
-                            ShowTimeId = new Guid("84ebf4ae-7f1c-437f-92b2-7ad0d8e9b6c4"),
+                            SeatId = new Guid("d0eb8f4a-9212-45ac-9191-bbdd00d0197d"),
+                            ShowTimeId = new Guid("9d60f0ed-850b-42d8-bcde-ae6bd47c54b7"),
                             Status = 2,
-                            TicketPriceId = new Guid("0bf0f98c-d4bc-4a7a-8ae0-4ffacf1e23e6")
+                            TicketPriceId = new Guid("d8bd8bd6-52e7-41be-9476-96bb490fa65c")
                         },
                         new
                         {
-                            Id = new Guid("966a5c8e-dac0-4c89-bb7e-800a447678f7"),
-                            BillId = new Guid("10aa65e8-69ac-4c4f-a24c-e6ee3776c06f"),
-                            CinemaCenterId = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
+                            Id = new Guid("8cd5d9e3-dfbd-4f7e-b109-329a3bf0bb87"),
+                            BillId = new Guid("dc4b0965-1048-4c48-beac-b4814cfc8bef"),
+                            CinemaCenterId = new Guid("a80c70d7-65e3-4d74-a743-73c766c8e8ae"),
                             Description = "Description for Ticket 13",
                             Qrcode = "qrcode13.jpg",
-                            SeatId = new Guid("e451daed-1c48-4432-8f9d-bed48e67ed0c"),
-                            ShowTimeId = new Guid("5730a49d-78fa-4c58-87f8-6b54e0891b93"),
+                            SeatId = new Guid("9f6674d5-7014-4584-afbe-39bb93768e1e"),
+                            ShowTimeId = new Guid("89ac21af-d3fa-4946-bb39-5f132b8e3c51"),
                             Status = 2,
-                            TicketPriceId = new Guid("160a58fe-f031-4cc2-8451-4ba2670f7cb7")
+                            TicketPriceId = new Guid("08dcb3f9-cf30-472d-ab13-32b2eb569bbd")
                         },
                         new
                         {
-                            Id = new Guid("8861e9ed-2e15-43fa-b96e-28cc90effc87"),
-                            BillId = new Guid("d512da42-ede6-4fc7-b895-b41359193abc"),
-                            CinemaCenterId = new Guid("b33761ea-2f8f-46ae-8a72-923adb87001f"),
+                            Id = new Guid("606b1bf1-750d-4055-ba34-16e31d967e35"),
+                            BillId = new Guid("212bc07a-d805-440c-9717-2f1e1020fc92"),
+                            CinemaCenterId = new Guid("a11ba9fe-9ebc-44fa-8db0-3cd0d10270c6"),
                             Description = "Description for Ticket 14",
                             Qrcode = "qrcode14.jpg",
-                            SeatId = new Guid("0d1a6b0a-0c14-4a29-980a-768566dc91e4"),
-                            ShowTimeId = new Guid("6c557a0e-acf5-4721-81ef-ca8a1677a441"),
+                            SeatId = new Guid("0d4c5e05-f2bf-4d29-83dc-eb49e4fed174"),
+                            ShowTimeId = new Guid("2f783da7-f7ab-4e1c-b6e5-24465e53058b"),
                             Status = 2,
-                            TicketPriceId = new Guid("68a06d8c-e036-4da0-a0f1-f632a83efc29")
+                            TicketPriceId = new Guid("71ab05c7-af12-4645-9650-1a198f4276d6")
                         },
                         new
                         {
-                            Id = new Guid("c1eb8e65-1f99-4a26-89b2-02ff69df066d"),
-                            BillId = new Guid("d04ef227-7f23-4f62-8dbd-0c57702885d0"),
-                            CinemaCenterId = new Guid("7b6669ba-5dc7-46b5-8731-93bdf681f358"),
+                            Id = new Guid("1c0de6b4-b7e4-4436-9f59-0cc76e12017c"),
+                            BillId = new Guid("9b2f3bb4-9be9-4a0a-aa57-f7cf6ccbb1fa"),
+                            CinemaCenterId = new Guid("ae97ec2f-870c-4940-8679-65b362488677"),
                             Description = "Description for Ticket 15",
                             Qrcode = "qrcode15.jpg",
-                            SeatId = new Guid("24bbccd1-6e85-4545-aef8-e1a33dc3938d"),
-                            ShowTimeId = new Guid("e4e78cc9-398a-4ee3-b57a-d51525bddb84"),
+                            SeatId = new Guid("4e8211a7-963b-415b-9599-23902935cf0c"),
+                            ShowTimeId = new Guid("6252a9d2-09bf-4a83-be2c-468af5236dba"),
                             Status = 2,
-                            TicketPriceId = new Guid("aaa23ed1-31f1-422b-b3bc-d8fef32570ed")
+                            TicketPriceId = new Guid("e9d851cd-9b32-4b2b-84b3-12cbcd1f80ee")
                         },
                         new
                         {
-                            Id = new Guid("1f0a72dd-f373-4bed-b379-e711950ec0e8"),
-                            BillId = new Guid("92e9faba-6f4f-4ee0-ab2f-f29b996d82a5"),
-                            CinemaCenterId = new Guid("dbdf57c7-b24f-492a-8547-a7a1b6c059a7"),
+                            Id = new Guid("1ded8a1e-c52c-4802-adf8-732a5fd34efc"),
+                            BillId = new Guid("75ec3bdb-d382-4b40-a1ed-1a046a92c8f2"),
+                            CinemaCenterId = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
                             Description = "Description for Ticket 16",
                             Qrcode = "qrcode16.jpg",
-                            SeatId = new Guid("75e3fe57-ca1c-48e1-967a-712f5b14e6b7"),
-                            ShowTimeId = new Guid("77e3d6fb-149a-43b8-b9f5-c70efc0d8300"),
+                            SeatId = new Guid("8bf3c57a-48ad-4af4-8fe7-176199a30f5c"),
+                            ShowTimeId = new Guid("fd2a0acd-ef4e-4c96-8ee2-116cfb4b20c8"),
                             Status = 2,
-                            TicketPriceId = new Guid("bf8162e1-75da-4a1b-898f-3f9e040c6e92")
+                            TicketPriceId = new Guid("30069041-cf67-487c-bfbb-33839fb35cb7")
                         },
                         new
                         {
-                            Id = new Guid("5294a1f5-0ca6-4624-af99-398d16304a42"),
-                            BillId = new Guid("50e640dd-814d-4d54-b56c-ed221f2793c0"),
-                            CinemaCenterId = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
+                            Id = new Guid("a8009669-aff3-47e5-8dab-8079d39158bf"),
+                            BillId = new Guid("84069f21-455a-4baf-9eff-159454500436"),
+                            CinemaCenterId = new Guid("774bb7be-c62c-4a07-b962-5032015c0411"),
                             Description = "Description for Ticket 17",
                             Qrcode = "qrcode17.jpg",
-                            SeatId = new Guid("182891cc-a820-4726-b1c7-f40c5f7685d6"),
-                            ShowTimeId = new Guid("2ef00b5c-27e0-4f9f-a147-82ed6f81ed33"),
+                            SeatId = new Guid("91655daf-0781-436d-8f9d-a986008e6262"),
+                            ShowTimeId = new Guid("e14d7649-fb92-46b3-9c72-fcd2f84195e8"),
                             Status = 2,
-                            TicketPriceId = new Guid("99d795a8-4384-4878-99c3-5905e9c6e3fa")
+                            TicketPriceId = new Guid("85921e23-5721-4610-8c46-04b3df9c2184")
                         },
                         new
                         {
-                            Id = new Guid("645bb7ec-3f55-4f7b-8b49-d012f9d1edc1"),
-                            BillId = new Guid("6f5052b0-ce1f-46fe-ba06-af930da1e24e"),
-                            CinemaCenterId = new Guid("f727c7c2-313f-40e6-9cba-bc33a0a4896d"),
+                            Id = new Guid("8d74f56a-af75-47f8-9f95-8e8d3a12e7be"),
+                            BillId = new Guid("cab547d1-bd0d-458d-9a34-c52e43ccb424"),
+                            CinemaCenterId = new Guid("986557b4-114c-4668-bd0e-02b416e99954"),
                             Description = "Description for Ticket 18",
                             Qrcode = "qrcode18.jpg",
-                            SeatId = new Guid("267b970e-136a-492f-8f50-3140fe2bf910"),
-                            ShowTimeId = new Guid("97f97b0f-80f2-4adc-8919-5d1fac696b28"),
+                            SeatId = new Guid("4273ed04-b99f-49f6-bf2f-5fe9569501bd"),
+                            ShowTimeId = new Guid("d2ba8b0d-bea0-4a76-8b6d-9945566d57d8"),
                             Status = 2,
-                            TicketPriceId = new Guid("5a1c296c-8e64-4611-8546-f8e23f2bfc17")
+                            TicketPriceId = new Guid("0edc63e8-0eab-46ba-b594-ed3e622f9ee0")
                         },
                         new
                         {
-                            Id = new Guid("9af18f3f-ec21-46aa-98c1-b477b32a49fc"),
-                            BillId = new Guid("2206d17f-b71c-4bba-86c7-112b8f8216fb"),
-                            CinemaCenterId = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
+                            Id = new Guid("a337965d-48d4-4937-800b-1d601d6167c3"),
+                            BillId = new Guid("3d144ab3-384d-4273-9081-7a053b4001aa"),
+                            CinemaCenterId = new Guid("34607b9c-adfd-46ea-80e2-d6688e710f74"),
                             Description = "Description for Ticket 19",
                             Qrcode = "qrcode19.jpg",
-                            SeatId = new Guid("815117fc-1f04-4ad8-aa29-2396a06ff80e"),
-                            ShowTimeId = new Guid("5dc83cb9-a4eb-4724-83bd-b844acddca7a"),
+                            SeatId = new Guid("9c8d5b58-7892-4bf7-bdcd-81009572cca9"),
+                            ShowTimeId = new Guid("e1ef143d-956e-4872-bb04-01f12fba6efb"),
                             Status = 2,
-                            TicketPriceId = new Guid("1354e144-bfb2-4b12-af25-90566c661b12")
+                            TicketPriceId = new Guid("9b7515d8-777c-4c46-b149-e864d19c2c9a")
                         },
                         new
                         {
-                            Id = new Guid("c379446e-baba-4d07-b836-c2ea7f4e484e"),
-                            BillId = new Guid("44fd8c5d-7ec3-413f-a66b-8a7edc0f042f"),
-                            CinemaCenterId = new Guid("562703b6-f408-4340-9651-780c11395069"),
+                            Id = new Guid("ed750d9f-8890-4f51-920b-2cd6fcb77456"),
+                            BillId = new Guid("400fbc87-4b42-4d83-8d44-635b4da23cac"),
+                            CinemaCenterId = new Guid("a8817eda-abab-4bff-a3a5-82a1460ae416"),
                             Description = "Description for Ticket 20",
                             Qrcode = "qrcode20.jpg",
-                            SeatId = new Guid("fa6898f3-5106-4c87-acd9-dfd2d0e44433"),
-                            ShowTimeId = new Guid("fd54b3b0-e4e5-4d2f-af2b-6f87a7dc047f"),
+                            SeatId = new Guid("290a762d-c6fb-41dc-b649-2ff8d181d303"),
+                            ShowTimeId = new Guid("eb0cacb2-f65c-4ada-bd03-4ad1e065e19f"),
                             Status = 2,
-                            TicketPriceId = new Guid("e633214f-0eff-485f-9d6f-8c7119d563af")
+                            TicketPriceId = new Guid("c74a85d7-84b6-4096-9d61-f3eac166adfe")
                         },
                         new
                         {
-                            Id = new Guid("8938c659-72be-4237-8242-79ba004f63e3"),
-                            BillId = new Guid("88ac530e-249d-4cef-b7a3-2b3753ef3bc0"),
-                            CinemaCenterId = new Guid("8fe002c4-d845-4ee0-8d55-29212c6618ef"),
+                            Id = new Guid("ef618db8-1438-4b07-adb3-966046f575a7"),
+                            BillId = new Guid("997826c2-3adc-47ea-9839-219e955fe461"),
+                            CinemaCenterId = new Guid("e6d3f6dd-929b-497c-bd54-454d317dea41"),
                             Description = "Description for Ticket 21",
                             Qrcode = "qrcode21.jpg",
-                            SeatId = new Guid("dfa59234-5205-4f75-92d4-946eb311487b"),
-                            ShowTimeId = new Guid("ded26285-734f-4e10-95ae-3191f793c5a3"),
+                            SeatId = new Guid("8070306d-bc60-43f9-aade-17f13d9c461a"),
+                            ShowTimeId = new Guid("6a3e34db-29ce-4848-9e30-e15caeff469e"),
                             Status = 2,
-                            TicketPriceId = new Guid("5ea1b6f4-c92f-4623-aa80-3cbcb3988f21")
+                            TicketPriceId = new Guid("e61f296d-442e-4e5f-ab4b-a9b467b070c2")
                         },
                         new
                         {
-                            Id = new Guid("48762dbb-6e08-4d8e-bf39-b16e3b971085"),
-                            BillId = new Guid("f904aa25-4dde-4405-9b7e-23659edd24f9"),
-                            CinemaCenterId = new Guid("6062cd97-0dbf-42a4-88cc-4e870ad66f2b"),
+                            Id = new Guid("5539088c-b5eb-4c5d-9615-2f76ca58dded"),
+                            BillId = new Guid("0cac3169-9cc9-4f34-98fb-ed9dc6deba0c"),
+                            CinemaCenterId = new Guid("34607b9c-adfd-46ea-80e2-d6688e710f74"),
                             Description = "Description for Ticket 22",
                             Qrcode = "qrcode22.jpg",
-                            SeatId = new Guid("e42e188b-1cb5-487b-9f6c-3b8832bdf836"),
-                            ShowTimeId = new Guid("98da30f1-679e-48b8-9e75-c014bda349d0"),
+                            SeatId = new Guid("91fa0f43-572e-432c-98a1-6bda1352e6a4"),
+                            ShowTimeId = new Guid("92180f99-928e-421b-83cf-8c936bc09ce9"),
                             Status = 2,
-                            TicketPriceId = new Guid("8157faf8-200b-4a1a-b577-cb86fed23d45")
+                            TicketPriceId = new Guid("7813a5f6-81f7-461a-bbe5-df84cef329a7")
                         },
                         new
                         {
-                            Id = new Guid("d7da457b-d655-4008-9df9-af5085a30261"),
-                            BillId = new Guid("72477574-e7b6-499e-b67f-ac6d59f394b7"),
-                            CinemaCenterId = new Guid("562703b6-f408-4340-9651-780c11395069"),
+                            Id = new Guid("fb23cdcf-e6e9-4393-87f8-5b222432c33b"),
+                            BillId = new Guid("c9bcb6d2-c37f-4dc3-a487-9b2f57e17c12"),
+                            CinemaCenterId = new Guid("ee8b9b21-fe0e-4add-816a-52b1a822b6ac"),
                             Description = "Description for Ticket 23",
                             Qrcode = "qrcode23.jpg",
-                            SeatId = new Guid("ecee704d-c9c6-4302-a300-d17f6f2e3232"),
-                            ShowTimeId = new Guid("7cf53c63-d4bf-4fbe-83a5-c2e8bd19df50"),
+                            SeatId = new Guid("600da20f-1d6f-4243-8673-0180e0924858"),
+                            ShowTimeId = new Guid("fd9a2b6a-9ce3-477f-b180-1d344c416c21"),
                             Status = 2,
-                            TicketPriceId = new Guid("d78984fc-e255-4a63-b3c4-b5cfdf1df002")
+                            TicketPriceId = new Guid("5ac8296d-9d98-4648-ad9a-b197fe757588")
                         },
                         new
                         {
-                            Id = new Guid("9f14970a-46d2-49c6-94d4-ab94b8becb67"),
-                            BillId = new Guid("e84940fa-f17c-4ddd-99de-b54b213164fc"),
-                            CinemaCenterId = new Guid("7b6669ba-5dc7-46b5-8731-93bdf681f358"),
+                            Id = new Guid("592b007b-0fe7-42ce-9362-b2bf05d01bff"),
+                            BillId = new Guid("f9402347-4fa0-4ca1-8553-fc6bc0a08c30"),
+                            CinemaCenterId = new Guid("b6a9896f-c9c6-4e97-a793-e18cfb55e1f7"),
                             Description = "Description for Ticket 24",
                             Qrcode = "qrcode24.jpg",
-                            SeatId = new Guid("513efb4d-4881-4dc0-84b7-5a72d53e6703"),
-                            ShowTimeId = new Guid("f6d74142-8c20-464a-8502-657c4cc75942"),
+                            SeatId = new Guid("9b9371b1-c304-4a1e-ba46-9ce674d45f3c"),
+                            ShowTimeId = new Guid("42c503d5-9b2e-4d2a-8a5a-20b07b9a7c2d"),
                             Status = 2,
-                            TicketPriceId = new Guid("e594668d-a0b7-4cf0-a9ab-5c1ca087696d")
+                            TicketPriceId = new Guid("4e3a4325-0c36-4c91-a5ac-f81ef0010bd9")
                         },
                         new
                         {
-                            Id = new Guid("647f7d69-ac1f-4ed4-b216-c1601aceb837"),
-                            BillId = new Guid("288433f0-cf58-4dcd-a682-e8afa7b307ef"),
-                            CinemaCenterId = new Guid("72ce0538-77cb-4738-86a4-db5f74a79f2e"),
+                            Id = new Guid("cdf4863c-d854-4d6d-a758-76d30815786d"),
+                            BillId = new Guid("fc40291a-c164-4e23-9d72-f330676a383c"),
+                            CinemaCenterId = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
                             Description = "Description for Ticket 25",
                             Qrcode = "qrcode25.jpg",
-                            SeatId = new Guid("b336a149-e836-43e1-b276-f427e7f5770e"),
-                            ShowTimeId = new Guid("a5c7a2cb-1f83-4a73-83fe-71fd277f0011"),
+                            SeatId = new Guid("9d2ed994-d06b-4c64-a844-d4968c4a59d4"),
+                            ShowTimeId = new Guid("45455ac8-ec3c-4d6e-ac27-9df78739e842"),
                             Status = 2,
-                            TicketPriceId = new Guid("9afb6602-af1a-4c3c-a2da-e0280a434e01")
+                            TicketPriceId = new Guid("0b2a89a2-186b-4391-84fb-d2393ec18bae")
                         },
                         new
                         {
-                            Id = new Guid("6485a2e9-22b0-4c3f-aa71-65afb5da9e2d"),
-                            BillId = new Guid("9a70b4af-8263-41c4-84d8-931eb85b8db1"),
-                            CinemaCenterId = new Guid("82bfb838-8074-4d43-97e3-af625430b1e5"),
+                            Id = new Guid("55d52dbf-adc3-4c7c-9747-bcefb04a1466"),
+                            BillId = new Guid("5b13aeda-0e57-4f88-9830-fa75d8dee144"),
+                            CinemaCenterId = new Guid("a80c70d7-65e3-4d74-a743-73c766c8e8ae"),
                             Description = "Description for Ticket 26",
                             Qrcode = "qrcode26.jpg",
-                            SeatId = new Guid("b0734d92-59f4-4412-9af3-6706972e818b"),
-                            ShowTimeId = new Guid("253db7d1-dc76-403f-8444-69dd44a47411"),
+                            SeatId = new Guid("904c501a-7272-4dcc-87bf-9b13cad0b953"),
+                            ShowTimeId = new Guid("da810290-aacd-43ad-af23-14a1e71efbdc"),
                             Status = 2,
-                            TicketPriceId = new Guid("f1400175-bef3-41fb-af49-9f3c10d40522")
+                            TicketPriceId = new Guid("ba02125a-5420-4e6b-a88b-3d2963e0c555")
                         },
                         new
                         {
-                            Id = new Guid("22021199-1ec2-4285-997c-47b69522778c"),
-                            BillId = new Guid("7401c5f1-bbf5-436c-a2f3-0ea0dd66664c"),
-                            CinemaCenterId = new Guid("78b6c6b0-212e-4582-9c31-68d15056d3ec"),
+                            Id = new Guid("2ada0f9b-5990-412b-b59e-b0382439a83a"),
+                            BillId = new Guid("fe6cfcc6-d410-4277-b234-6fd72e17f882"),
+                            CinemaCenterId = new Guid("195d310d-8236-41a2-8cf2-1092c96f6e3b"),
                             Description = "Description for Ticket 27",
                             Qrcode = "qrcode27.jpg",
-                            SeatId = new Guid("55fa66d6-e42d-420d-8dcd-d93d50c66eb4"),
-                            ShowTimeId = new Guid("4d6237fb-d91b-4c16-a092-7c6acab509aa"),
+                            SeatId = new Guid("f6ff1e35-8fd9-422c-800d-f09baf0f221e"),
+                            ShowTimeId = new Guid("06031aca-d7a0-45ee-87ca-e8d9b83eecbb"),
                             Status = 2,
-                            TicketPriceId = new Guid("06ac71cd-896a-4192-9db4-66e55f1fbe8d")
+                            TicketPriceId = new Guid("fea1a559-7e0d-4483-b996-0dfaa179d1e3")
                         },
                         new
                         {
-                            Id = new Guid("d58f98f4-3230-4e0b-8e06-c3ecbc9d9adb"),
-                            BillId = new Guid("cba5ee8a-ca9b-4b0a-b0d3-84042d358718"),
-                            CinemaCenterId = new Guid("d0566c92-c9d5-45c8-9d3b-a632f7c5e874"),
+                            Id = new Guid("b0cabb70-5526-40a4-8b58-f154a4f38422"),
+                            BillId = new Guid("af135110-2a5a-432f-9bc9-4dfe19bbc3df"),
+                            CinemaCenterId = new Guid("244ffcea-6b2b-4025-a043-eee24f165a05"),
                             Description = "Description for Ticket 28",
                             Qrcode = "qrcode28.jpg",
-                            SeatId = new Guid("26c45339-7e67-4bbb-b590-1f49e8648fa5"),
-                            ShowTimeId = new Guid("4e87d62e-ebab-4491-940f-7ae5222c9297"),
+                            SeatId = new Guid("0afed214-5f19-486e-b5a0-175e99d9cef9"),
+                            ShowTimeId = new Guid("8bb90529-64d5-4460-a309-6c767c792b31"),
                             Status = 2,
-                            TicketPriceId = new Guid("22fa0b0d-cbb3-4b7b-a7d5-f5202e6f7232")
+                            TicketPriceId = new Guid("1caec22f-f602-4bd1-bdf9-5b6c8c707bd6")
                         },
                         new
                         {
-                            Id = new Guid("6ea262cb-ee3c-42e4-bcba-f99a288d8b27"),
-                            BillId = new Guid("be5f0dc7-7f5d-495f-b9d4-b8c9148bd956"),
-                            CinemaCenterId = new Guid("72ce0538-77cb-4738-86a4-db5f74a79f2e"),
+                            Id = new Guid("60606083-a7d6-409a-ae85-36420247e392"),
+                            BillId = new Guid("16494580-36ae-4e88-9856-5cde6dfd9acf"),
+                            CinemaCenterId = new Guid("e58ec98d-2eba-40a6-a7c9-ac4228c635f1"),
                             Description = "Description for Ticket 29",
                             Qrcode = "qrcode29.jpg",
-                            SeatId = new Guid("aeb53e9b-d36d-43dc-b248-29bc3c5379d4"),
-                            ShowTimeId = new Guid("5a095403-85bb-4434-b92e-9554dcece8a3"),
+                            SeatId = new Guid("f6ff1e35-8fd9-422c-800d-f09baf0f221e"),
+                            ShowTimeId = new Guid("c9262864-fc02-41db-9213-07ad1ae27ce7"),
                             Status = 2,
-                            TicketPriceId = new Guid("20590e39-e764-4415-a3c6-e73064d46534")
+                            TicketPriceId = new Guid("e144a691-3d6a-4607-8944-3b94c7b21e1f")
                         },
                         new
                         {
-                            Id = new Guid("f399ccf0-0ab2-4776-b96f-22f887195635"),
-                            BillId = new Guid("ca5f8cef-4a02-4891-9d00-f1cd29927794"),
-                            CinemaCenterId = new Guid("a231f257-80fa-45b4-bdbd-178ca5c4cbb9"),
+                            Id = new Guid("576f09e4-6d77-488c-ba7e-594baa26e4b9"),
+                            BillId = new Guid("9b32b3b6-d128-42be-b67b-c39aa9237012"),
+                            CinemaCenterId = new Guid("a8817eda-abab-4bff-a3a5-82a1460ae416"),
                             Description = "Description for Ticket 30",
                             Qrcode = "qrcode30.jpg",
-                            SeatId = new Guid("a64c4419-5d16-484c-b9bf-24ed93da66d4"),
-                            ShowTimeId = new Guid("a5357a5e-6444-4fc9-a16f-55bfb756bd39"),
+                            SeatId = new Guid("290a762d-c6fb-41dc-b649-2ff8d181d303"),
+                            ShowTimeId = new Guid("94500556-c4dc-47b6-9e9d-2da205e84f5c"),
                             Status = 2,
-                            TicketPriceId = new Guid("5d743fea-8d86-4643-8a0d-41e160395209")
+                            TicketPriceId = new Guid("d9830a51-c4a8-4f08-8b4e-8af089b0e58c")
                         });
                 });
 
@@ -4772,127 +4800,27 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                     b.HasData(
                         new
                         {
-                            Id = new Guid("06961681-885c-47db-be43-112d0b3983e8"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("5f8dff09-1ce5-4a87-92bf-b8a23c0d92eb"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Price = 10000m,
                             ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("3e149012-b7e3-4aa8-8986-13838abcc261"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Id = new Guid("a71612bc-c7d5-4f9c-9583-cf1305ac26ba"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Price = 20000m,
                             ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("44cae637-055d-471f-82c8-1fe76ce101dc"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 30000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("e815b5ab-d548-4a15-a314-62f74a0b13bf"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 40000m,
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("270de1b0-875f-4165-9117-ac96cd338203"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
-                            Price = 50000m,
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("6790f820-0590-4a56-9f90-3a00817b40d3"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
-                            Price = 60000m,
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("4ef17c71-1c8f-4f0a-bfc3-b958509a4cb9"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
-                            Price = 70000m,
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("82287faa-ce55-446f-a627-3863b1fff25e"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
-                            Price = 80000m,
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("d72ddcb1-ebef-4b89-94e1-4ce38375a736"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 90000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("ad8f8f1d-31d8-4582-a6d4-03384fb7d46a"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
-                            Price = 0m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("3d422297-2da2-428e-b319-118f16346053"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
-                            Price = 10000m,
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("0bf0f98c-d4bc-4a7a-8ae0-4ffacf1e23e6"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 20000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("160a58fe-f031-4cc2-8451-4ba2670f7cb7"),
+                            Id = new Guid("d1507f4c-417c-4615-9dab-bd2f28660cc4"),
                             CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Price = 30000m,
                             ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
@@ -4902,159 +4830,179 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("68a06d8c-e036-4da0-a0f1-f632a83efc29"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("9f1b477f-1a9b-439d-8d47-30d0182729d7"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Price = 40000m,
                             ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
                             SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("aaa23ed1-31f1-422b-b3bc-d8fef32570ed"),
+                            Id = new Guid("58b4504a-d07c-4d5e-9e43-373f1c9818de"),
                             CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Price = 50000m,
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("bf8162e1-75da-4a1b-898f-3f9e040c6e92"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
-                            Price = 60000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("99d795a8-4384-4878-99c3-5905e9c6e3fa"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 70000m,
                             ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("5a1c296c-8e64-4611-8546-f8e23f2bfc17"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
-                            Price = 80000m,
-                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("1354e144-bfb2-4b12-af25-90566c661b12"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 90000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("e633214f-0eff-485f-9d6f-8c7119d563af"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
-                            Price = 0m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
                             ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("5ea1b6f4-c92f-4623-aa80-3cbcb3988f21"),
+                            Id = new Guid("d12d3ae8-a061-4f43-9256-0fb616131973"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
-                            Price = 10000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("8157faf8-200b-4a1a-b577-cb86fed23d45"),
-                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
-                            Price = 20000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            Price = 60000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
                             ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
                             SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("d78984fc-e255-4a63-b3c4-b5cfdf1df002"),
+                            Id = new Guid("d28e72b7-8fe9-4732-ba43-e40f267e3f8b"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 70000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("5a1081aa-2601-41ac-b2d7-8e5e3614ae46"),
                             CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Price = 80000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("e53c42be-afc3-49fe-9a00-792afcd03d4e"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Price = 90000m,
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("751ed19d-ab70-4baf-83ef-814ad7bafe98"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 0m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("1c614111-0f85-49d7-8e4d-daeedca63c44"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Price = 10000m,
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("d8bd8bd6-52e7-41be-9476-96bb490fa65c"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Price = 20000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("08dcb3f9-cf30-472d-ab13-32b2eb569bbd"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Price = 30000m,
                             ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("e594668d-a0b7-4cf0-a9ab-5c1ca087696d"),
+                            Id = new Guid("71ab05c7-af12-4645-9650-1a198f4276d6"),
                             CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
                             Price = 40000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
-                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("9afb6602-af1a-4c3c-a2da-e0280a434e01"),
+                            Id = new Guid("e9d851cd-9b32-4b2b-84b3-12cbcd1f80ee"),
                             CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Price = 50000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
                             SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("f1400175-bef3-41fb-af49-9f3c10d40522"),
-                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Id = new Guid("30069041-cf67-487c-bfbb-33839fb35cb7"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
                             Price = 60000m,
-                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
                             SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("06ac71cd-896a-4192-9db4-66e55f1fbe8d"),
+                            Id = new Guid("85921e23-5721-4610-8c46-04b3df9c2184"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Price = 70000m,
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
-                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
-                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("22fa0b0d-cbb3-4b7b-a7d5-f5202e6f7232"),
-                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
-                            Price = 80000m,
-                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
                             SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
                             Status = 1
                         },
                         new
                         {
-                            Id = new Guid("20590e39-e764-4415-a3c6-e73064d46534"),
+                            Id = new Guid("0edc63e8-0eab-46ba-b594-ed3e622f9ee0"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 80000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("9b7515d8-777c-4c46-b149-e864d19c2c9a"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
                             Price = 90000m,
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("c74a85d7-84b6-4096-9d61-f3eac166adfe"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Price = 0m,
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("e61f296d-442e-4e5f-ab4b-a9b467b070c2"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Price = 10000m,
                             ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
                             ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
@@ -5062,10 +5010,90 @@ namespace MovieTicket.Infrastructure.Migrations.MovieTicketReadWriteDb
                         },
                         new
                         {
-                            Id = new Guid("5d743fea-8d86-4643-8a0d-41e160395209"),
+                            Id = new Guid("7813a5f6-81f7-461a-bbe5-df84cef329a7"),
                             CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
-                            Price = 0m,
+                            Price = 20000m,
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("5ac8296d-9d98-4648-ad9a-b197fe757588"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 30000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("4e3a4325-0c36-4c91-a5ac-f81ef0010bd9"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 40000m,
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("d997b27a-ddb7-4ad1-a1cd-c2bd00c50cb9"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("0b2a89a2-186b-4391-84fb-d2393ec18bae"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 50000m,
                             ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("ba02125a-5420-4e6b-a88b-3d2963e0c555"),
+                            CinemaTypeId = new Guid("e85df49a-e99d-4727-917f-28ca67bf33ec"),
+                            Price = 60000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("fea1a559-7e0d-4483-b996-0dfaa179d1e3"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Price = 70000m,
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
+                            ScreeningDayId = new Guid("d51bee9b-54c3-4a3c-a06a-7c3940852f57"),
+                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("1caec22f-f602-4bd1-bdf9-5b6c8c707bd6"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Price = 80000m,
+                            ScreenTypeId = new Guid("2b18932d-3074-4ba9-9d4b-97b09feac482"),
+                            ScreeningDayId = new Guid("e4f8f494-4e25-4966-806a-7b8843d79b6b"),
+                            SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("e144a691-3d6a-4607-8944-3b94c7b21e1f"),
+                            CinemaTypeId = new Guid("fbe455d5-c40e-432e-9b28-edac59f7e481"),
+                            Price = 90000m,
+                            ScreenTypeId = new Guid("8c0c4fe0-5d38-4760-93f6-ebd5fcd0e17c"),
+                            ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
+                            SeatTypeId = new Guid("428edc6b-0862-4623-b038-ac505fd554bc"),
+                            Status = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("d9830a51-c4a8-4f08-8b4e-8af089b0e58c"),
+                            CinemaTypeId = new Guid("03846649-c852-443c-9f5c-f935343318d5"),
+                            Price = 0m,
+                            ScreenTypeId = new Guid("36bbb6d8-eda5-4353-9f9c-765e24ff0122"),
                             ScreeningDayId = new Guid("7136ed84-69f4-46dc-a784-857bb2c91c42"),
                             SeatTypeId = new Guid("e548fd61-3d84-4104-b15e-f13d5d7d53ed"),
                             Status = 1

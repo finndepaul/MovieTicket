@@ -1,0 +1,76 @@
+﻿@page "/banner/create-banner"
+@attribute [Authorize(Roles = "Admin")]
+<div class="container d-flex">
+        <EditForm Model="UploadModel" enctype="multipart/form-data" Enhance FormName="add-form" OnValidSubmit="CreateBanner">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="mb-3">
+                <label class="form-label">Tên</label>
+                <InputText @bind-Value="UploadModel.Name" class="form-control"></InputText>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Chọn ảnh</label>
+                <InputFile OnChange="LoadFile" class="form-control" />
+            </div>
+            <div class="mb-3 justify-content-center">
+                <input type="submit" class="btn btn-success" value="Tạo" />
+            </div>
+        </EditForm>
+    @* @if(!string.IsNullOrEmpty(_uploadedImgUrl))
+    {
+        <img src="@_uploadedImgUrl" class="img-fluid" />
+    } *@
+</div>
+@code {
+    [SupplyParameterFromForm(FormName = "add-form")]
+    private FileModel UploadModel { get; set; } = new();
+    private string? _uploadedImgUrl;
+    private BannerCreateRequest request = new();
+
+    private async Task CreateBanner()
+    {   
+        var file = UploadModel.ImageFile;
+        var folderPath = Path.Combine(WebHostEnv.WebRootPath, "./img/banner");
+        Directory.CreateDirectory(folderPath);
+        var filePath = Path.Combine(folderPath, file.Name);
+        try
+        {
+            using (var fileStream=new FileStream(filePath, FileMode.Create))
+            {
+                using var uploadFile = file.OpenReadStream();
+                await uploadFile.CopyToAsync(fileStream);
+                _uploadedImgUrl = $"./img/banner/{file.Name}";
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        request.Image = _uploadedImgUrl;
+        request.Name = UploadModel.Name;
+        ResponseObject<BannerDTO> response = await BannerService.Create(request);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            NavigationManager.NavigateTo("/banner", forceLoad: true);
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+
+    private void LoadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        UploadModel.ImageFile = file;
+    }
+
+    private class FileModel
+    {   [Required(ErrorMessage="Chưa nhập tên")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "Chưa chọn ảnh")]
+        public IBrowserFile ImageFile { get; set; }
+    }
+}
