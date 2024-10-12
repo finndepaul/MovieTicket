@@ -1,20 +1,14 @@
-﻿using Azure;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
-using MovieTicket.Application.DataTransferObjs.Auth;
 using MovieTicket.Application.DataTransferObjs.Auth.Requests;
 using MovieTicket.BlazorServer.Authentication;
-using MovieTicket.BlazorServer.Components.Pages;
 using MovieTicket.BlazorServer.Services.Interfaces;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Reflection.Metadata;
 using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses;
-using static MovieTicket.BlazorServer.Authentication.CustomAuthenticationStateProvider;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {

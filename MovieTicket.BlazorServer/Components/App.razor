@@ -20,13 +20,16 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <style>
-        .modal-header, h4, .btn-close {
+        .modal-header, h4 {
             background-color: #031529;
             color: white !important;
             text-align: center;
             font-size: 30px;
         }
 
+            .modal-header .btn-close {
+                --bs-btn-close-color: white;
+            }
         .modal-footer {
             background-color: #f9f9f9;
         }
