@@ -362,7 +362,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
 				Column = 10,
 				Row = 10,
 				MaxSeatCapacity = 100,
-				Description = $"Description for Cinema {i}"
+				Description = $"Description for Cinema {i}",
+				CreateTime = DateTime.Now
 			};
 			cinemas.Add(cinema);
 		}

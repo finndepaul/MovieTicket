@@ -360,8 +360,10 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 					Column = 10,
 					Row = 10,
 					MaxSeatCapacity = 100,
-					Description = $"Description for Cinema {i}"
-				};
+					Description = $"Description for Cinema {i}",
+					CreateTime = DateTime.Now,
+
+                };
 				cinemas.Add(cinema);
 			}
 			modelBuilder.Entity<Cinema>().HasData(cinemas);
