@@ -107,27 +107,25 @@
 						<NavLink class="nav-link" href="/tinmoiuudai">TIN MỚI VÀ ƯU ĐÃI</NavLink>
 					</li>
 					<li class="nav-item">
-						<NavLink class="nav-link" href="/nhuongquyen">NHƯỢNG QUYỀN</NavLink>
-					</li>
-					<li class="nav-item">
 						<NavLink class="nav-link" href="/thanhvien">THÀNH VIÊN</NavLink>
 					</li>
 				</ul>
 			</div>
-			<div class="auth-buttons d-flex justify-content-end">
-				<div>
-					<AuthorizeView>
-						<Authorized>
-							<p>Xin chào, @context.User.Identity.Name</p>
-							<a href="logout">Đăng xuất</a>
-						</Authorized>
-						<NotAuthorized>
-							<p>Xin chào, Khách</p>
-							<button type="button" class="btn btn-primary btn-lg justify-content-md-end" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
-							<button class="btn btn-outline-success me-2" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
-						</NotAuthorized>
-					</AuthorizeView>
-				</div>
+			<div class="auth-buttons">
+				<AuthorizeView>
+					<NotAuthorized>
+						<div class="d-flex align-items-center">
+							<button type="button" class="btn btn-outline-success me-2 btn-sm" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+							<button class="btn btn-outline-success me-2 btn-sm" type="button" id="regisBtn" data-bs-toggle="modal" data-bs-target="#regisModal">Đăng ký</button>
+						</div>
+					</NotAuthorized>
+					<Authorized>
+						<div class="d-flex align-items-center">
+							<p class="mb-0 me-3" style="font-size: 18px;">Xin chào, @context.User.Identity.Name</p>
+							<a href="logout" class="btn btn-outline-danger btn-sm">Đăng xuất</a>
+						</div>
+					</Authorized>
+				</AuthorizeView>
 			</div>
 		</div>
 	</nav>
@@ -178,7 +176,23 @@
 	.btn-outline-dark {
 		border-radius: 5px;
 	}
-	.nav-link{
+
+	.nav-link {
 		font-size: 18px;
 	}
+
+	.auth-buttons {
+		display: flex;
+		align-items: center; /* Căn giữa theo chiều dọc */
+	}
+
+		.auth-buttons p {
+			margin-bottom: 0;
+			font-weight: bold;
+		}
+
+	.btn-outline-success {
+		margin-left: 10px;
+	}
+
 </style>

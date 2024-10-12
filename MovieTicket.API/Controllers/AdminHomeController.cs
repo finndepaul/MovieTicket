@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.Paginations;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -23,17 +25,41 @@ namespace MovieTicket.API.Controllers
 			return Ok(general);
 		}
 		[HttpGet]
-		public async Task<ActionResult> GetListRevenueByCinemaAsync([FromQuery]DateTime? startDate, DateTime? endDate)
+		public async Task<ActionResult> GetListRevenueByCinemaAsync([FromQuery]DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] PagingParameters pagingParameters)
 		{
-			var revenueByCinema = await _adminHomeReadOnly.GetListRevenueByCinemaAsync(startDate,endDate);
-			return Ok(revenueByCinema);
+			var revenueByCinema = await _adminHomeReadOnly.GetListRevenueByCinemaAsync(startDate,endDate,pagingParameters);
+			var data = revenueByCinema.Item.ToList();
+			return Ok(new PageList<RevenueByCinemaDto>(data.ToList(), revenueByCinema.MetaData.TotalCount,
+				revenueByCinema.MetaData.CurrentPage,
+				revenueByCinema.MetaData.PageSize));
 		}
 		[HttpGet]
-		public async Task<ActionResult> GetListRevenueByMovieAsync([FromQuery] DateTime? startDate, DateTime? endDate)
+		public async Task<ActionResult> GetListRevenueByMovieAsync([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] PagingParameters pagingParameters)
 		{
-			var revenueByMovie = await _adminHomeReadOnly.GetListRevenueByMovieAsync(startDate, endDate);
-			return Ok(revenueByMovie);
+			var revenueByMovie = await _adminHomeReadOnly.GetListRevenueByMovieAsync(startDate, endDate, pagingParameters);
+			var data = revenueByMovie.Item.ToList();
+			return Ok(new PageList<RevenueByMovieDto>(data.ToList(),
+				revenueByMovie.MetaData.TotalCount,
+				revenueByMovie.MetaData.CurrentPage,
+				revenueByMovie.MetaData.PageSize));
 		}
-
-	}
+        [HttpGet]
+        public async Task<ActionResult> RevenueByMonthDto()
+        {
+            var revenueByMonth = await _adminHomeReadOnly.GetTopRevenueMonth();
+            return Ok(revenueByMonth);
+        }
+		[HttpGet]
+		public async Task<ActionResult> ExportRevenueCinemaDtoToExcel([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+		{
+			var file = await _adminHomeReadOnly.ExportRevenueCinemaDtoToExcel(startDate, endDate);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RevenueByCinema.xlsx");
+        }
+        [HttpGet]
+        public async Task<ActionResult> ExportRevenueMovieDtoToExcel([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+        {
+            var file = await _adminHomeReadOnly.ExportRevenueMovieDtoToExcel(startDate, endDate);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RevenueByMovie.xlsx");
+        }
+    }
 }

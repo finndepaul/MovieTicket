@@ -6,11 +6,11 @@
    <ValidationSummary />
         <div class="mb-3">
             <label class="form-label">Username</label>
-            <InputText id="username" class="form-control" @bind-Value="loginModel.Username" />
+            <InputText id="loginUsername" class="form-control" @bind-Value="loginModel.Username" />
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+            <label for="loginPPassword" class="form-label">Password</label>
+            <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
