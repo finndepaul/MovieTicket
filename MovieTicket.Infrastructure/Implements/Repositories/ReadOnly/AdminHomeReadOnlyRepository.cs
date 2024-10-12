@@ -17,8 +17,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
     {
         private readonly MovieTicketReadOnlyDbContext _db;
         private readonly DateTime time = DateTime.Now;
-        // Doanh thu theo tháng
-        public async Task<GeneralDto> GetAdminGeneralAsync()
+		public AdminHomeReadOnlyRepository(MovieTicketReadOnlyDbContext db)
+		{
+			_db = db;
+		}
+		// Doanh thu theo tháng
+		public async Task<GeneralDto> GetAdminGeneralAsync()
 		{
 			var lstBill = _db.Bills.AsNoTracking();
 			//var lstMembership = _db.Memberships.AsNoTracking();
