@@ -220,7 +220,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                     Id = Guid.NewGuid(),
                     Title = $"Title {i}"
                 };
-
                 promotions.Add(promotion);
             }
             modelBuilder.Entity<Promotion>().HasData(promotions);

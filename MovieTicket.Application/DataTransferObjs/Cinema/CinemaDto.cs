@@ -17,5 +17,6 @@ namespace MovieTicket.Application.DataTransferObjs.Cinema
         public int Column { get; set; }
         public int Row { get; set; }
         public string Description { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }
