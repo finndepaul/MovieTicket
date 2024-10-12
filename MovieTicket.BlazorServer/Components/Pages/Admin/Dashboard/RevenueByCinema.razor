@@ -1,163 +1,231 @@
 @page "/revenue-by-cinema"
-@attribute [Authorize(Roles ="Admin")]
+@attribute [Authorize(Roles = "Admin")]
 @using MovieTicket.Application.DataTransferObjs.AdminHome
+@using MovieTicket.Application.ValueObjs.Paginations
 @using MovieTicket.BlazorServer.Services.Interfaces
 @inject IAdminHomeService _ser;
 
 <div class="content">
-    <div class="d-flex align-items-center">
-        <div class="d-flex align-items-center mr-15">
-            <label for="start" class="mr-2 mb-0">Từ ngày:</label>
-            <input type="date" id="start" name="start-date" @bind="@startDate" class="form-control form-control-sm" style="width: 150px;">
-        </div>
+	<div class="d-flex align-items-center">
+		<div class="d-flex align-items-center mr-15">
+			<label for="start" class="mr-2 mb-0">Từ ngày:</label>
+			<input type="date" id="start" name="start-date" @bind="@startDate" class="form-control form-control-sm" style="width: 150px;">
+		</div>
 
-        <div class="d-flex align-items-center mr-15">
-            <label for="end" class="mr-2 mb-0">Đến ngày:</label>
-            <input type="date" id="end" name="end-date" @bind="@endDate" class="form-control form-control-sm" style="width: 150px;">
-        </div>
+		<div class="d-flex align-items-center mr-15">
+			<label for="end" class="mr-2 mb-0">Đến ngày:</label>
+			<input type="date" id="end" name="end-date" @bind="@endDate" class="form-control form-control-sm" style="width: 150px;">
+		</div>
 
-        <div class="d-flex align-items-center">
-            <button class="btn btn-primary btn-sm w-auto mr-15" @onclick="Reload">Load dữ liệu</button>
-            <button class="btn btn-success btn-sm w-auto">Xuất báo cáo</button>
-        </div>
-    </div>
+		<div class="d-flex align-items-center">
+			<button class="btn btn-primary btn-sm w-auto mr-15" @onclick="Reload">Load dữ liệu</button>
+			<button class="btn btn-success btn-sm w-auto" @onclick="ExportExcel">Xuất báo cáo</button>
+		</div>
+	</div>
 
-    <br />
+	<br />
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="chart-container">
-                <p class="text-center">Số vé bán ra theo rạp</p>
-                <canvas id="ticketChart"></canvas>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="chart-container">
-                <p class="text-center">Doanh thu theo rạp</p>
-                <canvas id="revenueChart"></canvas>
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="chart-container">
+				<p class="text-center">Số vé bán ra theo rạp</p>
+				<canvas id="ticketChart" width="400" height="200"></canvas>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="chart-container">
+				<p class="text-center">Doanh thu theo rạp</p>
+				<canvas id="revenueChart" width="400" height="200"></canvas>
+			</div>
+		</div>
+	</div>
 
-    <div class="table-responsive mt-4">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Tên rạp</th>
-                    <th>Tổng vé bán ra</th>
-                    <th>Tổng doanh thu</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in revenueByCinemaDtos)
-                {
-                    <tr>
-                        <th scope="row">@item.Name</th>
-                        <td>@item.TotalTicket</td>
-                        <td>@item.TotalRevenue</td>
-                    </tr>
-                }
-                <!-- Add more rows as needed -->
-            </tbody>
-        </table>
-        <nav class="d-flex justify-content-end" aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+	<div class="table-responsive mt-4">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Tên rạp</th>
+					<th>Tổng vé bán ra</th>
+					<th>Tổng doanh thu</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in revenueByCinemaDtos)
+				{
+					<tr>
+						<th scope="row">@item.Name</th>
+						<td>@item.TotalTicket</td>
+						<td>@item.TotalRevenue</td>
+					</tr>
+				}
+			</tbody>
+			<tfoot>
+				<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+			</tfoot>
+		</table>
+	</div>
 </div>
 
 <style>
-    .mr-15 {
-        margin-right: 15px !important;
-    }
+	.mr-15 {
+		margin-right: 15px !important;
+	}
 
-    .chart-container {
-        height: 400px;
-    }
+	.chart-container {
+		height: 400px;
+	}
 </style>
 
+
 <script>
+	function abcCharts(byCinemaDtos) {
+		var ticketCanvas = document.getElementById("ticketChart");
+		var revenueCanvas = document.getElementById("revenueChart");
 
-        var ticketCtx = document.getElementById('ticketChart').getContext('2d');
-        var revenueCtx = document.getElementById('revenueChart').getContext('2d');
+		if (!ticketCanvas) {
+			console.error('ticketChart canvas not found');
+			return;
+		}
+		if (!revenueCanvas) {
+			console.error('revenueChart canvas not found');
+			return;
+		}
 
-        new Chart(ticketCtx, {
-            type: 'bar',
-            data: {
-            labels: ['Rạp 1', 'Rạp 2', 'Rạp 3', 'Rạp 4'],
-                datasets: [{
-                    label: 'Số vé bán ra',
-                    data: [32, 11, 26, 8],
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+		var ticketCtx = ticketCanvas.getContext('2d');
+		var revenueCtx = revenueCanvas.getContext('2d');
 
-        new Chart(revenueCtx, {
-            type: 'bar',
-            data: {
-            labels: ['Rạp 1', 'Rạp 2', 'Rạp 3', 'Rạp 4'],
-                datasets: [{
-                    label: 'Doanh thu',
-                    data: [8677300, 4282000, 7791000, 2671000],
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+		//Kiểm tra nếu không lấy được context
+		if (!ticketCtx || !revenueCtx) {
+			console.error('Failed to get context for the charts.');
+			return;
+		}
 
-    function UpdateEndDate() {
-        var startDate = document.getElementById('start').value;
-        document.getElementById('end').min = startDate;
-    }
+		// Giới hạn dữ liệu chỉ lấy 5 phần tử đầu tiên
+		var labels = byCinemaDtos.slice(0, 5).map(item => item.name);
+		var ticketData = byCinemaDtos.slice(0, 5).map(item => item.totalTicket);
+		var revenueData = byCinemaDtos.slice(0, 5).map(item => item.totalRevenue);
+
+		// Clear previous charts if they exist
+		if (ticketCtx.chart) {
+			ticketCtx.chart.destroy();
+		}
+		if (revenueCtx.chart) {
+			revenueCtx.chart.destroy();
+		}
+
+		// Create ticket chart
+		ticketCtx.chart = new Chart(ticketCtx, {
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Số vé bán ra',
+					data: ticketData,
+					backgroundColor: 'rgba(54, 162, 235, 0.2)',
+					borderColor: 'rgba(54, 162, 235, 1)',
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+
+		// Create revenue chart
+		revenueCtx.chart = new Chart(revenueCtx, {
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Doanh thu',
+					data: revenueData,
+					backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					borderColor: 'rgba(255, 99, 132, 1)',
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+	}
+	function downloadFile(base64Data, fileName) {
+		// Tạo một phần tử <a> mới trong DOM
+		const link = document.createElement('a');
+
+		// Gán thuộc tính href của liên kết với data URL,
+		// bao gồm loại file và dữ liệu base64
+		link.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + base64Data;
+
+		// Gán tên file cho thuộc tính download của liên kết
+		link.download = fileName;
+
+		// Thêm liên kết vào body của tài liệu để có thể thực hiện click
+		document.body.appendChild(link);
+
+		// Mô phỏng hành động click vào liên kết để bắt đầu tải file
+		link.click();
+
+		// Xóa liên kết khỏi body sau khi click để giữ DOM sạch sẽ
+		document.body.removeChild(link);
+	}
+
 </script>
 
-@code {
-    private List<RevenueByCinemaDto> revenueByCinemaDtos = new List<RevenueByCinemaDto>();
-    private int totalUsers;
-    private int currentPage = 1;
-    private int pageSize = 10;
 
-    private DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-    private DateTime endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
-    protected async override Task OnInitializedAsync()
-    {
-        revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(startDate, endDate);
-    }
-    private async Task Reload()
-    {
-        revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(startDate, endDate);
-        StateHasChanged();
-    }
+@code {
+	private List<RevenueByCinemaDto> revenueByCinemaDtos = new List<RevenueByCinemaDto>();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private MetaData metaData { get; set; } = new MetaData();
+	private DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+	private DateTime endDate = DateTime.Now;
+
+	private bool isRendered = false;
+
+	protected async override Task OnInitializedAsync()
+	{
+		await Reload();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await Task.Delay(100);
+
+		if (firstRender)
+		{
+			var byCinemaDtos = revenueByCinemaDtos.Take(5).Select(r => new { r.Name, r.TotalTicket, r.TotalRevenue }).ToList();
+			await JSRuntime.InvokeVoidAsync("abcCharts", byCinemaDtos);
+			this.isRendered = true;
+		}
+
+	}
+
+	private async Task Reload()
+	{
+		var pagingResponse = await _ser.GetListRevenueByCinemaAsync(startDate, endDate, pagingParameters);
+		revenueByCinemaDtos = pagingResponse.Item.ToList();
+		metaData = pagingResponse.MetaData;
+		StateHasChanged();
+	}
+	private async Task SelectedPage(int page)
+	{
+		pagingParameters.PageNumber = page;
+		await Reload();
+	}
+	private async Task ExportExcel()
+	{
+		var excelData = await _ser.ExportRevenueCinemaDtoToExcel(startDate, endDate);
+		var base64Excel = Convert.ToBase64String(excelData);
+		var timeStamp = startDate.Month.ToString() + "_" + startDate.Year.ToString();
+		var fileName = $"RevenueByCinema_{timeStamp}.xlsx";
+		await JSRuntime.InvokeVoidAsync("downloadFile", base64Excel, fileName);
+	}
 }
