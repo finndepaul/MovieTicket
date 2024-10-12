@@ -63,7 +63,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var item in revenueByMovieDtos.Take(2))
+						@foreach (var item in revenueByMovieDtos)
 						{
 							<tr>
 								<th scope="row">@item.FilmName</th>
@@ -91,7 +91,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var item in revenueByCinemaDtos.Take(2))
+						@foreach (var item in revenueByCinemaDtos)
 						{
 							<tr>
 								<th scope="row">@item.Name</th>
@@ -116,7 +116,8 @@
 	private bool isRendered = false;
 
 	protected override async Task OnInitializedAsync()
-	{
+	{	
+		DateTime start = new DateTime(date.Year, date.Month, 1);
 		generalDto = await _ser.GetAdminGeneralAsync();
 		var dataRevenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
 		revenueByCinemaDtos = dataRevenueByCinemaDtos.Item.ToList();

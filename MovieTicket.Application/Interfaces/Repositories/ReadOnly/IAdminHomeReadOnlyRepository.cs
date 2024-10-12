@@ -1,4 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs.AdminHome;
+using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.ValueObjs.Paginations;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 		Task<PageList<RevenueByMovieDto>> GetListRevenueByMovieAsync(DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters);
 		Task <IQueryable<RevenueByMonthDto>> GetTopRevenueMonth();
 		Task<byte[]> ExportRevenueCinemaDtoToExcel(DateTime? startDate, DateTime? endDate);
-        Task<byte[]> ExportRevenueMovieDtoToExcel(DateTime? startDate, DateTime? endDate);
-    }
+    Task<byte[]> ExportRevenueMovieDtoToExcel(DateTime? startDate, DateTime? endDate);
+   }
 }
+

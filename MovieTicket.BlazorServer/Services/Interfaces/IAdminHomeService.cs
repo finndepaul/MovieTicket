@@ -13,3 +13,4 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
         Task<byte[]> ExportRevenueMovieDtoToExcel(DateTime? startDate, DateTime? endDate);
     }
 }
+

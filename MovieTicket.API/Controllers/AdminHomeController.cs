@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
@@ -7,16 +7,16 @@ using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
 {
-	[Route(API_Route.DEFAULT_CONTROLLER_ROUTE)]
-	[ApiController]
-	public class AdminHomeController : ControllerBase
+    [Route(API_Route.DEFAULT_CONTROLLER_ROUTE)]
+    [ApiController]
+    public class AdminHomeController : ControllerBase
     {
-		private readonly IAdminHomeReadOnlyRepository _adminHomeReadOnly;
+        private readonly IAdminHomeReadOnlyRepository _adminHomeReadOnly;
 
-		public AdminHomeController(IAdminHomeReadOnlyRepository adminHomeReadOnly)
-		{
-			_adminHomeReadOnly = adminHomeReadOnly;
-		}
+        public AdminHomeController(IAdminHomeReadOnlyRepository adminHomeReadOnly)
+        {
+            _adminHomeReadOnly = adminHomeReadOnly;
+        }
 
 		[HttpGet]
 		public async Task<ActionResult> GetAdminGeneralAsync()
@@ -63,3 +63,4 @@ namespace MovieTicket.API.Controllers
         }
     }
 }
+

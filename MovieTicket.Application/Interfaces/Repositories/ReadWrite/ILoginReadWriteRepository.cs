@@ -4,10 +4,10 @@ using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
-	public interface ILoginReadWriteRepository
-	{
-		Task<LoginRespone> LoginAsync(LoginDTO loginModel);
+    public interface ILoginReadWriteRepository
+    {
+        Task<LoginRespone> LoginAsync(LoginDTO loginModel);
 
-		LoginRespone RefreshToken(UserSession userSession);
-	}
+        LoginRespone RefreshToken(UserSession userSession);
+    }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.ValueObjs.Paginations;
@@ -13,15 +13,10 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
-	public class AdminHomeReadOnlyRepository : IAdminHomeReadOnlyRepository
-	{
-		private readonly MovieTicketReadOnlyDbContext _db;
-		private readonly DateTime time = DateTime.Now;
-		public AdminHomeReadOnlyRepository(MovieTicketReadOnlyDbContext db)
-		{
-			_db = db;
-		}
-
+    public class AdminHomeReadOnlyRepository : IAdminHomeReadOnlyRepository
+    {
+        private readonly MovieTicketReadOnlyDbContext _db;
+        private readonly DateTime time = DateTime.Now;
         // Doanh thu theo tháng
         public async Task<GeneralDto> GetAdminGeneralAsync()
 		{
@@ -205,3 +200,4 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         }
     }
 }
+

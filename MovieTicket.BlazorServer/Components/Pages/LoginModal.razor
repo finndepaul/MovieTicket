@@ -1,7 +1,8 @@
 ﻿@page "/login"
 @using MovieTicket.Application.DataTransferObjs.Auth
+@using MovieTicket.BlazorServer.Components.Layout
 
-<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+<EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLogin">
    <DataAnnotationsValidator />
    <ValidationSummary />
         <div class="mb-3">
@@ -12,7 +13,7 @@
             <label for="loginPPassword" class="form-label">Password</label>
             <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary">Đăng nhập</button>
 </EditForm>
 @code {
     private LoginDTO loginModel = new ();
