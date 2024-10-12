@@ -1,0 +1,214 @@
+﻿@page "/scheduel"
+@using MovieTicket.Application.DataTransferObjs.Schedule
+@using MovieTicket.BlazorServer.Services.Interfaces
+@inject IJSRuntime JSRuntime
+@inject IScheduelService _scheduleService
+@inject NavigationManager _navigationManager
+
+<div class="container-fluid">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        @* Button kích hoạt modal *@
+        <button class="btn add-btn" id="btnAdd" data-bs-toggle="modal" data-bs-target="#addModal">
+            <i class="bi bi-plus-square"></i>
+            Tạo lịch chiếu
+        </button>
+        <button class="btn btn-info me-md-2" style="color:white">
+            <i class="bi bi-arrow-clockwise"></i>
+            Refresh
+        </button>
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Tạo lịch chiếu</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <MovieTicket.BlazorServer.Components.Pages.Admin.Scheduel.AddScheduel />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sửa lịch chiếu</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <MovieTicket.BlazorServer.Components.Pages.Admin.Scheduel.UpdateScheduel ScheduleId="@selectedScheduleId" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive mb-3">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Phim chiếu</th>
+                    <th scope="col">Thời gian chiếu</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Phân loại</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Schedules != null)
+                {
+                    int index = 1;
+                    foreach (var item in Schedules)
+                    {
+                        <tr>
+                            <th scope="row">@index</th>
+                            <td>@item.FilmName</td>
+                            <td>
+                                <span class="badge text-bg-secondary">
+                                    @((item.StartDate is DateTime ? ((DateTime)item.StartDate).ToString("dd-MM-yyyy") : "Invalid Date"))
+                                </span>
+                                <span class="badge text-bg-secondary">
+                                    @((item.StartDate is DateTime ? ((DateTime)item.EndDate).ToString("dd-MM-yyyy") : "Invalid Date"))
+                                </span>
+
+                            </td>
+                            <td>
+                                @if (item.Status.ToString() == "Ended")
+                                {
+                                    <span class="badge bg-danger">Đã chiếu</span>
+                                }
+                                else if (item.Status.ToString() == "ComingSoon")
+                                {
+                                    <span class="badge bg-soon">Sắp chiếu</span>
+                                }
+                                else if (item.Status.ToString() == "Showing")
+                                {
+                                    <span class="badge bg-now">Đang chiếu</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Type.ToString() == "Early")
+                                {
+                                    <span class="badge bg-soon">Suất chiếu sớm</span>
+                                }
+                                else if (item.Type.ToString() == "Regular")
+                                {
+                                    <span class="badge bg-now">Đang chiếu</span>
+                                }
+                                else if (item.Type.ToString() == "Special")
+                                {
+                                    <span class="badge bg-warning">Suất chiếu đặc biệt</span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn btn-sm edit-btn" data-id="@item.Id" @onclick="() => OpenEditModal(item.Id.ToString())">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Sửa
+                                </button>
+
+                                <button class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                    Xóa
+                                </button>
+                            </td>
+
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">Loading...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="...">
+        <ul class="pagination justify-content-end">
+            <li class="page-item disabled">
+                <a class="page-link">Previous</a>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<style>
+    .add-btn {
+        -webkit-transition: all 0.5s ease-in-out;
+        background-color: #64B5F6;
+        color: #fff;
+    }
+
+        .add-btn:hover {
+            -webkit-transform: scale(1.1);
+            background-color: #64B5F6;
+            color: #fff;
+        }
+
+    .bg-soon {
+        background-color: #B3E5FC;
+        color: #03A9F4;
+        outline: thin solid #03A9F4;
+    }
+
+    .bg-now {
+        background-color: #F1F8E9;
+        color: #76FF03;
+        outline: thin solid #76FF03;
+    }
+
+    .edit-btn {
+        background-color: #FFA726;
+        color: #fff;
+    }
+
+        .edit-btn:hover {
+            background-color: #FFA726;
+            color: #fff;
+        }
+
+    .btn {
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+
+        .btn:hover {
+            -webkit-transform: scale(1.1);
+        }
+</style>
+<script>
+    function openModal(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+    
+</script>
+
+@code {
+    private IQueryable<ScheduleDto> Schedules;
+    override protected async Task OnInitializedAsync()
+    {
+        Schedules = await _scheduleService.GetAllAsync();
+    }
+    private string selectedScheduleId;
+
+    private async Task OpenEditModal(string id)
+    {
+        selectedScheduleId = id;  // Lưu Id của lịch chiếu khi nhấn nút Sửa
+        await JSRuntime.InvokeVoidAsync("openModal", "editModal");  // Mở modal sửa
+    }
+}

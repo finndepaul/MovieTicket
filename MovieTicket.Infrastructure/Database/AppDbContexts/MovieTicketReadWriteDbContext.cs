@@ -169,8 +169,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 					Gerne = i % 2 == 0 ? "Action" : "Comedy",
 					Director = $"Director {i}",
 					Cast = $"Actor {i}, Actress {i}",
-					ScreenTypeId = Guid.NewGuid(),
-					TranslationTypeId = Guid.NewGuid(),
 					Rating = i % 5 + 1,
 					StartDate = new DateTime(2023, (i % 12) + 1, (i % 28) + 1),
 					ReleaseYear = 2023,

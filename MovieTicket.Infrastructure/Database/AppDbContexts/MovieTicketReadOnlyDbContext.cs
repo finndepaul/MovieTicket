@@ -155,9 +155,10 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Status = Domain.Enums.MembershipStatus.Active,
 		};
 		modelBuilder.Entity<Membership>().HasData(membership);
-		//Film 
-		List<Film> films = new List<Film>();
 
+
+		//Film
+		List<Film> films = new List<Film>();
 		for (int i = 1; i <= 30; i++)
 		{
 			Film film = new Film
@@ -170,8 +171,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
 				Gerne = i % 2 == 0 ? "Action" : "Comedy",
 				Director = $"Director {i}",
 				Cast = $"Actor {i}, Actress {i}",
-				ScreenTypeId = Guid.NewGuid(),
-				TranslationTypeId = Guid.NewGuid(),
 				Rating = i % 5 + 1,
 				StartDate = new DateTime(2023, (i % 12) + 1, (i % 28) + 1),
 				ReleaseYear = 2023,

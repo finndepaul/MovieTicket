@@ -20,10 +20,6 @@ namespace MovieTicket.Application.DataTransferObjs.Film
 
         public string? Cast { get; set; }
 
-        public Guid? ScreenTypeId { get; set; }
-
-        public Guid? TranslationTypeId { get; set; }
-
         public int? Rating { get; set; }
 
         public DateTime? StartDate { get; set; }
@@ -41,5 +37,10 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public string? Language { get; set; }
 
         public DateTime? CreatDate { get; set; }
+
+        public List<Guid>? ScreenTypeIds { get; set; } = new List<Guid>();
+
+        public List<Guid>? TranslationTypeIds { get; set; } = new List<Guid>();
+
     }
 }

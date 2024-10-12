@@ -1,8 +1,29 @@
 ﻿@page "/list-film"
+@using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.BlazorServer.Services.Interfaces.IFilmService
+@using MovieTicket.Domain.Enums
+@inject IFilmService FilmService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime _JSRuntime
+<style>
+    .badge-coming-soon {
+        background-color: yellow;
+        color: black;
+    }
+
+    .badge-now-showing {
+        background-color: green;
+        color: white;
+    }
+
+    .badge-ended {
+        background-color: red;
+        color: white;
+    }
+</style>
 
 <div class="container-fluid">
-    <button class="btn btn-outline-secondary mb-3">Quay lại</button>
-    <button class="btn btn-primary mb-3">+ Tạo phim</button>
+    <button class="btn btn-primary mb-3" @onclick="CreateFilm">+ Tạo phim</button>
 
     <!-- Movie Table -->
     <div class="table-responsive mb-3">
@@ -15,23 +36,47 @@
                     <th scope="col">Lịch chiếu</th>
                     <th scope="col">Trạng thái</th>
                     <th scope="col">Ngày tạo</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Example Row -->
-                <tr>
-                    <td><a href="#" class="text-decoration-none">Furiosa: Câu Chuyện Từ Max Điên</a></td>
-                    <td>2024</td>
-                    <td>
-                        <span class="badge bg-primary">Hành động</span>
-                        <span class="badge bg-secondary">Gay cấn</span>
-                        <span class="badge bg-info">Khoa học - Viễn tưởng</span>
-                    </td>
-                    <td class="text-danger">17-05-2024</td>
-                    <td><span class="badge bg-success">Công khai</span></td>
-                    <td>13-04-2024</td>
-                </tr>
-                <!-- Add more rows as needed -->
+                @if (filmDto.Any())
+                {
+                    @if (filmDto == null)
+                    {
+                        <tr>
+                            <td colspan="6"><em>Loading...</em></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var film in filmDto)
+                        {
+                            <tr>
+                                <td><a href="#" class="text-decoration-none">@film.Name</a></td>
+                                <td>@film.ReleaseYear</td>
+                                <td>
+                                    <span class="badge bg-primary">@film.Gerne</span>
+                                </td>
+                                <td class="text-danger">@film.StartDate?.ToString("dd-MM-yyyy")</td>
+                                <td>
+                                    <span class="badge @(GetBadgeClass(film.Status))">@film.Status</span>
+                                </td>
+                                <td>@film.CreatDate?.ToString("dd-MM-yyyy")</td>
+                                <td>
+                                    <a class="btn btn-outline-primary" href="@($"film/update/{film.Id}")">Update</a>
+                                    <button class="btn btn-outline-danger" @onclick="(() => DeleteFilm(film.Id))">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6"><em>No film found</em></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -51,5 +96,32 @@
 </div>
 
 @code {
+    private IEnumerable<FilmDto> filmDto { get; set; } = new List<FilmDto>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        filmDto = await FilmService.GetAllFilms();
+    }
+
+    private async Task DeleteFilm(Guid id)
+    {
+        await FilmService.DeleteFilm(id);
+        await _JSRuntime.ToastrSuccess("Delete film successfully");
+        filmDto = await FilmService.GetAllFilms();
+    }
+    private void CreateFilm()
+    {
+        NavigationManager.NavigateTo("/create-film");
+    }
+
+    private string GetBadgeClass(FilmStatus? status)
+    {
+        return status switch
+        {
+            FilmStatus.ComingSoon => "badge-coming-soon",
+            FilmStatus.NowShowing => "badge-now-showing",
+            FilmStatus.Ended => "badge-ended",
+            _ => "badge-secondary"
+        };
+    }
 }
