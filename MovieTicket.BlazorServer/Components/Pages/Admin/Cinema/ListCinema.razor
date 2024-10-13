@@ -1,0 +1,91 @@
+﻿@page "/cinema"
+@using MovieTicket.Application.DataTransferObjs.Cinema
+@using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <label>
+            Chọn rạp
+            <select class="form-select" @onchange="OnChangeCinemaCenter">
+                <option value="">Chọn rạp</option>
+                @foreach (var cinemaCenter in cinemaCenters)
+                {
+                  <option value="@cinemaCenter.Name">@cinemaCenter.Name</option>
+                }
+            </select>
+        </label>
+    </div>
+
+    <div class="table-responsive mb-3">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên phòng chiếu</th>
+                    <th scope="col">Loại phòng chiếu</th>
+                    <th scope="col">Số lượng ghế tối đa</th>
+                    <th scope="col">Số hàng</th>
+                    <th scope="col">Số cột</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Sửa lần cuối</th>
+                    <th scope="col">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (cinemas.Count == 0)
+                {
+                    <tr>
+                        <td colspan="5">Không có dữ liệu</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var cinema in cinemas)
+                    {
+                        <tr>
+                            <td>@cinemas.IndexOf(cinema) + 1</td>
+                            <td>@cinema.Name</td>
+                            <td>@cinema.CinemaTypeName</td>
+                            <td>@cinema.MaxSeatCapacity</td>
+                            <td>@cinema.Row</td>
+                            <td>@cinema.Column</td>
+                            <td>@cinema.CreateTime</td>
+                            <td>@cinema.UpdateTime</td>
+                            <td>
+                                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateCinemaModal">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Sửa
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                    Xóa
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<CinemaCenterDto> cinemaCenters = new();
+    private List<CinemaDto> cinemas = new();
+    private string selectedCinemaCenterId = string.Empty;
+    private string selectedCinemaCenterName = string.Empty;
+    private CinemaCenterSearch search = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(search);
+    }
+
+    private async Task OnChangeCinemaCenter(ChangeEventArgs e)
+    {
+        selectedCinemaCenterName = e.Value.ToString();
+        cinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName);
+        StateHasChanged();
+    }
+}

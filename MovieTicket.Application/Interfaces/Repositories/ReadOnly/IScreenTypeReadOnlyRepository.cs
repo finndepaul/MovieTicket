@@ -1,4 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs.ScreenType;
+using MovieTicket.Application.DataTransferObjs.ScreenType;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
-	public interface IScreenTypeReadOnlyRepository
-	{
-		Task<IQueryable<ScreenTypeDto>> GetAllAsync();
-	}
+    public interface IScreenTypeReadOnlyRepository
+    {
+        Task<IQueryable<ScreenTypeDto>> GetAllAsync();
+    }
 }

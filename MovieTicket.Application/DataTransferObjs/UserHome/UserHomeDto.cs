@@ -1,9 +1,4 @@
 ﻿using MovieTicket.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.UserHome
 {
@@ -17,6 +12,6 @@ namespace MovieTicket.Application.DataTransferObjs.UserHome
 
         public string? Gerne { get; set; }
         public int? RunningTime { get; set; }
-		public ScheduleType? SType { get; set; }
-	}
+        public ScheduleType? SType { get; set; }
+    }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;

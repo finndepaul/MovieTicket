@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
-using MovieTicket.Domain.Enums;
-using System.Threading;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -12,13 +9,15 @@ namespace MovieTicket.API.Controllers
     public class UserHomeController : ControllerBase
     {
         private readonly IUserHomeReadOnlyRepository _userHomeReadOnly;
+
         public UserHomeController(IUserHomeReadOnlyRepository userHomeReadOnly)
         {
             _userHomeReadOnly = userHomeReadOnly;
         }
+
         [HttpGet]
         public async Task<ActionResult> GetAllFilmForUserHome()
-		{
+        {
             var films = await _userHomeReadOnly.GetAllFilmForUserHome();
             return Ok(films);
         }
