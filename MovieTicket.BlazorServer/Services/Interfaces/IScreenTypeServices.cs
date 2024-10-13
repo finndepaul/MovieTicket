@@ -2,7 +2,7 @@
 
 namespace MovieTicket.BlazorServer.Services.Interfaces
 {
-	public interface IScreenTypeService
+	public interface IScreenTypeServices
 	{
 		Task<List<ScreenTypeDto>> GetAllScreenTypes();
 	}
