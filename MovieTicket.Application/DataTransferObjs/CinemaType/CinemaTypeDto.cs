@@ -1,15 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieTicket.Application.DataTransferObjs.ScreenType
+namespace MovieTicket.Application.DataTransferObjs.CinemaType
 {
-	public class ScreenTypeDto
+	public class CinemaTypeDto
 	{
 		public Guid Id { get; set; }
 
-		public string Type { get; set; }
+		public string Name { get; set; }
+
 	}
 }

@@ -11,6 +11,5 @@ namespace MovieTicket.Application.DataTransferObjs.TicketPrice
         public Guid? ScreeningDayId { get; set; }
 
         public Guid? CinemaTypeId { get; set; }
-        public TicketPriceStatus? Status { get; set; }
     }
 }

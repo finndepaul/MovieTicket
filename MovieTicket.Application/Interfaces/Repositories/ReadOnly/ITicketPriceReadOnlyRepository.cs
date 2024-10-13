@@ -5,8 +5,8 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
     public interface ITicketPriceReadOnlyRepository
     {
-        Task<IQueryable<TicketPriceDto>> GetListAsync(TicketPriceWithPaginationRequest request, CancellationToken cancellationToken);
+        Task<IQueryable<TicketPriceDto>> GetListTicketPriceAsync(TicketPriceWithPaginationRequest request, CancellationToken cancellationToken);
 
-        Task<ResponseObject<TicketPriceDto>> GetByIdAsync(Guid id);
+        Task<TicketPriceDto> GetTicketPriceByIdAsync(Guid id);
     }
 }

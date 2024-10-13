@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
@@ -39,6 +39,9 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<ICinemaReadOnlyRepository, CinemaReadOnlyRepository>();
             services.AddScoped<IBannerReadOnlyRepository, BannerReadOnlyRepository>();
             services.AddScoped<IBannerReadWriteRepository, BannerReadWriteRepository>();
+			      services.AddScoped<IScreeningDayReadOnlyRepository, ScreeningDayReadOnlyRepository>();
+			      services.AddScoped<ICinemaTypesReadOnlyRepository, CinemaTypesReadOnlyRepository>();
+			      services.AddScoped<ISeatTypeReadOnlyRepository, SeatTypeReadOnlyRepository>();
             return services;
         }
     }

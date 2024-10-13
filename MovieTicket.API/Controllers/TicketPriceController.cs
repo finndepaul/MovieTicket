@@ -22,14 +22,14 @@ namespace MovieTicket.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTicketPrice(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _ticketPriceReadOnlyRepository.GetByIdAsync(id);
+            var result = await _ticketPriceReadOnlyRepository.GetTicketPriceByIdAsync(id);
             return Ok(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetListTicketPrice([FromQuery] TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
         {
-            var result = await _ticketPriceReadOnlyRepository.GetListAsync(request, cancellationToken);
+            var result = await _ticketPriceReadOnlyRepository.GetListTicketPriceAsync(request, cancellationToken);
             return Ok(result);
         }
 

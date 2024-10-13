@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.ScreenType;
 using MovieTicket.Domain.Entities;
