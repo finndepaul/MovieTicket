@@ -1,0 +1,161 @@
+﻿@page "/update-ticket-price/{Id}"
+@using MovieTicket.Application.DataTransferObjs.CinemaType
+@using MovieTicket.Application.DataTransferObjs.ScreenType
+@using MovieTicket.Application.DataTransferObjs.ScreeningDay
+@using MovieTicket.Application.DataTransferObjs.SeatType
+@using MovieTicket.Application.DataTransferObjs.TicketPrice
+@using MovieTicket.BlazorServer.Helper
+@using MovieTicket.Domain.Enums
+@inject ITicketPriceService _serTicketPrice;
+@inject IScreeningDayService _serScreeningDay;
+@inject IScreenTypeService _serScreenType;
+@inject ICinemaTypeService _serCinemaType;
+@inject ISeatTypeService _serSeatType;
+@inject IJSRuntime _IJSRuntime;
+
+<EditForm Model="request" FormName="update-form" OnValidSubmit="HandleUpdateAsync" method="put">
+    <div class="mb-3">
+        <label for="seatType" class="form-label">Loại ghế <span class="text-danger">*</span></label>
+        <select class="form-select @ChangeSelectedClass()" id="seatType" @bind="request.SeatTypeId" required>
+            <option disabled selected>--Chọn loại ghế--</option>
+            @foreach (var item in seatType)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="graphicsType" class="form-label">Hình thức chiếu <span class="text-danger">*</span></label>
+        <select class="form-select @ChangeSelectedClass()" id="screenType" @bind="request.ScreenTypeId" required>
+            <option disabled selected>--Chọn hình thức chiếu--</option>
+            @foreach (var item in screenType)
+            {
+                <option value="@item.Id">@item.Type</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="dayType" class="form-label">Loại ngày <span class="text-danger">*</span></label>
+        <select class="form-select @ChangeSelectedClass()" id="dayType" @bind="request.ScreeningDayId" required>
+            <option disabled selected>--Chọn ngày chiếu--</option>
+            @foreach (var item in screeningDay)
+            {
+                <option value="@item.Id">@item.Day</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="auditoriumType" class="form-label">Loại phòng chiếu <span class="text-danger">*</span></label>
+        <select class="form-select @ChangeSelectedClass()" id="cinemaType" @bind="request.CinemaTypeId" required>
+            <option disabled selected>--Chọn loại phòng chiếu--</option>
+            @foreach (var item in cinemaType)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="ticketPrice" class="form-label">Giá tiền <span class="text-danger">*</span></label>
+        <input type="number" class="form-control @ChangeSelectedClass()" id="ticketPrice" @bind-value="ticketPrice.Price" placeholder="Nhập giá vé" required>
+    </div>
+
+    <div class="modal-footer">
+        <div class="@ChangeClassStatus()">
+            
+            <select class="form-select" id="status" @bind="request.Status">
+                <option disabled selected>--Đổi trạng thái--</option>
+                @foreach (var item in Enum.GetValues(typeof(TicketPriceStatus)))
+                {
+                    <option value="@item">@item</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </div>
+</EditForm>
+
+<style>
+    .disabled {
+        pointer-events: none;
+        opacity: 0.5; /* Giảm độ trong suốt để thể hiện rõ trạng thái disabled */
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private List<ScreeningDayDto> screeningDay = new List<ScreeningDayDto>();
+    private List<ScreenTypeDto> screenType = new List<ScreenTypeDto>();
+    private List<CinemaTypeDto> cinemaType = new List<CinemaTypeDto>();
+    private List<SeatTypeDto> seatType = new List<SeatTypeDto>();
+    private TicketPriceDto ticketPrice = new TicketPriceDto();
+    private TicketPriceUpdateRequest request = new TicketPriceUpdateRequest();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!String.IsNullOrEmpty(Id))
+        {
+            ticketPrice = await _serTicketPrice.GetByIdAsync(Guid.Parse(Id));
+            // Gán các giá trị ban đầu của dropdown từ ticketPrice
+            request.SeatTypeId = seatType.FirstOrDefault(s => s.Name == ticketPrice.SeatName).Id;
+            request.ScreenTypeId = screenType.FirstOrDefault(st => st.Type == ticketPrice.Type).Id;
+            request.ScreeningDayId = screeningDay.FirstOrDefault(d => d.Day == ticketPrice.Day).Id;
+            request.CinemaTypeId = cinemaType.FirstOrDefault(c => c.Name == ticketPrice.CinemaTypeName).Id;
+            request.Status = ticketPrice.Status;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        screeningDay = await _serScreeningDay.GetListScreeningDaysAsync();
+        screenType = await _serScreenType.GetAllScreenTypes();
+        cinemaType = await _serCinemaType.GetListCinemaTypesAsync();
+        seatType = await _serSeatType.GetListSeatTypesAsync();
+    }
+    private string ChangeClassStatus()
+    {
+        if (ticketPrice.Status == TicketPriceStatus.Inactive)
+        {
+            return "";
+        }
+        else
+        {
+            return "disabled";
+        }
+    }   
+    private string ChangeSelectedClass()
+    {
+        if (ticketPrice.Status == TicketPriceStatus.Inactive)
+        {
+            return "disabled";
+        }
+        else
+        {
+            return "";
+        }
+    }
+    private async Task HandleUpdateAsync()
+    {
+       await Task.Delay(500);
+        request.Id = Guid.Parse(Id);
+        request.Price = ticketPrice.Price;
+
+        var result = await _serTicketPrice.Update(request);
+        if (result.Status == 200)
+        {
+            await _IJSRuntime.ToastrSuccess(result.Message);
+            NavigationManager.NavigateTo("/ticket-price", true);
+        }
+        else
+        {
+            await _IJSRuntime.ToastrError(result.Message);
+        }
+    }
+}
+

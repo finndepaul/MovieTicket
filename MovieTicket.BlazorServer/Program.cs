@@ -8,6 +8,7 @@ using MovieTicket.BlazorServer.Components;
 using MovieTicket.BlazorServer.Services.Implements;
 using MovieTicket.BlazorServer.Services.Interfaces;
 using System.ComponentModel;
+using System.Globalization;
 using System.Text;
 
 namespace MovieTicket.BlazorServer
@@ -17,9 +18,8 @@ namespace MovieTicket.BlazorServer
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-
-			// Add services to the container.
-			builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
+            // Add services to the container.
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
 			builder.Services.AddRazorComponents()
 				.AddInteractiveServerComponents();
 			builder.Services.AddBlazoredLocalStorage();
@@ -29,7 +29,12 @@ namespace MovieTicket.BlazorServer
 			builder.Services.AddScoped<IAuthenService, AuthenService>();
 			builder.Services.AddScoped<IUserHomeService, UserHomeService>();
 			builder.Services.AddScoped<IAdminHomeService, AdminHomeService>();
-			builder.Services.AddAuthentication()
+            builder.Services.AddScoped<ITicketPriceService, TicketPriceService>();          
+            builder.Services.AddScoped<IScreenTypeService, ScreenTypeService>();
+            builder.Services.AddScoped<ICinemaTypeService, CinemaTypeService>();
+            builder.Services.AddScoped<ISeatTypeService, SeatTypeService>();
+            builder.Services.AddScoped<IScreeningDayService, ScreeningDayService>();
+            builder.Services.AddAuthentication()
 	.AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
 			builder.Services.AddSingleton<AppState>();
 
