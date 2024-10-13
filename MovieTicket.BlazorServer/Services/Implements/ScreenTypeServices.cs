@@ -3,11 +3,11 @@ using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
-	public class ScreenTypeService : IScreenTypeService
+	public class ScreenTypeServices : IScreenTypeServices
 	{
 		private readonly HttpClient _httpClient;
 
-		public ScreenTypeService(HttpClient httpClient)
+		public ScreenTypeServices(HttpClient httpClient)
 		{
 			_httpClient = httpClient;
 		}
