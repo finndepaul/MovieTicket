@@ -2,11 +2,6 @@
 using MovieTicket.Application.DataTransferObjs.Cinema;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -19,9 +14,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _dbContext = dbContext;
         }
 
-        public async Task<IQueryable<CinemaDto>> GetAllAsync()
+        public async Task<IQueryable<CinemaDto>> GetAllAsync(string? name)
         {
-            return _dbContext.Cinemas.Select(c => new CinemaDto
+            var query = _dbContext.Cinemas.Select(c => new CinemaDto
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -31,9 +26,31 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 Column = c.Column,
                 Row = c.Row,
                 Description = c.Description,
-                CreateTime = c.CreateTime
+                CreateTime = c.CreateTime,
+                UpdateTime = c.UpdateTime
             }).AsNoTracking();
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(x => x.Name == name);
+            }
+            return query.AsQueryable();
         }
+
+        //public async Task<IQueryable<CinemaDto>> GetAllCinemasByCenterName(string name, CancellationToken cancellationToken)
+        //{
+        //    return _dbContext.Cinemas.Where(x => x.CinemaCenter.Name == name).Select(c => new CinemaDto
+        //    {
+        //        Id = c.Id,
+        //        Name = c.Name,
+        //        CinemaTypeName = c.CinemaType.Name,
+        //        CinemaCenterName = c.CinemaCenter.Name,
+        //        MaxSeatCapacity = c.MaxSeatCapacity,
+        //        Column = c.Column,
+        //        Row = c.Row,
+        //        Description = c.Description,
+        //        CreateTime = c.CreateTime
+        //    }).AsNoTracking();
+        //}
 
         public async Task<CinemaDto> GetCinemaById(Guid id, CancellationToken cancellationToken)
         {
@@ -52,7 +69,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 Column = result.Column,
                 Row = result.Row,
                 Description = result.Description,
-                CreateTime = result.CreateTime
+                CreateTime = result.CreateTime,
+                UpdateTime = result.UpdateTime
             };
         }
     }

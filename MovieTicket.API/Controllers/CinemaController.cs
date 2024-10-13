@@ -18,9 +18,9 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IQueryable<CinemaDto>> GetAll()
+        public ActionResult<IQueryable<CinemaDto>> GetAll(string? name)
         {
-            var cinemaDto = _cinemaReadOnlyRepository.GetAllAsync();
+            var cinemaDto = _cinemaReadOnlyRepository.GetAllAsync(name);
             return Ok(cinemaDto);
         }
 
