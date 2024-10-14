@@ -1,0 +1,39 @@
+﻿@page "/create-cinema"
+@attribute [Authorize(Roles ="Admin")];
+
+<div class="container d-flex">
+    <EditForm>
+        <div class="mb-3">
+            <label>
+                Rạp đã chọn
+                <select>
+
+                </select>
+            </label>
+        </div>
+        <div class="mb-3">
+            <label>
+                Loại phòng chiếu
+                <select>
+
+                </select>
+            </label>
+        </div>
+        <div class="mb-3">
+            <label>
+                Số hàng
+
+            </label>
+        </div>
+        <div class="mb-3">
+            <label>
+                Số cột
+            </label>
+        </div>
+    </EditForm>
+    
+</div>
+
+@code {
+
+}

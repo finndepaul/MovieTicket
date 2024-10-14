@@ -27,7 +27,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     return new ResponseObject<BannerDTO>
                     {
                         Status = StatusCodes.Status400BadRequest,
-                        Message = "Banner is exist",
+                        Message = "Banner đã tồn tại",
                         Data = null
                     };
                 }
@@ -52,7 +52,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         CreatedDate = banner.CreatedDate
                     },
                     Status = StatusCodes.Status200OK,
-                    Message = "Create Banner success"
+                    Message = "Thêm banner thành công"
                 };
             }
             catch (Exception e)
@@ -76,11 +76,11 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     return new ResponseObject<Banner>
                     {
                         Status = StatusCodes.Status400BadRequest,
-                        Message = "Banner is not exist",
+                        Message = "Banner không tồn tại",
                         Data = null
                     };
                 }
-                _movieTicket.Remove(model);
+                _movieTicket.Banners.Remove(model);
                 await _movieTicket.SaveChangesAsync();
                 return new ResponseObject<Banner>
                 {
@@ -110,7 +110,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     return new ResponseObject<BannerDTO>
                     {
                         Status = StatusCodes.Status400BadRequest,
-                        Message = "Banner is not exist",
+                        Message = "Banner không tồn tại",
                         Data = null
                     };
                 }
