@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.DataTransferObjs.TicketPrice;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 
 namespace MovieTicket.BlazorServer.Services.Interfaces
@@ -8,7 +9,7 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
 		Task<ResponseObject<TicketPriceCreateRequest>> Create(TicketPriceCreateRequest request);
 		Task<ResponseObject<bool>> Delete(Guid id);
 		Task<ResponseObject<TicketPriceUpdateRequest>> Update(TicketPriceUpdateRequest request);
-		Task<List<TicketPriceDto>> GetAllAsync();
+		Task<PageList<TicketPriceDto>> GetAllAsync(PagingParameters pagingParameters);
 		Task<TicketPriceDto> GetByIdAsync(Guid Id);
 
 	}

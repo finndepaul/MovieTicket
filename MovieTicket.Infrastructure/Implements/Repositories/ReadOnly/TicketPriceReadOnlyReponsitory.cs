@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -56,7 +59,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
 		}
 
-		public async Task<IQueryable<TicketPriceDto>> GetListTicketPriceAsync(TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
+		public async Task<PageList<TicketPriceDto>> GetListTicketPriceAsync(TicketPriceWithPaginationRequest request, PagingParameters pagingParameters, CancellationToken cancellationToken)
 		{
 			var query = _context.TicketPrices
 				.Join(_context.ScreeningDays,
@@ -100,8 +103,22 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				Day = x.sd.Day,
 				Price = x.tp.Price,
 				Status = x.tp.Status
-			}).OrderBy(x => x.Status).AsNoTracking().ToListAsync(cancellationToken);
-			return result.AsQueryable();
+			}).OrderBy(x => x.Status)
+				.AsNoTracking().ToListAsync(cancellationToken);
+			var count = result.Count;
+			var data = await query.Select(x => new TicketPriceDto
+			{
+				Id = x.tp.Id,
+				CinemaTypeName = x.ct.Name,
+				SeatName = x.set.Name,
+				Type = x.sct.Type,
+				Day = x.sd.Day,
+				Price = x.tp.Price,
+				Status = x.tp.Status
+			}).OrderBy(x => x.Status).Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+			.Take(pagingParameters.PageSize)
+				.AsNoTracking().ToListAsync(cancellationToken);
+			return new PageList<TicketPriceDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
 		}
 	}
 }

@@ -35,10 +35,6 @@ namespace MovieTicket.Application.DataTransferObjs.TicketPrice
 			{
 				return false;
 			}
-			if (String.IsNullOrEmpty(Price.ToString()))
-			{
-				return false;
-			}
 			return true;
 		}
 	}

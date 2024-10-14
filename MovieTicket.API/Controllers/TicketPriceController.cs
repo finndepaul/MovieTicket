@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -27,10 +29,14 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListTicketPrice([FromQuery] TicketPriceWithPaginationRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetListTicketPrice([FromQuery] TicketPriceWithPaginationRequest request,[FromQuery] PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
-            var result = await _ticketPriceReadOnlyRepository.GetListTicketPriceAsync(request, cancellationToken);
-            return Ok(result);
+            var result = await _ticketPriceReadOnlyRepository.GetListTicketPriceAsync(request, pagingParameters,cancellationToken);
+			var data = result.Item.ToList();
+			return Ok(new PageList<TicketPriceDto>(data.ToList(),
+				result.MetaData.TotalCount,
+				result.MetaData.CurrentPage,
+				result.MetaData.PageSize));
         }
 
         [HttpPost]
