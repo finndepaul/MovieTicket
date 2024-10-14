@@ -9,7 +9,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
     public interface ICinemaReadOnlyRepository
     {
-        Task<IQueryable<CinemaDto>> GetAllAsync(string? name);
+        Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName);
 
         Task<CinemaDto> GetCinemaById(Guid id, CancellationToken cancellationToken);
     }

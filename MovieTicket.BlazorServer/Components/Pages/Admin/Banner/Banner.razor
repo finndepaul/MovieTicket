@@ -69,10 +69,10 @@
                         <tr>
                             <td>@index</td>
                             <td>@banner.Name</td>
-                            <td><img src="@banner.Image" alt="Banner" style="width: 400px; height: auto;" /></td>
+                            <td><img src="@banner.Image" class="object-fit-scale border rounded" alt="Banner" style="width: auto; height: 200px;" /></td>
                             <td>@banner.CreatedDate</td>
                             <td>
-                                @if (banner.UpdatedDate == null)
+                                @if (banner.UpdatedDate == DateTime.MinValue)
                                 {
                                     <span class="badge text-bg-secondary">Chưa sửa</span>
                                 }
