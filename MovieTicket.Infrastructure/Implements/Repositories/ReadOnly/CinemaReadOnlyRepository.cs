@@ -14,7 +14,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _dbContext = dbContext;
         }
 
-        public async Task<IQueryable<CinemaDto>> GetAllAsync(string? name)
+        public async Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName)
         {
             var query = _dbContext.Cinemas.Select(c => new CinemaDto
             {
@@ -29,9 +29,13 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 CreateTime = c.CreateTime,
                 UpdateTime = c.UpdateTime
             }).AsNoTracking();
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(cinemaCenterName))
             {
-                query = query.Where(x => x.Name == name);
+                query = query.Where(x => x.CinemaCenterName == cinemaCenterName);
+                if (query == null)
+                {
+                    return null;
+                }
             }
             return query.AsQueryable();
         }

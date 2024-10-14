@@ -13,7 +13,6 @@ using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService;
 using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService;
 using System.Globalization;
 using System.ComponentModel;
-using System.Globalization;
 using System.Text;
 
 namespace MovieTicket.BlazorServer
@@ -23,7 +22,7 @@ namespace MovieTicket.BlazorServer
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-          
+
             // Add services to the container.
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
             builder.Services.AddRazorComponents()
@@ -43,7 +42,7 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<ICinemaService, CinemaService>();
             builder.Services.AddScoped<IBannerService, BannerService>();
             builder.Services.AddScoped<ICinemaCenterService, CinemaCenterService>();
-            builder.Services.AddScoped<ITicketPriceService, TicketPriceService>();          
+            builder.Services.AddScoped<ITicketPriceService, TicketPriceService>();
             builder.Services.AddScoped<ICinemaTypeService, CinemaTypeService>();
             builder.Services.AddScoped<ISeatTypeService, SeatTypeService>();
             builder.Services.AddScoped<IScreeningDayService, ScreeningDayService>();
