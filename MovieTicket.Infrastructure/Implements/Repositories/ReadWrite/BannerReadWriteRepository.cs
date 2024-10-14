@@ -132,7 +132,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         UpdatedDate = (DateTime)bannerModel.UpdatedDate
                     },
                     Status = StatusCodes.Status200OK,
-                    Message = "Update Banner success"
+                    Message = "Update Banner thành công"
                 };
             }
             catch (Exception e)
