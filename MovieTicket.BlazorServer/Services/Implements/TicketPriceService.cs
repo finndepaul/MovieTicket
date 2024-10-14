@@ -1,5 +1,7 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.WebUtilities;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
@@ -38,9 +40,15 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			};
 		}
 
-		public async Task<List<TicketPriceDto>> GetAllAsync()
+		public async Task<PageList<TicketPriceDto>> GetAllAsync(PagingParameters pagingParameters)
 		{
-			var result = await _http.GetFromJsonAsync<List<TicketPriceDto>>("api/TicketPrice/GetListTicketPrice");
+			var queryParameters = new Dictionary<string, string>
+			{
+				["pageNumber"] = pagingParameters.PageNumber.ToString(),
+				["pageSize"] = pagingParameters.PageSize.ToString()
+			};
+			string url = QueryHelpers.AddQueryString("api/TicketPrice/GetListTicketPrice", queryParameters);
+			var result = await _http.GetFromJsonAsync<PageList<TicketPriceDto>>(url);
 			return result;
 		}
 
