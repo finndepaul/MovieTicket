@@ -8,8 +8,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
     {
         Task<ResponseObject<ShowTime>> Create(ShowTimeCreateRequest showTime);
 
-        Task<ResponseObject<ShowTime>> Update(Guid Id, ShowTimeUpdateRequest showTime);
-
         Task<ResponseObject<ShowTime>> Delete(Guid id);
     }
 }
