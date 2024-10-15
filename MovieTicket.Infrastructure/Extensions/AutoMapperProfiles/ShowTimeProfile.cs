@@ -10,7 +10,6 @@ namespace MovieTicket.Infrastructure.Extensions.AutoMapperProfiles
         {
             CreateMap<ShowTimeDto, ShowTime>().ReverseMap();
             CreateMap<ShowTimeCreateRequest, ShowTime>();
-            CreateMap<ShowTimeUpdateRequest, ShowTime>();
         }
     }
 }
