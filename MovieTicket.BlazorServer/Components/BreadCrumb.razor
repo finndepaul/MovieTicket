@@ -2,18 +2,16 @@
 
 <nav>
     <ul class="breadcrumb">
-        <li class="me-2">
-            <NavLink class="nav-link" href="admin">
+        <li class="">
+            <NavLink class="nav-link p-0" href="admin">
                 <i class="bi bi-house-door-fill"></i>
-                Home
+                Home /
             </NavLink>
         </li>
         @foreach (var item in BreadcrumbItems)
         {
-            <li class="me-2">
-                <NavLink href="@item.Link" class="breadcrumb-item nav-link">
-                   / @item.Title
-                </NavLink>
+            <li class="">
+                <NavLink href="@item.Link" class="breadcrumb-item nav-link p-0 ps-1">@item.Title</NavLink>
             </li>
         }
     </ul>

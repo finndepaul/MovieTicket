@@ -14,10 +14,10 @@
 
 		</div>
 		<main>
-			<div class="navbar-brand pe-3" style="position: relative;min-height: 56px">
+			<div class="pe-3" style="position: relative">
 				<AuthorizeView>
 					<Authorized>
-						<div class="d-flex justify-content-end align-items-center" style="height: 56px">
+						<div class="d-flex justify-content-end align-items-center" style="min-height: 56px">
 							<!-- Add align-items-center class -->
 							<div class="align-self-center">Xin chào, @context.User.Identity.Name</div>
 							<div class="align-self-center"><a class="btn btn-danger btn-sm ms-3" href="logout">Đăng xuất</a></div>
@@ -25,7 +25,7 @@
 					</Authorized>
 				</AuthorizeView>
 			</div>
-			<article class="content" style="background-color: rgb(245, 245, 245)">
+			<article class="content py-2" style="background-color: rgb(245, 245, 245)">
 				<BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
 				<div class="bg-white px-4 pt-4 rounded-3 scrollable" style="min-height: calc(100vh - 115px);">
 					@Body
