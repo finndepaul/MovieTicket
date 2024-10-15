@@ -22,16 +22,25 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
         public async Task<ResponseObject<TicketPriceCreateRequest>> Create(TicketPriceCreateRequest request, CancellationToken cancellationToken)
         {
-            var duplicate = _dbContext.TicketPrices.Where(x => x.ScreeningDayId == request.ScreeningDayId && x.ScreenTypeId == request.ScreenTypeId && x.SeatTypeId == request.SeatTypeId && x.CinemaTypeId == request.CinemaTypeId).FirstOrDefault();
-            if (!String.IsNullOrEmpty(request.Validate()))
+            if (!request.Validate())
             {
                 return new ResponseObject<TicketPriceCreateRequest>
                 {
                     Data = null,
-                    Message = request.Validate(),
+                    Message = "All fields are required.",
                     Status = StatusCodes.Status404NotFound
                 };
             }
+            if (!(request.Price >= 30000 && request.Price <= 1000000))
+            {
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Price range from 30,000 to 1,000,000",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+            var duplicate = _dbContext.TicketPrices.Where(x => x.ScreeningDayId == request.ScreeningDayId && x.ScreenTypeId == request.ScreenTypeId && x.SeatTypeId == request.SeatTypeId && x.CinemaTypeId == request.CinemaTypeId).FirstOrDefault();
             //check trung
             if (duplicate != null)
             {
@@ -79,12 +88,30 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
         public async Task<ResponseObject<TicketPriceUpdateRequest>> Update(TicketPriceUpdateRequest request, CancellationToken cancellationToken)
         {
-            //check trung
-            var duplicate = _dbContext.TicketPrices.Where(x => x.ScreeningDayId == request.ScreeningDayId && x.ScreenTypeId == request.ScreenTypeId && x.SeatTypeId == request.SeatTypeId && x.CinemaTypeId == request.CinemaTypeId).FirstOrDefault();
+			//check trung
+			if (!request.Validate())
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "All fields are required.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (!(request.Price >= 30000 && request.Price <= 1000000))
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "Price range from 30,000 to 1,000,000",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			var duplicate = _dbContext.TicketPrices.Where(x => x.ScreeningDayId == request.ScreeningDayId && x.ScreenTypeId == request.ScreenTypeId && x.SeatTypeId == request.SeatTypeId && x.CinemaTypeId == request.CinemaTypeId).FirstOrDefault(x=>x.Id != request.Id);
             //tim
             var ticketPrice = await _dbContext.TicketPrices.FindAsync(request.Id);
-
-            if (ticketPrice == null)
+			
+			if (ticketPrice == null)
             {
                 return new ResponseObject<TicketPriceUpdateRequest>
                 {
@@ -107,6 +134,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             ticketPrice.SeatTypeId = request.SeatTypeId;
             ticketPrice.CinemaTypeId = request.CinemaTypeId;
             ticketPrice.Price = request.Price;
+            ticketPrice.Status = request.Status;
             _dbContext.TicketPrices.Update(ticketPrice);
             await _dbContext.SaveChangesAsync();
             return new ResponseObject<TicketPriceUpdateRequest>

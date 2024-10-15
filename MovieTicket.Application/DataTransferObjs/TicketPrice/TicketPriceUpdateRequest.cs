@@ -1,4 +1,6 @@
-﻿namespace MovieTicket.Application.DataTransferObjs.TicketPrice
+﻿using MovieTicket.Domain.Enums;
+
+namespace MovieTicket.Application.DataTransferObjs.TicketPrice
 {
     public class TicketPriceUpdateRequest
     {
@@ -12,5 +14,28 @@
         public Guid? CinemaTypeId { get; set; }
 
         public decimal? Price { get; set; }
-    }
+		
+		public TicketPriceStatus Status { get; set; }
+
+        public bool Validate()
+		{
+			if (String.IsNullOrEmpty(SeatTypeId.ToString()))
+			{
+				return false;
+			}
+			if (String.IsNullOrEmpty(ScreenTypeId.ToString()))
+			{
+				return false;
+			}
+			if (String.IsNullOrEmpty(ScreeningDayId.ToString()))
+			{
+				return false;
+			}
+			if (String.IsNullOrEmpty(CinemaTypeId.ToString()))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
 }
