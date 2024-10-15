@@ -17,20 +17,20 @@
 				<span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
 			</NavLink>
 			<div class="collapse" id="collapseHome">
-				<ul class="">
+				<ul class="ps-0">
 					<li class="" aria-current="true">
 						<NavLink class="nav-link" href="admin">
-							<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Tổng Quan
+							<span aria-hidden="true"></span> Tổng quan
 						</NavLink>
 					</li>
 					<li class="">
 						<NavLink class="nav-link" href="revenue-by-movie">
-							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Doanh Thu Theo Phim
+							<span aria-hidden="true"></span> Doanh thu theo Phim
 						</NavLink>
 					</li>
 					<li class="">
 						<NavLink class="nav-link" href="revenue-by-cinema">
-							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Doanh thu Theo Rạp
+							<span aria-hidden="true"></span> Doanh thu theo Rạp
 						</NavLink>
 					</li>
 				</ul>
@@ -45,15 +45,15 @@
 				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Phim
 			</NavLink>
 			<div class="collapse" id="collapseFilm">
-				<ul class="">
+				<ul class="ps-0"> @* k lùi dòng*@
 					<li class="" aria-current="true">
 						<NavLink class="nav-link" href="list-film">
-							<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Danh sách Phim
+							<span class="" aria-hidden="true"></span> Danh sách Phim
 						</NavLink>
 					</li>
 					<li class="">
 						<NavLink class="nav-link" href="create-film">
-							<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Tạo Phim
+							<span class="" aria-hidden="true"></span> Tạo Phim
 						</NavLink>
 					</li>
 				</ul>
@@ -112,10 +112,24 @@
 	</nav>
 </div>
 <script>
-	$(function() {
-  $('.nav-link').on('click', function() {
-    $('.nav-link').removeClass('active');
-    $(this).toggleClass("active");
-  });
-  
-});</script>
+	$(function () {
+		$('.nav-link').on('click', function () {
+			$('.nav-link').removeClass('active');
+			$(this).toggleClass("active");
+		});
+
+	});</script>
+
+<style>
+	.collapse {
+		background-color: rgb(1, 13, 23);
+	}
+
+	ul {
+		list-style: none;
+	}
+
+		ul li .nav-link {
+			padding-left: 32px;
+		}
+</style>

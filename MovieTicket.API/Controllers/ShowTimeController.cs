@@ -2,6 +2,7 @@
 using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,10 +23,13 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IQueryable<ShowTimeDto>> GetAll(string? name)
+        public async Task<ActionResult<ShowTimeDto>> GetAll([FromQuery]ShowTimeSearch? showTimeSearch, [FromQuery] PagingParameters pagingParameters)
         {
-            var showTimes = _readOnly.GetAll(name);
-            return Ok(showTimes);
+            var showTimes = await _readOnly.GetAll(showTimeSearch, pagingParameters);
+            var data = showTimes.Item.ToList();
+			return Ok(new PageList<ShowTimeDto>(data.ToList(), showTimes.MetaData.TotalCount,
+				showTimes.MetaData.CurrentPage,
+				showTimes.MetaData.PageSize));
         }
 
         [HttpGet]
@@ -37,20 +41,18 @@ namespace MovieTicket.API.Controllers
 
         // POST api/<ShowTimeController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] ShowTimeCreateRequest showTimeCreate)
         {
-        }
-
-        // PUT api/<ShowTimeController>/5
-        [HttpPut]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            var showTime = await _readWrite.Create(showTimeCreate);
+			return Ok(showTime);
+		}
 
         // DELETE api/<ShowTimeController>/5
         [HttpDelete]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-        }
+			var showTime = await _readWrite.Delete(id);
+			return Ok(showTime);
+		}
     }
 }
