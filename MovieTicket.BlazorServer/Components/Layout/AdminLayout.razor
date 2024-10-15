@@ -2,79 +2,78 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using static MovieTicket.BlazorServer.Components.BreadCrumb
 @inject NavigationManager Navigation
-                    
-<div style="overflow: hidden;  height: 100vh;">
-<div class="page">
-    <div class="sidebar">
-        <AuthorizeView>
-            <Authorized>
-                <AdminNavMenu />
-            </Authorized>
-        </AuthorizeView>
-        
-    </div>
-    <main>
-        <div class="navbar-brand py-1" style="position: relative">
-            <AuthorizeView>
-                <Authorized>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <p class="text-end">Xin chào, @context.User.Identity.Name</p>
-                        <a href="logout">Đăng xuất</a>
-                    </div>
-                </Authorized>
-            </AuthorizeView>
-            
-        </div>
-        <article class="content" style="background-color: rgb(245, 245, 245)">
-            <BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
-            <div class="bg-white px-4 pt-4 rounded-3 scrollable" style="min-height: calc(100vh - 115px);">
-                @Body
-            </div>
-        </article>
-    </main>
-</div>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
+<div style="overflow: hidden;  height: 100vh;">
+	<div class="page">
+		<div class="sidebar">
+			<AuthorizeView>
+				<Authorized>
+					<AdminNavMenu />
+				</Authorized>
+			</AuthorizeView>
+
+		</div>
+		<main>
+            <div class="navbar-brand pe-3" style="position: relative;min-height: 56px">
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="d-flex justify-content-end align-items-center" style="height: 56px"> <!-- Add align-items-center class -->
+                            <div class="align-self-center">Xin chào, @context.User.Identity.Name</div>
+                            <div class="align-self-center"><a class="btn btn-danger btn-sm ms-3" href="logout">Đăng xuất</a></div>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+			<article class="content" style="background-color: rgb(245, 245, 245)">
+				<BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
+				<div class="bg-white px-4 pt-4 rounded-3 scrollable" style="min-height: calc(100vh - 115px);">
+					@Body
+				</div>
+			</article>
+		</main>
+	</div>
+
+	<div id="blazor-error-ui">
+		An unhandled error has occurred.
+		<a href="" class="reload">Reload</a>
+		<a class="dismiss">🗙</a>
 	</div>
 </div>
 <style>
-    .scrollable {
-        max-height: calc(100vh - 50px); /* 56px là chiều cao của navbar */
-        overflow-y: scroll; /* Cuộn dọc */
-    }
+	.scrollable {
+		max-height: calc(100vh - 50px); /* 56px là chiều cao của navbar */
+		overflow-y: scroll; /* Cuộn dọc */
+	}
 
-    .container-fluid {
-        padding-bottom: 4rem;
-    }
+	.container-fluid {
+		padding-bottom: 4rem;
+	}
 </style>
 @code {
-    private List<BreadcrumbItem> GetBreadcrumbItems()
-    {
-        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
-        var segments = uri.Segments.Where(s => !string.IsNullOrEmpty(s)).ToList();
+	private List<BreadcrumbItem> GetBreadcrumbItems()
+	{
+		var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+		var segments = uri.Segments.Where(s => !string.IsNullOrEmpty(s)).ToList();
 
-        var items = new List<BreadcrumbItem>();
-        string path = "";
+		var items = new List<BreadcrumbItem>();
+		string path = "";
 
-        foreach (var segment in segments)
-        {
-            path += segment;
-            if (segment.Length > 1)
-            {
-                items.Add(new BreadcrumbItem
-                    {
-                        Title = char.ToUpper(segment[0]) + segment.Substring(1).Replace("-", " "),
-                        Link = path
-                    });
-            }
-        }
-        return items;
-    }
-    private void NavigationLogout()
-    {
-        Navigation.NavigateTo("/");
-    }
+		foreach (var segment in segments)
+		{
+			path += segment;
+			if (segment.Length > 1)
+			{
+				items.Add(new BreadcrumbItem
+					{
+						Title = char.ToUpper(segment[0]) + segment.Substring(1).Replace("-", " "),
+						Link = path
+					});
+			}
+		}
+		return items;
+	}
+	private void NavigationLogout()
+	{
+		Navigation.NavigateTo("/");
+	}
 }
