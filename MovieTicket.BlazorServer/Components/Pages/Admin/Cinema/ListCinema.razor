@@ -75,7 +75,7 @@
     private List<CinemaDto> cinemas = new();
     private string selectedCinemaCenterId = string.Empty;
     private string selectedCinemaCenterName = string.Empty;
-    private CinemaCenterSearch search = new();
+    private CinemaCenterSearch search = new CinemaCenterSearch();
 
     protected override async Task OnInitializedAsync()
     {
