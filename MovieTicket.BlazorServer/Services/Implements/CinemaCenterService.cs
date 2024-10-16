@@ -19,22 +19,38 @@ namespace MovieTicket.BlazorServer.Services.Implements
             throw new NotImplementedException();
         }
 
-        public async Task<List<CinemaCenterDto>> GetCinemaCentersAsync(CinemaCenterSearch search)
+        public async Task<IQueryable<CinemaCenterDto>> GetCinemaCentersAsync(CinemaCenterSearch search)
         {
-            var parameters = new Dictionary<string, string>
-            {
-            };
+            // Bắt đầu với URL cơ bản
+            var url = "api/CinemaCenter/GetAll";
+
+            // Danh sách để lưu các tham số truy vấn
+            var queryParams = new List<string>();
+
+            // Thêm tham số truy vấn nếu có
             if (!string.IsNullOrEmpty(search.Name))
             {
-                parameters.Add("Name", search.Name);
+                queryParams.Add($"Name={Uri.EscapeDataString(search.Name)}");
             }
+
             if (!string.IsNullOrEmpty(search.Address))
             {
-                parameters.Add("Address", search.Address);
+                queryParams.Add($"Address={Uri.EscapeDataString(search.Address)}");
             }
-            var url = QueryHelpers.AddQueryString("api/CinemaCenter/GetAll", parameters);
-            var response = await _httpClient.GetFromJsonAsync<List<CinemaCenterDto>>(url);
-            return response;
+
+            // Nếu có tham số truy vấn, thêm vào URL
+            if (queryParams.Count > 0)
+            {
+                url += "?" + string.Join("&", queryParams);
+            }
+
+            // Gọi API và nhận kết quả
+            var lst = await _httpClient.GetFromJsonAsync<List<CinemaCenterDto>>(url);
+
+            // Chuyển đổi danh sách thành IQueryable
+            return lst.AsQueryable();
         }
+
+
     }
 }

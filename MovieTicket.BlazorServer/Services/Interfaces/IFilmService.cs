@@ -1,8 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Film;
-using MovieTicket.Application.DataTransferObjs.ScreenType;
-using MovieTicket.Application.DataTransferObjs.TranslationType;
 
-namespace MovieTicket.BlazorServer.Services.Interfaces.IFilmService
+namespace MovieTicket.BlazorServer.Services.Interfaces
 {
     public interface IFilmService
     {

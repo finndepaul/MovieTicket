@@ -1,6 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.ScreenType;
 
-namespace MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService
+namespace MovieTicket.BlazorServer.Services.Interfaces
 {
     public interface IScreenTypeService
     {

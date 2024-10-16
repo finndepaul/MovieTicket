@@ -9,6 +9,7 @@ using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
+using System.Linq;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -26,7 +27,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             var film = _mapper.Map<Film>(filmCreateRequest);
             film.CreatDate = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddMinutes(DateTime.Now.Minute);
             await _context.Films.AddAsync(film);
-            await _context.SaveChangesAsync();
+
             foreach (var id in filmCreateRequest.ScreenTypeIds)
             {
                 var filmScreenType = new FilmScreenType
@@ -35,7 +36,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     ScreenTypeId = id
                 };
                 await _context.FilmScreenTypes.AddAsync(filmScreenType);
-                await _context.SaveChangesAsync();
             }
 
             foreach (var id in filmCreateRequest.TranslationTypeIds)
@@ -46,9 +46,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     TranslationTypeId = id
                 };
                 await _context.FilmTranslationTypes.AddAsync(filmTranslationType);
-                await _context.SaveChangesAsync();
             }
-
+            await _context.SaveChangesAsync();
             var filmDto = _mapper.Map<FilmDto>(film);
             return new ResponseObject<FilmDto>
             {
@@ -85,10 +84,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
         public async Task<ResponseObject<FilmDto>> UpdateFilm(Guid id, FilmUpdateRequest filmUpdateRequest)
         {
-            var film = await _context.Films
-                .Include(f => f.FilmScreenTypes)
-                .Include(f => f.FilmTranslationTypes)
-                .FirstOrDefaultAsync(f => f.Id == id);
+            var film = await (from f in _context.Films
+                              where f.Id == id
+                              select f).FirstOrDefaultAsync();
+
             if (film == null)
             {
                 return new ResponseObject<FilmDto>
@@ -97,46 +96,66 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     Status = StatusCodes.Status404NotFound,
                     Message = "Film not found"
                 };
-
             }
 
+            // Manually load related entities
+            await _context.Entry(film).Collection(f => f.FilmScreenTypes).LoadAsync();
+            await _context.Entry(film).Collection(f => f.FilmTranslationTypes).LoadAsync();
+
+            // Update common properties of the film
             _mapper.Map(filmUpdateRequest, film);
             _context.Films.Update(film);
 
-            var currentFilmScreenTypes = _context.FilmScreenTypes.Where(fst => fst.FilmId == id);
-            _context.FilmScreenTypes.RemoveRange(currentFilmScreenTypes);
-
-            var currentFilmTranslationTypes = _context.FilmTranslationTypes.Where(ftt => ftt.FilmId == id);
-            _context.FilmTranslationTypes.RemoveRange(currentFilmTranslationTypes);
-
-            foreach (var screenTypeId in filmUpdateRequest.ScreenTypeIds)
+            // Check for changes in FilmScreenTypes
+            var currentScreenTypeIds = (from fst in film.FilmScreenTypes
+                                        select fst.ScreenTypeId).ToList();
+            if (!currentScreenTypeIds.SequenceEqual(filmUpdateRequest.ScreenTypeIds))
             {
-                var filmScreenType = new FilmScreenType
+                // Remove current FilmScreenTypes if there are changes
+                _context.FilmScreenTypes.RemoveRange(film.FilmScreenTypes);
+
+                // Add new FilmScreenTypes
+                foreach (var screenTypeId in filmUpdateRequest.ScreenTypeIds)
                 {
-                    FilmId = film.Id,
-                    ScreenTypeId = screenTypeId  // Sử dụng screenTypeId từ filmUpdateRequest
-                };
-                await _context.FilmScreenTypes.AddAsync(filmScreenType);
+                    var filmScreenType = new FilmScreenType
+                    {
+                        FilmId = film.Id,
+                        ScreenTypeId = screenTypeId
+                    };
+                    await _context.FilmScreenTypes.AddAsync(filmScreenType);
+                }
             }
 
-            // Thêm các FilmTranslationType mới
-            foreach (var translationTypeId in filmUpdateRequest.TranslationTypeIds)
+            // Check for changes in FilmTranslationTypes
+            var currentTranslationTypeIds = (from ftt in film.FilmTranslationTypes
+                                             select ftt.TranslationTypeId).ToList();
+            if (!currentTranslationTypeIds.SequenceEqual(filmUpdateRequest.TranslationTypeIds))
             {
-                var filmTranslationType = new FilmTranslationType
+                // Remove current FilmTranslationTypes if there are changes
+                _context.FilmTranslationTypes.RemoveRange(film.FilmTranslationTypes);
+
+                // Add new FilmTranslationTypes
+                foreach (var translationTypeId in filmUpdateRequest.TranslationTypeIds)
                 {
-                    FilmId = film.Id,
-                    TranslationTypeId = translationTypeId  // Sử dụng translationTypeId từ filmUpdateRequest
-                };
-                await _context.FilmTranslationTypes.AddAsync(filmTranslationType);
+                    var filmTranslationType = new FilmTranslationType
+                    {
+                        FilmId = film.Id,
+                        TranslationTypeId = translationTypeId
+                    };
+                    await _context.FilmTranslationTypes.AddAsync(filmTranslationType);
+                }
             }
 
+            // Save changes to the database
             await _context.SaveChangesAsync();
+
             var filmDto = _mapper.Map<FilmDto>(film);
+
             return new ResponseObject<FilmDto>
             {
                 Data = filmDto,
-                Status = StatusCodes.Status201Created,
-                Message = "Film Update successfully"
+                Status = StatusCodes.Status200OK,
+                Message = "Film updated successfully"
             };
         }
     }

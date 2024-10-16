@@ -8,8 +8,8 @@ namespace MovieTicket.Application.DataTransferObjs.TranslationType
 {
     public class TranslationTypeDto
     {
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
 
-        public string? Type { get; set; }
+        public string Type { get; set; }
     }
 }

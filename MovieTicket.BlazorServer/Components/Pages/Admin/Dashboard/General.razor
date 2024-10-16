@@ -1,10 +1,5 @@
 @page "/admin"
 @attribute [Authorize(Roles = "Admin")]
-@using Microsoft.AspNetCore.Authorization
-@using MovieTicket.Application.DataTransferObjs.AdminHome
-@using MovieTicket.Application.ValueObjs.Paginations
-@using MovieTicket.BlazorServer.Services.Interfaces
-@inject IAdminHomeService _ser;
 
 <div class="container-fluid">
 	<div class="row my-3">
@@ -118,12 +113,12 @@
 	protected override async Task OnInitializedAsync()
 	{	
 		DateTime start = new DateTime(date.Year, date.Month, 1);
-		generalDto = await _ser.GetAdminGeneralAsync();
-		var dataRevenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
+		generalDto = await AdminHomeService.GetAdminGeneralAsync();
+		var dataRevenueByCinemaDtos = await AdminHomeService.GetListRevenueByCinemaAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
 		revenueByCinemaDtos = dataRevenueByCinemaDtos.Item.ToList();
-		var dataRevenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
+		var dataRevenueByMovieDtos = await AdminHomeService.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
 		revenueByMovieDtos = dataRevenueByMovieDtos.Item.ToList();
-		revenueByMonthDtos = await _ser.RevenueByMonthDto();
+		revenueByMonthDtos = await AdminHomeService.RevenueByMonthDto();
 		StateHasChanged();
 	}
 

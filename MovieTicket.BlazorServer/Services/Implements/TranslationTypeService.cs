@@ -1,8 +1,8 @@
 ﻿using MovieTicket.Application.DataTransferObjs.TranslationType;
-using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService;
+using MovieTicket.BlazorServer.Services.Interfaces;
 using System.Net.Http;
 
-namespace MovieTicket.BlazorServer.Services.Implements.TranslationTypeService
+namespace MovieTicket.BlazorServer.Services.Implements
 {
     public class TranslationTypeService : ITranslationTypeService
     {
