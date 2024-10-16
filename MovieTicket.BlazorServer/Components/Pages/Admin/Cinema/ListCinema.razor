@@ -1,91 +1,106 @@
 ﻿@page "/cinema"
 @using MovieTicket.Application.DataTransferObjs.Cinema
 @using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@inject ICinemaCenterService _cinemaCenterService
+@inject ICinemaService _cinemaService
 @attribute [Authorize(Roles = "Admin")]
 
-<div class="container-fluid">
-    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <label>
-            Chọn rạp
-            <select class="form-select" @onchange="OnChangeCinemaCenter">
-                <option value="">Chọn rạp</option>
-                @foreach (var cinemaCenter in cinemaCenters)
-                {
-                  <option value="@cinemaCenter.Name">@cinemaCenter.Name</option>
-                }
-            </select>
-        </label>
-    </div>
+@if (_lstCinemaCenters != null)
+{
+    <div class="container-fluid">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <label>
+                Chọn rạp
+                <select class="form-select" @onchange="OnChangeCinemaCenter">
+                    <option value="">Chọn rạp</option>
+                    @foreach (var item in _lstCinemaCenters)
+                    {
+                        <option value="@item.Name">@item.Name</option>
+                    }
+                </select>
+            </label>
+        </div>
 
-    <div class="table-responsive mb-3">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên phòng chiếu</th>
-                    <th scope="col">Loại phòng chiếu</th>
-                    <th scope="col">Số lượng ghế tối đa</th>
-                    <th scope="col">Số hàng</th>
-                    <th scope="col">Số cột</th>
-                    <th scope="col">Ngày tạo</th>
-                    <th scope="col">Sửa lần cuối</th>
-                    <th scope="col">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (cinemas.Count == 0)
-                {
+        <div class="table-responsive mb-3">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
                     <tr>
-                        <td colspan="5">Không có dữ liệu</td>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên phòng chiếu</th>
+                        <th scope="col">Loại phòng chiếu</th>
+                        <th scope="col">Số lượng ghế tối đa</th>
+                        <th scope="col">Số hàng</th>
+                        <th scope="col">Số cột</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Sửa lần cuối</th>
+                        <th scope="col">Thao tác</th>
                     </tr>
-                }
-                else
-                {
-                    @foreach (var cinema in cinemas)
+                </thead>
+                <tbody>
+                    @if (_lstCinemas == null || !_lstCinemas.Any())
                     {
                         <tr>
-                            <td>@cinemas.IndexOf(cinema) + 1</td>
-                            <td>@cinema.Name</td>
-                            <td>@cinema.CinemaTypeName</td>
-                            <td>@cinema.MaxSeatCapacity</td>
-                            <td>@cinema.Row</td>
-                            <td>@cinema.Column</td>
-                            <td>@cinema.CreateTime</td>
-                            <td>@cinema.UpdateTime</td>
-                            <td>
-                                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateCinemaModal">
-                                    <i class="bi bi-pencil-square"></i>
-                                    Sửa
-                                </button>
-                                <button class="btn btn-danger">
-                                    <i class="bi bi-trash"></i>
-                                    Xóa
-                                </button>
-                            </td>
+                            <td colspan="9">Không có dữ liệu</td>
                         </tr>
                     }
-                }
-            </tbody>
-        </table>
+                    else
+                    {
+                        int index = 1; // Biến đếm bắt đầu từ 1
+                        @foreach (var cinema in _lstCinemas)
+                        {
+                            <tr>
+                                <td>@index</td> <!-- Sử dụng biến đếm -->
+                                <td>@cinema.Name</td>
+                                <td>@cinema.CinemaTypeName</td>
+                                <td>@cinema.MaxSeatCapacity</td>
+                                <td>@cinema.Row</td>
+                                <td>@cinema.Column</td>
+                                <td>@cinema.CreateTime</td>
+                                <td>@cinema.UpdateTime</td>
+                                <td>
+                                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateCinemaModal">
+                                        <i class="bi bi-pencil-square"></i>
+                                        Sửa
+                                    </button>
+                                    <button class="btn btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                        Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                            index++; // Tăng biến đếm sau mỗi lần lặp
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <h3>Loading...</h3>
+}
 
 @code {
-    private List<CinemaCenterDto> cinemaCenters = new();
-    private List<CinemaDto> cinemas = new();
-    private string selectedCinemaCenterId = string.Empty;
+    private IQueryable<CinemaCenterDto> _lstCinemaCenters;
+    private IQueryable<CinemaDto> _lstCinemas;
     private string selectedCinemaCenterName = string.Empty;
-    private CinemaCenterSearch search = new CinemaCenterSearch();
 
     protected override async Task OnInitializedAsync()
     {
-        cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(search);
+        _lstCinemaCenters = await _cinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+
+        // Giả sử bạn đã chọn một cinema center nào đó
+        selectedCinemaCenterName = "Tên Rạp Phim"; // Thay thế bằng tên thực tế
+        _lstCinemas = await _cinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
     }
 
     private async Task OnChangeCinemaCenter(ChangeEventArgs e)
     {
-        selectedCinemaCenterName = e.Value.ToString();
-        cinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName);
+        selectedCinemaCenterName = e.Value?.ToString();
+        _lstCinemas = await _cinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
         StateHasChanged();
     }
+
 }

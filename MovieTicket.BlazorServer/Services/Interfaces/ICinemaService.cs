@@ -5,7 +5,7 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
 {
     public interface ICinemaService
     {
-        Task<List<CinemaDto>> GetCinemasAsync(string? name);
+        Task<IQueryable<CinemaDto>> GetCinemasAsync(string? cinemaCenterName, string? name);
 
         Task<ResponseObject<CinemaDto>> GetCinemaById(Guid id);
     }
