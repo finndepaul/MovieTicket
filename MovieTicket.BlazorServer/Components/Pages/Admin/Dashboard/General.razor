@@ -1,8 +1,7 @@
 @page "/admin"
-@attribute [Authorize(Roles = "Admin")]
-@using Microsoft.AspNetCore.Authorization
 @using MovieTicket.Application.DataTransferObjs.AdminHome
-@using MovieTicket.BlazorServer.Services.Interfaces
+@attribute [Authorize(Roles = "Admin")]
+
 @inject IAdminHomeService _ser;
 
 <div class="container-fluid">

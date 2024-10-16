@@ -1,9 +1,8 @@
 ﻿using MovieTicket.Application.DataTransferObjs.AdminHome;
-using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
-	public class AdminHomeService : IAdminHomeService
+    public class AdminHomeService : IAdminHomeService
 	{
 		private readonly HttpClient _httpClient;
 

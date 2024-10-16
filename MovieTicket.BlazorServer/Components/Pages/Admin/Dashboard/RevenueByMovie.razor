@@ -1,7 +1,6 @@
 @page "/revenue-by-movie"
-@attribute [Authorize(Roles = "Admin")]
 @using MovieTicket.Application.DataTransferObjs.AdminHome
-@using MovieTicket.BlazorServer.Services.Interfaces
+@attribute [Authorize(Roles = "Admin")]
 @inject IAdminHomeService _ser;
 
 <div class="content">

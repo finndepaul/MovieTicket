@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using MovieTicket.BlazorServer.Services.Interfaces.IFilmService;
+using MovieTicket.BlazorServer.Services.Interfaces;
 
-namespace MovieTicket.BlazorServer.Services.Implements.FilmService
+namespace MovieTicket.BlazorServer.Services.Implements
 {
     public class FileUpload : IFileUpload
     {
