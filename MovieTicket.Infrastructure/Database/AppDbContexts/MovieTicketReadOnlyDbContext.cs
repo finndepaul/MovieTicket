@@ -462,49 +462,33 @@ public class MovieTicketReadOnlyDbContext : DbContext
 	private void SeedingDataWithBogus(ModelBuilder modelBuilder)
 	{
 		// Faker for Account
-		var accountFaker = new Faker<Account>()
-			.RuleFor(a => a.Id, f => Guid.NewGuid())
-			.RuleFor(a => a.Username, f => f.Internet.UserName())
-			.RuleFor(a => a.Password, f => Hash.EncryptPassword("abc123"))
-			.RuleFor(a => a.Role, f => f.PickRandom<Domain.Enums.AccountRole>())
-			.RuleFor(a => a.Avatar, f => $"avatar{f.IndexFaker}.png")
-			.RuleFor(a => a.Name, f => f.Name.FullName())
-			.RuleFor(a => a.Phone, f => f.Phone.PhoneNumber())
-			.RuleFor(a => a.Email, f => f.Internet.Email())
-			.RuleFor(a => a.Status, f => Domain.Enums.AccountStatus.Active)
-			.RuleFor(a => a.CreateDate, f => f.Date.Between(new DateTime(2024, 10, 1), new DateTime(2024, 10, 30)));
-
-		List<Account> accounts = accountFaker.Generate(15);
-
-		// Add specific admin and client
-		accounts.Insert(0, new Account
+		List<Account> accounts = new List<Account>();
+		accounts.Add(new Account()
 		{
 			Id = Guid.Parse("fd36705c-0610-4c30-9cfb-e5827b3f3d78"),
 			Username = "Admin",
-			Password = Hash.EncryptPassword("abc123"),
-			Role = Domain.Enums.AccountRole.Admin,
-			Avatar = "avatar1.png",
+			Password = Hash.EncryptPassword("123"),
+			Role = Domain.Enums.AccountRole.Admin, // 1, 2, or 3
+			Avatar = $"avatar1.png",
 			Name = "AdminTest",
 			Phone = "000-000-000",
 			Email = "azusachan307@gmail.com",
-			Status = Domain.Enums.AccountStatus.Active,
-			CreateDate = new DateTime(2024, 10, 1)
+			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
+			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
 		});
-
-		accounts.Insert(1, new Account
+		accounts.Add(new Account()
 		{
 			Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
-			Username = "Client",
-			Password = Hash.EncryptPassword("abc123"),
-			Role = Domain.Enums.AccountRole.User,
-			Avatar = "avatar2.png",
+			Username = "User",
+			Password = Hash.EncryptPassword("123"),
+			Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
+			Avatar = $"avatar2.png",
 			Name = "ClientTest",
 			Phone = "000-000-000",
 			Email = "azusachan309@gmail.com",
-			Status = Domain.Enums.AccountStatus.Active,
-			CreateDate = new DateTime(2024, 10, 1)
+			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
+			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
 		});
-
 		modelBuilder.Entity<Account>().HasData(accounts);
 
 		// Faker for Membership
@@ -515,36 +499,12 @@ public class MovieTicketReadOnlyDbContext : DbContext
 
 		modelBuilder.Entity<Membership>().HasData(membershipFaker.Generate(1));
 
-		// Faker for Film
-		var filmFaker = new Faker<Film>()
-			.RuleFor(f => f.Id, f => Guid.NewGuid())
-			.RuleFor(f => f.Name, f => $"Film {f.IndexFaker}")
-			.RuleFor(f => f.EnglishName, f => $"Film {f.IndexFaker} (English)")
-			.RuleFor(f => f.Trailer, f => f.Internet.Url())
-			.RuleFor(f => f.Description, f => f.Lorem.Sentence())
-			.RuleFor(f => f.Gerne, f => f.PickRandom("Action", "Comedy"))
-			.RuleFor(f => f.Director, f => f.Name.FullName())
-			.RuleFor(f => f.Cast, f => $"{f.Name.FirstName()} {f.Name.LastName()}")
-			.RuleFor(f => f.Rating, f => f.Random.Int(1, 5))
-			.RuleFor(f => f.StartDate, f => f.Date.Between(new DateTime(2024, 10, 1), new DateTime(2024, 10, 30)))
-			.RuleFor(f => f.ReleaseYear, 2024)
-			.RuleFor(f => f.RunningTime, f => f.Random.Int(60, 180))
-			.RuleFor(f => f.Status, Domain.Enums.FilmStatus.NowShowing)
-			.RuleFor(f => f.Nation, f => f.PickRandom("USA", "Japan"))
-			.RuleFor(f => f.Poster, "film_fake.jpg")
-			.RuleFor(f => f.Language, f => f.PickRandom("English", "Japanese"))
-			.RuleFor(f => f.CreatDate, f => f.Date.Between(new DateTime(2024, 10, 1), new DateTime(2024, 10, 30)));
-
-		// Generate list of films
-		var films = filmFaker.Generate(15);
-		modelBuilder.Entity<Film>().HasData(films);
-
 		// Faker for CinemaCenter
 		var cinemaCenterFaker = new Faker<CinemaCenter>()
 			.RuleFor(c => c.Id, f => Guid.NewGuid())
 			.RuleFor(c => c.Name, f => $"Cinema Center {f.IndexFaker}")
 			.RuleFor(c => c.Address, f => f.Address.FullAddress());
-		var cinemaCenters = cinemaCenterFaker.Generate(15);
+		var cinemaCenters = cinemaCenterFaker.Generate(5);
 		modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
 
 		// Faker for Combo
@@ -552,151 +512,77 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			.RuleFor(c => c.Id, f => Guid.NewGuid())
 			.RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
 			.RuleFor(c => c.Price, f => f.Random.Int(10000, 100000));
-		modelBuilder.Entity<Combo>().HasData(comboFaker.Generate(15));
-
-		// Faker for Promotion
-		var promotionFaker = new Faker<Promotion>()
-			.RuleFor(p => p.Id, f => Guid.NewGuid())
-			.RuleFor(p => p.Title, f => f.Lorem.Sentence());
-
-		modelBuilder.Entity<Promotion>().HasData(promotionFaker.Generate(15));
-
+		modelBuilder.Entity<Combo>().HasData(comboFaker.Generate(5));
+		// Faker for ScreeningDay (ensure unique values)
 		// Faker for ScreeningDay
+		var screeningDayList = new List<string> { "T2-CN", "T2-T6", "T7-CN" };
 		var screeningDayFaker = new Faker<ScreeningDay>()
 			.RuleFor(s => s.Id, f => Guid.NewGuid())
-			.RuleFor(s => s.Day, f => f.PickRandom("T2-CN", "T2-T6", "T7-CN"));
-		var screeningDays = screeningDayFaker.Generate(3);
+			.RuleFor(s => s.Day, f =>
+			{
+				var day = screeningDayList.First(); // Lấy phần tử đầu tiên
+				screeningDayList.RemoveAt(0); // Loại bỏ phần tử đã chọn để đảm bảo không trùng lặp
+				return day;
+			});
+
+		var screeningDays = screeningDayFaker.Generate(3); // Sinh ra đúng 3 loại ngày
 		modelBuilder.Entity<ScreeningDay>().HasData(screeningDays);
 
 		// Faker for SeatType
+		var seatTypeList = new List<string> { "Normal", "VIP", "Couple" };
 		var seatTypeFaker = new Faker<SeatType>()
 			.RuleFor(s => s.Id, f => Guid.NewGuid())
-			.RuleFor(s => s.Name, f => f.PickRandom("Normal", "VIP", "Couple"));
-		var seatTypes = seatTypeFaker.Generate(3);
+			.RuleFor(s => s.Name, f =>
+			{
+				var seatType = seatTypeList.First();
+				seatTypeList.RemoveAt(0);
+				return seatType;
+			});
+
+		var seatTypes = seatTypeFaker.Generate(3); // Sinh ra đúng 3 loại ghế
 		modelBuilder.Entity<SeatType>().HasData(seatTypes);
 
 		// Faker for CinemaType
+		var cinemaTypeList = new List<string> { "2D", "Gold Class", "Premium Class", "IMAX", "4DX" };
 		var cinemaTypeFaker = new Faker<CinemaType>()
 			.RuleFor(c => c.Id, f => Guid.NewGuid())
-			.RuleFor(c => c.Name, f => f.PickRandom("2D", "Gold Class", "Premium Class"));
-		var cinemaTypes = cinemaTypeFaker.Generate(3);
+			.RuleFor(c => c.Name, f =>
+			{
+				var cinemaType = cinemaTypeList.First();
+				cinemaTypeList.RemoveAt(0);
+				return cinemaType;
+			});
+
+		var cinemaTypes = cinemaTypeFaker.Generate(5); // Sinh ra đúng 5 loại rạp chiếu
 		modelBuilder.Entity<CinemaType>().HasData(cinemaTypes);
 
-		// Faker for Schedule
-		var scheduleFaker = new Faker<Schedule>()
-			.RuleFor(s => s.Id, f => Guid.NewGuid())
-			.RuleFor(s => s.FilmId, f => f.PickRandom(films).Id)
-			.RuleFor(s => s.StartDate, f => f.Date.Between(new DateTime(2024, 10, 1), new DateTime(2024, 10, 30)))
-			.RuleFor(s => s.EndDate, f => f.Date.Between(new DateTime(2024, 11, 1), new DateTime(2023, 11, 30)))
-			.RuleFor(s => s.Type, f => f.PickRandom<ScheduleType>())
-			.RuleFor(s => s.Status, ScheduleStatus.Showing);
-		var schedules = scheduleFaker.Generate(15);
-		modelBuilder.Entity<Schedule>().HasData(schedules);
-
 		// Faker for ScreenType
+		var screenTypeList = new List<string> { "2D", "4DX", "IMAX", "3D" };
 		var screenTypeFaker = new Faker<ScreenType>()
 			.RuleFor(s => s.Id, f => Guid.NewGuid())
-			.RuleFor(s => s.Type, f => f.PickRandom("2D", "3D", "IMAX"));
-		var screenTypes = screenTypeFaker.Generate(3);
+			.RuleFor(s => s.Type, f =>
+			{
+				var screenType = screenTypeList.First();
+				screenTypeList.RemoveAt(0);
+				return screenType;
+			});
+
+		var screenTypes = screenTypeFaker.Generate(4); // Sinh ra đúng 4 loại màn hình
 		modelBuilder.Entity<ScreenType>().HasData(screenTypes);
 
-		// Faker for TicketPrice
-		var ticketPriceFaker = new Faker<TicketPrice>()
-			.RuleFor(t => t.Id, f => Guid.NewGuid())
-			.RuleFor(t => t.Price, f => f.Random.Int(10000, 100000))
-			.RuleFor(t => t.SeatTypeId, f => f.PickRandom(seatTypes).Id)
-			.RuleFor(t => t.ScreeningDayId, f => f.PickRandom(screeningDays).Id)
-			.RuleFor(t => t.CinemaTypeId, f => f.PickRandom(cinemaTypes).Id)
-			.RuleFor(t => t.ScreenTypeId, f => f.PickRandom(screenTypes).Id)
-			.RuleFor(t => t.Status, TicketPriceStatus.Active);
-		var ticketPrices = ticketPriceFaker.Generate(15);
-		modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
-
 		// Faker for TranslationType
-		List<TranslationType> translationTypes = new List<TranslationType>() {
-	new TranslationType
-	{
-		Id = Guid.Parse("c4bba8c8-0cc7-4d31-a82d-efa9c1d7bb30"),
-		Type = "Phụ đề"
-	},
-	new TranslationType
-	{
-		Id = Guid.Parse("e7e15c47-4d2d-4f6b-9b93-6b233e0115bf"),
-		Type = "Phụ đề và Lồng tiếng"
-	}
-};
+		var translationTypeList = new List<string> { "Phụ đề Việt", "Phụ đề Anh - Việt", "Phụ đề Hàn - Việt", "Lồng tiếng Việt" };
+		var translationTypeFaker = new Faker<TranslationType>()
+			.RuleFor(t => t.Id, f => Guid.NewGuid())
+			.RuleFor(t => t.Type, f =>
+			{
+				var translationType = translationTypeList.First();
+				translationTypeList.RemoveAt(0);
+				return translationType;
+			});
+
+		var translationTypes = translationTypeFaker.Generate(4); // Sinh ra đúng 4 loại dịch thuật
 		modelBuilder.Entity<TranslationType>().HasData(translationTypes);
 
-		// Faker for Cinema
-		var cinemaFaker = new Faker<Cinema>()
-			.RuleFor(c => c.Id, f => Guid.NewGuid())
-			.RuleFor(c => c.CinemaTypeId, f => f.PickRandom(cinemaTypes).Id)
-			.RuleFor(c => c.CinemaCenterId, f => f.PickRandom(cinemaCenters).Id)
-			.RuleFor(c => c.Name, f => $"Cinema {f.IndexFaker}")
-			.RuleFor(c => c.Column, 10)
-			.RuleFor(c => c.Row, 10)
-			.RuleFor(c => c.MaxSeatCapacity, 100)
-			.RuleFor(c => c.Description, f => f.Lorem.Sentence())
-			.RuleFor(c => c.CreateTime, f => f.Date.Past());
-		var cinemas = cinemaFaker.Generate(15);
-		modelBuilder.Entity<Cinema>().HasData(cinemas);
-
-		// Faker for ShowTime
-		var showTimeFaker = new Faker<ShowTime>()
-			.RuleFor(s => s.Id, f => Guid.NewGuid())
-			.RuleFor(s => s.ScheduleId, f => f.PickRandom(schedules).Id)
-			.RuleFor(s => s.FilmId, f => f.PickRandom(schedules).FilmId)
-			.RuleFor(s => s.CinemaId, f => f.PickRandom(cinemas).Id)
-			.RuleFor(s => s.CinemaCenterId, f => f.PickRandom(cinemas).CinemaCenterId)
-			.RuleFor(s => s.ScreenTypeId, f => f.PickRandom(screenTypes).Id)
-			.RuleFor(s => s.TranslationTypeId, f => f.PickRandom(translationTypes).Id)
-			.RuleFor(s => s.StartTime, f => f.Date.Between(new DateTime(2024, 10, 1), new DateTime(2024, 10, 30)))
-			.RuleFor(s => s.EndTime, (f, s) => s.StartTime.Value.AddHours(2))
-			.RuleFor(s => s.Desciption, f => f.Lorem.Sentence())
-			.RuleFor(s => s.Status, ShowtimeStatus.Showing);
-		var showTimes = showTimeFaker.Generate(15);
-		modelBuilder.Entity<ShowTime>().HasData(showTimes);
-
-		// Faker for Bill
-		var billFaker = new Faker<Bill>()
-			.RuleFor(b => b.Id, f => Guid.NewGuid())
-			.RuleFor(b => b.TotalMoney, f => f.Finance.Amount(10000, 100000))
-			.RuleFor(b => b.CreateTime, f => f.Date.Past())
-			.RuleFor(b => b.BarCode, f => $"barcode{f.IndexFaker}.jpg")
-			.RuleFor(b => b.Status, BillStatus.Paid)
-			.RuleFor(b => b.ActivationStatus, true)
-			.RuleFor(b => b.MembershipId, Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"))
-			.RuleFor(b => b.VoucherId, (Guid?)null);
-		var bills = billFaker.Generate(15);
-		modelBuilder.Entity<Bill>().HasData(bills);
-
-		// Faker for Seat
-		var seatFaker = new Faker<Seat>()
-			.RuleFor(s => s.Id, f => Guid.NewGuid())
-			.RuleFor(s => s.CinemaId, f => f.PickRandom(cinemas).Id)
-			.RuleFor(s => s.SeatTypeId, f => seatTypes[0].Id)
-			.RuleFor(s => s.Position, (f, s) => $"{(char)('A' + f.Random.Int(0, 9))}{f.Random.Int(1, 10)}")
-			.RuleFor(s => s.Status, SeatStatus.Available);
-		var seats = seatFaker.Generate(100);  // 10 rows * 10 columns
-		modelBuilder.Entity<Seat>().HasData(seats);
-
-		// Faker for Ticket
-		var ticketFaker = new Faker<Ticket>()
-			.RuleFor(t => t.Id, f => Guid.NewGuid())
-			.RuleFor(t => t.SeatId, f => f.PickRandom(seats).Id)
-			.RuleFor(t => t.ShowTimeId, f => f.PickRandom(showTimes).Id)
-			.RuleFor(t => t.BillId, f => f.PickRandom(bills).Id)
-			.RuleFor(t => t.Qrcode, f => $"qrcode{f.IndexFaker}.jpg")
-			.RuleFor(t => t.Status, TicketStatus.Used)
-			 .RuleFor(t => t.TicketPriceId, f =>
-			 {
-				 var selectedTicketPrice = f.PickRandom(ticketPrices); // Chọn ticketPrice ngẫu nhiên
-				 ticketPrices.Remove(selectedTicketPrice); // Xóa để tránh trùng lặp
-				 return selectedTicketPrice.Id;
-			 })
-			.RuleFor(t => t.CinemaCenterId, f => f.PickRandom(cinemaCenters).Id)
-			.RuleFor(t => t.Description, f => f.Lorem.Sentence());
-		var tickets = ticketFaker.Generate(15);
-		modelBuilder.Entity<Ticket>().HasData(tickets);
 	}
 }

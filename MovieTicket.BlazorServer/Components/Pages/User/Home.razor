@@ -47,26 +47,37 @@
 		<!-- Tab content -->
 		<div id="SapChieu" class="tabcontent">
 			<div class="row ">
-				<!-- Movie 1 -->
-				@foreach(var item in listObj){
-					@if(item.SType == ScheduleType.Early){
-					<div class="col-lg-3 mb-5">
-						<div class="movie-card">
-								<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
-								<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
-							<span class="sticker sticker-new"></span>
+				@if (listObj == null)
+				{
+					<p>Chưa có phim</p>
+				}
+				else
+				{
+					<!-- Movie 1 -->
+					@foreach (var item in listObj)
+					{
+						@if (item.SType == ScheduleType.Early)
+						{
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<span class="sticker sticker-new"></span>
 
-							<div class="movie-info">
-								<h5 class="text-primary">@item.Name</h5>
-								<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
-								<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
-								<p><strong>Ngày khởi chiếu:</strong> 18/10/2024</p>
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+										<p><strong>Ngày khởi chiếu:</strong> 18/10/2024</p>
+									</div>
+
+								</div>
 							</div>
-
-						</div>
-					</div>
+						}
 					}
 				}
+				
+
 
 			</div>
 		</div>
@@ -74,57 +85,73 @@
 		<div id="DangChieu" class="tabcontent">
 			<div class="row">
 				<!-- Movie 1 -->
-				@foreach (var item in listObj)
+				@if (listObj == null)
 				{
-					@if (item.SType == ScheduleType.Regular)
+					<p>Chưa có phim</p>
+				}
+				else
+				{
+					@foreach (var item in listObj)
 					{
-					<div class="col-lg-3 mb-5">
-						<div class="movie-card">
-								<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
-								<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
-							<span class="sticker sticker-new"></span>
+						@if (item.SType == ScheduleType.Regular)
+						{
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<span class="sticker sticker-new"></span>
 
-							<div class="movie-info">
-								<h5 class="text-primary">@item.Name</h5>
-								<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
-								<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+									</div>
+									<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+										<span><i class="bi bi-ticket-perforated"></i></span>
+										MUA VÉ
+									</a>
+								</div>
 							</div>
-							<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
-								<span><i class="bi bi-ticket-perforated"></i></span>
-								MUA VÉ
-							</a>
-						</div>
-					</div>
+						}
 					}
 				}
+
 			</div>
 		</div>
 
 		<div id="Dacbiet" class="tabcontent">
 			<div class="row">
-				@foreach (var item in listObj)
+				@if (listObj == null)
 				{
-					@if (item.SType == ScheduleType.Special)
+					<p>Chưa có phim</p>
+				}
+				else
+				{
+					@foreach (var item in listObj)
 					{
-					<div class="col-lg-3 mb-5">
-						<div class="movie-card">
-								<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
-								<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
-							<span class="sticker sticker-new"></span>
+						@if (item.SType == ScheduleType.Special)
+						{
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<span class="sticker sticker-new"></span>
 
-							<div class="movie-info">
-								<h5 class="text-primary">@item.Name</h5>
-								<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
-								<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+									</div>
+									<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+										<span><i class="bi bi-ticket-perforated"></i></span>
+										MUA VÉ
+									</a>
+								</div>
 							</div>
-							<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
-								<span><i class="bi bi-ticket-perforated"></i></span>
-								MUA VÉ
-							</a>
-						</div>
-					</div>
+						}
 					}
 				}
+
 			</div>
 		</div>
 	</div>
@@ -136,13 +163,13 @@
 			<span class="close-modal-btn" onclick="closeModal()">&times;</span>
 			<h5>LỊCH CHIẾU - Cô Dâu Hào Môn</h5>
 		</div>
-		<div ></div>
-		
+		<div></div>
+
 	</div>
 </div>
 <style>
 	/* Chỉnh phần movie-card để căn giữa */
-	
+
 
 	.col-lg-3 {
 		flex: 0 0 25%; /* Đặt chiều rộng mỗi cột là 25% (tương đương với 3 cột trên một hàng) */
@@ -237,7 +264,7 @@
 		justify-content: center;
 		background: none;
 	}
-	
+
 		/* Style the buttons that are used to open the tab content */
 		.tab button {
 			background: none;
@@ -257,8 +284,8 @@
 
 			/* Change background color of buttons on hover */
 			/* 	.tab button:hover {
-									border-bottom: 2px solid blue;
-								} */
+										border-bottom: 2px solid blue;
+									} */
 
 			/* Create an active/current tablink class */
 			.tab button.active {
@@ -315,7 +342,8 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.modal-size{
+
+	.modal-size {
 		width: 50%;
 		min-height: 50%;
 		background-color: #fff;
@@ -326,7 +354,6 @@
 		padding: 20px;
 		border-radius: 5px;
 		position: relative;
-
 	}
 
 	/* Nút đóng modal */
@@ -380,12 +407,12 @@
 	}
 </script>
 
-@code{
+@code {
 	private List<UserHomeDto> listObj = new List<UserHomeDto>();
-	
+
 	protected async override Task OnInitializedAsync()
 	{
 		listObj = await _service.GetAllFilmForUserHome();
 	}
-	
+
 }
