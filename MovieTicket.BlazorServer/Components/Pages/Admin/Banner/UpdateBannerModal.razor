@@ -1,0 +1,93 @@
+﻿@page "/banner/update-banner/{id:guid}"
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container d-flex">
+    <EditForm Model="EditModel" enctype="multipart/form-data" Enhance FormName="update-form" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-3">
+            <label class="form-label">Tên</label>
+            <InputText @bind-Value="EditModel.Name" class="form-control">@EditModel.Name</InputText>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ảnh</label>
+            <img src="@_uploadedImgUrl" alt="Banner" style="width: 300px; height: auto;"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Chọn ảnh mới</label>
+            <InputFile OnChange="LoadFile" class="form-control" />
+        </div>
+        <div class="mb-3 justify-content-center">
+            <input type="submit" class="btn btn-success" value="Sửa" />
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public Guid BannerId { get; set; }
+
+    [SupplyParameterFromForm(FormName = "update-form")]
+    private FileModel EditModel { get; set; } = new();
+    private string _uploadedImgUrl;
+    private string _newUploadedImgUrl;
+    private BannerUpdateRequest request = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(BannerId != Guid.Empty)
+        {
+            var banner = await BannerService.GetById(BannerId);
+            EditModel.Name = banner.Data.Name;
+            _uploadedImgUrl = banner.Data.Image;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {   
+        System.IO.File.Delete("C:\\Users\\MSII\\source\\repos\\MovieTicket\\MovieTicket.BlazorServer\\wwwroot" + _uploadedImgUrl);
+        var file = EditModel.ImageFile;
+        var folderPath = Path.Combine(WebHostEnv.WebRootPath, "./img/banner");
+        var filePath = Path.Combine(folderPath, file.Name);
+        try
+        {
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                using var uploadFile = file.OpenReadStream();
+                await uploadFile.CopyToAsync(fileStream);
+                _newUploadedImgUrl = $"./img/banner/{file.Name}";
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        request.Image = _newUploadedImgUrl;
+        request.Name = EditModel.Name;
+        request.Id = BannerId;
+        ResponseObject<BannerDTO> response = await BannerService.Update(request);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            NavigationManager.NavigateTo("/banner", forceLoad: true);
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+
+    private void LoadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        EditModel.ImageFile = file;
+    }
+
+    private class FileModel
+    {
+        [Required(ErrorMessage = "Chưa nhập tên")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "Chưa chọn ảnh")]
+        public IBrowserFile ImageFile { get; set; }
+    }
+}

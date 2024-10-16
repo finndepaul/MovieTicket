@@ -1,0 +1,202 @@
+﻿@page "/banner"
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+    @* Nút *@
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <button class="btn add-btn" id="btnAdd" data-bs-toggle="modal" data-bs-target="#addBannerModal">
+            <i class="bi bi-plus-square"></i>
+            Thêm banner
+        </button>
+        <button class="btn btn-info me-md-2" style="color:white">
+            <i class="bi bi-arrow-clockwise"></i>
+            Refresh
+        </button>
+    </div>
+    @*Add Modal *@
+    <div class="modal fade" id="addBannerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Thêm Banner</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <MovieTicket.BlazorServer.Components.Pages.Admin.Banner.AddBannerModal />
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Update Modal *@
+    <div class="modal fade" id="updateBannerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Sửa Banner</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <MovieTicket.BlazorServer.Components.Pages.Admin.Banner.UpdateBannerModal BannerId="@guid"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Bảng *@
+    <div class="table-responsive mb-3">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên banner</th>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Ngày tạo</th>
+                    <th scope="col">Sửa lần cuối</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(banners.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var (index, banner) in banners.Select((banner, index) => (index + 1, banner)))
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@banner.Name</td>
+                            <td><img src="@banner.Image" class="object-fit-scale border rounded" alt="Banner" style="width: auto; height: 200px;" /></td>
+                            <td>@banner.CreatedDate</td>
+                            <td>
+                                @if (banner.UpdatedDate == DateTime.MinValue)
+                                {
+                                    <span class="badge text-bg-secondary">Chưa sửa</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-secondary">@banner.UpdatedDate</span>
+                                }
+                            </td>
+                            <td>
+                                @if (banner.Status.Equals("1"))
+                                {
+                                    <span class="badge bg-success">Đang hiển thị</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Ẩn</span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn edit-btn" data-id="@banner.Id" @onclick="() => OpenEditModal(banner.Id)">
+                                    <i class="bi bi-pencil-square"></i>
+                                    Sửa
+                                </button>
+  
+                                <button class="btn btn-danger" data-id="@banner.Id" @onclick="() => ShowDeleteConfirmation(banner.Id)">
+                                    <i class="bi bi-trash"></i>
+                                    Xóa
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+     .add-btn {
+         -webkit-transition: all 0.3s ease-in-out;
+         background-color: #64B5F6;
+         color: #fff;
+     }
+
+     .add-btn:hover {
+         -webkit-transform: scale(1.1);
+             background-color: #64B5F6;
+             color: #fff;
+     }
+
+     .bg-soon{
+         background-color: #B3E5FC;
+         color: #03A9F4;
+         outline: thin solid #03A9F4;
+    }
+
+     .bg-now {
+         background-color: #F1F8E9;
+         color: #76FF03;
+         outline: thin solid #76FF03;
+     }
+     .edit-btn{
+         background-color: #FFA726;
+         color: #fff;
+     }
+     .edit-btn:hover {
+             background-color: #FFA726;
+             color: #fff;
+     }
+
+     .btn {
+         -webkit-transition: all 0.3s ease-in-out;
+     }
+     .btn:hover {
+         -webkit-transform: scale(1.1);
+     }
+</style>
+
+<script>
+    function openModal(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+</script>
+@code {
+    private Guid deleteId;
+    private bool showConfirmation;
+    private Guid guid;
+    private List<BannerDTO> banners = new();
+
+    protected async override Task OnInitializedAsync()
+    {
+        banners = await BannerService.GetBannersAsync();
+    }
+
+    private async Task OpenEditModal(Guid id)
+    {
+        guid = id;
+        Task.Delay(300);
+        await JSRuntime.InvokeVoidAsync("openModal", "updateBannerModal");
+    }
+
+    private async void ShowDeleteConfirmation(Guid id)
+    {
+        deleteId = id;
+        showConfirmation = true;
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            await DeleteBanner();
+        }
+    }
+
+    private async Task DeleteBanner()
+    {   
+        var response = await BannerService.Delete(deleteId);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            NavigationManager.NavigateTo("/banner", forceLoad: true);
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+}

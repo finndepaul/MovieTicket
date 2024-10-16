@@ -6,43 +6,32 @@
 
 <div class="container-fluid">
 	<div class="row my-3">
-		<div class="col mx-2 p-3"
-			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-                transition: 0.3s;border-radius: 10px;
-		  ">
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
 			<div class="card-body">
 				<h5 class="card-title">Doanh thu trong ngày</h5>
 				<p class="card-text fs-1 fw-semibold">@generalDto.DailyRevenue</p>
 			</div>
 		</div>
-		<div class="col mx-2 p-3"
-			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            transition: 0.3s;border-radius: 10px;
-	  ">
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
 			<div class="card-body">
 				<h5 class="card-title">Khách hàng mới</h5>
 				<p class="card-text fs-1 fw-semibold">@generalDto.NewCustomer</p>
 			</div>
 		</div>
-		<div class="col mx-2 p-3"
-			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            transition: 0.3s;border-radius: 10px;
-	  ">
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
 			<div class="card-body">
 				<h5 class="card-title">Tổng vé bán ra (@date.Month/@date.Year)</h5>
 				<p class="card-text fs-1 fw-semibold">@generalDto.TotalTicketsSold</p>
 			</div>
 		</div>
-		<div class="col mx-2 p-3"
-			 style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            transition: 0.3s;border-radius: 10px;
-	  ">
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
 			<div class="card-body">
 				<h5 class="card-title">Tổng doanh thu (@date.Month/@date.Year)</h5>
 				<p class="card-text fs-1 fw-semibold">@generalDto.TotalRevenue</p>
 			</div>
 		</div>
 	</div>
+
 	<div class="row" style="width: 100%;">
 		<div class="w-50 col">
 			<h2 class="fw-semibold fs-5" style="text-align:center">Top bài viết được xem nhiều nhất</h2>
@@ -53,15 +42,14 @@
 			<canvas id="topRevenue"></canvas>
 		</div>
 	</div>
-	<hr class="m-5"/>
+
+	<hr class="m-5" />
 
 	<div class="row">
 		<div class="w-50 col">
 			<div class="d-flex justify-content-between">
 				<h2 class="fw-bold">Doanh thu theo Phim</h2>
-				<NavLink href="revenue-by-movie" class="icon-link icon-link-hover fs-4">
-					Xem tất cả
-				</NavLink>
+				<NavLink href="revenue-by-movie" class="icon-link icon-link-hover fs-4">Xem tất cả</NavLink>
 			</div>
 			<div>
 				<table class="table table-hover">
@@ -73,7 +61,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var item in revenueByMovieDtos.Take(2))
+						@foreach (var item in revenueByMovieDtos)
 						{
 							<tr>
 								<th scope="row">@item.FilmName</th>
@@ -81,34 +69,15 @@
 								<td>@item.TotalRevenue</td>
 							</tr>
 						}
-						
 					</tbody>
-				</table>
-				<nav class="d-flex justify-content-end" aria-label="Page navigation example">
-					<ul class="pagination">
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
+				</table>				
 			</div>
 		</div>
+
 		<div class="w-50 col">
 			<div class="d-flex justify-content-between">
 				<h2 class="fw-bold">Doanh thu theo Rạp</h2>
-				<NavLink class="icon-link fs-4 icon-link-hover" href="revenue-by-cinema">
-					Xem tất cả
-				</NavLink>
+				<NavLink class="icon-link fs-4 icon-link-hover" href="revenue-by-cinema">Xem tất cả</NavLink>
 			</div>
 			<div>
 				<table class="table table-hover">
@@ -120,7 +89,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						@foreach (var item in revenueByCinemaDtos.Take(2))
+						@foreach (var item in revenueByCinemaDtos)
 						{
 							<tr>
 								<th scope="row">@item.Name</th>
@@ -130,93 +99,113 @@
 						}
 					</tbody>
 				</table>
-				<nav class="d-flex justify-content-end" aria-label="Page navigation example">
-					<ul class="pagination">
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item"><a class="page-link" href="#">2</a></li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item">
-							<a class="page-link" href="#" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
 			</div>
 		</div>
 	</div>
 </div>
-
 @code {
 	private GeneralDto generalDto = new GeneralDto();
 	private List<RevenueByCinemaDto> revenueByCinemaDtos = new List<RevenueByCinemaDto>();
 	private List<RevenueByMovieDto> revenueByMovieDtos = new List<RevenueByMovieDto>();
+	private List<RevenueByMonthDto> revenueByMonthDtos = new List<RevenueByMonthDto>();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private MetaData metaData { get; set; } = new MetaData();
 	private DateTime date = DateTime.Now;
+	private bool isRendered = false;
+
 	protected override async Task OnInitializedAsync()
-	{
+	{	
+		DateTime start = new DateTime(date.Year, date.Month, 1);
 		generalDto = await _ser.GetAdminGeneralAsync();
-		// revenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year,date.Month,1),new DateTime(date.Year,date.Month,DateTime.DaysInMonth(date.Year,date.Month)));
-		//revenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
+		var dataRevenueByCinemaDtos = await _ser.GetListRevenueByCinemaAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
+		revenueByCinemaDtos = dataRevenueByCinemaDtos.Item.ToList();
+		var dataRevenueByMovieDtos = await _ser.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
+		revenueByMovieDtos = dataRevenueByMovieDtos.Item.ToList();
+		revenueByMonthDtos = await _ser.RevenueByMonthDto();
+		StateHasChanged();
+	}
+
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !isRendered)
+		{
+			// Thêm thời gian chờ ngắn
+			await Task.Delay(100);
+
+			if (revenueByMonthDtos != null && revenueByMonthDtos.Any())
+			{
+				var revenueData = revenueByMonthDtos.Select(r => new { r.Month, r.Year, r.TotalRevenue }).ToList();
+				await JSRuntime.InvokeVoidAsync("updateCharts", revenueData);
+			}
+			else
+			{
+				Console.WriteLine("Dữ liệu revenueByMonthDtos rỗng hoặc null.");
+			}
+
+			isRendered = true;
+		}
 	}
 }
+
 <script>
-	var articleTop = document.getElementById('topArticle');
-	var revenueTop = document.getElementById('topRevenue');
-	var labels = ['DeadPool', 'Conan Movie 27', '15 phim...', 'Top 10 phim bộ', 'Top 10 phim lẻ'];
-	var currentMonthIndex = new Date().getMonth();
+	function updateCharts(revenueData) {
+		var articleTop = document.getElementById('topArticle');
+		var revenueTop = document.getElementById('topRevenue');
 
-	var months = [
-		'Tháng 1',
-		'Tháng 2',
-		'Tháng 3',
-		'Tháng 4',
-		'Tháng 5',
-		'Tháng 6',
-		'Tháng 7',
-		'Tháng 8',
-		'Tháng 9',
-		'Tháng 10',
-		'Tháng 11',
-		'Tháng 12'
-	];
+		// Biểu đồ lượt xem bài viết
+		new Chart(articleTop, {
+			type: 'bar',
+			data: {
+				labels: ['DeadPool', 'Conan Movie 27', '15 phim...', 'Top 10 phim bộ', 'Top 10 phim lẻ'],
+				datasets: [{
+					label: 'Lượt xem',
+					data: [25, 19, 17, 17, 15],
+					borderWidth: 1
+				}]
+			}
+		});
 
-	// Tạo mảng để lưu 5 tháng trước
-	var lastFiveMonths = [];
-
-	// Lặp để lấy 5 tháng trước
-	for (let i = 1; i <= 5; i++) {
-		var monthIndex = (currentMonthIndex - i + 12) % 12; // Xử lý trường hợp tháng âm
-		lastFiveMonths.push(months[monthIndex]);
-	}
-
-	new Chart(articleTop, {
-		type: 'bar',
-		data: {
-			labels: labels,
-			datasets: [{
-				label: 'Lượt xem',
-				data: [25, 19, 17, 17, 15],
-				borderWidth: 1
-			}]
-		},
-	});
-
-	new Chart(revenueTop, {
-		type: 'line',
-		data: {
-			labels: lastFiveMonths,
-			datasets: [{
-				label: 'Doanh thu',
-				data: [20000000, 40000000, 70000000, 10000000, 90000000],
-				fill: false,
-				borderColor: 'rgb(75, 192, 192)',
-				tension: 0.1
-			}]
+		// Kiểm tra dữ liệu doanh thu trước khi vẽ biểu đồ
+		if (!revenueData || revenueData.length === 0) {
+			console.error(revenueData);
+			return;
 		}
-	});
+
+		// Biểu đồ doanh thu theo tháng
+		var labels = revenueData.map(item => `${item.month}/${item.year}`);
+		var data = revenueData.map(item => item.totalRevenue);
+
+		new Chart(revenueTop, {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Doanh thu',
+					data: data,
+					fill: false,
+					borderColor: 'rgb(75, 192, 192)',
+					tension: 0.1
+				}]
+			},
+			options: {
+				responsive: true,
+				scales: {
+					y: {
+						beginAtZero: true,
+						title: {
+							display: true,
+							text: 'Doanh thu'
+						}
+					},
+					x: {
+						title: {
+							display: true,
+							text: 'Tháng/Năm'
+						}
+					}
+				}
+			}
+		});
+	}
 </script>

@@ -6,9 +6,8 @@ public class Seat
 {
     public Guid Id { get; set; }
 
-    public Guid? SeatTypeId { get; set; }
-
     public Guid? CinemaId { get; set; }
+    public Guid? SeatTypeId { get; set; }
 
     public string? Position { get; set; }
 

@@ -1,12 +1,11 @@
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using MovieTicket.BlazorServer.Authentication;
 using MovieTicket.BlazorServer.Components;
 using MovieTicket.BlazorServer.Services.Implements;
 using MovieTicket.BlazorServer.Services.Interfaces;
+
 using System.ComponentModel;
 using System.Text;
 
@@ -29,14 +28,27 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<IAuthenService, AuthenService>();
             builder.Services.AddScoped<IUserHomeService, UserHomeService>();
             builder.Services.AddScoped<IFilmService, FilmService>();
-            builder.Services.AddScoped<IScreenTypeService, ScreenTypeService>();
+            builder.Services.AddScoped<IScreenTypeServices, ScreenTypeServices>();
             builder.Services.AddScoped<ITranslationTypeService, TranslationTypeService>();
             builder.Services.AddScoped<IFileUpload, FileUpload>();
             builder.Services.AddScoped<IAdminHomeService, AdminHomeService>();
             builder.Services.AddScoped<IScheduelService, ScheduelService>();
+            builder.Services.AddScoped<ICinemaService, CinemaService>();
+            builder.Services.AddScoped<IBannerService, BannerService>();
+            builder.Services.AddScoped<ICinemaCenterService, CinemaCenterService>();
+            builder.Services.AddScoped<ITicketPriceService, TicketPriceService>();
+            builder.Services.AddScoped<ICinemaTypeService, CinemaTypeService>();
+            builder.Services.AddScoped<ISeatTypeService, SeatTypeService>();
+            builder.Services.AddScoped<IScreeningDayService, ScreeningDayService>();
+
             builder.Services.AddAuthentication()
-                     .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
+               .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
             builder.Services.AddSingleton<AppState>();
+
+            var cultureInfo = new CultureInfo("en-UK");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

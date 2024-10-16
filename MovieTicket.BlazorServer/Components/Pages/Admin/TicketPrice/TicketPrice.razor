@@ -1,0 +1,206 @@
+﻿@page "/ticket-price"
+@using MovieTicket.Application.DataTransferObjs.CinemaType
+@using MovieTicket.Application.DataTransferObjs.ScreenType
+@using MovieTicket.Application.DataTransferObjs.ScreeningDay
+@using MovieTicket.Application.DataTransferObjs.SeatType
+@using MovieTicket.Application.DataTransferObjs.TicketPrice
+@using MovieTicket.Application.ValueObjs.Paginations
+@using MovieTicket.BlazorServer.Helper
+@attribute [Authorize(Roles = "Admin")]
+@inject ITicketPriceService _serTicketPrice;
+@inject IScreeningDayService _serScreeningDay;
+@inject IScreenTypeServices _serScreenType;
+@inject ICinemaTypeService _serCinemaType;
+@inject ISeatTypeService _serSeatType;
+<div class="modal fade" id="CreateTicketPriceModalToggle" aria-hidden="true" aria-labelledby="CreateTicketPriceToggleLabel" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="CreateTicketPriceToggleLabel">Tạo giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<CreateTicketPrice />
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="UpdateTicketPriceModalToggle" aria-hidden="true" aria-labelledby="UpdateTicketPriceToggleLabel" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="UpdateTicketPriceToggleLabel">Sửa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<UpdateTicketPrice Id="@SelectTicketPriceId" />
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="DeleteTicketPriceModalToggle" aria-hidden="true" aria-labelledby="DeleteTicketPriceToggleLabel" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="DeleteTicketPriceToggleLabel">Xác nhận xóa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				
+				<p>Bạn có chắc chắn muốn xóa giá vé này không?</p>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteAsync(SelectTicketPriceId)">Xóa</button>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="mb-3">
+	<!--Create Ticket Price-->
+	<a class="btn btn-primary me-2" data-bs-toggle="modal" href="#CreateTicketPriceModalToggle" role="button">
+		<i class="bi bi-plus-lg"></i> Tạo giá vé
+	</a>
+	<a class="btn btn-info bg-opacity-25 text-light" role="button" @onclick="Refresh">
+		<i class="bi bi-arrow-clockwise"></i>Refresh
+	</a>
+
+</div>
+<table class="table align-middle" style="table-layout: fixed">
+	<thead class="">
+		<tr class="">
+			<th><p class="border-end mb-0">Loại ghế</p></th>
+			<th><p class="border-end mb-0">Hình thức chiếu</p></th>
+			<th><p class="border-end mb-0">Loại ngày áp dụng</p></th>
+			<th><p class="border-end mb-0">Loại phòng chiếu</p></th>
+			<th><p class="border-end mb-0">Giá vé</p></th>
+			<th><p class="border-end mb-0">Trạng thái</p></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (ticketPrice != null)
+		{
+			@foreach (var item in ticketPrice)
+			{
+				<tr>
+					<td scope="row"><span class="p-2 m-2 badge seat-@item.SeatName">@item.SeatName</span></td>
+					<td><span class="p-2 m-2 badge screentype-@item.Type">@item.Type</span></td>
+					<td><span class="p-2 m-2 badge screenday-@item.Day">@item.Day</span></td>
+					<td><span class="p-2 m-2 badge cinematype-@item.CinemaTypeName.Replace(" ","")">@item.CinemaTypeName</span></td>
+					<td><span class="">@item.Price.Value.ToString("#,##0")</span></td>
+
+					<td>
+						@if (item.Status == Domain.Enums.TicketPriceStatus.Active)
+						{
+							<span class="p-2 m-2 badge status-Active">Đang kích hoạt</span>
+						}
+						else
+						{
+							<span class="p-2 m-2 badge status-Inactive">Ngưng kích hoạt</span>
+						}
+					</td>
+					<td>
+						<span class="p-2 m-2 badge text-light bg-primary" data-id="@item.Id" role="button" @onclick="() => GetTicketPriceUpdateId(item.Id.ToString())">
+							<i class="bi bi-pencil-square fs-6"></i>
+						</span>
+						<span class="p-2 m-2 badge text-light bg-danger" @onclick="() => GetTicketPriceDeleteId(item.Id.ToString())">
+							<i class="bi bi-trash3 fs-6"></i>
+						</span>
+					</td>
+
+				</tr>
+			}
+		}
+		else
+		{
+			<tr>
+				<td colspan="7"><div class="loader"></div></td>
+			</tr>
+		}
+	</tbody>
+	<tfoot>
+		<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+	</tfoot>
+</table>
+
+<style>
+	.status-Active {
+		color: white;
+		background-color: rgb(102, 187, 106);
+		border-radius: 10px;
+		padding: 5px;
+	}
+
+	.status-Inactive {
+		color: white;
+		background-color: rgb(239, 83, 80);
+		border-radius: 10px;
+		padding: 5px;
+	}
+</style>
+<script>
+	function openModalUpdate(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}	
+	function openModalDelete(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}
+</script>
+
+@code {
+	private string SelectTicketPriceId { get; set; }
+	private List<TicketPriceDto> ticketPrice;
+	private PagingParameters pagingParameters = new PagingParameters();
+	private MetaData metaData { get; set; } = new MetaData();
+	protected async override Task OnInitializedAsync()
+	{
+		await Refresh();
+	}
+	private async Task Refresh()
+	{
+		var pagination = await _serTicketPrice.GetAllAsync(new PagingParameters()
+		{
+			PageNumber = pagingParameters.PageNumber,
+			PageSize = 10
+		});
+		ticketPrice = pagination.Item.ToList();
+		metaData = pagination.MetaData;
+		StateHasChanged();
+	}
+	private async Task GetTicketPriceUpdateId(string id)
+	{
+		SelectTicketPriceId = id;
+	
+			await JSRuntime.InvokeVoidAsync("openModalUpdate", "UpdateTicketPriceModalToggle");  // Mở modal sửa
+
+	}	
+	private async Task GetTicketPriceDeleteId(string id)
+	{
+		SelectTicketPriceId = id;
+		await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteTicketPriceModalToggle");
+	}
+	private async Task SelectedPage(int page)
+	{
+		pagingParameters.PageNumber = page;
+		await Refresh();
+	}
+	private async Task HandleDeleteAsync(string id)
+	{
+		var result = await _serTicketPrice.Delete(Guid.Parse(id));
+
+		if (result.Status == 200)
+		{
+			await JSRuntime.ToastrSuccess(result.Message);
+			NavigationManager.NavigateTo("/ticket-price", forceLoad: true);
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result.Message);
+		}
+		
+	}
+}

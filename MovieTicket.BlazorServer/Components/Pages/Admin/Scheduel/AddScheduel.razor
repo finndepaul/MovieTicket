@@ -39,7 +39,11 @@
 </EditForm>
 
 @code {
-    private CreateScheduleRequest request = new CreateScheduleRequest();
+    private CreateScheduleRequest request = new CreateScheduleRequest
+        {
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now
+        };
     private IQueryable<FilmForCreateDto> Films { get; set; }
     private string SelectedFilmReleaseDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
     string selectedFilmId;

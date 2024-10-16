@@ -18,15 +18,20 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <style>
-        .modal-header, h4, .btn-close {
+        .modal-header, h4 {
             background-color: #031529;
             color: white !important;
             text-align: center;
             font-size: 30px;
         }
 
+            .modal-header .btn-close {
+                --bs-btn-close-color: white;
+            }
         .modal-footer {
             background-color: #f9f9f9;
         }
