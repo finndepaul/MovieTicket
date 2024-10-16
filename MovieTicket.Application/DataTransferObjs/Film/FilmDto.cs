@@ -1,4 +1,8 @@
-﻿using MovieTicket.Domain.Enums;
+﻿using MovieTicket.Application.DataTransferObjs.ScreenType;
+using MovieTicket.Application.DataTransferObjs.TranslationType;
+using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
+using System.ComponentModel;
 
 namespace MovieTicket.Application.DataTransferObjs.Film
 {
@@ -37,10 +41,7 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public string? Language { get; set; }
 
         public DateTime? CreatDate { get; set; }
-
-        public List<Guid>? ScreenTypeIds { get; set; } = new List<Guid>();
-
-        public List<Guid>? TranslationTypeIds { get; set; } = new List<Guid>();
-
+        public List<ScreenTypeDto> ScreenTypeDtos { get; set; } = new List<ScreenTypeDto>();
+        public List<TranslationTypeDto> TranslationTypeDtos { get; set; } = new List<TranslationTypeDto>();
     }
 }

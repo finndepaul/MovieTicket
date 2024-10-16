@@ -1,15 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using MovieTicket.Application.DataTransferObjs.Film;
-using MovieTicket.Application.DataTransferObjs.ScreenType;
-using MovieTicket.Application.DataTransferObjs.TranslationType;
-using MovieTicket.BlazorServer.Services.Interfaces.IFilmService;
-using MovieTicket.Domain.Entities;
-using System.ComponentModel;
-using System.Globalization;
-using System.Text.Json;
+﻿using MovieTicket.Application.DataTransferObjs.Film;
+using MovieTicket.BlazorServer.Services.Interfaces;
 
-namespace MovieTicket.BlazorServer.Services.Implements.FilmService
+namespace MovieTicket.BlazorServer.Services.Implements
 {
     public class FilmService : IFilmService
     {
@@ -44,6 +36,7 @@ namespace MovieTicket.BlazorServer.Services.Implements.FilmService
             var response = await _httpClient.PutAsJsonAsync($"api/Film/Update?id={id}", filmUpdateRequest);
             return await response.Content.ReadFromJsonAsync<FilmDto>();
         }
+
 
         public async Task<FilmDto> DeleteFilm(Guid id)
         {

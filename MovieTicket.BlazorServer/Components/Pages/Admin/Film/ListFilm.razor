@@ -1,6 +1,5 @@
 ﻿@page "/list-film"
 @using MovieTicket.Application.DataTransferObjs.Film
-@using MovieTicket.BlazorServer.Services.Interfaces.IFilmService
 @using MovieTicket.Domain.Enums
 @inject IFilmService FilmService
 @inject NavigationManager NavigationManager
@@ -22,6 +21,24 @@
     }
 </style>
 
+<div class="modal fade" id="DeleteFilmModalToggle" aria-hidden="true" aria-labelledby="DeleteFilmModalToggle" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="DeleteFilmModalToggle">Xác nhận xóa phim</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p>Bạn có chắc chắn muốn xóa phim này không?</p>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteFilm(SelectedDeleteFilmId)">Xóa</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid">
     <button class="btn btn-primary mb-3" @onclick="CreateFilm">+ Tạo phim</button>
 
@@ -40,23 +57,17 @@
                 </tr>
             </thead>
             <tbody>
-                @if (filmDto.Any())
+                @if (filmDto != null) 
                 {
-                    @if (filmDto == null)
-                    {
-                        <tr>
-                            <td colspan="6"><em>Loading...</em></td>
-                        </tr>
-                    }
-                    else
+                    @if (filmDto.Any())
                     {
                         @foreach (var film in filmDto)
                         {
-                            <tr>
-                                <td><a href="#" class="text-decoration-none">@film.Name</a></td>
+                            <tr class="align-middle">
+                                <td>@film.Name</td>
                                 <td>@film.ReleaseYear</td>
                                 <td>
-                                    <span class="badge bg-primary">@film.Gerne</span>
+                                    <span class="badge text-bg-primary" style="white-space: normal; width: 200px;">@film.Gerne</span>
                                 </td>
                                 <td class="text-danger">@film.StartDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
@@ -65,19 +76,26 @@
                                 <td>@film.CreatDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
                                     <a class="btn btn-outline-primary" href="@($"film/update/{film.Id}")">Update</a>
-                                    <button class="btn btn-outline-danger" @onclick="(() => DeleteFilm(film.Id))">Delete</button>
+                                    <button class="btn btn-outline-danger" @onclick="() => GetFilmDeleteId(film.Id)">Delete</button>
                                 </td>
                             </tr>
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6"><em>No film found</em></td>
+                        </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="6"><em>No film found</em></td>
+                        <td colspan="6"><em>Loading...</em></td>
                     </tr>
                 }
             </tbody>
+
         </table>
     </div>
 
@@ -94,20 +112,40 @@
         </ul>
     </nav>
 </div>
-
+<script>
+    function openModalDelete(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+</script>
 @code {
     private IEnumerable<FilmDto> filmDto { get; set; } = new List<FilmDto>();
+
+    private Guid SelectedDeleteFilmId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         filmDto = await FilmService.GetAllFilms();
     }
 
-    private async Task DeleteFilm(Guid id)
+    private async Task GetFilmDeleteId(Guid id)
     {
-        await FilmService.DeleteFilm(id);
-        await _JSRuntime.ToastrSuccess("Delete film successfully");
-        filmDto = await FilmService.GetAllFilms();
+        SelectedDeleteFilmId = id;
+        await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteFilmModalToggle");
+    }
+
+    private async Task HandleDeleteFilm(Guid id)
+    {
+        var result = await FilmService.DeleteFilm(id);
+        if (result != null)
+        {
+            await _JSRuntime.ToastrSuccess("Delete film successfully");
+            filmDto = await FilmService.GetAllFilms();
+        }
+        else
+        {
+            await _JSRuntime.ToastrError("Delete film failed");
+        }
     }
     private void CreateFilm()
     {

@@ -45,7 +45,7 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public int? ReleaseYear { get; set; }
         [Range(1, 500, ErrorMessage = "Running time must be between 1 and 500 minutes.")]
         public int? RunningTime { get; set; }
-
+        [EnumDataType(typeof(FilmStatus), ErrorMessage = "Invalid status.")]
         public FilmStatus? Status { get; set; }
 
         [StringLength(255, ErrorMessage = "Nation must not exceed 255 characters.")]
@@ -56,9 +56,10 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         [StringLength(255, ErrorMessage = "Language must not exceed 255 characters.")]
         public string? Language { get; set; }
 
-        public List<Guid>? ScreenTypeIds { get; set; } = new List<Guid>();
-
-        public List<Guid>? TranslationTypeIds { get; set; } = new List<Guid>();
+        [Required(ErrorMessage = "Screen types are required.")]
+        public List<Guid> ScreenTypeIds { get; set; } = new List<Guid>();
+        [Required(ErrorMessage = "Translation types are required.")]
+        public List<Guid> TranslationTypeIds { get; set; } = new List<Guid>();
 
         public static ValidationResult? ValidateStartDate(DateTime? startDate, ValidationContext context)
         {

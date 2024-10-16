@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using MovieTicket.Application.DataTransferObjs.AdminHome;
-using MovieTicket.Application.ValueObjs.Paginations;
-using MovieTicket.BlazorServer.Services.Interfaces;
+
 using System.Net.Http.Json;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
-    public class AdminHomeService : IAdminHomeService
-    {
-        private readonly HttpClient _httpClient;
+	public class AdminHomeService : IAdminHomeService
+	{
+		private readonly HttpClient _httpClient;
 
         public AdminHomeService(HttpClient httpClient)
         {

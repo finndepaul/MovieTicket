@@ -1,9 +1,8 @@
 ﻿using MovieTicket.Application.DataTransferObjs.ScreenType;
-using MovieTicket.BlazorServer.Services.Interfaces;
-using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService;
+
 using System.Net.Http;
 
-namespace MovieTicket.BlazorServer.Services.Implements.ScreenTypeService
+namespace MovieTicket.BlazorServer.Services.Implements
 {
     public class ScreenTypeService : IScreenTypeServices
     {

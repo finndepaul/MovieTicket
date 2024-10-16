@@ -2,9 +2,6 @@
 @using MovieTicket.Application.DataTransferObjs.Film
 @using MovieTicket.Application.DataTransferObjs.ScreenType
 @using MovieTicket.Application.DataTransferObjs.TranslationType
-@using MovieTicket.BlazorServer.Services.Interfaces.IFilmService
-@using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService
-@using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService
 @using MovieTicket.Domain.Enums
 @inject IFilmService FilmService
 @inject IFileUpload FileUploadService
@@ -25,8 +22,7 @@
             </div>
             <div class="col-md-6">
                 <label for="hinhThucChieu" class="form-label">Hình thức chiếu</label>
-                <select class="form-select" id="hinhThucChieu" @bind="selectedScreenTypeId">
-                    <option selected>Select a screen type</option>
+                <select class="form-select" id="hinhThucChieu" @onchange="OnScreenTypeChange" multiple>
                     @foreach (var screenType in screenTypes)
                     {
                         <option value="@screenType.Id">@screenType.Type</option>
@@ -148,7 +144,7 @@
     private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
     private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
 
-    private Guid selectedScreenTypeId;
+    private List<Guid> selectedScreenTypeIds;
     private Guid translationTypeId;
 
     protected override async Task OnInitializedAsync()
@@ -164,7 +160,7 @@
         {
             filmCreateRequest.Poster = await FileUploadService.UploadFile(posterFile);
         }
-        filmCreateRequest.ScreenTypeIds = new List<Guid> { selectedScreenTypeId };
+        filmCreateRequest.ScreenTypeIds = selectedScreenTypeIds ;
         filmCreateRequest.TranslationTypeIds = new List<Guid> { translationTypeId };
         await FilmService.CreateFilm(filmCreateRequest);
         await _JSRuntime.ToastrSuccess("Create film successfully");
@@ -179,5 +175,9 @@
     {
         NavigationManager.NavigateTo("/list-film");
     }
-
+    private void OnScreenTypeChange(ChangeEventArgs e)
+    {
+        var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
+        selectedScreenTypeIds = selectedOptions;
+    }
 }

@@ -4,14 +4,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MovieTicket.BlazorServer.Authentication;
 using MovieTicket.BlazorServer.Components;
 using MovieTicket.BlazorServer.Services.Implements;
-using MovieTicket.BlazorServer.Services.Implements.FilmService;
-using MovieTicket.BlazorServer.Services.Implements.ScreenTypeService;
-using MovieTicket.BlazorServer.Services.Implements.TranslationTypeService;
 using MovieTicket.BlazorServer.Services.Interfaces;
-using MovieTicket.BlazorServer.Services.Interfaces.IFilmService;
-using MovieTicket.BlazorServer.Services.Interfaces.IScreenTypeService;
-using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService;
-using System.Globalization;
+
 using System.ComponentModel;
 using System.Text;
 
@@ -46,6 +40,7 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<ICinemaTypeService, CinemaTypeService>();
             builder.Services.AddScoped<ISeatTypeService, SeatTypeService>();
             builder.Services.AddScoped<IScreeningDayService, ScreeningDayService>();
+
             builder.Services.AddAuthentication()
                .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
             builder.Services.AddSingleton<AppState>();
