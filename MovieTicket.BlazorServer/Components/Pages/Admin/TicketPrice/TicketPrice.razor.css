@@ -5,13 +5,13 @@
     border: 1px solid rgba(var(--bs-primary-rgb));
 }
 /*warning*/
-.seat-VIP, .screenday-T2-CN, .cinematype-GoldClass {
+.seat-VIP, .screenday-T2-CN, .cinematype-GoldClass ,.screentype-4DX {
     background-color: rgb(255, 249, 230);
     color: rgba(var(--bs-warning-rgb));
     border: 1px solid rgba(var(--bs-warning-rgb));
 }
 /*success*/
-.screentype-IMAX, .cinematype-PremiumClass {
+.screentype-IMAX, .cinematype-4DX {
     background-color: rgb(232, 243, 238);
     color: rgba(var(--bs-success-rgb));
     border: 1px solid rgba(var(--bs-success-rgb));
@@ -23,13 +23,13 @@
     border: 1px solid rgba(var(--bs-secondary-rgb));
 }
 /*danger*/
-.screenday-T7-CN {
+.screenday-T7-CN, .cinematype-IMAX {
     background-color: rgb(251, 234, 236);
     color: rgba(var(--bs-danger-rgb));
     border: 1px solid rgba(var(--bs-danger-rgb));
 }
 /*pink*/
-.seat-Couple {
+.seat-Couple, .cinematype-PremiumClass {
     background-color: rgb(248, 187, 208);
     color: rgb(236, 64, 122);
     border: 1px solid rgb(236, 64, 122);

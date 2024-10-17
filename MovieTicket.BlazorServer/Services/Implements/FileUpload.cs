@@ -35,7 +35,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
         public async Task<string> UploadFile(IBrowserFile file)
         {
             var fileName = $"{Path.GetFileNameWithoutExtension(file.Name)}_{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "PosterFilm", fileName);
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "img/posterFilm", fileName);
 
             await using var fileStream = new FileStream(filePath, FileMode.Create);
             await file.OpenReadStream().CopyToAsync(fileStream);
