@@ -489,6 +489,28 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 			});
 			modelBuilder.Entity<Account>().HasData(accounts);
 
+			var filmFaker = new Faker<Film>()
+			.RuleFor(f => f.Id, f => Guid.NewGuid())
+			.RuleFor(f => f.Name, f => $"Mộ đom đóm (Lần {f.IndexFaker})")
+			.RuleFor(f => f.EnglishName, f => $"Grave of the Fireflies (English)")
+			.RuleFor(f => f.Trailer, f => "https://youtu.be/p6jOf_uDeH8")
+			.RuleFor(f => f.Description, f => f.Lorem.Sentence())
+			.RuleFor(f => f.Gerne, f => f.PickRandom("Romantic", "School Love"))
+			.RuleFor(f => f.Director, f => f.Name.FullName())
+			.RuleFor(f => f.Cast, f => $"{f.Name.FirstName()} {f.Name.LastName()}")
+			.RuleFor(f => f.Rating, f => f.PickRandom(12, 16, 18))
+			.RuleFor(f => f.StartDate, f => DateTime.Now)
+			.RuleFor(f => f.ReleaseYear, 2024)
+			.RuleFor(f => f.RunningTime, f => f.Random.Int(60, 180))
+			.RuleFor(f => f.Status, Domain.Enums.FilmStatus.NowShowing)
+			.RuleFor(f => f.Nation, f => f.PickRandom("USA", "Japan"))
+			.RuleFor(f => f.Poster, "film_modomdom.jpg")
+			.RuleFor(f => f.Language, f => f.PickRandom("English", "Japanese"))
+			.RuleFor(f => f.CreatDate, f => DateTime.Now);
+			// Generate list of films
+			var films = filmFaker.Generate(15);
+			modelBuilder.Entity<Film>().HasData(films);
+
 			// Faker for Membership
 			var membershipFaker = new Faker<Membership>()
 				.RuleFor(m => m.Id, Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"))
@@ -581,6 +603,69 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 
 			var translationTypes = translationTypeFaker.Generate(4); // Sinh ra đúng 4 loại dịch thuật
 			modelBuilder.Entity<TranslationType>().HasData(translationTypes);
+
+			// Faker for FilmScreenType
+			var filmScreenTypeFaker = new List<FilmScreenType>();
+
+			// Bước 1: Đảm bảo mỗi FilmId xuất hiện ít nhất một lần
+			foreach (var film in films)
+			{
+				var filmScreenType = new Faker<FilmScreenType>()
+					.RuleFor(f => f.FilmId, f => film.Id)
+					.RuleFor(f => f.ScreenTypeId, f => screenTypes[f.Random.Int(0, screenTypes.Count - 1)].Id)
+					.Generate();
+
+				filmScreenTypeFaker.Add(filmScreenType);
+			}
+			// Generate list of film screen types
+			modelBuilder.Entity<FilmScreenType>().HasData(filmScreenTypeFaker);
+			//fake for FilmTranslationType
+			var filmTranslationTypeFaker = new List<FilmTranslationType>();
+
+			// Bước 1: Đảm bảo mỗi FilmId xuất hiện ít nhất một lần
+			foreach (var film in films)
+			{
+				var filmTranslationType = new Faker<FilmTranslationType>()
+					.RuleFor(f => f.FilmId, f => film.Id)
+					.RuleFor(f => f.TranslationTypeId, f => translationTypes[f.Random.Int(0, translationTypes.Count - 1)].Id)
+					.Generate();
+
+				filmTranslationTypeFaker.Add(filmTranslationType);
+			}
+			// Generate list of film translation types
+			modelBuilder.Entity<FilmTranslationType>().HasData(filmTranslationTypeFaker);
+			// Faker for Bill
+			var billFaker = new Faker<Bill>()
+				.RuleFor(b => b.Id, f => Guid.NewGuid())
+				.RuleFor(b => b.TotalMoney, f => f.Finance.Amount(50000, 300000))
+				.RuleFor(b => b.CreateTime, f => f.Date.Between(new DateTime(2024, 9, 1), new DateTime(2024, 10, 30)))
+				.RuleFor(b => b.BarCode, f => $"barcode{f.IndexFaker}.jpg")
+				.RuleFor(b => b.Status, BillStatus.Paid)
+				.RuleFor(b => b.ActivationStatus, true)
+				.RuleFor(b => b.MembershipId, Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"))
+				.RuleFor(b => b.VoucherId, (Guid?)null);
+			var bills = billFaker.Generate(10);
+			modelBuilder.Entity<Bill>().HasData(bills);
+
+			// Faker for Schedule
+			var schedules = new List<Schedule>();
+
+			// Bước 1: Đảm bảo mỗi FilmId xuất hiện ít nhất một lần
+			foreach (var film in films)
+			{
+				var schedule = new Faker<Schedule>()
+					.RuleFor(s => s.Id, f => Guid.NewGuid())
+					.RuleFor(s => s.FilmId, f => film.Id)
+					.RuleFor(s => s.StartDate, f => f.Date.Between(new DateTime(2024, 10, 1), DateTime.Now))
+				.RuleFor(s => s.EndDate, (f, s) => s.StartDate.AddDays(10))
+					.RuleFor(s => s.Type, f => f.PickRandom<ScheduleType>())
+					.RuleFor(s => s.Status, ScheduleStatus.Showing)
+					.Generate();
+
+				schedules.Add(schedule);
+			}
+			// Generate list of schedules
+			modelBuilder.Entity<Schedule>().HasData(schedules);
 
 		}
 	}
