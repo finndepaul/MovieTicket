@@ -31,9 +31,9 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        public async Task<ActionResult> GetById(Guid id)
         {
-            var cinema = await _cinemaReadOnlyRepository.GetCinemaById(id, cancellationToken);
+            var cinema = await _cinemaReadOnlyRepository.GetCinemaById(id);
             return Ok(cinema);
         }
 

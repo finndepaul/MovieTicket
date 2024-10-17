@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Cinema;
+using MovieTicket.Application.DataTransferObjs.Cinema.Request;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
@@ -15,8 +16,17 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
         public async Task<ResponseObject<CinemaDto>> GetCinemaById(Guid id)
         {
-            var respone = await _httpClient.GetFromJsonAsync<ResponseObject<CinemaDto>>($"api/Cinema/GetById?id={id}");
-            return respone;
+            var result = await _httpClient.GetFromJsonAsync<ResponseObject<CinemaDto>>($"api/Cinema/GetById?id={id}");
+            if (result == null)
+            {
+                return new ResponseObject<CinemaDto>
+                {
+                    Status = 404,
+                    Message = "Not found",
+                    Data = null
+                };
+            }
+            return result;
         }
 
         public async Task<IQueryable<CinemaDto>> GetCinemasAsync(string? cinemaCenterName, string? name)
@@ -54,7 +64,25 @@ namespace MovieTicket.BlazorServer.Services.Implements
             }
         }
 
+        public async Task<ResponseObject<CinemaDto>> Create(CinemaCreateRequest request)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/Cinema/Create", request);
+            var result = await response.Content.ReadFromJsonAsync<ResponseObject<CinemaDto>>();
+            return result;
+        }
 
+        public async Task<ResponseObject<CinemaDto>> Update(CinemaUpdateRequest request)
+        {
+            var response = await _httpClient.PutAsJsonAsync("api/Cinema/Update", request);
+            var result = await response.Content.ReadFromJsonAsync<ResponseObject<CinemaDto>>();
+            return result;
+        }
 
+        public async Task<ResponseObject<CinemaDto>> Delete(Guid id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/Cinema/HardDelete?id={id}");
+            var result = await response.Content.ReadFromJsonAsync<ResponseObject<CinemaDto>>();
+            return result;
+        }
     }
 }

@@ -4,8 +4,6 @@ namespace MovieTicket.Application.DataTransferObjs.CinemaCenter
 {
     public class CinemaCenterCreateRequest
     {
-        public Guid Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 

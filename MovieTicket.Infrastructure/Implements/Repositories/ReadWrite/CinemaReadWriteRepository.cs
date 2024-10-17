@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Cinema;
 using MovieTicket.Application.DataTransferObjs.Cinema.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
@@ -113,6 +114,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Data = null
                     };
                 }
+                var seat = await _context.Seats.Where(x => x.CinemaId == id).ToListAsync();
+                _context.Seats.RemoveRange(seat);
                 _context.Cinemas.Remove(model);
                 await _context.SaveChangesAsync();
                 return new ResponseObject<Cinema>

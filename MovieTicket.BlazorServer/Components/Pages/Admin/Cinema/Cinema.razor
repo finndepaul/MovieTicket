@@ -1,0 +1,239 @@
+﻿@page "/cinema"
+@attribute [Authorize(Roles = "Admin")]
+
+@if (_lstCinemaCenters != null)
+{
+    <div class="container-fluid">
+        <!-- Nút -->
+        <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+            <select class="form-select" style="width:auto" @onchange="OnChangeCinemaCenter">
+                <option value="">Chọn rạp</option>
+                @foreach (var item in _lstCinemaCenters)
+                {
+                    <option value="@item.Name">@item.Name</option>
+                }
+            </select>
+            <button class="btn add-btn me-md-2" id="btnAdd" data-id="selectedCinemaCenterName" @onclick="()=>OpenCreateModal(selectedCinemaCenterName)">
+                <i class="bi bi-plus-square"></i>
+                Tạo phòng chiếu
+            </button>
+        </div>
+        <!-- Create Modal -->
+        <div class="modal fade" id="CreateCinemaModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Tạo Phòng chiếu</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <CreateCinemaModal CinemaCenterName="@selectedCinemaCenterName"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Update Modal -->
+        <div class="modal fade" id="UpdateCinemaModal" tabindex="-1" data-id="" data-bs-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sửa Banner</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <UpdateCinemaModal CinemaId="@guid" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bảng -->
+        <div class="table-responsive my-3">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên phòng chiếu</th>
+                        <th scope="col">Loại phòng chiếu</th>
+                        <th scope="col">Số lượng ghế tối đa</th>
+                        <th scope="col">Số hàng</th>
+                        <th scope="col">Số cột</th>
+                        <th scope="col">Ngày tạo</th>
+                        <th scope="col">Sửa lần cuối</th>
+                        <th scope="col">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (_lstCinemas == null || !_lstCinemas.Any())
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        int index = 1; // Biến đếm bắt đầu từ 1
+                        @foreach (var cinema in _lstCinemas)
+                        {
+                            <tr>
+                                <td>@index</td> <!-- Sử dụng biến đếm -->
+                                <td>@cinema.Name</td>
+                                <td>@cinema.CinemaTypeName</td>
+                                <td>@cinema.MaxSeatCapacity</td>
+                                <td>@cinema.Row</td>
+                                <td>@cinema.Column</td>
+                                <td>@cinema.CreateTime</td>
+                                <td>
+                                    @if(cinema.UpdateTime == DateTime.MinValue)
+                                    {
+                                        <span class="badge text-bg-secondary">Chưa sửa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-secondary">@cinema.UpdateTime</span>
+                                    } 
+                                </td>
+                                <td>
+                                    <button class="btn edit-btn" data-id="@cinema.Id" @onclick="() => OpenEditModal(cinema.Id)">
+                                        <i class="bi bi-pencil-square"></i>
+                                        Sửa
+                                    </button>
+                                    <button class="btn btn-danger" data-id="@cinema.Id" @onclick="() => ShowDeleteConfirmation(cinema.Id)">
+                                        <i class="bi bi-trash"></i>
+                                        Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                            index++; // Tăng biến đếm sau mỗi lần lặp
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <h3>Loading...</h3>
+}
+
+<style>
+    .add-btn {
+        -webkit-transition: all 0.3s ease-in-out;
+        background-color: #64B5F6;
+        color: #fff;
+    }
+
+        .add-btn:hover {
+            -webkit-transform: scale(1.1);
+            background-color: #64B5F6;
+            color: #fff;
+        }
+
+    .bg-soon {
+        background-color: #B3E5FC;
+        color: #03A9F4;
+        outline: thin solid #03A9F4;
+    }
+
+    .bg-now {
+        background-color: #F1F8E9;
+        color: #76FF03;
+        outline: thin solid #76FF03;
+    }
+
+    .edit-btn {
+        background-color: #FFA726;
+        color: #fff;
+    }
+
+        .edit-btn:hover {
+            background-color: #FFA726;
+            color: #fff;
+        }
+
+    .btn {
+        -webkit-transition: all 0.3s ease-in-out;
+    }
+
+        .btn:hover {
+            -webkit-transform: scale(1.1);
+        }
+</style>
+
+<script>
+    function openModal(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+</script>
+
+@code {
+    private IQueryable<CinemaCenterDto> _lstCinemaCenters;
+    private IQueryable<CinemaDto> _lstCinemas;
+    private string selectedCinemaCenterName = string.Empty;
+    private Guid guid;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _lstCinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+
+        // Giả sử bạn đã chọn một cinema center nào đó
+        selectedCinemaCenterName = "Tên Rạp Phim"; // Thay thế bằng tên thực tế
+        _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
+    }
+
+    private async Task OnChangeCinemaCenter(ChangeEventArgs e)
+    {
+        selectedCinemaCenterName = e.Value?.ToString();
+        if(string.IsNullOrEmpty(selectedCinemaCenterName))
+        {
+            _lstCinemas = null;
+            return;
+        }
+        _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
+        StateHasChanged();
+    }
+
+    private async void ShowDeleteConfirmation(Guid id)
+    {
+        guid = id;
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Mày chắc chưa?");
+        if (confirmed)
+        {
+            await DeleteCinema();
+        }
+    }
+
+    private async Task DeleteCinema()
+    {
+        var response = await CinemaService.Delete(guid);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+        await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        NavigationManager.NavigateTo("/cinema", forceLoad: true);
+        }
+        else
+        {
+        await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+
+    private async Task OpenEditModal(Guid id)
+    {   
+        guid = id;
+        Task.Delay(300);
+        await JSRuntime.InvokeVoidAsync("openModal", "UpdateCinemaModal");
+    }
+
+    private async Task OpenCreateModal(string cinemaCenterName)
+    {   
+        selectedCinemaCenterName = cinemaCenterName;
+        if (selectedCinemaCenterName == "Tên Rạp Phim")
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn rạp phim trước khi tạo phòng chiếu");
+            NavigationManager.NavigateTo("/cinema", forceLoad: true);
+        }
+        Task.Delay(300);
+        JSRuntime.InvokeVoidAsync("openModal", "CreateCinemaModal");
+    }
+}
