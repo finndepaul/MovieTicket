@@ -22,7 +22,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <MovieTicket.BlazorServer.Components.Pages.Admin.Banner.AddBannerModal />
+                    <AddBannerModal />
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <MovieTicket.BlazorServer.Components.Pages.Admin.Banner.UpdateBannerModal BannerId="@guid"/>
+                    <UpdateBannerModal BannerId="@guid"/>
                 </div>
             </div>
         </div>
@@ -159,7 +159,6 @@
 </script>
 @code {
     private Guid deleteId;
-    private bool showConfirmation;
     private Guid guid;
     private List<BannerDTO> banners = new();
 
@@ -178,8 +177,7 @@
     private async void ShowDeleteConfirmation(Guid id)
     {
         deleteId = id;
-        showConfirmation = true;
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Mày chắc chưa?");
         if (confirmed)
         {
             await DeleteBanner();

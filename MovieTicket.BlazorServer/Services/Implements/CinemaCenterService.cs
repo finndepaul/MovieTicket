@@ -50,7 +50,5 @@ namespace MovieTicket.BlazorServer.Services.Implements
             // Chuyển đổi danh sách thành IQueryable
             return lst.AsQueryable();
         }
-
-
     }
 }

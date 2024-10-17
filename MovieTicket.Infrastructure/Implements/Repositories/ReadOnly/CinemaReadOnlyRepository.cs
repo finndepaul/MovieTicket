@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Cinema;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
@@ -40,41 +41,39 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             return query.AsQueryable();
         }
 
-        //public async Task<IQueryable<CinemaDto>> GetAllCinemasByCenterName(string name, CancellationToken cancellationToken)
-        //{
-        //    return _dbContext.Cinemas.Where(x => x.CinemaCenter.Name == name).Select(c => new CinemaDto
-        //    {
-        //        Id = c.Id,
-        //        Name = c.Name,
-        //        CinemaTypeName = c.CinemaType.Name,
-        //        CinemaCenterName = c.CinemaCenter.Name,
-        //        MaxSeatCapacity = c.MaxSeatCapacity,
-        //        Column = c.Column,
-        //        Row = c.Row,
-        //        Description = c.Description,
-        //        CreateTime = c.CreateTime
-        //    }).AsNoTracking();
-        //}
-
-        public async Task<CinemaDto> GetCinemaById(Guid id, CancellationToken cancellationToken)
+        public async Task<ResponseObject<CinemaDto>> GetCinemaById(Guid id)
         {
-            var result = await _dbContext.Cinemas.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            var result = await _dbContext.Cinemas.FindAsync(id);
             if (result == null)
             {
-                return null;
+                return new ResponseObject<CinemaDto>
+                {
+                    Status = 404,
+                    Message = "Not found",
+                    Data = null
+                };
             }
-            return new CinemaDto
+
+            var cinemaType = await _dbContext.CinemaTypes.FindAsync(result.CinemaTypeId);
+            var cinemaCenter = await _dbContext.CinemaCenters.FindAsync(result.CinemaCenterId);
+
+            return new ResponseObject<CinemaDto>
             {
-                Id = result.Id,
-                Name = result.Name,
-                CinemaTypeName = _dbContext.CinemaTypes.FirstOrDefaultAsync(x => x.Id == result.CinemaTypeId).Result.Name,
-                CinemaCenterName = _dbContext.CinemaCenters.FirstOrDefaultAsync(x => x.Id == result.CinemaCenterId).Result.Name,
-                MaxSeatCapacity = result.MaxSeatCapacity,
-                Column = result.Column,
-                Row = result.Row,
-                Description = result.Description,
-                CreateTime = result.CreateTime,
-                UpdateTime = result.UpdateTime
+                Status = 200,
+                Message = "Success",
+                Data = new CinemaDto
+                {
+                    Id = result.Id,
+                    Name = result.Name,
+                    CinemaTypeName = cinemaType?.Name ?? string.Empty,
+                    CinemaCenterName = cinemaCenter?.Name ?? string.Empty,
+                    MaxSeatCapacity = result.MaxSeatCapacity,
+                    Column = result.Column,
+                    Row = result.Row,
+                    Description = result.Description,
+                    CreateTime = result.CreateTime,
+                    UpdateTime = result.UpdateTime
+                }
             };
         }
     }

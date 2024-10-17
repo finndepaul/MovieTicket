@@ -21,12 +21,19 @@
 @using MovieTicket.Application.DataTransferObjs.Banner
 @using MovieTicket.Application.DataTransferObjs.AdminHome
 @using MovieTicket.Application.ValueObjs.Paginations
+@using MovieTicket.Application.DataTransferObjs.Cinema
+@using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@using MovieTicket.Application.DataTransferObjs.Cinema.Request
+@using MovieTicket.Application.DataTransferObjs.CinemaType
+
 
 @inject IAuthenService AuthenService
 @inject IBannerService BannerService
 @inject ICinemaService CinemaService
 @inject ICinemaCenterService CinemaCenterService
 @inject IAdminHomeService AdminHomeService
+@inject ICinemaCenterService CinemaCenterService
+@inject ICinemaTypeService CinemaTypeService
 
 @inject IJSRuntime JSRuntime
 @inject AppState AppState
