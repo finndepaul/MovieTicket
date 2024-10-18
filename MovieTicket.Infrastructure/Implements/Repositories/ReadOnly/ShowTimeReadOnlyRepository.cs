@@ -42,7 +42,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 								 TranslationTypeName = translationType.Type,
 								 StartTime = showTime.StartTime,
 								 EndTime = showTime.EndTime,
-								 ShowtimeDate = showTime.Schedule.StartDate,
+								 ShowtimeDate = showTime.ShowtimeDate,
 								 Desciption = showTime.Desciption,
 								 Status = showTime.Status
 							 }).AsQueryable();
@@ -80,19 +80,21 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                    where showTime.Id == id
                                    select new ShowTimeDto
                                    {
-                                       Id = showTime.Id,
-                                       CinemaName = cinema.Name,
-                                       CinemaCenterName = cinemaCenter.Name,
-                                       FilmName = film.Name,
-                                       StartDate = schedule.StartDate,
-                                       ScreenTypeName = screenType.Type,
-                                       TranslationTypeName = translationType.Type,
-                                       StartTime = showTime.StartTime,
-                                       EndTime = showTime.EndTime,
-                                       ShowtimeDate = showTime.ShowtimeDate,
-                                       Desciption = showTime.Desciption,
-                                       Status = showTime.Status
-                                   }).FirstOrDefaultAsync();
+									   Id = showTime.Id,
+									   CinemaId = showTime.Cinema.Id,
+									   CinemaCenterId = showTime.CinemaCenter.Id,
+									   CinemaName = cinema.Name,
+									   CinemaCenterName = cinemaCenter.Name,
+									   FilmName = film.Name,
+									   StartDate = schedule.StartDate,
+									   ScreenTypeName = screenType.Type,
+									   TranslationTypeName = translationType.Type,
+									   StartTime = showTime.StartTime,
+									   EndTime = showTime.EndTime,
+									   ShowtimeDate = showTime.ShowtimeDate,
+									   Desciption = showTime.Desciption,
+									   Status = showTime.Status
+								   }).FirstOrDefaultAsync();
             if (showTimes == null)
             {
                 return new ResponseObject<ShowTimeDto>

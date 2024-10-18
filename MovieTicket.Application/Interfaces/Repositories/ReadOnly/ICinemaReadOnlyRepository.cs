@@ -1,4 +1,5 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Cinema;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
     {
         Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName);
 
-        Task<CinemaDto> GetCinemaById(Guid id, CancellationToken cancellationToken);
+        Task<ResponseObject<CinemaDto>> GetCinemaById(Guid id);
     }
 }

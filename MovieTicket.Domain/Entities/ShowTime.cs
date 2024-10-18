@@ -13,7 +13,7 @@ public class ShowTime
     public Guid? TranslationTypeId { get; set; }
     public DateTime? StartTime { get; set; }
     public DateTime? EndTime { get; set; }
-    public DateTime? ShowtimeDate { get; set; } // Ngày chiếu dự trên lịch chiếu
+    public DateTime? ShowtimeDate { get; set; }
     public string? Desciption { get; set; }
     public ShowtimeStatus? Status { get; set; }
 
