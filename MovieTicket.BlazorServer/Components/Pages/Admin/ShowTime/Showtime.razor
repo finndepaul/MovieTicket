@@ -1,0 +1,221 @@
+﻿@page "/showtime"
+@using MovieTicket.Application.DataTransferObjs.Cinema
+@using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@using MovieTicket.Application.DataTransferObjs.ShowTime
+@using MovieTicket.Application.ValueObjs.Paginations
+@attribute [Authorize(Roles = "Admin")]
+@inject IShowTimeService ShowTimeService
+@inject ICinemaService CinemaService
+@inject ICinemaCenterService CinemaCenterService
+<div class="container-fluid">
+	<div class="d-flex align-items-center mb-3">
+		<div class="d-flex align-items-center me-4">
+			<label for="cinema" class="me-2 mb-0">Rạp chiếu:</label>
+			<select class="form-control form-control-sm" id="cinemaCenter" style="width: 150px;" @onchange="(e) => SelectedCinemaCenter(e)">
+				<option value="">Select a cinema center</option>
+				@foreach (var item in cinemaCenters)
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			</select>
+		</div>
+
+		<div class="d-flex align-items-center me-4">
+			<label for="auditorium" class="me-2 mb-0">Phòng chiếu:</label>
+			<select class="form-control form-control-sm" id="cinema" style="width: 150px;" @onchange="(e) => SelectedCinema(e)">
+				<option value="">Select a cinema</option>
+				@foreach (var item in cinemaSearch)
+				{
+					<option value="@item.Id">@item.Name</option>
+				}
+			</select>
+		</div>
+
+		<div class="d-flex align-items-center me-4">
+			<label for="date" class="me-2 mb-0">Ngày chiếu:</label>
+			<input type="date" id="date" class="form-control form-control-sm" style="width: 150px;" @onchange="UpdateShowDate">
+		</div>
+
+		<div class="d-flex align-items-center">
+			<button class="btn btn-primary btn-sm" @onclick="SearchShowTimes">Tìm kiếm</button>
+		</div>
+	</div>
+
+
+	<h6 class="text-center mt-5">Lịch chiếu ngày: @Date.ToString("dd-MM-yyyy")</h6>
+	<h6 class="text-center mt-3 text-white bg-primary" style="padding: 9px; border-radius: 6px">Rạp: @CinemaCenterName</h6>
+	<h6 class="mb-3" style="color: red">@CinemaName</h6>
+
+	<div class="table-responsive">
+		<table class="table">
+			<thead class="table-light">
+				<tr>
+					<th></th>
+					<th scope="col">Phim chiếu</th>
+					<th scope="col">Hình thức chiếu</th>
+					<th scope="col">Hình thức dịch</th>
+					<th scope="col">Thời gian chiếu</th>
+					<th scope="col">Loại suất chiếu</th>
+					<th scope="col">Trạng thái</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in ShowTimes)
+				{					
+					<tr>
+						<td><i class="bi bi-justify"></i></td>
+						<td class="text-primary">@item.FilmName</td>
+						<td>
+							@if (item.ScreenTypeName == "2D")
+							{
+								<span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">@item.ScreenTypeName</span>
+							}
+							@if (item.ScreenTypeName == "3D")
+							{
+								<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.ScreenTypeName</span>
+							}
+							@if (item.ScreenTypeName == "IMAX")
+							{
+								<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.ScreenTypeName</span>
+							}
+						</td>
+						<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
+						<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
+						<td>
+							@if (item.ShowtimeDate.HasValue && item.StartDate.HasValue)
+							{
+								if (item.ShowtimeDate.Value < item.StartDate.Value)
+								{
+									<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Xuất chiếu sớm</span>
+								}
+								else if (item.ShowtimeDate.Value == item.StartDate.Value)
+								{
+									<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Chiếu theo lịch</span>
+								}
+								else if (item.ShowtimeDate.Value > item.StartDate.Value)
+								{
+									<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Xuất chiếu muộn</span>
+								}
+							}
+							else
+							{
+								<span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Không có dữ liệu</span>
+							}
+						</td>
+						<td>
+							@if(item.Status == Domain.Enums.ShowtimeStatus.ComingSoon)
+							{
+								<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Sắp chiếu</span>
+							}
+							@if(item.Status == Domain.Enums.ShowtimeStatus.Showing)
+							{
+								<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Đang chiếu</span>
+							}
+							@if (item.Status == Domain.Enums.ShowtimeStatus.Ended)
+							{
+								<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Đã chiếu</span>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="mt-3">
+		<!-- Button to Open Modal -->
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+			+ Thêm suất chiếu
+		</button>
+	</div>
+
+	<div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="scheduleModalLabel">Thêm suất chiếu (@CinemaCenterName - @CinemaName)</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<CreateShowTime CinemaCenterId="@ShowTimeSearchs.CinemaCenterId" CinemaId="@ShowTimeSearchs.CinemaId" Date="@Date"></CreateShowTime>
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
+	private ShowTimeSearch ShowTimeSearchs = new ShowTimeSearch();
+	private PagingParameters PagingParameters = new PagingParameters();
+	public MetaData MetaData { set; get; } = new MetaData();
+	private List<CinemaCenterDto> cinemaCenters = new List<CinemaCenterDto>();
+	private List<CinemaDto> cinemas = new List<CinemaDto>();
+	public CinemaCenterSearch cinemaCenterSearch = new CinemaCenterSearch();
+	private string CinemaName { get; set; }
+	private string CinemaCenterName { get; set; }
+	private DateTime Date = DateTime.Today;
+	private List<CinemaDto> cinemaSearch = new List<CinemaDto>();
+	protected override async Task OnInitializedAsync()
+	{
+		cinemas = await CinemaService.GetCinemasAsync(null);
+		cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);
+		ShowTimeSearchs.StartDate = Date;
+		await SearchShowTimes();
+	}
+
+	private async Task SelectedCinemaCenter(ChangeEventArgs e)
+	{
+		var selectedCinemaCenterId = e.Value.ToString();
+		var selectedCinemaCenter = cinemaCenters.FirstOrDefault(c => c.Id.ToString() == selectedCinemaCenterId);
+
+		if (selectedCinemaCenter != null)
+		{
+			CinemaCenterName = selectedCinemaCenter.Name;
+
+			cinemaSearch = cinemas.Where(x => x.CinemaCenterName == CinemaCenterName).ToList();
+
+			ShowTimeSearchs.CinemaCenterId = selectedCinemaCenter.Id;
+		}
+
+		await SearchShowTimes();
+	}
+
+	private async Task SelectedCinema(ChangeEventArgs e)
+	{
+		var selectedCinemaId = e.Value.ToString();
+		var selectedCinema = cinemas.FirstOrDefault(c => c.Id.ToString() == selectedCinemaId);
+		if (selectedCinema != null)
+		{
+			CinemaName = selectedCinema.Name;
+			ShowTimeSearchs.CinemaId = selectedCinema.Id;
+		}
+		else
+		{
+			ShowTimeSearchs.CinemaId = null;
+		}
+
+		await SearchShowTimes();
+	}
+
+	private async Task UpdateShowDate(ChangeEventArgs e)
+	{
+		if (DateTime.TryParse(e.Value.ToString(), out var date))
+		{
+			Date = date;
+			ShowTimeSearchs.StartDate = Date;
+		}
+		await SearchShowTimes();
+	}
+
+	private async Task SearchShowTimes()
+	{
+		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.StartDate.HasValue)
+		{
+			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, PagingParameters);
+			ShowTimes = pagingResponse.Item.ToList();
+			MetaData = pagingResponse.MetaData;
+			StateHasChanged();
+		}
+	}
+}

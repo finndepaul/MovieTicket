@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
@@ -27,7 +27,7 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] CinemaCenterSearch search)
+        public async Task<ActionResult<CinemaCenterDto>> GetAll([FromQuery] CinemaCenterSearch search)
         {
             var cinemaCenterDto = await _centerReadOnlyRepository.GetAll(search);
             return Ok(cinemaCenterDto);

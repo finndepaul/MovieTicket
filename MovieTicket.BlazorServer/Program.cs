@@ -38,7 +38,8 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<ICinemaTypeService, CinemaTypeService>();
             builder.Services.AddScoped<ISeatTypeService, SeatTypeService>();
             builder.Services.AddScoped<IScreeningDayService, ScreeningDayService>();
-            builder.Services.AddAuthentication()
+            builder.Services.AddScoped<IShowTimeService, ShowTimeSevice>();
+			builder.Services.AddAuthentication()
                .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
             builder.Services.AddSingleton<AppState>();
 
