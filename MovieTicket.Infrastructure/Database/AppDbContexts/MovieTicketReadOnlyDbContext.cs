@@ -491,7 +491,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		});
 		modelBuilder.Entity<Account>().HasData(accounts);
 
-		var filmFaker = new Faker<Film>()
+		var filmFaker = new Faker<Film>("vi")
 		.RuleFor(f => f.Id, f => Guid.NewGuid())
 		.RuleFor(f => f.Name, f => $"Mộ đom đóm (Lần {f.IndexFaker})")
 		.RuleFor(f => f.EnglishName, f => $"Grave of the Fireflies (English)")
@@ -522,9 +522,9 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		modelBuilder.Entity<Membership>().HasData(membershipFaker.Generate(1));
 
 		// Faker for CinemaCenter
-		var cinemaCenterFaker = new Faker<CinemaCenter>()
+		var cinemaCenterFaker = new Faker<CinemaCenter>("vi")
 			.RuleFor(c => c.Id, f => Guid.NewGuid())
-			.RuleFor(c => c.Name, f => $"Cinema Center {f.IndexFaker}")
+			.RuleFor(c => c.Name, f => $"VHD Vincom {f.Address.StreetAddress()}")
 			.RuleFor(c => c.Address, f => f.Address.FullAddress());
 		var cinemaCenters = cinemaCenterFaker.Generate(5);
 		modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
