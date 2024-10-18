@@ -8,10 +8,7 @@
 @using Microsoft.JSInterop
 @using MovieTicket.BlazorServer
 @using MovieTicket.BlazorServer.Components
-
 @using MovieTicket.BlazorServer.Helper
-
-
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using MovieTicket.Application.DataTransferObjs.Auth.Requests
@@ -22,12 +19,21 @@
 @using MovieTicket.BlazorServer.Authentication
 @using System.ComponentModel.DataAnnotations
 @using MovieTicket.Application.DataTransferObjs.Banner
+@using MovieTicket.Application.DataTransferObjs.AdminHome
+@using MovieTicket.Application.ValueObjs.Paginations
+@using MovieTicket.Application.DataTransferObjs.Cinema
+@using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@using MovieTicket.Application.DataTransferObjs.Cinema.Request
+@using MovieTicket.Application.DataTransferObjs.CinemaType
 
 
 @inject IAuthenService AuthenService
 @inject IBannerService BannerService
 @inject ICinemaService CinemaService
 @inject ICinemaCenterService CinemaCenterService
+@inject IAdminHomeService AdminHomeService
+@inject ICinemaCenterService CinemaCenterService
+@inject ICinemaTypeService CinemaTypeService
 
 @inject IJSRuntime JSRuntime
 @inject AppState AppState

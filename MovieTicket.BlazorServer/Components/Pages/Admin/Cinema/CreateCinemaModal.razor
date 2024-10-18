@@ -1,0 +1,102 @@
+﻿@page "/create-cinema/{CinemaCenterName}"
+@attribute [Authorize(Roles ="Admin")];
+
+<div class="container-input">
+    <EditForm Model="request" OnValidSubmit="CreateCinema">
+        <DataAnnotationsValidator />
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="CinemaCenterName">Rạp</label>
+            <input type="text" value="@CinemaCenterName" id="CinemaCenterName" class="form-control" disabled/>
+        </div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="name">Tên phòng chiếu</label>
+            <InputText @bind-Value="request.Name" id="name" class="form-control"/>
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Name)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="cinemaType">Loại phòng chiếu</label>
+            <select class="form-select" id="cinemaType" @bind="request.CinemaTypeId">
+                <option value="">Chọn loại phòng chiếu</option>
+                @foreach (var type in cinemaTypes)
+                {
+                    <option value="@type.Id">@type.Name</option>
+                })
+            </select>
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.CinemaTypeId)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="row">Số hàng</label>
+            <InputNumber @bind-Value="request.Row" id="row" class="form-control" />
+        </div>
+        <div class="mt-1"><ValidationMessage For="@(() => request.Row)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="column">Số cột</label>
+            <InputNumber @bind-Value="request.Column" id="column" class="form-control" />
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Column)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="description">Mô tả</label>
+            <InputText @bind-Value="request.Description" id="description" class="form-control" />
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Description)" /></div>
+        <div class="my-3 justify-content-center">
+            <input type="submit" class="btn btn-success" value="Tạo" />
+        </div>
+    </EditForm>
+</div>
+
+<style>
+    .validate {
+        color: red;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string CinemaCenterName { get; set; }
+
+    private CinemaCreateRequest request = new();
+    private List<CinemaTypeDto> cinemaTypes = new();
+    private IQueryable<CinemaCenterDto> CinemaCenterDtos;
+    private IQueryable<CinemaDto> _lstCinemas;
+
+    protected override async void OnInitialized()
+    {
+        cinemaTypes = await CinemaTypeService.GetListCinemaTypesAsync();
+    }
+
+    private async Task CreateCinema()
+    {
+        CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch()
+            {
+                Name = CinemaCenterName,
+                Address = null
+            });
+        if (CinemaCenterDtos.Any())
+        {
+            request.CinemaCenterId = CinemaCenterDtos.First().Id;
+        }
+        ResponseObject<CinemaDto> response = await CinemaService.Create(request);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            NavigationManager.NavigateTo("/cinema");
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+    private async Task OnChangeCinemaCenter(ChangeEventArgs e)
+    {
+        string selectedCinemaCenterName = CinemaCenterName;
+        _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
+        StateHasChanged();
+    }
+}

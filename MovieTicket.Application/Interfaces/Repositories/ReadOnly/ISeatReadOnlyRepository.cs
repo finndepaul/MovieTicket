@@ -1,4 +1,4 @@
-﻿using MovieTicket.Application.DataTransferObjs.Cinema;
+﻿using MovieTicket.Application.DataTransferObjs.Seat;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
-    public interface ICinemaReadOnlyRepository
+    public interface ISeatReadOnlyRepository
     {
-        Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName);
+        Task<IQueryable<SeatDTO>> GetAllAsync(Guid cinemaId);
 
-        Task<ResponseObject<CinemaDto>> GetCinemaById(Guid id);
+        Task<ResponseObject<SeatDTO>> GetSeatById(Guid id);
     }
 }

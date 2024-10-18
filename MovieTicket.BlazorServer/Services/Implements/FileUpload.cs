@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using MovieTicket.BlazorServer.Services.Interfaces.IFilmService;
+using MovieTicket.BlazorServer.Services.Interfaces;
 
-namespace MovieTicket.BlazorServer.Services.Implements.FilmService
+namespace MovieTicket.BlazorServer.Services.Implements
 {
     public class FileUpload : IFileUpload
     {
@@ -35,7 +35,7 @@ namespace MovieTicket.BlazorServer.Services.Implements.FilmService
         public async Task<string> UploadFile(IBrowserFile file)
         {
             var fileName = $"{Path.GetFileNameWithoutExtension(file.Name)}_{Guid.NewGuid()}{Path.GetExtension(file.Name)}";
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "PosterFilm", fileName);
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "img/posterFilm", fileName);
 
             await using var fileStream = new FileStream(filePath, FileMode.Create);
             await file.OpenReadStream().CopyToAsync(fileStream);

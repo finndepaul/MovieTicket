@@ -1,18 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using MovieTicket.Application.DataTransferObjs.Banner;
 using MovieTicket.Application.DataTransferObjs.Cinema;
 using MovieTicket.Application.DataTransferObjs.Cinema.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using MovieTicket.Infrastructure.Implements.Repositories.ReadOnly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
@@ -53,7 +47,28 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     CreateTime = DateTime.Now,
                     UpdateTime = DateTime.MinValue
                 };
+
                 await _context.Cinemas.AddAsync(cinema);
+                await _context.SaveChangesAsync();
+                string position = "";
+                for (int x = 1; x <= request.Column; x++)
+                {
+                    position = AlphabeticalOrder(x - 1);
+                    for (int y = 1; y <= request.Row; y++)
+                    {
+                        position += y;
+                        var seat = new Seat
+                        {
+                            CinemaId = cinema.Id,
+                            SeatTypeId = null,
+                            Position = position,
+                            Status = SeatStatus.Available,
+                        };
+                        await _context.Seats.AddAsync(seat);
+                        position = AlphabeticalOrder(x - 1);
+                    }
+                    position = "";
+                }
                 await _context.SaveChangesAsync();
                 return new ResponseObject<CinemaDto>
                 {
@@ -99,6 +114,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Data = null
                     };
                 }
+                var seat = await _context.Seats.Where(x => x.CinemaId == id).ToListAsync();
+                _context.Seats.RemoveRange(seat);
                 _context.Cinemas.Remove(model);
                 await _context.SaveChangesAsync();
                 return new ResponseObject<Cinema>
@@ -170,6 +187,20 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     Message = e.Message
                 };
             }
+        }
+
+        private string AlphabeticalOrder(int number)
+        {
+            List<string> Alphabet = new List<string>
+            { "A", "B", "C", "D",
+              "E", "F", "G", "H",
+              "I", "J", "K", "L",
+              "M", "N", "O", "P",
+              "Q", "R", "S", "T",
+              "U", "V", "W", "X",
+              "Y", "Z"
+            };
+            return Alphabet[number];
         }
     }
 }

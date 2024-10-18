@@ -1,46 +1,44 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using MovieTicket.Application.DataTransferObjs.AdminHome;
 using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.BlazorServer.Services.Interfaces;
-using System.Net.Http.Json;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
-    public class AdminHomeService : IAdminHomeService
-    {
-        private readonly HttpClient _httpClient;
+	public class AdminHomeService : IAdminHomeService
+	{
+		private readonly HttpClient _httpClient;
 
-        public AdminHomeService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+		public AdminHomeService(HttpClient httpClient)
+		{
+			_httpClient = httpClient;
+		}
 
-        public async Task<byte[]> ExportRevenueCinemaDtoToExcel(DateTime? startDate, DateTime? endDate)
-        {
-            var queryParameters = new Dictionary<string, string>
-            {
-                ["startDate"] = startDate.ToString(),
-                ["endDate"] = endDate.ToString()
-            };
-            string url = QueryHelpers.AddQueryString("api/AdminHome/ExportRevenueCinemaDtoToExcel", queryParameters);
-            var result = await _httpClient.GetByteArrayAsync(url);
-            return result;
-        }
+		public async Task<byte[]> ExportRevenueCinemaDtoToExcel(DateTime? startDate, DateTime? endDate)
+		{
+			var queryParameters = new Dictionary<string, string>
+			{
+				["startDate"] = startDate.ToString(),
+				["endDate"] = endDate.ToString()
+			};
+			string url = QueryHelpers.AddQueryString("api/AdminHome/ExportRevenueCinemaDtoToExcel", queryParameters);
+			var result = await _httpClient.GetByteArrayAsync(url);
+			return result;
+		}
 
-        public async Task<byte[]> ExportRevenueMovieDtoToExcel(DateTime? startDate, DateTime? endDate)
-        {
-            var queryParameters = new Dictionary<string, string>
-            {
-                ["startDate"] = startDate.ToString(),
-                ["endDate"] = endDate.ToString()
-            };
-            string url = QueryHelpers.AddQueryString("api/AdminHome/ExportRevenueMovieDtoToExcel", queryParameters);
-            var result = await _httpClient.GetByteArrayAsync(url);
-            return result;
-        }
+		public async Task<byte[]> ExportRevenueMovieDtoToExcel(DateTime? startDate, DateTime? endDate)
+		{
+			var queryParameters = new Dictionary<string, string>
+			{
+				["startDate"] = startDate.ToString(),
+				["endDate"] = endDate.ToString()
+			};
+			string url = QueryHelpers.AddQueryString("api/AdminHome/ExportRevenueMovieDtoToExcel", queryParameters);
+			var result = await _httpClient.GetByteArrayAsync(url);
+			return result;
+		}
 
-        public async Task<GeneralDto> GetAdminGeneralAsync()
+		public async Task<GeneralDto> GetAdminGeneralAsync()
 		{
 			var result = await _httpClient.GetFromJsonAsync<GeneralDto>("api/AdminHome/GetAdminGeneral");
 			return result;
@@ -74,11 +72,10 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			return result;
 		}
 
-        public async Task<List<RevenueByMonthDto>> RevenueByMonthDto()
-        {
-            var result = await _httpClient.GetFromJsonAsync<List<RevenueByMonthDto>>($"api/AdminHome/RevenueByMonthDto");
-            return result;
-        }
-    }
+		public async Task<List<RevenueByMonthDto>> RevenueByMonthDto()
+		{
+			var result = await _httpClient.GetFromJsonAsync<List<RevenueByMonthDto>>($"api/AdminHome/RevenueByMonthDto");
+			return result;
+		}
+	}
 }
-
