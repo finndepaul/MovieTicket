@@ -489,7 +489,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 			});
 			modelBuilder.Entity<Account>().HasData(accounts);
 
-			var filmFaker = new Faker<Film>()
+			var filmFaker = new Faker<Film>("vi")
 			.RuleFor(f => f.Id, f => Guid.NewGuid())
 			.RuleFor(f => f.Name, f => $"Mộ đom đóm (Lần {f.IndexFaker})")
 			.RuleFor(f => f.EnglishName, f => $"Grave of the Fireflies (English)")
@@ -499,14 +499,14 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 			.RuleFor(f => f.Director, f => f.Name.FullName())
 			.RuleFor(f => f.Cast, f => $"{f.Name.FirstName()} {f.Name.LastName()}")
 			.RuleFor(f => f.Rating, f => f.PickRandom(12, 16, 18))
-			.RuleFor(f => f.StartDate, f => DateTime.Now)
+			.RuleFor(f => f.StartDate, f => f.Date.Between(new DateTime(2024, 9, 1), new DateTime(2024, 10, 30)))
 			.RuleFor(f => f.ReleaseYear, 2024)
 			.RuleFor(f => f.RunningTime, f => f.Random.Int(60, 180))
 			.RuleFor(f => f.Status, Domain.Enums.FilmStatus.NowShowing)
 			.RuleFor(f => f.Nation, f => f.PickRandom("USA", "Japan"))
 			.RuleFor(f => f.Poster, "film_modomdom.jpg")
 			.RuleFor(f => f.Language, f => f.PickRandom("English", "Japanese"))
-			.RuleFor(f => f.CreatDate, f => DateTime.Now);
+			.RuleFor(f => f.CreatDate, f => f.Date.Between(new DateTime(2024, 9, 1), new DateTime(2024, 10, 30)));
 			// Generate list of films
 			var films = filmFaker.Generate(15);
 			modelBuilder.Entity<Film>().HasData(films);
@@ -520,9 +520,9 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 			modelBuilder.Entity<Membership>().HasData(membershipFaker.Generate(1));
 
 			// Faker for CinemaCenter
-			var cinemaCenterFaker = new Faker<CinemaCenter>()
+			var cinemaCenterFaker = new Faker<CinemaCenter>("vi")
 				.RuleFor(c => c.Id, f => Guid.NewGuid())
-				.RuleFor(c => c.Name, f => $"Cinema Center {f.IndexFaker}")
+				.RuleFor(c => c.Name, f => $"VHD Vincom {f.Address.StreetAddress()}")
 				.RuleFor(c => c.Address, f => f.Address.FullAddress());
 			var cinemaCenters = cinemaCenterFaker.Generate(5);
 			modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
