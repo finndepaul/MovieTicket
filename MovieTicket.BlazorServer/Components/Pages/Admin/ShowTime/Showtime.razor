@@ -13,9 +13,12 @@
 			<label for="cinema" class="me-2 mb-0">Rạp chiếu:</label>
 			<select class="form-control form-control-sm" id="cinemaCenter" style="width: 150px;" @onchange="(e) => SelectedCinemaCenter(e)">
 				<option value="">Select a cinema center</option>
-				@foreach (var item in cinemaCenters)
+				@if (cinemaCenters != null)
 				{
-					<option value="@item.Id">@item.Name</option>
+					@foreach (var item in cinemaCenters)
+					{
+						<option value="@item.Id">@item.Name</option>
+					}
 				}
 			</select>
 		</div>
@@ -149,16 +152,18 @@
 	private ShowTimeSearch ShowTimeSearchs = new ShowTimeSearch();
 	private PagingParameters PagingParameters = new PagingParameters();
 	public MetaData MetaData { set; get; } = new MetaData();
-	private List<CinemaCenterDto> cinemaCenters = new List<CinemaCenterDto>();
-	private List<CinemaDto> cinemas = new List<CinemaDto>();
+	private IQueryable<CinemaCenterDto> cinemaCenters;
+	private IQueryable<CinemaDto> cinemas;
 	public CinemaCenterSearch cinemaCenterSearch = new CinemaCenterSearch();
 	private string CinemaName { get; set; }
 	private string CinemaCenterName { get; set; }
 	private DateTime Date = DateTime.Today;
 	private List<CinemaDto> cinemaSearch = new List<CinemaDto>();
+	private string _lstCinema = string.Empty;
 	protected override async Task OnInitializedAsync()
 	{
-		cinemas = await CinemaService.GetCinemasAsync(null);
+		_lstCinema = "Select a cinema";
+		cinemas = await CinemaService.GetCinemasAsync(_lstCinema, null);
 		cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);
 		ShowTimeSearchs.StartDate = Date;
 		await SearchShowTimes();
