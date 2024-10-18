@@ -4,8 +4,7 @@
 @using MovieTicket.Application.DataTransferObjs.ScreenType
 @using MovieTicket.Application.DataTransferObjs.ShowTime
 @using MovieTicket.Application.DataTransferObjs.TranslationType
-@using MovieTicket.BlazorServer.Services.Interfaces.IFilmService
-@using MovieTicket.BlazorServer.Services.Interfaces.ITranslationTypeService
+@using MovieTicket.BlazorServer.Services.Interfaces
 @inject IFilmService FilmService
 @inject IScreenTypeServices ScreenTypeService
 @inject ITranslationTypeService TranslationTypeService
@@ -117,17 +116,9 @@
 			{
 				var dateFilm = FilmValidate.FirstOrDefault(x => x.Id == filmId);
 
-				var lstScreenTypeValidate = Films.FirstOrDefault(x => x.Id == filmId).ScreenTypeIds.ToList();
-				var lstTranslationTypeValidate = Films.FirstOrDefault(x => x.Id == filmId).TranslationTypeIds.ToList();
-
-				foreach (var id in lstScreenTypeValidate)
-				{
-					ScreenTypeValidate.Add(ScreenTypeDtos.FirstOrDefault(x => x.Id == id));
-				}
-				foreach (var id in lstTranslationTypeValidate)
-				{
-					TranslationTypeValidate.Add(TranslationTypeDtos.FirstOrDefault(x => x.Id == id));
-				}
+				var lstScreenTypeValidate = Films.FirstOrDefault(x => x.Id == filmId).ScreenTypeDtos.ToList();
+				TranslationTypeValidate = Films.FirstOrDefault(x => x.Id == filmId).TranslationTypeDtos.ToList();
+				ScreenTypeValidate = lstScreenTypeValidate;
 			}
 			if (schedule != null)
 			{

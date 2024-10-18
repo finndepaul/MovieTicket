@@ -22,29 +22,42 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			var query = _context.Films
 				  .Join(_context.FilmScreenTypes, f => f.Id, fst => fst.FilmId, (f, fst) => new { f, fst })
 				  .Join(_context.FilmTranslationTypes, x => x.f.Id, ftt => ftt.FilmId, (x, ftt) => new { x.fst, x.f, ftt })
-				  .GroupBy(x => new { x.f.Id, x.f.Name, x.f.EnglishName, x.f.Trailer, x.f.Description, x.f.Gerne, x.f.Director, x.f.Cast, x.f.Rating, x.f.StartDate, x.f.ReleaseYear, x.f.RunningTime, x.f.Status, x.f.Nation, x.f.Poster, x.f.Language, x.f.CreatDate })
-				  .Select(group => new FilmDto()
+				  .Join(_context.ScreenTypes, x => x.fst.ScreenTypeId, st => st.Id, (x, st) => new { x.f, x.fst, x.ftt, st })
+				  .Join(_context.TranslationTypes, x=>x.ftt.TranslationTypeId, tt => tt.Id, (x,tt) => new {x.f ,x.fst ,x.ftt,x.st ,tt})
+				  .Select(x => new FilmDto
 				  {
-					  Id = group.Key.Id,
-					  Name = group.Key.Name,
-					  EnglishName = group.Key.EnglishName,
-					  Trailer = group.Key.Trailer,
-					  Description = group.Key.Description,
-					  Gerne = group.Key.Gerne,
-					  Director = group.Key.Director,
-					  Cast = group.Key.Cast,
-					  Rating = group.Key.Rating,
-					  StartDate = group.Key.StartDate,
-					  ReleaseYear = group.Key.ReleaseYear,
-					  RunningTime = group.Key.RunningTime,
-					  Status = group.Key.Status,
-					  Nation = group.Key.Nation,
-					  Poster = group.Key.Poster,
-					  Language = group.Key.Language,
-					  CreatDate = group.Key.CreatDate,
-					  ScreenTypeIds = group.Select(g => g.fst.ScreenTypeId).Distinct().ToList(), // Lấy danh sách ScreenTypeIds
-					  TranslationTypeIds = group.Select(g => g.ftt.TranslationTypeId).Distinct().ToList() // Lấy danh sách TranslationTypeIds
-				  }).AsQueryable();
+					  Id = x.f.Id,
+					  Name = x.f.Name,
+					  EnglishName = x.f.EnglishName,
+					  Trailer = x.f.Trailer,
+					  Description = x.f.Description,
+					  Gerne = x.f.Gerne,
+					  Director = x.f.Director,
+					  Cast = x.f.Cast,
+					  Rating = x.f.Rating,
+					  StartDate = x.f.StartDate,
+					  ReleaseYear = x.f.ReleaseYear,
+					  RunningTime = x.f.RunningTime,
+					  Status = x.f.Status,
+					  Nation = x.f.Nation,
+					  Poster = x.f.Poster,
+					  Language = x.f.Language,
+					  CreatDate = x.f.CreatDate,
+					  ScreenTypeDtos = (
+						from fst in x.f.FilmScreenTypes
+						select new ScreenTypeDto
+						{
+							Id = fst.ScreenType.Id,
+							Type = fst.ScreenType.Type
+						}).ToList(),
+					  TranslationTypeDtos = (
+						from ftt in x.f.FilmTranslationTypes
+						select new TranslationTypeDto
+						{
+							Id = ftt.TranslationType.Id,
+							Type = ftt.TranslationType.Type
+						}).ToList()
+				  });
 
 			return query;
 		}
