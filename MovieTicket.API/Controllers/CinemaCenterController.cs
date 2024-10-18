@@ -27,7 +27,7 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<CinemaCenterDto>> GetAll([FromQuery] CinemaCenterSearch search)
+        public async Task<IActionResult> GetAll([FromQuery] CinemaCenterSearch search)
         {
             var cinemaCenterDto = await _centerReadOnlyRepository.GetAll(search);
             return Ok(cinemaCenterDto);
