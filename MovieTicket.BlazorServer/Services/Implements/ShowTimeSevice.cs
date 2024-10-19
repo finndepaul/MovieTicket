@@ -43,7 +43,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			if (showTimeSearch == null ||
 				(!showTimeSearch.CinemaCenterId.HasValue &&
 				 !showTimeSearch.CinemaId.HasValue &&
-				 !showTimeSearch.StartDate.HasValue))
+				 !showTimeSearch.ShowtimeDate.HasValue))
 			{
 				return new PageList<ShowTimeDto>
 				{
@@ -64,9 +64,9 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			{
 				queryParam.Add("cinemaId", showTimeSearch.CinemaId.ToString());
 			}
-			if (showTimeSearch.StartDate.HasValue)
+			if (showTimeSearch.ShowtimeDate.HasValue)
 			{
-				queryParam.Add("startDate", showTimeSearch.StartDate.Value.ToString("yyyy-MM-dd"));
+				queryParam.Add("showtimeDate", showTimeSearch.ShowtimeDate.Value.ToString());
 			}
 
 			string url = QueryHelpers.AddQueryString("api/ShowTime/GetAll", queryParam);

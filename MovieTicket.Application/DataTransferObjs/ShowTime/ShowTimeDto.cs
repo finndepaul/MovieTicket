@@ -7,7 +7,8 @@ namespace MovieTicket.Application.DataTransferObjs.ShowTime
         public Guid Id { get; set; }
         public string FilmName { get; set; } // Tên phim
         public DateTime? StartDate { get; set; } // Ngày bắt đầu
-        public Guid CinemaCenterId { get; set; } // Id rạp chiếu
+        public DateTime? EndDate { get; set; } // Ngày kết thúc
+		public Guid CinemaCenterId { get; set; } // Id rạp chiếu
 		public string CinemaCenterName { get; set; } // Tên rạp chiếu
 		public Guid CinemaId { get; set; } // Id phòng chiếu
 		public string CinemaName { get; set; } // Tên phòng chiếu
