@@ -10,6 +10,6 @@ namespace MovieTicket.Application.DataTransferObjs.ShowTime
 	{
 		public Guid? CinemaCenterId { get; set; }
 		public Guid? CinemaId { get; set; }
-		public DateTime? StartDate { get; set; }
+		public DateTime? ShowtimeDate { get; set; }
 	}
 }

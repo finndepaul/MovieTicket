@@ -23,11 +23,22 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
 		public async Task<ResponseObject<ShowTime>> Create(ShowTimeCreateRequest showTime)
 		{
-			// Tìm thời gian kết thúc của suất chiếu cuối cùng trong ngày tại cùng rạp và loại màn hình
-			var lastShowTime = await _db.ShowTimes
+			// Tìm suất chiếu gần nhất trước thời gian bắt đầu của suất chiếu mới
+			var previousTimeShowTime = await _db.ShowTimes
 				.Where(st => st.CinemaId == showTime.CinemaId && st.ShowtimeDate.Value == showTime.ShowtimeDate.Value)
+				.Where(st => st.EndTime < showTime.StartTime) 
 				.OrderByDescending(st => st.EndTime)
 				.FirstOrDefaultAsync();
+
+			var eightAM = new TimeSpan(8, 0, 0);
+			var eightPM = new TimeSpan(23, 0, 0);
+			// Tìm suất chiếu có thời gian bắt đầu gần nhất sau thời gian kết thúc của suất chiếu mới
+			var nextShowTime = await _db.ShowTimes
+				.Where(st => st.CinemaId == showTime.CinemaId && st.ShowtimeDate.Value == showTime.ShowtimeDate.Value)
+				.Where(st => st.StartTime > showTime.EndTime) 
+				.OrderBy(st => st.StartTime) 
+				.FirstOrDefaultAsync();
+
 
 			// Tìm thời gian bắt đầu và kết thúc của lịch chiếu phim
 			var schedule = await _db.Schedules
@@ -70,17 +81,74 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Status = StatusCodes.Status400BadRequest
 				};
 			}
+			// check phải từ 8h sáng
+			if (showTime.StartTime.HasValue)
+			{
+				var startTimeSpan = showTime.StartTime.Value.TimeOfDay;
+
+				if (startTimeSpan < eightAM)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Giờ bắt đầu phải lớn hơn hoặc bằng 8 giờ sáng.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
+			}
+
+			if (showTime.StartTime.HasValue)
+			{
+				var startTimeSpan = showTime.StartTime.Value.TimeOfDay;
+
+				if (startTimeSpan > eightPM)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Giờ bắt đầu phải nhỏ hơn hoặc bằng 23 giờ.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
+			}
 
 			// Check thời gian cho suất chiếu tiếp theo (phải cách ít nhất 30 phút với suất chiếu trước đó)
-			if (lastShowTime != null)
+			if (previousTimeShowTime != null)
 			{
-				var timeDifference = showTime.StartTime.Value - lastShowTime.EndTime.Value;
-				if (timeDifference.TotalMinutes < 30)
+				var checkStartTime = showTime.StartTime.Value - previousTimeShowTime.EndTime.Value;
+				if (checkStartTime.TotalMinutes < 30)
 				{
 					return new ResponseObject<ShowTime>
 					{
 						Data = null,
 						Message = "Giờ chiếu phải cách giờ chiếu trước ít nhất 30 phút.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
+			}
+			if (nextShowTime != null)
+			{
+				var checkEndTime = nextShowTime.StartTime.Value - showTime.EndTime.Value;
+				if (checkEndTime.TotalMinutes < 30)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Giờ chiếu phải cách giờ chiếu tiếp theo 30p.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
+			}
+			if (previousTimeShowTime != null && nextShowTime != null)
+			{
+				var checkEndTime = nextShowTime.StartTime.Value - showTime.EndTime.Value;
+				var checkStartTime = showTime.StartTime.Value - previousTimeShowTime.EndTime.Value;
+				if (checkStartTime.TotalMinutes < 30 && checkEndTime.TotalMinutes < 30)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Giờ chiếu phải cách giờ chiếu trước và giờ chiếu tiếp theo 30p.",
 						Status = StatusCodes.Status400BadRequest
 					};
 				}

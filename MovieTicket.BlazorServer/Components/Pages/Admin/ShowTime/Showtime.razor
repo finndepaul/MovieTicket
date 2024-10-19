@@ -27,9 +27,16 @@
 			<label for="auditorium" class="me-2 mb-0">Phòng chiếu:</label>
 			<select class="form-control form-control-sm" id="cinema" style="width: 150px;" @onchange="(e) => SelectedCinema(e)">
 				<option value="">Select a cinema</option>
-				@foreach (var item in cinemaSearch)
+				@if (cinemaSearch != null)
 				{
-					<option value="@item.Id">@item.Name</option>
+					@foreach (var item in cinemaSearch)
+					{
+						<option value="@item.Id">@item.Name</option>
+					}
+				}
+				else
+				{
+					<option value="">Select a cinema</option>
 				}
 			</select>
 		</div>
@@ -63,63 +70,70 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var item in ShowTimes)
-				{					
-					<tr>
-						<td><i class="bi bi-justify"></i></td>
-						<td class="text-primary">@item.FilmName</td>
-						<td>
-							@if (item.ScreenTypeName == "2D")
-							{
-								<span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">@item.ScreenTypeName</span>
-							}
-							@if (item.ScreenTypeName == "3D")
-							{
-								<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.ScreenTypeName</span>
-							}
-							@if (item.ScreenTypeName == "IMAX")
-							{
-								<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.ScreenTypeName</span>
-							}
-						</td>
-						<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
-						<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
-						<td>
-							@if (item.ShowtimeDate.HasValue && item.StartDate.HasValue)
-							{
-								if (item.ShowtimeDate.Value < item.StartDate.Value)
+				@if (ShowTimes.Any())
+				{
+					@foreach (var item in ShowTimes)
+					{
+						<tr>
+							<td><i class="bi bi-justify"></i></td>
+							<td class="text-primary">@item.FilmName</td>
+							<td>
+								@if (item.ScreenTypeName == "2D")
 								{
-									<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Xuất chiếu sớm</span>
+									<span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">@item.ScreenTypeName</span>
 								}
-								else if (item.ShowtimeDate.Value == item.StartDate.Value)
+								@if (item.ScreenTypeName == "3D")
 								{
-									<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Chiếu theo lịch</span>
+									<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.ScreenTypeName</span>
 								}
-								else if (item.ShowtimeDate.Value > item.StartDate.Value)
+								@if (item.ScreenTypeName == "IMAX")
 								{
-									<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Xuất chiếu muộn</span>
+									<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.ScreenTypeName</span>
 								}
-							}
-							else
-							{
-								<span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Không có dữ liệu</span>
-							}
-						</td>
-						<td>
-							@if(item.Status == Domain.Enums.ShowtimeStatus.ComingSoon)
-							{
-								<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Sắp chiếu</span>
-							}
-							@if(item.Status == Domain.Enums.ShowtimeStatus.Showing)
-							{
-								<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Đang chiếu</span>
-							}
-							@if (item.Status == Domain.Enums.ShowtimeStatus.Ended)
-							{
-								<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Đã chiếu</span>
-							}
-						</td>
-					</tr>
+							</td>
+							<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
+							<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
+							<td>
+								@if (item.ShowtimeDate.HasValue && item.StartDate.HasValue && item.EndDate.HasValue)
+								{
+									if (item.ShowtimeDate.Value < item.StartDate.Value)
+									{
+										<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Suất chiếu sớm</span>
+									}
+									else if (item.ShowtimeDate.Value >= item.StartDate.Value && item.ShowtimeDate.Value <= item.EndDate.Value)
+									{
+										<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Chiếu theo lịch</span>
+									}
+									else if (item.ShowtimeDate.Value > item.EndDate.Value)
+									{
+										<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Suất chiếu muộn</span>
+									}
+								}
+								else
+								{
+									<span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Không có dữ liệu</span>
+								}
+							</td>
+							<td>
+								@if (item.Status == Domain.Enums.ShowtimeStatus.ComingSoon)
+								{
+									<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Sắp chiếu</span>
+								}
+								@if (item.Status == Domain.Enums.ShowtimeStatus.Showing)
+								{
+									<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Đang chiếu</span>
+								}
+								@if (item.Status == Domain.Enums.ShowtimeStatus.Ended)
+								{
+									<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Đã chiếu</span>
+								}
+							</td>
+						</tr>
+					}
+				}
+				else
+				{
+					<div>Không có dữ liệu</div>
 				}
 			</tbody>
 		</table>
@@ -158,14 +172,14 @@
 	private string CinemaName { get; set; }
 	private string CinemaCenterName { get; set; }
 	private DateTime Date = DateTime.Today;
-	private List<CinemaDto> cinemaSearch = new List<CinemaDto>();
+	private IQueryable<CinemaDto> cinemaSearch;
 	private string _lstCinema = string.Empty;
+
 	protected override async Task OnInitializedAsync()
 	{
 		_lstCinema = "Select a cinema";
-		cinemas = await CinemaService.GetCinemasAsync(_lstCinema, null);
-		cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);
-		ShowTimeSearchs.StartDate = Date;
+		cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);		
+		ShowTimeSearchs.ShowtimeDate = Date;
 		await SearchShowTimes();
 	}
 
@@ -177,8 +191,7 @@
 		if (selectedCinemaCenter != null)
 		{
 			CinemaCenterName = selectedCinemaCenter.Name;
-
-			cinemaSearch = cinemas.Where(x => x.CinemaCenterName == CinemaCenterName).ToList();
+			cinemaSearch = await CinemaService.GetCinemasAsync(CinemaCenterName, null);
 
 			ShowTimeSearchs.CinemaCenterId = selectedCinemaCenter.Id;
 		}
@@ -189,7 +202,7 @@
 	private async Task SelectedCinema(ChangeEventArgs e)
 	{
 		var selectedCinemaId = e.Value.ToString();
-		var selectedCinema = cinemas.FirstOrDefault(c => c.Id.ToString() == selectedCinemaId);
+		var selectedCinema = cinemaSearch.FirstOrDefault(c => c.Id.ToString() == selectedCinemaId);
 		if (selectedCinema != null)
 		{
 			CinemaName = selectedCinema.Name;
@@ -207,15 +220,22 @@
 	{
 		if (DateTime.TryParse(e.Value.ToString(), out var date))
 		{
-			Date = date;
-			ShowTimeSearchs.StartDate = Date;
+			if (date == null)
+			{
+				ShowTimeSearchs.ShowtimeDate = Date;
+			}
+			else
+			{
+				Date = date;
+				ShowTimeSearchs.ShowtimeDate = Date;
+			}
 		}
 		await SearchShowTimes();
 	}
 
 	private async Task SearchShowTimes()
 	{
-		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.StartDate.HasValue)
+		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
 		{
 			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, PagingParameters);
 			ShowTimes = pagingResponse.Item.ToList();
