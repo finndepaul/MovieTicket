@@ -38,6 +38,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 								 CinemaCenterName = cinemaCenter.Name,
 								 FilmName = film.Name,
 								 StartDate = schedule.StartDate,
+								 EndDate = schedule.EndDate,
 								 ScreenTypeName = screenType.Type,
 								 TranslationTypeName = translationType.Type,
 								 StartTime = showTime.StartTime,
@@ -55,9 +56,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			{
 				showTimes = showTimes.Where(x => x.CinemaId == showTimeSearch.CinemaId);
 			}
-			if (showTimeSearch.StartDate.HasValue)
+			if (showTimeSearch.ShowtimeDate.HasValue)
 			{
-				showTimes = showTimes.Where(x => x.StartDate == showTimeSearch.StartDate);
+				showTimes = showTimes.Where(x => x.ShowtimeDate == showTimeSearch.ShowtimeDate);
 			}
 
 			int count = await showTimes.CountAsync();
@@ -87,6 +88,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 									   CinemaCenterName = cinemaCenter.Name,
 									   FilmName = film.Name,
 									   StartDate = schedule.StartDate,
+									   EndDate = schedule.EndDate,
 									   ScreenTypeName = screenType.Type,
 									   TranslationTypeName = translationType.Type,
 									   StartTime = showTime.StartTime,
