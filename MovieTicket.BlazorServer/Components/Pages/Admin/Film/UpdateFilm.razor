@@ -39,13 +39,12 @@
             </div>
             <div class="col-md-6">
                 <label for="hinhThucDich" class="form-label">Hình thức dịch</label>
-                <InputSelect @bind-Value="selectedTranslationTypeIds" class="form-control" id="hinhThucDich">
-                    <option value="">Select Translation Type</option>
+                <select class="form-select" id="hinhThucChieu" @onchange="OnTranslationTypeChange" multiple>
                     @foreach (var translationType in translationTypes)
                     {
                         <option value="@translationType.Id">@translationType.Type</option>
                     }
-                </InputSelect>
+                </select>
             </div>
         </div>
 
@@ -147,7 +146,7 @@
     private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
     private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
     private List<Guid> selectedScreenTypeIds;
-    private Guid selectedTranslationTypeIds;
+    private List<Guid> selectedTranslationTypeIds;
     protected async override Task OnInitializedAsync()
     {
 
@@ -178,7 +177,7 @@
             };
 
             selectedScreenTypeIds = filmDto.ScreenTypeDtos.Select(st => st.Id).ToList();
-            selectedTranslationTypeIds = filmDto.TranslationTypeDtos.FirstOrDefault().Id;
+            selectedTranslationTypeIds = filmDto.TranslationTypeDtos.Select(tt => tt.Id).ToList();
         }
         else
         {
@@ -194,7 +193,7 @@
             filmUpdateRequest.Poster = await FileUploadService.UploadFile(posterFile);
         }
         filmUpdateRequest.ScreenTypeIds = selectedScreenTypeIds;
-        filmUpdateRequest.TranslationTypeIds = new List<Guid> { selectedTranslationTypeIds };
+        filmUpdateRequest.TranslationTypeIds = selectedTranslationTypeIds;
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
         if (response != null)
         {
@@ -220,5 +219,11 @@
     {
         var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
         selectedScreenTypeIds = selectedOptions;
+    }
+
+    private void OnTranslationTypeChange(ChangeEventArgs e)
+    {
+        var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
+        selectedTranslationTypeIds = selectedOptions;
     }
 }
