@@ -39,8 +39,7 @@
             </div>
             <div class="col-md-6">
                 <label for="hinhThucDich" class="form-label">Hình thức dịch</label>
-                <select class="form-select" id="hinhThucChieu" @bind="translationTypeId">
-                    <option selected>Select a translation type</option>
+                <select class="form-select" id="hinhThucChieu" @onchange="OnTranslationTypeChange" multiple>
                     @foreach (var translationType in translationTypes)
                     {
                         <option value="@translationType.Id">@translationType.Type</option>
@@ -145,7 +144,7 @@
     private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
 
     private List<Guid> selectedScreenTypeIds;
-    private Guid translationTypeId;
+    private List<Guid> selectedTranslationTypeId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -161,7 +160,7 @@
             filmCreateRequest.Poster = await FileUploadService.UploadFile(posterFile);
         }
         filmCreateRequest.ScreenTypeIds = selectedScreenTypeIds ;
-        filmCreateRequest.TranslationTypeIds = new List<Guid> { translationTypeId };
+        filmCreateRequest.TranslationTypeIds = selectedTranslationTypeId;
         await FilmService.CreateFilm(filmCreateRequest);
         await _JSRuntime.ToastrSuccess("Create film successfully");
         NavigationManager.NavigateTo("/list-film");
@@ -179,5 +178,11 @@
     {
         var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
         selectedScreenTypeIds = selectedOptions;
+    }
+
+    private void OnTranslationTypeChange(ChangeEventArgs e)
+    {
+        var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
+        selectedTranslationTypeId = selectedOptions;
     }
 }

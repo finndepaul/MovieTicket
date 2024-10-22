@@ -1,4 +1,6 @@
 ﻿@page "/list-user"
+@using MovieTicket.Application.DataTransferObjs.Account
+@inject IAccountService AccountService
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -24,30 +26,39 @@
                     </tr>
                 </thead>
                 <tbody class="align-middle">
-                    <tr>
-                        <td><img src="https://cly.1cdn.vn/2022/05/10/anh-nen-avatar-dep_021652403.jpg" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
-                        <td>Nguyen Van A</td>
-                        <td>nguyenvana@gmail.com</td>
-                        <td>0123456789</td>
-                        <td><span class="badge bg-danger">User</span></td>
-                        <td><span class="badge bg-success">Kích hoạt</span></td>
-                        <td>13-04-2024</td>
-                        <td>
-                            <a class="btn btn-info btn-sm" href="/update-detail-user">View</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="https://i.pinimg.com/736x/b7/91/44/b79144e03dc4996ce319ff59118caf65.jpg" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
-                        <td>Nguyen Van A</td>
-                        <td>nguyenvana@gmail.com</td>
-                        <td>0123456789</td>
-                        <td><span class="badge bg-danger">User</span></td>
-                        <td><span class="badge bg-success">Kích hoạt</span></td>
-                        <td>13-04-2024</td>
-                        <td>
-                            <a class="btn btn-info btn-sm" href="/update-detail-user">View</a>
-                        </td>
-                    </tr>
+                    @if(accounts != null)
+                    {
+                        @if (accounts.Any())
+                        {
+                            @foreach (var account in accounts)
+                            {
+                                <tr>
+                                    <td><img src="@account.Avatar" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
+                                    <td>@account.Name</td>
+                                    <td>@account.Email</td>
+                                    <td>@account.Phone</td>
+                                    <td><span class="badge bg-danger">@account.Role</span></td>
+                                    <td><span class="badge bg-success">@account.Status</span></td>
+                                    <td>@account.CreateDate?.ToString("dd-MM-yyyy")</td>
+                                    <td>
+                                        <a class="btn btn-info btn-sm" href="@($"update-detail-user/{account.Id}")">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">Loading...</td>
+                        </tr>
+                    }
                     
                 </tbody>
             </table>
@@ -55,5 +66,10 @@
     </div>
 </div>
 @code {
+    private IEnumerable<AccountDto> accounts = new List<AccountDto>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await AccountService.GetAllAsync();
+    }
 }
