@@ -1,50 +1,66 @@
 ﻿@page "/create-user"
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@inject IAccountService AccountService
 <div class="container-fluid">
-    <form>
+    <EditForm Model="account" OnValidSubmit="CreateAccount">
+        <DataAnnotationsValidator />
         <div class="mb-3">
-            <a type="button" class="btn btn-light me-2" href="/list-user">Quay lại</a>
-            <a type="submit" class="btn btn-primary me-2" href="#">+ Tạo mới</a>
+            <a type="button" class="btn btn-light me-2" @onclick="GoBack">Quay lại</a>
+            <button type="submit" class="btn btn-primary me-2">+ Tạo mới</button>
         </div>
-
         <div class="mb-3">
             <label for="fullname" class="form-label">Họ tên</label>
-            <input type="text" class="form-control" id="fullname">
+            <InputText class="form-control" id="fullname" @bind-Value="account.Name" />
+            <ValidationMessage For="@(() => account.Name)" />
         </div>
 
         <div class="mb-3">
+            <label for="UserName" class="form-label">Tên tài khoản</label>
+            <InputText class="form-control" id="UserName" @bind-Value="account.Username" />
+            <ValidationMessage For="@(() => account.Username)" />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mật khẩu</label>
+            <InputText class="form-control" id="password" @bind-Value="account.Password" />
+            <ValidationMessage For="@(() => account.Password)" />
+        </div>
+        <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email">
+            <InputText class="form-control" id="email" @bind-Value="account.Email" />
+            <ValidationMessage For="@(() => account.Email)" />
         </div>
 
         <div class="mb-3">
             <label for="phone" class="form-label">Số điện thoại</label>
-            <input type="text" class="form-control" id="phone">
+            <InputText class="form-control" id="phone" @bind-Value="account.Phone" />
+            <ValidationMessage For="@(() => account.Phone)" />
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Mật khẩu</label>
-            <input type="password" class="form-control" id="password">
-        </div>
-
-        
-        <div class="mb-3">
-            <label for="role" class="form-label">Quyền</label>
-            <select class="form-select" id="role">
-                <option selected>USER</option>
-                <option>ADMIN</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="status" class="form-label">Trạng thái</label>
-            <select class="form-select" id="status">
-                <option selected>Kích hoạt</option>
-                <option>Chưa kích hoạt</option>
-            </select>
-        </div>
-
-        
-    </form>
+    </EditForm>
 </div>
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
 @code {
+    private AccountCreateRequest account = new AccountCreateRequest();
+    private async Task CreateAccount()
+    {
+        if(account != null)
+        {
+            await AccountService.CreateAsync(account);
+            await JSRuntime.ToastrSuccess("Create user successfully");
+            NavigationManager.NavigateTo("/list-user");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Create user failed");
+        }
 
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/list-film");
+    }
 }
