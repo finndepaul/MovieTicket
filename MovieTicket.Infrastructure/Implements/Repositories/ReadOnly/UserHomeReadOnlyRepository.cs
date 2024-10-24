@@ -28,6 +28,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                         Gerne = f.Gerne,
                         RunningTime = f.RunningTime,
                         SType = s.Type,
+                        StartDate = s.StartDate
                     }).AsNoTracking();
 
             //.Select(x => new UserHomeDto
