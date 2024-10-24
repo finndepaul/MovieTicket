@@ -1,32 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\img\Avatar\" />
-	<Folder Include="wwwroot\img\icons\" />
-    <Folder Include="wwwroot\img\posterFilm\" />
-    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <Folder Include="wwwroot\css\" />
-  </ItemGroup>
+	<ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="bootstrap" Version="5.3.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.8" />
-	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
-  </ItemGroup>
+		<Folder Include="wwwroot\img\Avatar\" />
+		<Folder Include="wwwroot\img\icons\" />
+		<Folder Include="wwwroot\img\posterFilm\" />
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+		<Folder Include="Components\Pages\User\" />
+		<Folder Include="wwwroot\css\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MovieTicket.API\MovieTicket.API.csproj" />
-    <ProjectReference Include="..\MovieTicket.Application\MovieTicket.Application.csproj" />
-    <ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
-    <ProjectReference Include="..\MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="bootstrap" Version="5.3.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\MovieTicket.API\MovieTicket.API.csproj" />
+		<ProjectReference Include="..\MovieTicket.Application\MovieTicket.Application.csproj" />
+		<ProjectReference Include="..\MovieTicket.Domain\MovieTicket.Domain.csproj" />
+		<ProjectReference Include="..\MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj" />
+	</ItemGroup>
 </Project>
