@@ -36,6 +36,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 								 CinemaCenterId = showTime.CinemaCenter.Id, 
 								 CinemaName = cinema.Name,
 								 CinemaCenterName = cinemaCenter.Name,
+								 FilmId = showTime.Film.Id,
 								 FilmName = film.Name,
 								 StartDate = schedule.StartDate,
 								 EndDate = schedule.EndDate,
