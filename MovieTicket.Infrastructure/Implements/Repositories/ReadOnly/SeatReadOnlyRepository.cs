@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Seat;
@@ -7,11 +6,6 @@ using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -36,7 +30,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 CinemaName = c.Cinema.Name,
                 SeatTypeName = c.SeatType.Name,
                 Position = c.Position,
-                Status = (SeatStatus)c.Status
+                Row = (int)c.Row,
+                Column = (int)c.Column,
+                Status = (SeatStatus)c.Status,
+                Selection = (SeatSelection)c.Selection
             }).AsNoTracking();
             if (!CinemaId.Equals(Guid.Empty))
             {

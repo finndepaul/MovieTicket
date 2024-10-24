@@ -16,15 +16,17 @@
         </div>
         <div class="validate mt-1"><ValidationMessage For="@(() => request.Name)" /></div>
 
-        <div class="input-group mt-3">
+         <div class="input-group mt-3">
             <label class="input-group-text" for="cinemaType">Loại phòng chiếu</label>
-            <select class="form-select" id="cinemaType" @bind="request.CinemaTypeId">
-                <option value="">Chọn loại phòng chiếu</option>
+            <div id="cinemaType" class="form-control">
                 @foreach (var type in cinemaTypes)
-                {
-                    <option value="@type.Id">@type.Name</option>
-                })
-            </select>
+                {   
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="cinemaType" id="@type.Name" @onchange="@(()=>OnCinemaTypeChange(type.Id))" />
+                        <label class="form-check-label" for="@type.Name">@type.Name</label>
+                    </div>
+                }
+            </div>
         </div>
         <div class="validate mt-1"><ValidationMessage For="@(() => request.CinemaTypeId)" /></div>
 
@@ -32,7 +34,7 @@
             <label class="input-group-text" for="row">Số hàng</label>
             <InputNumber @bind-Value="request.Row" id="row" class="form-control" />
         </div>
-        <div class="mt-1"><ValidationMessage For="@(() => request.Row)" /></div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Row)" /></div>
 
         <div class="input-group mt-3">
             <label class="input-group-text" for="column">Số cột</label>
@@ -45,7 +47,8 @@
             <InputText @bind-Value="request.Description" id="description" class="form-control" />
         </div>
         <div class="validate mt-1"><ValidationMessage For="@(() => request.Description)" /></div>
-        <div class="my-3 justify-content-center">
+        
+            <div class="my-3 d-flex justify-content-center">
             <input type="submit" class="btn btn-success" value="Tạo" />
         </div>
     </EditForm>
@@ -60,6 +63,8 @@
 @code {
     [Parameter]
     public string CinemaCenterName { get; set; }
+    [Parameter]
+    public EventCallback<string> OnCreateSuccess { get; set; } //thông báo vào truyền CinemaCenterName về Cinema.razor
 
     private CinemaCreateRequest request = new();
     private List<CinemaTypeDto> cinemaTypes = new();
@@ -71,6 +76,18 @@
         cinemaTypes = await CinemaTypeService.GetListCinemaTypesAsync();
     }
 
+    public void ResetForm() => request = new CinemaCreateRequest(); // Reset form
+
+    private void OnCinemaTypeChange(Guid cinemaTypeId)
+    {
+        request.CinemaTypeId = cinemaTypeId.ToString();
+        if (cinemaTypeId == Guid.Empty)
+        {
+            // Trigger validation message
+            request.CinemaTypeId = null;
+        }
+    }
+ 
     private async Task CreateCinema()
     {
         CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch()
@@ -82,21 +99,20 @@
         {
             request.CinemaCenterId = CinemaCenterDtos.First().Id;
         }
+        // if(request.CinemaTypeId == Guid.Empty)
+        // {
+        //     await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn loại phòng chiếu");
+        //     return;
+        // }
         ResponseObject<CinemaDto> response = await CinemaService.Create(request);
         if (response.Status == StatusCodes.Status200OK)
         {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
-            NavigationManager.NavigateTo("/cinema");
+            await OnCreateSuccess.InvokeAsync(CinemaCenterName);
         }
         else
         {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
         }
-    }
-    private async Task OnChangeCinemaCenter(ChangeEventArgs e)
-    {
-        string selectedCinemaCenterName = CinemaCenterName;
-        _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
-        StateHasChanged();
     }
 }

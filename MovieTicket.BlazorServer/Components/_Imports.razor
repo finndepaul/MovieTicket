@@ -25,7 +25,7 @@
 @using MovieTicket.Application.DataTransferObjs.CinemaCenter
 @using MovieTicket.Application.DataTransferObjs.Cinema.Request
 @using MovieTicket.Application.DataTransferObjs.CinemaType
-
+@using MovieTicket.Application.DataTransferObjs.Seat
 
 @inject IAuthenService AuthenService
 @inject IBannerService BannerService
@@ -34,6 +34,8 @@
 @inject IAdminHomeService AdminHomeService
 @inject ICinemaCenterService CinemaCenterService
 @inject ICinemaTypeService CinemaTypeService
+@inject ISeatService SeatService
+@inject ISeatTypeService SeatTypeService
 
 @inject IJSRuntime JSRuntime
 @inject AppState AppState

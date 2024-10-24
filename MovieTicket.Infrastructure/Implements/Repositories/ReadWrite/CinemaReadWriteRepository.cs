@@ -38,7 +38,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 var cinema = new Cinema
                 {
                     Name = request.Name,
-                    CinemaTypeId = request.CinemaTypeId,
+                    CinemaTypeId = Guid.Parse(request.CinemaTypeId),
                     CinemaCenterId = request.CinemaCenterId,
                     Column = request.Column,
                     Row = request.Row,
@@ -51,18 +51,21 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 await _context.Cinemas.AddAsync(cinema);
                 await _context.SaveChangesAsync();
                 string position = "";
-                for (int x = 1; x <= request.Column; x++)
+                for (int x = 1; x <= request.Row; x++)
                 {
                     position = AlphabeticalOrder(x - 1);
-                    for (int y = 1; y <= request.Row; y++)
+                    for (int y = 1; y <= request.Column; y++)
                     {
                         position += y;
                         var seat = new Seat
                         {
                             CinemaId = cinema.Id,
-                            SeatTypeId = null,
+                            SeatTypeId = _context.SeatTypes.Where(x => x.Name == "Normal").FirstOrDefault().Id,
                             Position = position,
+                            Row = x,
+                            Column = y,
                             Status = SeatStatus.Available,
+                            Selection = SeatSelection.None,
                         };
                         await _context.Seats.AddAsync(seat);
                         position = AlphabeticalOrder(x - 1);

@@ -11,5 +11,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
         Task<ResponseObject<SeatDTO>> UpdateAsync(SeatUpdateRequest request);
 
         Task<ResponseObject<Seat>> HardDelete(Guid id);
+
+        Task<ResponseObject<List<SeatDTO>>> UpdateRangeAsync(List<SeatUpdateRequest> request);
     }
 }
