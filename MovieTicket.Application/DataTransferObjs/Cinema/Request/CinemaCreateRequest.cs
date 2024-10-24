@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MovieTicket.Application.DataTransferObjs.Cinema.Request
 {
@@ -13,7 +8,7 @@ namespace MovieTicket.Application.DataTransferObjs.Cinema.Request
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Chưa chọn loại phòng chiếu")]
-        public Guid CinemaTypeId { get; set; }
+        public string CinemaTypeId { get; set; } //ValidationMessage không check được Guid, phải convert sang string
 
         [Required]
         public Guid CinemaCenterId { get; set; }
