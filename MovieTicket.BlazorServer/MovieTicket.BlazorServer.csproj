@@ -7,11 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-
 		<Folder Include="wwwroot\img\Avatar\" />
 		<Folder Include="wwwroot\img\icons\" />
 		<Folder Include="wwwroot\img\posterFilm\" />
-		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
 		<Folder Include="Components\Pages\User\" />
 		<Folder Include="wwwroot\css\" />
 	</ItemGroup>
@@ -22,6 +20,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
