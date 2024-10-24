@@ -211,6 +211,8 @@
 	{
 		var pagingResponse = await _ser.GetListRevenueByCinemaAsync(startDate, endDate, pagingParameters);
 		revenueByCinemaDtos = pagingResponse.Item.ToList();
+		var hello = await _ser.GetListRevenueByCinemaAsync(startDate, endDate, new PagingParameters() { PageSize = 30 });
+		hello.Item.ToList();
 		metaData = pagingResponse.MetaData;
 		StateHasChanged();
 	}

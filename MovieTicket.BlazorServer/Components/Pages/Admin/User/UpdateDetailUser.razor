@@ -1,4 +1,8 @@
-﻿@page "/update-detail-user"
+﻿@page "/update-detail-user/{Id:guid}"
+@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@using MovieTicket.Domain.Enums
+@inject IAccountService AccountService
 <div class="container-fluid">
     <ul class="nav nav-underline" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -11,59 +15,143 @@
 
     <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
-            <form>
+            <EditForm Model="accountUpdateRequest" OnValidSubmit="UpdateAccount">
                 <div class="mb-3">
                     <a type="button" class="btn btn-light me-2" href="/list-user">Quay lại</a>
-                    <a type="submit" class="btn btn-primary me-2" href="#">Cập nhật</a>
+                    <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
                     <a type="button" class="btn btn-warning" href="#">Reset mật khẩu</a>
                 </div>
 
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Họ tên</label>
-                    <input type="text" class="form-control" id="fullname" value="Phạm Đình Tiến">
+                    <InputText class="form-control" id="fullname" @bind-Value="accountUpdateRequest.Name"/>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" value="phamdinhtien@gmail.com" disabled>
+                    <InputText class="form-control" id="email" @bind-Value="accountUpdateRequest.Email" disabled />
                 </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label">Số điện thoại</label>
-                    <input type="text" class="form-control" id="phone" value="0709732310">
+                    <InputText class="form-control" id="phone" @bind-Value="accountUpdateRequest.Phone"/>
                 </div>
 
                 <div class="mb-3">
                     <label for="role" class="form-label">Quyền</label>
-                    <select class="form-select" id="role">
-                        <option selected>USER</option>
-                        <option>ADMIN</option>
-                    </select>
+                    <InputSelect @bind-Value="accountUpdateRequest.Role" class="form-select" id="role">
+                        <option selected>Select a Status</option>
+                        @foreach (var Item in Enum.GetValues(typeof(AccountRole)))
+                        {
+                            <option value="@Item">@Item</option>
+                        }
+                    </InputSelect>
                 </div>
 
                 <div class="mb-3">
                     <label for="status" class="form-label">Trạng thái</label>
-                    <select class="form-select" id="status">
-                        <option selected>Kích hoạt</option>
-                        <option>Chưa kích hoạt</option>
-                    </select>
+                    <InputSelect @bind-Value="accountUpdateRequest.Status" class="form-select" id="status">
+                        <option selected>Select a Status</option>
+                        @foreach (var Item in Enum.GetValues(typeof(AccountStatus)))
+                        {
+                            <option value="@Item">@Item</option>
+                        }
+                    </InputSelect>
                 </div>
-
                 <div class="mb-3">
-                    <img src="https://i.ytimg.com/vi/OBIIhGvmND8/hqdefault.jpg" alt="User Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
+                    @if (accountUpdateRequest.Avatar == null)
+                    {
+                        <label for="customFile" class="form-label">Upload Image</label>
+                        <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+                    }
+                    @if (accountUpdateRequest.Avatar != null)
+                    {
+                        <div class="row">
+                            <div class="md-3 pt-3">
+                                <img src="@accountUpdateRequest.Avatar" alt="User Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
+                            </div>
+                            <div class="md-3 pt-3 ">
+                                <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
+                            </div>
+                        </div>
+                    }
                 </div>
-
-                <div class="mb-3">
-                    <button type="button" class="btn btn-primary">Thay đổi ảnh đại diện</button>
-                </div>
-            </form>
+            </EditForm>
         </div>
-
         <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
             <p>Hiện tại chưa có thông tin đặt vé.</p>
         </div>
     </div>
 </div>
 @code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private string? _directoryPath { get; set; }
+    private AccountDto accountDtos = new AccountDto();
+    private AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest();
 
+    protected override async Task OnInitializedAsync()
+    {
+        accountDtos = await AccountService.GetByIdAsync(Id);
+        accountUpdateRequest = new AccountUpdateRequest
+        {
+            Id = accountDtos.Id,
+            Name = accountDtos.Name,
+            Email = accountDtos.Email,
+            Phone = accountDtos.Phone,
+            Role = accountDtos.Role,
+            Status = accountDtos.Status,
+            Avatar = accountDtos.Avatar
+        };
+        _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Avatar");
+    }
+
+    private async Task UpdateAccount()
+    {
+        if (accountUpdateRequest != null)
+        {
+            accountUpdateRequest.Id = Id;
+            await AccountService.UpdateAsync(accountUpdateRequest);
+            await JSRuntime.ToastrSuccess("Update user successfully");
+            NavigationManager.NavigateTo("/list-user");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Update user failed");
+        }
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        FileInfo fileInfo = new (file.Name);
+        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
+        if(!Directory.Exists(_directoryPath))
+        {
+            Directory.CreateDirectory(_directoryPath);
+        }
+        var path = Path.Combine(_directoryPath, newFileName);
+        await using FileStream fs = new(path, FileMode.Create);
+        await file.OpenReadStream(file.Size).CopyToAsync(fs);
+        accountUpdateRequest.Avatar = $"/img/Avatar/{newFileName}";
+    }
+
+    void DeleteImage()
+    {
+        if(accountUpdateRequest.Avatar == null)
+        {
+            return;
+        }
+        var fileToDelete = accountUpdateRequest.Avatar.Split('/').Reverse().First();
+        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
+        if (!File.Exists(filePathToDeleteImage))
+        {
+            accountUpdateRequest.Avatar = null;
+            return;
+        }
+        File.Delete(filePathToDeleteImage);
+
+        accountUpdateRequest.Avatar = null;
+        return;
+    }
 }

@@ -90,6 +90,10 @@
 								{
 									<span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.ScreenTypeName</span>
 								}
+								@if (item.ScreenTypeName == "4DX")
+								{
+									<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.ScreenTypeName</span>
+								}
 							</td>
 							<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
 							<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
@@ -237,7 +241,10 @@
 	{
 		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
 		{
-			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, PagingParameters);
+			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, new PagingParameters()
+				{
+					PageSize = 20
+				});
 			ShowTimes = pagingResponse.Item.ToList();
 			MetaData = pagingResponse.MetaData;
 			StateHasChanged();
