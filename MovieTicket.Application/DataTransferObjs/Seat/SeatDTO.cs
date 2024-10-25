@@ -10,6 +10,9 @@ namespace MovieTicket.Application.DataTransferObjs.Seat
         public string CinemaName { get; set; }
         public string SeatTypeName { get; set; }
         public string Position { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
         public SeatStatus Status { get; set; }
+        public SeatSelection Selection { get; set; }
     }
 }

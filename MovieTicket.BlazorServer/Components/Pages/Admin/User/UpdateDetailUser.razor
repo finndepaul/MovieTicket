@@ -3,6 +3,7 @@
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Domain.Enums
 @inject IAccountService AccountService
+@attribute [Authorize(Roles = "Admin")]
 <div class="container-fluid">
     <ul class="nav nav-underline" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -16,6 +17,7 @@
     <div class="tab-content mt-3" id="myTabContent">
         <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
             <EditForm Model="accountUpdateRequest" OnValidSubmit="UpdateAccount">
+                <DataAnnotationsValidator />
                 <div class="mb-3">
                     <a type="button" class="btn btn-light me-2" href="/list-user">Quay lại</a>
                     <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
@@ -25,6 +27,7 @@
                 <div class="mb-3">
                     <label for="fullname" class="form-label">Họ tên</label>
                     <InputText class="form-control" id="fullname" @bind-Value="accountUpdateRequest.Name"/>
+                    <ValidationMessage For="@(() => accountUpdateRequest.Name)" />
                 </div>
 
                 <div class="mb-3">
@@ -35,6 +38,7 @@
                 <div class="mb-3">
                     <label for="phone" class="form-label">Số điện thoại</label>
                     <InputText class="form-control" id="phone" @bind-Value="accountUpdateRequest.Phone"/>
+                    <ValidationMessage For="@(() => accountUpdateRequest.Phone)" />
                 </div>
 
                 <div class="mb-3">
@@ -46,6 +50,7 @@
                             <option value="@Item">@Item</option>
                         }
                     </InputSelect>
+                    <ValidationMessage For="@(() => accountUpdateRequest.Role)" />
                 </div>
 
                 <div class="mb-3">
@@ -57,6 +62,7 @@
                             <option value="@Item">@Item</option>
                         }
                     </InputSelect>
+                    <ValidationMessage For="@(() => accountUpdateRequest.Status)" />
                 </div>
                 <div class="mb-3">
                     @if (accountUpdateRequest.Avatar == null)
@@ -83,6 +89,11 @@
         </div>
     </div>
 </div>
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
 @code {
     [Parameter]
     public Guid Id { get; set; }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Seat;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
@@ -47,6 +46,13 @@ namespace MovieTicket.API.Controllers
         public async Task<ActionResult> Update(SeatUpdateRequest request)
         {
             var update = await _seatReadWriteRepository.UpdateAsync(request);
+            return Ok(update);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateRange(List<SeatUpdateRequest> request)
+        {
+            var update = await _seatReadWriteRepository.UpdateRangeAsync(request);
             return Ok(update);
         }
 

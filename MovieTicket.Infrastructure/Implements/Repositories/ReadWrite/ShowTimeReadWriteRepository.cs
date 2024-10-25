@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.ShowTime;
@@ -63,10 +63,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			// Tìm suất chiếu có thời gian trùng nhau trong cùng một ngày
 			var overlappingShowTime = await _db.ShowTimes
 				.Where(st => st.CinemaId == showTime.CinemaId
-							 && st.ShowtimeDate.Value == showTime.ShowtimeDate.Value
-							 && ((st.ScreenTypeId == showTime.ScreenTypeId && st.TranslationTypeId == showTime.TranslationTypeId)
-								 || (st.ScreenTypeId != showTime.ScreenTypeId && st.TranslationTypeId == showTime.TranslationTypeId)
-								 || (st.ScreenTypeId == showTime.ScreenTypeId && st.TranslationTypeId != showTime.TranslationTypeId))
+							 && st.ShowtimeDate.Value == showTime.ShowtimeDate.Value							 
 							 && ((showTime.StartTime >= st.StartTime && showTime.StartTime <= st.EndTime)
 								 || (showTime.EndTime >= st.StartTime && showTime.EndTime <= st.EndTime)))
 				.FirstOrDefaultAsync();
