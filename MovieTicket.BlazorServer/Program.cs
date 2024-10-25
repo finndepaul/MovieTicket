@@ -28,7 +28,6 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<IFilmService, FilmService>();
             builder.Services.AddScoped<IScreenTypeServices, ScreenTypeServices>();
             builder.Services.AddScoped<ITranslationTypeService, TranslationTypeService>();
-            builder.Services.AddScoped<IFileUpload, FileUpload>();
             builder.Services.AddScoped<IAdminHomeService, AdminHomeService>();
             builder.Services.AddScoped<IScheduelService, ScheduelService>();
             builder.Services.AddScoped<ICinemaService, CinemaService>();

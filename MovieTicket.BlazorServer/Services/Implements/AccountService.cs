@@ -1,5 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer.Services.Implements
@@ -21,12 +22,17 @@ namespace MovieTicket.BlazorServer.Services.Implements
         public async Task<AccountDto> GetByIdAsync(Guid id)
         {
             return await _httpClient.GetFromJsonAsync<AccountDto>($"api/Account/GetAccountById?Id={id}");
-            
         }
-        public async Task<AccountDto> CreateAsync(AccountCreateRequest accountCreateRequest)
+        public async Task<ResponseObject<AccountDto>> CreateAsync(AccountCreateRequest accountCreateRequest)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Account/CreateAccount", accountCreateRequest);
-            return await response.Content.ReadFromJsonAsync<AccountDto>();
+            var readObj = await response.Content.ReadFromJsonAsync<ResponseObject<AccountDto>>();
+            return new ResponseObject<AccountDto>()
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
         }
         public async Task<AccountDto> UpdateAsync(AccountUpdateRequest accountUpdateRequest)
         {

@@ -1,6 +1,7 @@
 ﻿@page "/list-user"
 @using MovieTicket.Application.DataTransferObjs.Account
 @inject IAccountService AccountService
+@attribute [Authorize(Roles = "Admin")]
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 d-flex justify-content-between align-items-center">
