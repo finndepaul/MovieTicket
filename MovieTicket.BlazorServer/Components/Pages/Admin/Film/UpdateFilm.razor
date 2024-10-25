@@ -5,15 +5,14 @@
 @using MovieTicket.Domain.Enums
 @inject IFilmService FilmService
 @inject NavigationManager NavigationManager
-@inject IFileUpload FileUploadService
 @inject IJSRuntime _JSRuntime
 @inject ITranslationTypeService TranslationTypeService
 @inject IScreenTypeServices ScreenTypeService
 <div class="container-fluid">
-    <button class="btn btn-outline-secondary mb-3" @onclick="GoBack">Quay lại</button>
-
     <EditForm Model="filmUpdateRequest" OnValidSubmit="HandleFilmUpdate">
         <DataAnnotationsValidator />
+        <a class="btn btn-outline-secondary mb-3" href="/list-film">Quay lại</a>
+        <button type="submit" class="btn btn-primary mb-3">Submit</button>
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="tenPhim" class="form-label">Tên phim</label>
@@ -21,13 +20,16 @@
                 <ValidationMessage For="@(() => filmUpdateRequest.Name)" />
             </div>
             <div class="col-md-6">
-                <label for="hinhThucChieu" class="form-label">Hình thức chiếu</label>
-                <select @onchange="OnScreenTypeChange" class="form-control" multiple id="hinhThucChieu">
+                <label class="form-label">Hình thức chiếu</label>
+                <div class="d-flex flex-wrap">
                     @foreach (var screenType in screenTypes)
                     {
-                        <option value="@screenType.Id">@screenType.Type</option>
+                        <div class="form-check me-3">
+                            <input type="checkbox" class="form-check-input" @onchange="(e) => OnScreenTypeCheckbox(screenType.Id, e.Value)" checked="@selectedScreenTypeIds.Contains(screenType.Id)" />
+                            <label class="form-check-label">@screenType.Type</label>
+                        </div>
                     }
-                </select>
+                </div>
             </div>
         </div>
 
@@ -38,13 +40,16 @@
                 <ValidationMessage For="@(() => filmUpdateRequest.EnglishName)" />
             </div>
             <div class="col-md-6">
-                <label for="hinhThucDich" class="form-label">Hình thức dịch</label>
-                <select class="form-select" id="hinhThucChieu" @onchange="OnTranslationTypeChange" multiple>
+                <label class="form-label">Hình thức dịch</label>
+                <div class="d-flex flex-wrap ">
                     @foreach (var translationType in translationTypes)
                     {
-                        <option value="@translationType.Id">@translationType.Type</option>
+                        <div class="form-check me-3">
+                            <input type="checkbox" class="form-check-input" @onchange="(e) => OnTranslationTypeCheckbox(translationType.Id, e.Value)" checked="@selectedTranslationTypeIds.Contains(translationType.Id)" />
+                            <label class="form-check-label">@translationType.Type</label>
+                        </div>
                     }
-                </select>
+                </div>
             </div>
         </div>
 
@@ -56,7 +61,13 @@
             </div>
             <div class="col-md-6">
                 <label for="doTuoi" class="form-label">Độ tuổi xem phim</label>
-                <InputNumber class="form-control" id="doTuoi" @bind-Value="filmUpdateRequest.Rating" placeholder="Enter rating"/>
+                <select class="form-select" @bind="filmUpdateRequest.Rating">
+                    <option selected>Lựa chọn độ tuổi của phim</option>
+                    <option value="12">Phim dành cho mọi lứa tuổi</option>
+                    <option value="13">13 tuổi trở lên</option>
+                    <option value="16">16 tuổi trở lên</option>
+                    <option value="18">18 tuổi trở lên</option>
+                </select>
                 <ValidationMessage For="@(() => filmUpdateRequest.Rating)" />
             </div>
         </div>
@@ -128,12 +139,24 @@
                 <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
             </div>
             <div class="col-md-6">
-                <label for="poster" class="form-label">Poster</label>
-                <InputFile OnChange="OnInputFileChange" class="form-control" />
+                @if (filmUpdateRequest.Poster == null)
+                {
+                    <label for="customFile" class="form-label">Upload Image</label>
+                    <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+                }
+                @if (filmUpdateRequest.Poster != null)
+                {
+                    <div class="row">
+                        <div class="col-md-12 pt-3">
+                            <img src="@filmUpdateRequest.Poster" alt="Film Image" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="col-md-12 pt-3">
+                            <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
     </EditForm>
 </div>
 
@@ -142,11 +165,11 @@
     public Guid Id { get; set; }
     private FilmUpdateRequest filmUpdateRequest = new FilmUpdateRequest();
     private FilmDto filmDto = new FilmDto();
-    private IBrowserFile? posterFile;
+    private string? _directoryPath { get; set; }
     private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
     private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
-    private List<Guid> selectedScreenTypeIds;
-    private List<Guid> selectedTranslationTypeIds;
+    private List<Guid> selectedScreenTypeIds = new List<Guid>();
+    private List<Guid> selectedTranslationTypeIds = new List<Guid>();
     protected async override Task OnInitializedAsync()
     {
 
@@ -178,6 +201,7 @@
 
             selectedScreenTypeIds = filmDto.ScreenTypeDtos.Select(st => st.Id).ToList();
             selectedTranslationTypeIds = filmDto.TranslationTypeDtos.Select(tt => tt.Id).ToList();
+            _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "posterFilm");
         }
         else
         {
@@ -188,10 +212,6 @@
 
     private async Task HandleFilmUpdate()
     {
-        if (posterFile != null)
-        {
-            filmUpdateRequest.Poster = await FileUploadService.UploadFile(posterFile);
-        }
         filmUpdateRequest.ScreenTypeIds = selectedScreenTypeIds;
         filmUpdateRequest.TranslationTypeIds = selectedTranslationTypeIds;
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
@@ -206,24 +226,74 @@
         }
 
     }
-    private void OnInputFileChange(InputFileChangeEventArgs e)
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
     {
-        posterFile = e.File;
-    }
-    private void GoBack()
-    {
-        NavigationManager.NavigateTo("/list-film");
+        var file = e.File;
+        FileInfo fileInfo = new(file.Name);
+        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
+        if (!Directory.Exists(_directoryPath))
+        {
+            Directory.CreateDirectory(_directoryPath);
+        }
+        var path = Path.Combine(_directoryPath, newFileName);
+        await using FileStream fs = new(path, FileMode.Create);
+        await file.OpenReadStream(file.Size).CopyToAsync(fs);
+        filmUpdateRequest.Poster = $"/img/posterFilm/{newFileName}";
     }
 
-    private void OnScreenTypeChange(ChangeEventArgs e)
+    void DeleteImage()
     {
-        var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
-        selectedScreenTypeIds = selectedOptions;
+        if (filmUpdateRequest.Poster == null)
+        {
+            return;
+        }
+        var fileToDelete = filmUpdateRequest.Poster.Split('/').Reverse().First();
+        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
+        if (!File.Exists(filePathToDeleteImage))
+        {
+            filmUpdateRequest.Poster = null;
+            return;
+        }
+        File.Delete(filePathToDeleteImage);
+
+        filmUpdateRequest.Poster = null;
+        return;
     }
 
-    private void OnTranslationTypeChange(ChangeEventArgs e)
+    private void OnScreenTypeCheckbox(Guid screenTypeId, object isChecked)
     {
-        var selectedOptions = ((IEnumerable<string>)e.Value).Select(Guid.Parse).ToList();
-        selectedTranslationTypeIds = selectedOptions;
+        if ((bool)isChecked)
+        {
+            if (!selectedScreenTypeIds.Contains(screenTypeId))
+            {
+                selectedScreenTypeIds.Add(screenTypeId);
+            }
+        }
+        else
+        {
+            if (selectedScreenTypeIds.Contains(screenTypeId))
+            {
+                selectedScreenTypeIds.Remove(screenTypeId);
+            }
+        }
+    }
+
+    private void OnTranslationTypeCheckbox(Guid translationTypeId, object isChecked)
+    {
+        if ((bool)isChecked)
+        {
+            if (!selectedTranslationTypeIds.Contains(translationTypeId))
+            {
+                selectedTranslationTypeIds.Add(translationTypeId);
+            }
+        }
+        else
+        {
+            if (selectedTranslationTypeIds.Contains(translationTypeId))
+            {
+                selectedTranslationTypeIds.Remove(translationTypeId);
+            }
+        }
     }
 }
