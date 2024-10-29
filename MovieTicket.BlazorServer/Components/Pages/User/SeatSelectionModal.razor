@@ -1,0 +1,176 @@
+﻿@using MovieTicket.Application.DataTransferObjs.ShowTime
+@if (cinemaDto != null)
+{
+    <div class="container-modal">
+        <!--Seats Layout-->
+        <div class="seat-grid text-center">
+            @for (int x = 1; x <= cinemaDto.Row; x++)
+            {
+                int row = x;
+                <div class="row row-cols-auto">
+                    @for (int y = 1; y <= cinemaDto.Column; y++)
+                    {
+                        var seat = lstSeats.FirstOrDefault(s => s.Row == x && s.Column == y);
+                        <div class="col">
+                            @if (seat.Status == SeatStatus.Available)
+                            {
+                                <button type="button" id="seat" data-seat-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" @onclick="(() => SeatSelection(seat.Id))" >
+                                    @seat.Position
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" id="seat" data-seat-status="@(seat.Status == SeatStatus.Unavailable ? "Unavailable" : @seat.SeatTypeName)" class="btn seat-unavailable" data-id="@seat.Id">
+                                    @seat.Position
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <hr>
+        
+    </div>
+    <div class="detail">
+        <div class="row">
+            <div class="info col">
+                <label class="me-2">Phim:</label>
+                @showtimeDto.FilmName
+                <br />
+                <label class="me-2">Rạp:</label>
+                @showtimeDto.CinemaCenterName
+                <br />
+                <label class="me-2">Phòng chiếu:</label>
+                @cinemaDto.Name
+            </div>
+            <div class="selectedSeats col">
+                <label class="me-2">Ghế đã chọn:</label>
+                @if (lstSeatsSelected != null)
+                {
+                    @SeatsSelectedstr
+                }
+            </div>
+            <div class="ticketPrices col">
+                <label class="me-2">Tổng tiền:</label>
+                @if (total != null)
+                {
+                    @total
+                }
+            </div>
+            <div class="checkout col">
+                <button class="btn btn-success" @onclick="() => HandleCheckout()">Thanh toán</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Không có dữ liệu</p>
+}
+
+@code {
+    [Parameter] public Guid ShowtimeId { get; set; }
+    [Parameter] public EventCallback<List<TicketPriceDto>> eventCallback { get; set; }
+    private CinemaDto cinemaDto { get; set; } = new();
+    private IQueryable<SeatDTO> lstSeats { get; set; }
+    private List<TicketPriceDto> lstTicketPrices { get; set; }
+    private Guid SeatId = Guid.Empty;
+    private List<SeatDTO> lstSeatsSelected = new();//list ghế đã chọn
+    private string SeatsSelectedstr = "";
+    private string total = null;
+    private ShowTimeDto showtimeDto = new();
+    string today = DateTime.Now.DayOfWeek.ToString();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (ShowtimeId != Guid.Empty)
+        {
+            var response = await ShowTimeService.GetById(ShowtimeId);
+            showtimeDto = response.Data;
+            var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+            cinemaDto = cinema.Data;
+            lstSeats = await SeatService.GetSeats(cinemaDto.Id);
+            var responseTicket = await TicketPriceService.GetAllAsync(new PagingParameters()
+                {
+                    PageNumber = 1,
+                    PageSize = 180
+                });
+            lstTicketPrices = responseTicket.Item.ToList();
+
+            //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
+        }
+    }
+
+    private async Task SeatSelection(Guid id)
+    {
+        Task.Delay(100);
+        SeatId = id;
+        var response = await SeatService.GetById(SeatId);
+
+        var seat = response.Data;
+
+        if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn 
+        {
+            //nếu đã tồn tại thì xóa
+            if (SeatsSelectedstr.Contains(seat.Position))
+            {
+                SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
+            }
+            lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
+            CalculateTotal();
+        }
+        else
+        {
+            //nếu chưa tồn tại thì thêm
+            if (!SeatsSelectedstr.Contains(seat.Position))
+            {
+                SeatsSelectedstr += seat.Position + " ";
+            }
+            lstSeatsSelected.Add(seat);
+            CalculateTotal();
+        };
+
+        //update hóa đơn chờ ở đây
+
+        StateHasChanged();
+    }
+
+    private string CalculateTotal() //tính tổng tiền
+    {
+        decimal x = 0;
+        foreach (var item in lstSeatsSelected)
+        {
+            var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+            if (ticketPrice != null)
+            {
+                x += (Decimal)ticketPrice.Price;
+            }
+        }
+        total = x.ToString("#,##0") + "VND";
+        return total;
+    }
+
+    private string DayOfTheWeek(string day) //check ngày
+    {   
+        if (day.Equals("Saturday") || day.Equals("Sunday"))
+        {
+            return "T7-CN";
+        }
+        else
+        {
+            return "T2-T6";
+        }
+    }
+    public void Reset()
+    {
+        lstSeatsSelected.Clear();
+        SeatsSelectedstr = "";
+        total = null;
+    }
+
+    private async Task HandleCheckout()
+    {
+        //khi bấm nút check out thì chuyển sang trang thanh toán 
+    }
+}

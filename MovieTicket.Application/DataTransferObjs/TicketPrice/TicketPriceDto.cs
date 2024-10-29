@@ -12,5 +12,5 @@ namespace MovieTicket.Application.DataTransferObjs.TicketPrice
         public decimal? Price { get; set; }
 
         public TicketPriceStatus Status { get; set; }
-	}
+    }
 }

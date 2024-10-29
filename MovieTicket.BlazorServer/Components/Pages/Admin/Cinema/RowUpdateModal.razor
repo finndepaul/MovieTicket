@@ -1,19 +1,16 @@
-﻿@using MovieTicket.Application.DataTransferObjs.SeatType
-@using MovieTicket.Domain.Enums
-
-@if (SeatDTOs !=null)
+﻿@if (SeatDTOs != null)
 {
     <div class="container-modal">
         <!--Seats Layout-->
         <div class="seat-grid text-center">
             <div class="row row-cols-auto" style="flex-wrap:wrap">
-            @foreach (var seat in lstSeatDTOs)
-            {
-                <div class="col">
-                    <button type="button" id="seat" data-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id">
-                        @seat.Position
-                    </button>
-                </div>
+                @foreach (var seat in lstSeatDTOs)
+                {
+                    <div class="col">
+                        <button type="button" id="seat" data-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id">
+                            @seat.Position
+                        </button>
+                    </div>
                 }
             </div>
         </div>
@@ -76,8 +73,8 @@ else
 
     protected override async void OnParametersSet()
     {
-        if(SeatDTOs != null)
-        {   
+        if (SeatDTOs != null)
+        {
             seatTypes = await SeatTypeService.GetListSeatTypesAsync();
             lstSeatDTOs = SeatDTOs;
         }
@@ -85,22 +82,23 @@ else
     public void ResetForm() => request = new SeatUpdateRequest();
 
     private async Task UpdateSeats()
-    {   
+    {
         foreach (var seat in lstSeatDTOs)
         {
             lstSeatUpdateRequests.Add(new SeatUpdateRequest
-            {
-                Id = seat.Id,
-                SeatTypeId = request.SeatTypeId,
-                Status = request.Status
-            });
+                {
+                    Id = seat.Id,
+                    SeatTypeId = request.SeatTypeId,
+                    Status = request.Status
+                });
         }
         var response = await SeatService.UpdateRange(lstSeatUpdateRequests);
-        if(response.Status == StatusCodes.Status200OK)
-        {   
+        if (response.Status == StatusCodes.Status200OK)
+        {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
             await OnRowUpdated.InvokeAsync();
-        }else
+        }
+        else
         {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
         }
