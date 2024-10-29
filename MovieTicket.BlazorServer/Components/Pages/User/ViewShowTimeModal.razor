@@ -1,4 +1,4 @@
-﻿@using MovieTicket.Application.DataTransferObjs.ShowTime
+@using MovieTicket.Application.DataTransferObjs.ShowTime
 <div class="container-fluid ">
 	<ul class="nav" style="flex-wrap: wrap">
 		@if (dateRange != null)
@@ -18,7 +18,7 @@
 		{
 			@foreach (var item in ShowTimeSort)
 			{
-				if (item.CinemaCenterName != previousCinemaCenterName || item.ScreenTypeName != previousScreenTypeName || item.TranslationTypeName != previousTranslationTypeName || item.FilmId != previousFilmId)
+				if (item.ScreenTypeName != previousScreenTypeName || item.TranslationTypeName != previousTranslationTypeName || item.FilmId != previousFilmId)
 				{
 					var isActive = ((item.ScreenTypeName == selectedScreenTypeSort && item.TranslationTypeName == selectedTranslationTypeSort) || count == 0) ? "active" : "";
 
@@ -35,17 +35,15 @@
 </div>
 
 
-
 <div class="container-fluid px-3 scrollable" style="height: 580px">
-
-	@if (ShowTimes.Count() != 0)
-	{
+	@if (ShowTimes.Count() != 0) 
+	{ 
 		if (ShowTimes.Count() == 1)
 		{
-			@foreach (var item in ShowTimes)
-			{
-
-
+			var item = ShowTimes.First();
+			<hr />
+			<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
+			<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
 				<hr />
 				<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
 				<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
@@ -58,11 +56,15 @@
 		}
 		else
 		{
-			@foreach (var item in ShowTimes)
-			{
+			previousCinemaCenterName = null;
+			previousScreenTypeName = null;
+			previousFilmId = Guid.Empty;
+			previousTranslationTypeName = null;
 
-				//check
-				if (item.CinemaCenterName != previousCinemaCenterName || item.ScreenTypeName != previousScreenTypeName || item.FilmId != previousFilmId)
+			foreach (var item in ShowTimes)
+			{
+				// Kiểm tra điều kiện để nhóm các suất chiếu
+				if (item.CinemaCenterName != previousCinemaCenterName || item.ScreenTypeName != previousScreenTypeName || item.TranslationTypeName != previousTranslationTypeName || item.FilmId != previousFilmId)
 				{
 					<hr />
 					<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
@@ -72,11 +74,9 @@
 				previousCinemaCenterName = item.CinemaCenterName;
 				previousScreenTypeName = item.ScreenTypeName;
 				previousFilmId = item.FilmId;
-
+				previousTranslationTypeName = item.TranslationTypeName;
 			}
 		}
-
-
 	}
 	else
 	{
