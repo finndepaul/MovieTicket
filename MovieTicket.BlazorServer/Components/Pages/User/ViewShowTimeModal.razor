@@ -50,7 +50,7 @@
 				<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
 				<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
 
-				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => SelectTimeOnAlert(item.Id.ToString())">@item.StartTime.Value.ToString("HH:mm")</button>
+				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => OpenSeatSelection(item.Id)">@item.StartTime.Value.ToString("HH:mm")</button>
 				previousCinemaCenterName = item.CinemaCenterName;
 				previousScreenTypeName = item.ScreenTypeName;
 				previousFilmId = item.FilmId;
@@ -68,7 +68,7 @@
 					<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
 					<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
 				}
-				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => SelectTimeOnAlert(item.Id.ToString())">@item.StartTime.Value.ToString("HH:mm")</button>
+				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => OpenSeatSelection(item.Id)">@item.StartTime.Value.ToString("HH:mm")</button>
 				previousCinemaCenterName = item.CinemaCenterName;
 				previousScreenTypeName = item.ScreenTypeName;
 				previousFilmId = item.FilmId;
@@ -175,6 +175,7 @@
 @code {
 	[Parameter]
 	public string Id { get; set; }
+	[Parameter] public EventCallback<Guid> OnShowtimeSelected { get; set; }
 	private List<DateTime> dateRange = new List<DateTime>();
 	private DateTime selectedDate = DateTime.Today;
 	private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
@@ -188,6 +189,8 @@
 	private string selectedTranslationTypeSort = null;
 	private Guid previousFilmId = Guid.Empty;
 	private int count = 0;
+	private Guid ShowTimeId = Guid.Empty;
+
 	protected async override Task OnParametersSetAsync()
 	{
 		if (!String.IsNullOrEmpty(Id))
@@ -277,6 +280,11 @@
 		{
 			StateHasChanged();
 		}
+	}
+	private async Task OpenSeatSelection(Guid id)
+	{
+		ShowTimeId = id;
+		await OnShowtimeSelected.InvokeAsync(ShowTimeId);
 	}
 
 }

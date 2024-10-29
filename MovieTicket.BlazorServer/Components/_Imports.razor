@@ -26,6 +26,9 @@
 @using MovieTicket.Application.DataTransferObjs.Cinema.Request
 @using MovieTicket.Application.DataTransferObjs.CinemaType
 @using MovieTicket.Application.DataTransferObjs.Seat
+@using MovieTicket.Application.DataTransferObjs.TicketPrice
+@using MovieTicket.Domain.Enums
+@using MovieTicket.Application.DataTransferObjs.SeatType
 
 @inject IAuthenService AuthenService
 @inject IBannerService BannerService
@@ -38,6 +41,7 @@
 @inject ISeatTypeService SeatTypeService
 @inject IShowTimeService ShowTimeService
 @inject IScheduelService ScheduelService
+@inject ITicketPriceService TicketPriceService
 
 @inject IJSRuntime JSRuntime
 @inject AppState AppState
