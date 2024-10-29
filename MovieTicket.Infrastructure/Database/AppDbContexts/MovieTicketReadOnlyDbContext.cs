@@ -309,36 +309,36 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		}
 		// Generate list of schedules
 		modelBuilder.Entity<Schedule>().HasData(schedules);
-		List<TicketPrice> ticketPrices = new List<TicketPrice>();
-		List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
-		List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
-		List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
-		List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
+		//List<TicketPrice> ticketPrices = new List<TicketPrice>();
+		//List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
+		//List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
+		//List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
+		//List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
 
-		// Sinh ra tất cả các tổ hợp SeatTypeId, ScreeningDayId, CinemaTypeId, ScreenTypeId
-		var combinations = from seat in seatTypeIds
-						   from day in screeningDayIds
-						   from cinema in cinemaTypeIds
-						   from screen in screenTypeIds
-						   select new { seat, day, cinema, screen };
+		//// Sinh ra tất cả các tổ hợp SeatTypeId, ScreeningDayId, CinemaTypeId, ScreenTypeId
+		//var combinations = from seat in seatTypeIds
+		//				   from day in screeningDayIds
+		//				   from cinema in cinemaTypeIds
+		//				   from screen in screenTypeIds
+		//				   select new { seat, day, cinema, screen };
 
-		// Chọn 1365 tổ hợp và tạo TicketPrice cho mỗi tổ hợp
-		foreach (var combo in combinations.Take(1365))
-		{
-			TicketPrice ticket = new TicketPrice
-			{
-				Id = Guid.NewGuid(),
-				Price = 30000, // Tính giá ngẫu nhiên hoặc dựa vào logic của bạn
-				SeatTypeId = combo.seat,
-				ScreeningDayId = combo.day,
-				CinemaTypeId = combo.cinema,
-				ScreenTypeId = combo.screen,
-				Status = TicketPriceStatus.Active
-			};
-			ticketPrices.Add(ticket);
-		}
+		//// Chọn 1365 tổ hợp và tạo TicketPrice cho mỗi tổ hợp
+		//foreach (var combo in combinations.Take(1365))
+		//{
+		//	TicketPrice ticket = new TicketPrice
+		//	{
+		//		Id = Guid.NewGuid(),
+		//		Price = 30000, // Tính giá ngẫu nhiên hoặc dựa vào logic của bạn
+		//		SeatTypeId = combo.seat,
+		//		ScreeningDayId = combo.day,
+		//		CinemaTypeId = combo.cinema,
+		//		ScreenTypeId = combo.screen,
+		//		Status = TicketPriceStatus.Active
+		//	};
+		//	ticketPrices.Add(ticket);
+		//}
 
-		// Seed dữ liệu vào database
-		modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
+		//// Seed dữ liệu vào database
+		//modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
 	}
 }
