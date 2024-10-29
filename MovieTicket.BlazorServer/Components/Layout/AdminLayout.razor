@@ -25,9 +25,9 @@
 					</Authorized>
 				</AuthorizeView>
 			</div>
-			<article class="content py-2" style="background-color: rgb(245, 245, 245)">
+			<article class="content py-2" style="background-color: rgb(245, 245, 245);height: 100vh">
 				<BreadCrumb BreadcrumbItems="GetBreadcrumbItems()" />
-				<div class="bg-white px-4 pt-4 rounded-3 scrollable" style="min-height: calc(100vh - 115px);">
+				<div class="bg-white px-4 pt-4 rounded-3 scrollable" style="">
 					@Body
 				</div>
 			</article>
@@ -42,8 +42,10 @@
 </div>
 <style>
 	.scrollable {
-		max-height: calc(100vh - 50px); /* 56px là chiều cao của navbar */
-		overflow-y: scroll; /* Cuộn dọc */
+		min-height: 90%;
+		max-height: 300px;/* 56px là chiều cao của navbar */
+
+		overflow-y: auto;
 	}
 
 	.container-fluid {

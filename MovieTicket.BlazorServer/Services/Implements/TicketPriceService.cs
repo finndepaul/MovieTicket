@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.WebUtilities;
+using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
@@ -40,16 +41,36 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			};
 		}
 
-		public async Task<PageList<TicketPriceDto>> GetAllAsync(PagingParameters pagingParameters)
+		public async Task<PageList<TicketPriceDto>> GetAllAsync(TicketPriceWithPaginationRequest request,PagingParameters pagingParameters)
 		{
+			
 			var queryParameters = new Dictionary<string, string>
 			{
 				["pageNumber"] = pagingParameters.PageNumber.ToString(),
 				["pageSize"] = pagingParameters.PageSize.ToString()
 			};
+			if (request.ScreeningDayId.HasValue)
+			{
+				queryParameters.Add("ScreeningDayId", request.ScreeningDayId.ToString());
+			}
+			if (request.ScreenTypeId.HasValue)
+			{
+				queryParameters.Add("ScreenTypeId", request.ScreenTypeId.ToString());
+			}
+			if (request.CinemaTypeId.HasValue)
+			{
+				queryParameters.Add("CinemaTypeId", request.CinemaTypeId.ToString());
+			}
+			if (request.SeatTypeId.HasValue)
+			{
+				queryParameters.Add("SeatTypeId", request.SeatTypeId.ToString());
+			}
 			string url = QueryHelpers.AddQueryString("api/TicketPrice/GetListTicketPrice", queryParameters);
 			var result = await _http.GetFromJsonAsync<PageList<TicketPriceDto>>(url);
-			return result;
+			return result ?? new PageList<TicketPriceDto>
+			{
+				Item = new List<TicketPriceDto>(),
+			};
 		}
 
 		public async Task<TicketPriceDto> GetByIdAsync(Guid Id)

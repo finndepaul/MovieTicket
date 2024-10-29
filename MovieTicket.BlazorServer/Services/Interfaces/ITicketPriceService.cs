@@ -9,7 +9,7 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
 		Task<ResponseObject<TicketPriceCreateRequest>> Create(TicketPriceCreateRequest request);
 		Task<ResponseObject<bool>> Delete(Guid id);
 		Task<ResponseObject<TicketPriceUpdateRequest>> Update(TicketPriceUpdateRequest request);
-		Task<PageList<TicketPriceDto>> GetAllAsync(PagingParameters pagingParameters);
+		Task<PageList<TicketPriceDto>> GetAllAsync(TicketPriceWithPaginationRequest request, PagingParameters pagingParameters);
 		Task<TicketPriceDto> GetByIdAsync(Guid Id);
 
 	}
