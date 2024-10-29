@@ -38,7 +38,7 @@
 <div class="container-fluid px-3 scrollable" style="height: 580px">
 	@if (ShowTimes.Count() != 0) 
 	{ 
-		if (ShowTimes.Count() == 1)
+		@if (ShowTimes.Count() == 1)
 		{
 			var item = ShowTimes.First();
 			<hr />
@@ -52,7 +52,6 @@
 				previousCinemaCenterName = item.CinemaCenterName;
 				previousScreenTypeName = item.ScreenTypeName;
 				previousFilmId = item.FilmId;
-			}
 		}
 		else
 		{
