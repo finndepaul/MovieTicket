@@ -1,11 +1,8 @@
 ﻿@page "/cinema/{id:guid}"
-@using MovieTicket.Domain.Enums
-
 @attribute [Authorize(Roles = "Admin")]
 
-
-@if(cinema != null && lstSeats != null)
-{   
+@if (cinema != null && lstSeats != null)
+{
     <div class="title">
         <h2 class="text-center">@cinema.Name - @cinema.CinemaCenterName</h2>
     </div>
@@ -21,16 +18,12 @@
                     {
                         var seat = lstSeats.FirstOrDefault(s => s.Row == x && s.Column == y);
                         <div class="col">
-                            @* <button type="button" id="seat" data-seat-status="@seat.Status" data-seat-type="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" @onclick="() => OpenSeatDetail(seat.Id)">
-                                @seat.Position
-                            </button> *@
                             <button type="button" id="seat" data-seat-status="@(seat.Status == SeatStatus.Unavailable ? "Unavailable" : @seat.SeatTypeName)" class="btn seat-btn" data-id="@seat.Id" @onclick="() => OpenSeatDetail(seat.Id)">
                                 @seat.Position
                             </button>
                         </div>
-                    } 
+                    }
                     <div class="col">
-
                         <button type="button" class="btn edit-btn" data-id="@x" id="btnUpdate" @onclick="()=>RowUpdate(row)">
                             <i class="bi bi-pencil-square"></i>
                         </button>
@@ -38,7 +31,7 @@
                 </div>
             }
         </div>
-        <hr> 
+        <hr>
     </div>
 }
 else
@@ -48,38 +41,37 @@ else
 }
 
 <div class="seatInfo">
-        <div class="mx-2">
-            <button type="button" class="btn seat-Normal">
-            </button>
-            <label>Ghế thường</label>
-        </div>
+    <div class="mx-2">
+        <button type="button" class="btn seat-Normal">
+        </button>
+        <label>Ghế thường</label>
+    </div>
 
     <div class="mx-2">
-            <button type="button" class="btn seat-VIP">
-            </button>
-            <label>Ghế VIP</label>
-        </div>
+        <button type="button" class="btn seat-VIP">
+        </button>
+        <label>Ghế VIP</label>
+    </div>
 
     <div class="mx-2">
-        </div>
+    </div>
 
     <div class="mx-2">
-            <button type="button" class="btn seat-Couple">
-            </button>
-            <label>Ghế Couple</label>
-        </div>
+        <button type="button" class="btn seat-Couple">
+        </button>
+        <label>Ghế Couple</label>
+    </div>
 
     <div class="mx-2">
-            <button type="button" class="btn seat-Unavailable">
-            </button>
-            <label>Không khả dụng</label>
-        </div>
+        <button type="button" class="btn seat-Unavailable">
+        </button>
+        <label>Không khả dụng</label>
+    </div>
 </div>
 
 
 <style>
     .seat-btn {
-        <!---->
         background-color: #fff;
         outline: solid 1px #000;
         color: #000;
@@ -88,6 +80,7 @@ else
         margin: 0px;
         padding: 10px;
     }
+
         .seat-btn:hover {
             background-color: #fff;
             color: #000;
@@ -96,7 +89,7 @@ else
 
     .seat-Normal {
         background-color: #7C4DFF;
-        outline:none;
+        outline: none;
         width: 50px;
         height: 50px;
         margin: 0px;
@@ -126,17 +119,19 @@ else
         cursor: not-allowed;
         pointer-events: none;
     }
-    .seat-VIP:hover {
-        background-color: #DD2C00;
-        outline: none;
-        width: 50px;
-        height: 50px;
-        margin: 0px;
-        padding: 10px;
-        cursor: not-allowed;
+
+        .seat-VIP:hover {
+            background-color: #DD2C00;
+            outline: none;
+            width: 50px;
+            height: 50px;
+            margin: 0px;
+            padding: 10px;
+            cursor: not-allowed;
             pointer-events: none;
-    }
-    .seat-Couple{
+        }
+
+    .seat-Couple {
         background-color: #FF8A80;
         outline: none;
         width: 50px;
@@ -146,16 +141,17 @@ else
         cursor: not-allowed;
         pointer-events: none;
     }
-    .seat-Couple:hover{
-        background-color: #FF8A80;
-        outline: none;
-        width: 50px;
-        height: 50px;
-        margin: 0px;
-        padding: 10px;
-        cursor: not-allowed;
+
+        .seat-Couple:hover {
+            background-color: #FF8A80;
+            outline: none;
+            width: 50px;
+            height: 50px;
+            margin: 0px;
+            padding: 10px;
+            cursor: not-allowed;
             pointer-events: none;
-    }
+        }
 
     [data-seat-status="Unavailable"] {
         background-color: #263238;
@@ -165,7 +161,8 @@ else
         height: 50px;
         margin: 0px;
         padding: 10px;
-    } 
+    }
+
         [data-seat-status="Unavailable"]:hover {
             color: white;
             background-color: #263238;
@@ -223,6 +220,7 @@ else
     .btn {
         -webkit-transition: all 0.3s ease-in-out;
     }
+
         .btn:hover {
             -webkit-transform: scale(1.1);
         }
@@ -231,42 +229,46 @@ else
         padding: 0px;
         margin: 0.5rem;
     }
+
     .col {
         padding: 0rem;
         width: 50px;
-        margin-left:0.25rem;
-        margin-right:0.25rem;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
     }
+
     .seat-grid {
         width: max-content;
     }
-    .seatInfo{
+
+    .seatInfo {
         display: flex;
         justify-content: center;
         align-items: center;
         width: 100%;
     }
+
     .container-modal {
-        display:grid;
+        display: grid;
         justify-content: center;
     }
 </style>
 
 @code {
     [Parameter]
-    public Guid CinemaId { get; set; } 
+    public Guid CinemaId { get; set; }
     [Parameter]
     public EventCallback<Guid> OnSeatSelected { get; set; }
     [Parameter]
     public EventCallback<List<SeatDTO>> OnRowSelected { get; set; }
 
-    private CinemaDto cinema { get; set; } = new ();
+    private CinemaDto cinema { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
     public Guid SeatId = Guid.Empty;
-    
+
 
     protected override async Task OnParametersSetAsync()
-    {   
+    {
         if (CinemaId != Guid.Empty)
         {
             var result = await CinemaService.GetCinemaById(CinemaId);
@@ -276,7 +278,7 @@ else
     }
 
     private async Task OpenSeatDetail(Guid seatId)
-    {   
+    {
         SeatId = seatId;
         Console.WriteLine(SeatId);
         //await Task.Delay(100);
@@ -284,9 +286,9 @@ else
     }
 
     private async Task RowUpdate(int row)
-    {  
-       Console.WriteLine("row: ",row);
-       var lstSeatsRow = lstSeats.Where(s => s.Row == row).ToList();
-       await OnRowSelected.InvokeAsync(lstSeatsRow);
+    {
+        Console.WriteLine("row: ", row);
+        var lstSeatsRow = lstSeats.Where(s => s.Row == row).ToList();
+        await OnRowSelected.InvokeAsync(lstSeatsRow);
     }
 }
