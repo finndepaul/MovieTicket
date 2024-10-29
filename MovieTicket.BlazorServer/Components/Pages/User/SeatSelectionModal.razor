@@ -91,11 +91,11 @@ else
             var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
             cinemaDto = cinema.Data;
             lstSeats = await SeatService.GetSeats(cinemaDto.Id);
-            var responseTicket = await TicketPriceService.GetAllAsync(new PagingParameters()
-                {
-                    PageNumber = 1,
-                    PageSize = 180
-                });
+            var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+            {
+                PageNumber = 1,
+                PageSize = 180
+            });
             lstTicketPrices = responseTicket.Item.ToList();
 
             //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
@@ -104,36 +104,40 @@ else
 
     private async Task SeatSelection(Guid id)
     {
-        Task.Delay(100);
-        SeatId = id;
-        var response = await SeatService.GetById(SeatId);
-
-        var seat = response.Data;
-
-        if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn 
+        if(id != null)
         {
-            //nếu đã tồn tại thì xóa
-            if (SeatsSelectedstr.Contains(seat.Position))
+            Task.Delay(100);
+            SeatId = id;
+            var response = await SeatService.GetById(SeatId);
+
+            var seat = response.Data;
+
+            if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn
             {
-                SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
+                //nếu đã tồn tại thì xóa
+                if (SeatsSelectedstr.Contains(seat.Position))
+                {
+                    SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
+                }
+                lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
+                CalculateTotal();
             }
-            lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
-            CalculateTotal();
+            else
+            {
+                //nếu chưa tồn tại thì thêm
+                if (!SeatsSelectedstr.Contains(seat.Position))
+                {
+                    SeatsSelectedstr += seat.Position + " ";
+                }
+                lstSeatsSelected.Add(seat);
+                CalculateTotal();
+            };
+
+            //update hóa đơn chờ ở đây
+
+            StateHasChanged();
         }
-        else
-        {
-            //nếu chưa tồn tại thì thêm
-            if (!SeatsSelectedstr.Contains(seat.Position))
-            {
-                SeatsSelectedstr += seat.Position + " ";
-            }
-            lstSeatsSelected.Add(seat);
-            CalculateTotal();
-        };
-
-        //update hóa đơn chờ ở đây
-
-        StateHasChanged();
+        
     }
 
     private string CalculateTotal() //tính tổng tiền
