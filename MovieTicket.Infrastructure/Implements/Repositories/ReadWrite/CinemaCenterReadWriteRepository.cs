@@ -51,27 +51,43 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             };
         }
 
-        public async Task<ResponseObject<CinemaCenter>> Delete(Guid id)
-        {
-            var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
-            if (cinemaCenter == null)
-            {
-                return new ResponseObject<CinemaCenter>
-                {
-                    Data = null,
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Cinema Center is not exist"
-                };
-            }
-            _movieTicket.CinemaCenters.Remove(cinemaCenter);
-            await _movieTicket.SaveChangesAsync();
-            return new ResponseObject<CinemaCenter>
-            {
-                Data = cinemaCenter,
-                Status = StatusCodes.Status200OK,
-                Message = "Delete Cinema Center success"
-            };
-        }
+		public async Task<ResponseObject<CinemaCenter>> Delete(Guid id)
+		{
+			// Tìm CinemaCenter cần xóa
+			var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
+			if (cinemaCenter == null)
+			{
+				return new ResponseObject<CinemaCenter>
+				{
+					Data = null,
+					Status = StatusCodes.Status400BadRequest,
+					Message = "Cinema Center does not exist"
+				};
+			}
+			
+			var hasReferences = await _movieTicket.Cinemas.AnyAsync(c => c.CinemaCenterId == id); 
+			if (hasReferences)
+			{
+				return new ResponseObject<CinemaCenter>
+				{
+					Data = null,
+					Status = StatusCodes.Status400BadRequest,
+					Message = "Không thể xóa Cinema Center vì nó được tham chiếu đến Cinema"
+				};
+			}
+
+			// Xóa CinemaCenter
+			_movieTicket.CinemaCenters.Remove(cinemaCenter);
+			await _movieTicket.SaveChangesAsync();
+
+			return new ResponseObject<CinemaCenter>
+			{
+				Data = cinemaCenter,
+				Status = StatusCodes.Status200OK,
+				Message = "Delete Cinema Center successful"
+			};
+		}
+
 
 		public async Task<ResponseObject<CinemaCenter>> Update(Guid id, CinemaCenterUpdateRequest cinemaCenter)
 		{
