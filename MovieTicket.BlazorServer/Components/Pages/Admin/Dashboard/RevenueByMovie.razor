@@ -1,5 +1,6 @@
 @page "/revenue-by-movie"
 @using MovieTicket.Application.DataTransferObjs.AdminHome
+@attribute [Authorize(Roles = "Admin")]
 @inject IAdminHomeService _ser;
 
 <div class="content">

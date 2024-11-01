@@ -1,52 +1,167 @@
 ﻿@page "/cinema-center"
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using MovieTicket.BlazorServer.Helper
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Admin")]
+@* Modal Xóa *@
+<div class="modal fade" id="DeleteCinemaCenter" aria-hidden="true" aria-labelledby="DeleteCinemaCenterLabel" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h1 class="modal-title fs-5" id="DeleteTicketPriceToggleLabel">Xác nhận xóa giá vé</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa rạp này không?</p>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteAsync(CinemaCenterId)">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a class="btn btn-success" href="/create-cinema-center">Tạo Rạp Chiếu</a>
+    <div class="d-flex justify-content-start align-items-center mb-3">
+        <a class="btn btn-success me-2" href="/create-cinema-center">Tạo Rạp Chiếu</a>
     </div>
 
-    <table class="table table-striped">
+    <div class="d-flex mt-4" style="max-width: 900px;">
+        <input type="text" class="form-control form-control-sm me-2" placeholder="Tìm theo tên" aria-label="Tìm theo tên" style="width: 40%;" @bind="@CinemaCenterName">
+        <input type="text" class="form-control form-control-sm me-2" placeholder="Tìm theo địa chỉ" aria-label="Tìm theo địa chỉ" style="width: 40%;" @bind="@CinemaCenterAddress">
+        <button class="btn btn-primary btn-sm" type="button" @onclick="Search">Tìm kiếm</button>
+    </div>
+
+    <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col" class="small-col">#</th>
                 <th scope="col">Tên Rạp Chiếu</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Ngày Tạo</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            @for (int i = 1; i <= 10; i++)
+            @if (CinemaCenters.Any())
+            {
+                int index = 1;
+                @foreach (var item in CinemaCenters)
+                {
+                    <tr>
+                        <th scope="row" class="small-col">@index</th>
+                        <td>@item.Name</td>
+                        <td>@item.Address</td>
+                        <td>@item.CreateDate?.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <span class="p-2 m-2 badge text-light bg-primary" role="button" @onclick="() => NavigateToUpdate(item.Id)">
+                                <i class="bi bi-pencil-square fs-6"></i>
+                            </span>
+                            <span class="p-2 m-2 badge text-light bg-danger" role="button" @onclick="() => DeleteId(item.Id.ToString())">
+                                <i class="bi bi-trash3 fs-6"></i>
+                            </span>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
             {
                 <tr>
-                    <th scope="row">@i</th>
-                    <td>Rạp @($"ABC {i}")</td>
-                    <td>@($"123 Đường A, Quận {i}")</td>
-                    <td>@DateTime.Now.AddDays(-i).ToString("yyyy-MM-dd")</td>
+                    <td colspan="4" class="text-center">Không có dữ liệu</td>
                 </tr>
             }
         </tbody>
+        <tfoot>
+            <Pagination MetaData="MetaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+        </tfoot>
     </table>
-
-    <!-- Pagination (Phân trang) -->
-    <div class="pagination-wrapper">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Trước</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Tiếp</a></li>
-            </ul>
-        </nav>
-    </div>
 </div>
+<script>
+    function openModalUpdate(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+    function openModalDelete(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+    function closeModal(modalId) {
+        var modalElement = document.getElementById(modalId);
+        var modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+        }
+    }
+</script>
 <style>
     .pagination-wrapper {
         display: flex;
         justify-content: flex-end;
     }
+
+    .btn:hover, .badge:hover {
+        transform: scale(1.1); 
+        transition: transform 0.2s ease-in-out; 
+    }
+
+    .small-col {
+        width: 50px; 
+        text-align: center; 
+    }
 </style>
 
 @code {
-    private string PageTitle = "Danh Sách Rạp Chiếu Phim";
+    private string CinemaCenterId = string.Empty;
+    private string CinemaCenterName = string.Empty;
+    private string CinemaCenterAddress = string.Empty;
+    private IQueryable<CinemaCenterDto> CinemaCenters = Enumerable.Empty<CinemaCenterDto>().AsQueryable();
+    private CinemaCenterSearch CinemaCenterSearch = new CinemaCenterSearch();
+    private PagingParameters PagingParameters = new PagingParameters();
+    public MetaData MetaData { get; set; } = new MetaData();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    private async Task LoadData()
+    {
+        var cinemaCenters = await CinemaCenterService.GetAllCinemaCenter(CinemaCenterSearch, PagingParameters);
+        CinemaCenters = cinemaCenters.Item.AsQueryable();
+        MetaData = cinemaCenters.MetaData;
+        StateHasChanged();
+    }
+    private async Task Search()
+    {
+        CinemaCenterSearch.Name = CinemaCenterName;
+        CinemaCenterSearch.Address = CinemaCenterAddress;
+        await LoadData();
+    }
+    public async Task SelectedPage(int page)
+	{
+		PagingParameters.PageNumber = page;
+		await LoadData();
+	}
+    private async Task DeleteId(string id)
+    {
+        CinemaCenterId = id;
+        await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteCinemaCenter");
+    }
+    private async Task HandleDeleteAsync(string id)
+    {
+        var result = await CinemaCenterService.Delete(Guid.Parse(id));
+        if (result.Status == 200)
+        {
+            await JSRuntime.ToastrSuccess(result.Message);
+            await JSRuntime.InvokeVoidAsync("closeModal", "DeleteCinemaCenter");
+            await LoadData();
+            StateHasChanged();
+        }
+        else
+        {
+            await JSRuntime.ToastrError(result.Message);
+        }
+    }
+    private async Task NavigateToUpdate(Guid id)
+    {
+        Navigation.NavigateTo($"/update-cinema-center/{id}");
+    }
 }

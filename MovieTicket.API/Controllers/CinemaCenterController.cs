@@ -1,8 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
+using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
@@ -32,13 +34,20 @@ namespace MovieTicket.API.Controllers
             var cinemaCenterDto = await _centerReadOnlyRepository.GetAll(search);
             return Ok(cinemaCenterDto);
         }
-
-        [HttpGet]
+		[HttpGet]
+		public async Task<ActionResult<CinemaCenterDto>> GetAllCinemaCenter([FromQuery] CinemaCenterSearch search, [FromQuery] PagingParameters pagingParameters)
+		{
+			var cinemaCenterDto = await _centerReadOnlyRepository.GetAllCinemaCenter(search, pagingParameters);
+            var data = cinemaCenterDto.Item.ToList();
+			return Ok(new PageList<CinemaCenterDto>(data.ToList(), cinemaCenterDto.MetaData.TotalCount,
+				cinemaCenterDto.MetaData.CurrentPage,
+				cinemaCenterDto.MetaData.PageSize));
+		}
+		[HttpGet]
         public async Task<ActionResult> GetById(Guid id)
         {
             var cinemaCenter = await _centerReadOnlyRepository.GetById(id);
-            var cinemaCenterDto = _mapper.Map<CinemaCenterDto>(cinemaCenter);
-            return Ok(cinemaCenterDto);
+            return Ok(cinemaCenter);
         }
 
         [HttpPost]
@@ -59,8 +68,8 @@ namespace MovieTicket.API.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete(Guid id)
         {
-            await _centerReadWriteRepository.Delete(id);
-            return Ok("Xóa thành công");
+            var result = await _centerReadWriteRepository.Delete(id);
+            return Ok(result);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/scheduel"
 @using MovieTicket.Application.DataTransferObjs.Schedule
 @using MovieTicket.BlazorServer.Services.Interfaces
+@attribute [Authorize(Roles = "Admin")]
 @inject IJSRuntime JSRuntime
 @inject IScheduelService _scheduleService
 @inject NavigationManager _navigationManager

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
@@ -35,21 +37,47 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             return cinemaCenterDtos;
         }
 
-        public async Task<ResponseObject<CinemaCenter>> GetById(Guid id)
+		public async Task<PageList<CinemaCenterDto>> GetAllCinemaCenter(CinemaCenterSearch search, PagingParameters pagingParameters)
+		{
+			var cinemaCenters = _movieTicket.CinemaCenters.Select(x=> new CinemaCenterDto
+            {
+				Id = x.Id,
+				Name = x.Name,
+				Address = x.Address,
+				AddressMap = x.AddressMap,
+				CreateDate = x.CreateDate,
+			}).AsQueryable();
+			if (!string.IsNullOrEmpty(search.Name))
+			{
+				cinemaCenters = cinemaCenters.Where(x => x.Name.Contains(search.Name));
+			}
+			if (!string.IsNullOrEmpty(search.Address))
+			{
+				cinemaCenters = cinemaCenters.Where(x => x.Address.Contains(search.Address));
+			}
+			int count = await cinemaCenters.CountAsync();
+			var data = await cinemaCenters.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+					.Take(pagingParameters.PageSize)
+					.ToListAsync();
+			return new PageList<CinemaCenterDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+		}
+
+		public async Task<ResponseObject<CinemaCenterDto>> GetById(Guid id)
         {
             var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
+            var cinemaCenterDto = _mapper.Map<CinemaCenterDto>(cinemaCenter);
             if (cinemaCenter == null)
             {
-                return new ResponseObject<CinemaCenter>
+                return new ResponseObject<CinemaCenterDto>
                 {
                     Status = StatusCodes.Status404NotFound,
                     Message = "Cinema Center not found",
                     Data = null
                 };
             }
-            return new ResponseObject<CinemaCenter>
+            return new ResponseObject<CinemaCenterDto>
             {
-                Data = cinemaCenter,
+                Data = cinemaCenterDto,
                 Status = StatusCodes.Status200OK,
                 Message = "Get Cinema Center success"
             };
