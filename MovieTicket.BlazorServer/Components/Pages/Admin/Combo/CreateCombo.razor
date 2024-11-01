@@ -1,0 +1,116 @@
+﻿@page "/createcombo"
+@inject IComboService ComboService
+@attribute [Authorize(Roles = "Admin")]
+<EditForm Model="createComboRequest" OnValidSubmit="HandleOnSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <a type="button" class="btn btn-light me-2" href="/listcombo">Quay lại</a>
+        <button type="submit" class="btn btn-primary me-2">Tạo combo</button>
+    </div>
+    
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="createComboRequest.Name" />
+        <ValidationMessage For="@(() => createComboRequest.Name)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <InputNumber id="price" class="form-control" @bind-Value="createComboRequest.Price" />
+        <ValidationMessage For="@(() => createComboRequest.Price)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="createComboRequest.Description" />
+        <ValidationMessage For="@(() => createComboRequest.Description)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="trangThai" class="form-label">Trạng thái</label>
+        <InputSelect class="form-select" id="trangThai" @bind-Value="createComboRequest.comboStatus">
+            <option selected>Select a Status</option>
+            @foreach (var Item in Enum.GetValues(typeof(ComboStatus)))
+            {
+                <option value="@Item">@Item</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => createComboRequest.comboStatus)" />
+    </div>
+
+    <div class="mb-3">
+        @if (createComboRequest.Image == null)
+        {
+            <label for="customFile" class="form-label">Upload Image</label>
+            <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+        }
+        @if (createComboRequest.Image != null)
+        {
+            <div class="row">
+                <div class="md-3 pt-3">
+                    <img src="@createComboRequest.Image" alt="User Avatar" class="img-thumbnail" style="width: 100px; height: 100px;">
+                </div>
+                <div class="md-3 pt-3 ">
+                    <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
+                </div>
+            </div>
+        }
+    </div>
+</EditForm>
+@code {
+    private CreateComboRequest createComboRequest = new CreateComboRequest();
+    private string? _directoryPath { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Combo");
+    }
+    private async Task HandleOnSubmit()
+    {
+        var result = await ComboService.Create(createComboRequest);
+        if (result != null)
+        {
+            await JSRuntime.ToastrSuccess("Create combo successfully");
+            NavigationManager.NavigateTo("/listcombo");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Create combo failed");
+        }
+
+    }
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        FileInfo fileInfo = new(file.Name);
+        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
+        if (!Directory.Exists(_directoryPath))
+        {
+            Directory.CreateDirectory(_directoryPath);
+        }
+        var path = Path.Combine(_directoryPath, newFileName);
+        await using FileStream fs = new(path, FileMode.Create);
+        await file.OpenReadStream(file.Size).CopyToAsync(fs);
+        createComboRequest.Image = $"/img/Combo/{newFileName}";
+    }
+
+    void DeleteImage()
+    {
+        if (createComboRequest.Image == null)
+        {
+            return;
+        }
+        var fileToDelete = createComboRequest.Image.Split('/').Reverse().First();
+        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
+        if (!File.Exists(filePathToDeleteImage))
+        {
+            createComboRequest.Image = null;
+            return;
+        }
+        File.Delete(filePathToDeleteImage);
+
+        createComboRequest.Image = null;
+        return;
+    }
+}
