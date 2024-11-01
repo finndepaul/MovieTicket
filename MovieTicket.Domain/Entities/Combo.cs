@@ -1,4 +1,6 @@
-﻿namespace MovieTicket.Domain.Entities;
+﻿using MovieTicket.Domain.Enums;
+
+namespace MovieTicket.Domain.Entities;
 
 public class Combo
 {
@@ -7,5 +9,10 @@ public class Combo
     public string? Name { get; set; }
 
     public decimal? Price { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? Image { get; set; }
+    public ComboStatus? comboStatus { get; set; }
     public virtual ICollection<BillCombo> BillCombos { get; set; } = new List<BillCombo>();
 }

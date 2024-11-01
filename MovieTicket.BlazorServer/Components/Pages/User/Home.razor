@@ -1,10 +1,6 @@
 @page "/"
-@using MovieTicket.Application.DataTransferObjs.UserHome
-@using MovieTicket.BlazorServer.Services.Interfaces
-@using MovieTicket.Domain.Enums
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
-@inject IUserHomeService _service;
-@inject NavigationManager _navigationManager;
+
 <PageTitle>Home</PageTitle>
 
 <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
@@ -246,18 +242,20 @@
 
 	protected async override Task OnInitializedAsync()
 	{
-		listObjFilm = await _service.GetAllFilmForUserHome();
+		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
 	}
+
+
 	private async Task OpenModalShowTime(string id)
 	{
 		IdFilm = id;
-		var listObj = await _service.GetAllFilmForUserHome();
+		var listObj = await UserHomeService.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(id)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
 	}
 	private async Task OpenSeatSelectionModal(Guid id)
 	{
-		Task.Delay(100);
+		Task.Delay(300);
 		ShowTimeId = id;
 		await JSRuntime.InvokeVoidAsync("closeModal");
 		seatSelectionModalref.Reset();
@@ -267,7 +265,7 @@
 	{
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
 		seatSelectionModalref.Reset();
-		var listObj = await _service.GetAllFilmForUserHome();
+		var listObj = await UserHomeService.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
 	}

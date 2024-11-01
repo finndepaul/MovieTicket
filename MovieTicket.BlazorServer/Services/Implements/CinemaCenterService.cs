@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using MovieTicket.Application.DataTransferObjs.CinemaCenter;
+using MovieTicket.Application.DataTransferObjs.ShowTime;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
+using MovieTicket.Domain.Entities;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
@@ -14,9 +17,54 @@ namespace MovieTicket.BlazorServer.Services.Implements
             _httpClient = httpClient;
         }
 
-        public Task<ResponseObject<CinemaCenterDto>> GetCinemaCenterById(Guid id)
+        public async Task<ResponseObject<CinemaCenter>> Create(CinemaCenterCreateRequest cinemaCenter)
         {
-            throw new NotImplementedException();
+            var result = await _httpClient.PostAsJsonAsync("api/CinemaCenter/Create", cinemaCenter);
+            var readObj = await result.Content.ReadFromJsonAsync<ResponseObject<CinemaCenter>>();
+            return new ResponseObject<CinemaCenter>
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
+        }
+
+        public async Task<ResponseObject<CinemaCenter>> Delete(Guid id)
+        {
+            var result = await _httpClient.DeleteAsync($"api/CinemaCenter/Delete?id={id}");
+            var readObj = await result.Content.ReadFromJsonAsync<ResponseObject<CinemaCenter>>();
+            return new ResponseObject<CinemaCenter>
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
+        }
+
+        public async Task<PageList<CinemaCenterDto>> GetAllCinemaCenter(CinemaCenterSearch search, PagingParameters pagingParameters)
+        {
+            var queryParam = new Dictionary<string, string>
+            {
+                ["pageNumber"] = pagingParameters.PageNumber.ToString(),
+                ["pageSize"] = pagingParameters.PageSize.ToString()
+            };
+            if (!string.IsNullOrEmpty(search.Name))
+            {
+                queryParam.Add("name", search.Name.ToString());
+            }
+            if (!string.IsNullOrEmpty(search.Address))
+            {
+                queryParam.Add("address", search.Address.ToString());
+            }
+            string url = QueryHelpers.AddQueryString("api/CinemaCenter/GetAllCinemaCenter", queryParam);
+            var result = await _httpClient.GetFromJsonAsync<PageList<CinemaCenterDto>>(url);
+            return result;
+        }
+
+        public async Task<ResponseObject<CinemaCenterDto>> GetCinemaCenterById(Guid id)
+        {
+            var result = await _httpClient.GetFromJsonAsync<ResponseObject<CinemaCenterDto>>($"api/CinemaCenter/GetById?id={id}");
+            return result;
         }
 
         public async Task<IQueryable<CinemaCenterDto>> GetCinemaCentersAsync(CinemaCenterSearch search)
@@ -49,6 +97,18 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
             // Chuyển đổi danh sách thành IQueryable
             return lst.AsQueryable();
+        }
+
+        public async Task<ResponseObject<CinemaCenter>> Update(Guid Id, CinemaCenterUpdateRequest cinemaCenter)
+        {
+            var result = await _httpClient.PutAsJsonAsync($"api/CinemaCenter/Update?id={Id}", cinemaCenter);
+            var readObj = await result.Content.ReadFromJsonAsync<ResponseObject<CinemaCenter>>();
+            return new ResponseObject<CinemaCenter>
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
         }
     }
 }

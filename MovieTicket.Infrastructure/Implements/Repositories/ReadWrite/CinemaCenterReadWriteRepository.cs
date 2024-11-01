@@ -20,7 +20,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         public async Task<ResponseObject<CinemaCenter>> Create(CinemaCenter cinemaCenter)
         {
             // Check tồn tại
-            var cinemaCenterItem = await _movieTicket.CinemaCenters.FirstOrDefaultAsync(x => x.Name == cinemaCenter.Name && x.Address == cinemaCenter.Address);
+            var cinemaCenterItem = await _movieTicket.CinemaCenters.FirstOrDefaultAsync(x => x.Name == cinemaCenter.Name);
             if (cinemaCenter == null)
             {
                 return new ResponseObject<CinemaCenter>
@@ -36,65 +36,100 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return new ResponseObject<CinemaCenter>
                 {
                     Status = StatusCodes.Status400BadRequest,
-                    Message = "Cinema Center is exist",
+                    Message = "Tên rạp chiếu đã tồn tại",
                     Data = null
                 };
             }
+            cinemaCenter.Id = Guid.NewGuid();
             await _movieTicket.AddAsync(cinemaCenter);
             await _movieTicket.SaveChangesAsync();
             return new ResponseObject<CinemaCenter>
             {
                 Status = StatusCodes.Status200OK,
-                Message = "Create Cinema Center success",
+                Message = "Tạo thành công",
                 Data = cinemaCenter
             };
         }
 
-        public async Task<ResponseObject<CinemaCenter>> Delete(Guid id)
-        {
-            var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
-            if (cinemaCenter == null)
-            {
-                return new ResponseObject<CinemaCenter>
-                {
-                    Data = null,
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Cinema Center is not exist"
-                };
-            }
-            _movieTicket.CinemaCenters.Remove(cinemaCenter);
-            await _movieTicket.SaveChangesAsync();
-            return new ResponseObject<CinemaCenter>
-            {
-                Data = cinemaCenter,
-                Status = StatusCodes.Status200OK,
-                Message = "Delete Cinema Center success"
-            };
-        }
+		public async Task<ResponseObject<CinemaCenter>> Delete(Guid id)
+		{
+			// Tìm CinemaCenter cần xóa
+			var cinemaCenter = await _movieTicket.CinemaCenters.FindAsync(id);
+			if (cinemaCenter == null)
+			{
+				return new ResponseObject<CinemaCenter>
+				{
+					Data = null,
+					Status = StatusCodes.Status400BadRequest,
+					Message = "Cinema Center does not exist"
+				};
+			}
+			
+			var hasReferences = await _movieTicket.Cinemas.AnyAsync(c => c.CinemaCenterId == id); 
+			if (hasReferences)
+			{
+				return new ResponseObject<CinemaCenter>
+				{
+					Data = null,
+					Status = StatusCodes.Status400BadRequest,
+					Message = "Không thể xóa Cinema Center vì nó được tham chiếu đến Cinema"
+				};
+			}
 
-        public async Task<ResponseObject<CinemaCenter>> Update(Guid id, CinemaCenterUpdateRequest cinemaCenter)
-        {
-            var cinemaCenterItem = await _movieTicket.CinemaCenters.FindAsync(id);
-            // check tồn tại
-            if (cinemaCenterItem == null)
-            {
-                return new ResponseObject<CinemaCenter>
-                {
-                    Data = null,
-                    Status = StatusCodes.Status400BadRequest,
-                    Message = "Cinema Center is not exist"
-                };
-            }
-            cinemaCenterItem.Name = cinemaCenter.Name;
-            cinemaCenterItem.Address = cinemaCenter.Address;
-            _movieTicket.CinemaCenters.Update(cinemaCenterItem);
-            await _movieTicket.SaveChangesAsync();
-            return new ResponseObject<CinemaCenter>
-            {
-                Data = cinemaCenterItem,
-                Status = StatusCodes.Status200OK,
-                Message = "Update Cinema Center success"
-            };
-        }
-    }
+			// Xóa CinemaCenter
+			_movieTicket.CinemaCenters.Remove(cinemaCenter);
+			await _movieTicket.SaveChangesAsync();
+
+			return new ResponseObject<CinemaCenter>
+			{
+				Data = cinemaCenter,
+				Status = StatusCodes.Status200OK,
+				Message = "Delete Cinema Center successful"
+			};
+		}
+
+
+		public async Task<ResponseObject<CinemaCenter>> Update(Guid id, CinemaCenterUpdateRequest cinemaCenter)
+		{
+			var cinemaCenterItem = await _movieTicket.CinemaCenters.FindAsync(id);
+
+			if (cinemaCenterItem == null)
+			{
+				return new ResponseObject<CinemaCenter>
+				{
+					Data = null,
+					Status = StatusCodes.Status400BadRequest,
+					Message = "Cinema Center does not exist"
+				};
+			}
+
+			var duplicateNameCheck = await _movieTicket.CinemaCenters
+				.AnyAsync(c => c.Name == cinemaCenter.Name && c.Id != id);
+
+			if (duplicateNameCheck)
+			{
+				return new ResponseObject<CinemaCenter>
+				{
+					Data = null,
+					Status = StatusCodes.Status400BadRequest,
+					Message = "Cinema Center name already exists"
+				};
+			}
+
+			cinemaCenterItem.Name = cinemaCenter.Name;
+			cinemaCenterItem.Address = cinemaCenter.Address;
+			cinemaCenterItem.AddressMap = cinemaCenter.AddressMap;
+
+			_movieTicket.CinemaCenters.Update(cinemaCenterItem);
+			await _movieTicket.SaveChangesAsync();
+
+			return new ResponseObject<CinemaCenter>
+			{
+				Data = cinemaCenterItem,
+				Status = StatusCodes.Status200OK,
+				Message = "Update Cinema Center successful"
+			};
+		}
+
+	}
 }

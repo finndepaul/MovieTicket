@@ -6,11 +6,15 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Folder Include="wwwroot\img\Avatar\" />
-		<Folder Include="wwwroot\img\posterFilm\" />
-		<Folder Include="wwwroot\css\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\img\Avatar\" />
+	<Folder Include="wwwroot\img\icons\" />
+	<Folder Include="wwwroot\img\Combo\" />
+    <Folder Include="wwwroot\img\posterFilm\" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <Folder Include="Components\Pages\User\" />
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="bootstrap" Version="5.3.3" />

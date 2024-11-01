@@ -1,0 +1,41 @@
+﻿.add-btn {
+    -webkit-transition: all 0.3s ease-in-out;
+    background-color: #64B5F6;
+    color: #fff;
+}
+
+    .add-btn:hover {
+        -webkit-transform: scale(1.1);
+        background-color: #64B5F6;
+        color: #fff;
+    }
+
+.bg-soon {
+    background-color: #B3E5FC;
+    color: #03A9F4;
+    outline: thin solid #03A9F4;
+}
+
+.bg-now {
+    background-color: #F1F8E9;
+    color: #76FF03;
+    outline: thin solid #76FF03;
+}
+
+.edit-btn {
+    background-color: #FFA726;
+    color: #fff;
+}
+
+    .edit-btn:hover {
+        background-color: #FFA726;
+        color: #fff;
+    }
+
+.btn {
+    -webkit-transition: all 0.3s ease-in-out;
+}
+
+    .btn:hover {
+        -webkit-transform: scale(1.1);
+    }
