@@ -44,7 +44,7 @@
 			<hr />
 			<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
 			<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
-				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => OpenSeatSelection(item.Id)">@item.StartTime.Value.ToString("HH:mm")</button>
+			<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => CheckLogged(item.Id)">@item.StartTime.Value.ToString("HH:mm")</button>
 				previousCinemaCenterName = item.CinemaCenterName;
 				previousScreenTypeName = item.ScreenTypeName;
 				previousFilmId = item.FilmId;
@@ -65,7 +65,7 @@
 					<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
 					<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
 				}
-				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => OpenSeatSelection(item.Id)">@item.StartTime.Value.ToString("HH:mm")</button>
+				<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => CheckLogged(item.Id)">@item.StartTime.Value.ToString("HH:mm")</button>
 				previousCinemaCenterName = item.CinemaCenterName;
 				previousScreenTypeName = item.ScreenTypeName;
 				previousFilmId = item.FilmId;
@@ -98,11 +98,9 @@
 	.date.active {
 		border-bottom: 3px solid #0056b3 /* Màu viền khi active */
 	}
-
 		.date.active a {
 			color: #0056b3; /* Màu chữ cho link trong li khi active */
 		}
-
 
 	.date a {
 		color: black;
@@ -112,7 +110,6 @@
 		border-bottom: 1px solid rgb(199, 200, 201);
 		transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng chuyển đổi */
 	}
-
 		.date:hover {
 			background-color: #f8f9fa; /* Màu nền khi hover (không active) */
 			cursor: pointer; /* Thay đổi con trỏ khi hover */
@@ -171,6 +168,7 @@
 	[Parameter]
 	public string Id { get; set; }
 	[Parameter] public EventCallback<Guid> OnShowtimeSelected { get; set; }
+	private AuthenticationState AuthenState;
 	private List<DateTime> dateRange = new List<DateTime>();
 	private DateTime selectedDate = DateTime.Today;
 	private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
@@ -206,7 +204,21 @@
 			ShowTimeSort = paginationReponse.Item.Where(x => x.FilmId == Guid.Parse(Id)).GroupBy(x => new { x.CinemaCenterName, x.ScreenTypeName }).SelectMany(x => x).OrderBy(x => x.ScreenTypeName).ToList();
 			ShowTimes = paginationReponse.Item.Where(x => x.FilmId == Guid.Parse(Id) && x.ScreenTypeName == ShowTimeSort[0].ScreenTypeName && x.TranslationTypeName == ShowTimeSort[0].TranslationTypeName).GroupBy(x => new { x.CinemaCenterName, x.ScreenTypeName }).SelectMany(x => x).ToList();
 			MetaData = paginationReponse.MetaData;
+			AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
 		}
+	}
+
+	private async Task CheckLogged(Guid id)
+	{
+		if(AuthenState.User.Identity.IsAuthenticated)
+        {
+            await OpenSeatSelection(id);
+        }
+        else
+        {	
+			await JSRuntime.InvokeVoidAsync("alert", "Bạn cần đăng nhập để chọn ghế");
+            NavigationManager.NavigateTo("login");
+        }
 	}
 
 	private async Task GetDate(DateTime date)
@@ -250,6 +262,7 @@
 
 		return dates;
 	}
+
 	private async Task SelectedSort(string screenType, string translationType)
 	{
 		selectedTranslationTypeSort = translationType;
@@ -267,6 +280,7 @@
 		previousScreenTypeName = null;
 		previousFilmId = Guid.Empty;
 	}
+
 	private async Task SelectTimeOnAlert(string id)
 	{
 		var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Bạn có muốn chọn suất chiếu này {id}?");
@@ -276,10 +290,10 @@
 			StateHasChanged();
 		}
 	}
+
 	private async Task OpenSeatSelection(Guid id)
 	{
 		ShowTimeId = id;
 		await OnShowtimeSelected.InvokeAsync(ShowTimeId);
 	}
-
 }

@@ -248,6 +248,8 @@
 	{
 		listObjFilm = await _service.GetAllFilmForUserHome();
 	}
+
+
 	private async Task OpenModalShowTime(string id)
 	{
 		IdFilm = id;
@@ -257,7 +259,7 @@
 	}
 	private async Task OpenSeatSelectionModal(Guid id)
 	{
-		Task.Delay(100);
+		Task.Delay(300);
 		ShowTimeId = id;
 		await JSRuntime.InvokeVoidAsync("closeModal");
 		seatSelectionModalref.Reset();
