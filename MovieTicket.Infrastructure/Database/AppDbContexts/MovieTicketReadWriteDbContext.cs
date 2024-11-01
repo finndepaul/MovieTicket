@@ -81,7 +81,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
             // Trung:
-            optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+            //optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
             // Toản:
             //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
@@ -98,8 +98,6 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
             SeedingDataWithBogus(modelBuilder);
         }
-
-
 
         private void SeedingDataWithBogus(ModelBuilder modelBuilder)
         {
@@ -342,7 +340,5 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             //// Seed dữ liệu vào database
             //modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
         }
-
-
     }
 }
