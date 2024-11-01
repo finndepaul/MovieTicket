@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
@@ -20,11 +21,11 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         public async Task<IQueryable<ComboDto>> GetAllAsync()
         {
             var comboModel = dbContext.Combos.AsQueryable();
-            if (!comboModel.Any()) // Kiểm tra có ít nhát 1 combo không
+            if(comboModel == null)
             {
-                throw new InvalidOperationException("No combos found."); // Ném ra ngoại lệ nếu không tìm thấy combo
+                return null;
             }
-            var comboDtos = comboModel.Select(combo => mapper.Map<ComboDto>(combo)!); // Ánh xạ từ Combo sang ComboDto
+            var comboDtos = comboModel.ProjectTo<ComboDto>(mapper.ConfigurationProvider);
             return comboDtos;
         }
 
