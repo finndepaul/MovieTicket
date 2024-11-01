@@ -1,5 +1,4 @@
 ﻿@page "/update-cinema/{id:guid}"
-@using static Cinema
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container-input">
@@ -17,16 +16,6 @@
         </div>
         <div class="validate mt-1"><ValidationMessage For="@(() => request.Name)" /></div>
 
-        @* <div class="input-group mt-3">
-            <label class="input-group-text" for="cinemaType">Loại phòng chiếu</label>
-            <select class="form-select" id="cinemaType" @bind="request.CinemaTypeId">
-                <option value="@CinemaTypeId">@CinemaTypeName</option>
-                @foreach (var type in cinemaTypes)
-                {
-                    <option value="@type.Id">@type.Name</option>
-                })
-            </select>
-        </div> *@
         <div class="input-group mt-3">
             <label class="input-group-text" for="cinemaType">Loại phòng chiếu</label>
             <div id="cinemaType" class="form-control">
@@ -109,5 +98,4 @@
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
         }
     }
-
 }
