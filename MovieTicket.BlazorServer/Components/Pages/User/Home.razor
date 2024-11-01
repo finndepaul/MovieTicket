@@ -58,10 +58,11 @@
 					{
 						@if (item.SType == ScheduleType.Early)
 						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="img/posterFilm/@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
@@ -95,10 +96,11 @@
 					{
 						@if (item.SType == ScheduleType.Regular)
 						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="img/posterFilm/@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
@@ -131,10 +133,11 @@
 					{
 						@if (item.SType == ScheduleType.Special)
 						{
+							var rating = "c"+"-"+item.Rating.Value.ToString()+".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="img/posterFilm/@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+                                    <span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
@@ -151,7 +154,6 @@
 						}
 					}
 				}
-
 			</div>
 		</div>
 	</div>
@@ -164,9 +166,22 @@
 			<h5>LỊCH CHIẾU - @filmName</h5>
 		</div>
 		<div class="modal-body">
-			<ViewShowTimeModal Id="@IdFilm"></ViewShowTimeModal>
+			<ViewShowTimeModal OnShowtimeSelected="OpenSeatSelectionModal" Id="@IdFilm"></ViewShowTimeModal>
 		</div>
-
+	</div>
+</div>
+<!--Modal chọn ghế -->
+<div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Chọn ghế</h4>
+				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" />
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -207,12 +222,27 @@
 			closeModal();
 		}
 	}
+
+	function openModal(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = new bootstrap.Modal(modalElement);
+		modal.show();
+	}
+	function closeModall(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+			modal.hide();
+		}
+	}
 </script>
 
 @code {
 	private List<UserHomeDto> listObjFilm = new List<UserHomeDto>();
 	private string IdFilm;
 	private string filmName { get; set; }
+	private Guid ShowTimeId;
+	private SeatSelectionModal seatSelectionModalref;
 
 	protected async override Task OnInitializedAsync()
 	{
@@ -224,5 +254,29 @@
 		var listObj = await _service.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(id)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+	private async Task OpenSeatSelectionModal(Guid id)
+	{
+		Task.Delay(100);
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("closeModal");
+		seatSelectionModalref.Reset();
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+	}
+	private async Task CloseSeatSelectionModal()
+	{
+		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
+		seatSelectionModalref.Reset();
+		var listObj = await _service.GetAllFilmForUserHome();
+		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
+		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+	private async void ShowCloseConfirmation()
+	{
+		bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận hủy đặt vé?");
+		if (confirmed)
+		{
+			await CloseSeatSelectionModal();
+		}
 	}
 }

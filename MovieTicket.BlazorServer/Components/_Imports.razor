@@ -1,4 +1,4 @@
-﻿@using System.Net.Http
+@using System.Net.Http
 @using System.Net.Http.Json
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -26,6 +26,11 @@
 @using MovieTicket.Application.DataTransferObjs.Cinema.Request
 @using MovieTicket.Application.DataTransferObjs.CinemaType
 @using MovieTicket.Application.DataTransferObjs.Seat
+@using MovieTicket.Application.DataTransferObjs.TicketPrice
+@using MovieTicket.Domain.Enums
+@using MovieTicket.Application.DataTransferObjs.SeatType
+@using MovieTicket.Application.DataTransferObjs.Combo
+@using MovieTicket.Domain.Enums
 
 @inject IAuthenService AuthenService
 @inject IBannerService BannerService
@@ -38,6 +43,7 @@
 @inject ISeatTypeService SeatTypeService
 @inject IShowTimeService ShowTimeService
 @inject IScheduelService ScheduelService
+@inject ITicketPriceService TicketPriceService
 
 @inject IJSRuntime JSRuntime
 @inject AppState AppState
