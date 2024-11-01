@@ -21,6 +21,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             {
                 Avatar = model.Avatar,
                 Name = model.Name,
+                Username = model.Username,
                 Email = model.Email,
                 Phone = model.Phone,
                 Role = model.Role,
