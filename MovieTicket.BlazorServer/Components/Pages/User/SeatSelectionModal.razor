@@ -81,6 +81,8 @@ else
     private string total = null;
     private ShowTimeDto showtimeDto = new();
     string today = DateTime.Now.DayOfWeek.ToString();
+    private AuthenticationState AuthenState;
+    private string user = null;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -97,7 +99,8 @@ else
                 PageSize = 180
             });
             lstTicketPrices = responseTicket.Item.ToList();
-
+            AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+            user = AuthenState.User.Identity.Name; //lấy username của user đang đăng nhập
             //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
         }
     }
@@ -109,7 +112,6 @@ else
             Task.Delay(100);
             SeatId = id;
             var response = await SeatService.GetById(SeatId);
-
             var seat = response.Data;
 
             if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn

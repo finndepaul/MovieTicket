@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
-        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Layout.AdminLayout) ">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(Layout.AdminLayout) ">
                 <Authorizing>
                     <p>Đang xác thực...</p>
                     </Authorizing>
