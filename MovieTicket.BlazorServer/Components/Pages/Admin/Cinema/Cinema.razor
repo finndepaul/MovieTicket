@@ -1,4 +1,5 @@
 ﻿@page "/cinema"
+@using static Microsoft.EntityFrameworkCore.DbLoggerCategory
 @attribute [Authorize(Roles = "Admin")]
 
 @if (_lstCinemaCenters != null)
@@ -13,35 +14,82 @@
                     <option value="@item.Name">@item.Name</option>
                 }
             </select>
-            <button class="btn add-btn me-md-2" id="btnAdd" data-id="selectedCinemaCenterName" @onclick="()=>OpenCreateModal(selectedCinemaCenterName)">
+            <button class="btn add-btn me-md-2" id="btnAdd" data-id="selectedCinemaCenterName" @onclick="()=>OpenCreateCinemaModal(selectedCinemaCenterName)">
                 <i class="bi bi-plus-square"></i>
                 Tạo phòng chiếu
             </button>
         </div>
-        <!-- Create Modal -->
+        <!-- Create Cinema Modal -->
         <div class="modal fade" id="CreateCinemaModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" data-bs-theme="dark">
                         <h4 class="modal-title">Tạo Phòng chiếu</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <CreateCinemaModal CinemaCenterName="@selectedCinemaCenterName"/>
+                        <CreateCinemaModal @ref="createCinemaModalRef" CinemaCenterName="@selectedCinemaCenterName" OnCreateSuccess="HandleCreateCinemaSuccess" />
+                        <!--
+                            CinemaCenterName="selectedCinemaCenterName" -> Truyền tên rạp phim vào CreateCinemaModal
+                            OnCreateSuccess="HandleCreateSuccess" -> Truyền phương thức HandleCreateSuccess vào CreateCinemaModal
+                            ref="createCinemaModalRef" -> Tham chiếu đến CreateCinemaModal
+                        -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Update Modal -->
-        <div class="modal fade" id="UpdateCinemaModal" tabindex="-1" data-id="" data-bs-backdrop="static" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Sửa Banner</h4>
+        <!-- Cinema Detail Modal -->
+        <div class="modal fade" id="CinemaDetailModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content" >
+                    <div class="modal-header" data-bs-theme="dark">
+                        <h4 class="modal-title">Chi tiết</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <UpdateCinemaModal CinemaId="@guid" />
+                        <CinemaDetailModal CinemaId="@guid" OnSeatSelected="HandleSeatSelected" OnRowSelected="HandleRowSelected" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Update Cinema Modal -->
+        <div class="modal fade" id="UpdateCinemaModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true" data-bs-theme="light">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" data-bs-theme="dark">
+                        <h4 class="modal-title">Sửa Phòng chiếu</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <UpdateCinemaModal @ref="updateCinemaModalRef" CinemaId="@guid" OnUpdateSuccess="HandleUpdateCinemaSuccess" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Seat Detail Modal -->
+        <div class="modal fade" id="SeatDetailModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" data-bs-theme="dark">
+                        <h4 class="modal-title">Chi tiết ghế</h4>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="() => CloseSeatDetail()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <SeatDetailModal @ref="seatDetailModalRef" SeatId="@SeatId" OnSeatUpdated="HandleSeatUpdated" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Row Update Modal -->
+        <div class="modal fade" id="RowUpdateModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header" data-bs-theme="dark">
+                        <h4 class="modal-title">Sửa hàng ghế</h4>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="() => CloseRowUpdate()"></button>
+                    </div>
+                    <div class="modal-body">
+                        <RowUpdateModal @ref="rowUpdateModalRef" SeatDTOs="lstSeatsRow" OnRowUpdated="HandleRowUpdated"  />
                     </div>
                 </div>
             </div>
@@ -76,7 +124,11 @@
                         {
                             <tr>
                                 <td>@index</td> <!-- Sử dụng biến đếm -->
-                                <td>@cinema.Name</td>
+                                <td>
+                                    <a class="cinemaName" data-id="@cinema.Id" @onclick="() => OpenCinemaDetailModal(cinema.Id)">
+                                        @cinema.Name
+                                    </a>
+                                </td>
                                 <td>@cinema.CinemaTypeName</td>
                                 <td>@cinema.MaxSeatCapacity</td>
                                 <td>@cinema.Row</td>
@@ -93,7 +145,7 @@
                                     } 
                                 </td>
                                 <td>
-                                    <button class="btn edit-btn" data-id="@cinema.Id" @onclick="() => OpenEditModal(cinema.Id)">
+                                    <button class="btn edit-btn" data-id="@cinema.Id" @onclick="() => OpenUpdateCinemaModal(cinema.Id)">
                                         <i class="bi bi-pencil-square"></i>
                                         Sửa
                                     </button>
@@ -158,13 +210,29 @@ else
         .btn:hover {
             -webkit-transform: scale(1.1);
         }
+
+    .cinemaName {
+       text-decoration: none;
+    }
+        .cinemaName:hover {
+            cursor: pointer;
+            color: #007bff;
+        }
 </style>
 
 <script>
     function openModal(modalId) {
-        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        var modalElement = document.getElementById(modalId);
+        var modal = new bootstrap.Modal(modalElement);
         modal.show();
-    }
+        }
+    function closeModal(modalId) {
+            var modalElement = document.getElementById(modalId);
+            var modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+        }
 </script>
 
 @code {
@@ -172,11 +240,17 @@ else
     private IQueryable<CinemaDto> _lstCinemas;
     private string selectedCinemaCenterName = string.Empty;
     private Guid guid;
+    private Guid SeatId;
+    private List<SeatDTO> lstSeatsRow;
+    private CreateCinemaModal createCinemaModalRef; // Tham chiếu đến CreateCinemaModal
+    private UpdateCinemaModal updateCinemaModalRef; // Tham chiếu đến UpdateCinemaModal
+    private SeatDetailModal seatDetailModalRef; // Tham chiếu đến SeatDetailModal
+    private RowUpdateModal rowUpdateModalRef; // Reference to RowUpdateModal
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
     protected override async Task OnInitializedAsync()
-    {
+    {   
         _lstCinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
-
         // Giả sử bạn đã chọn một cinema center nào đó
         selectedCinemaCenterName = "Tên Rạp Phim"; // Thay thế bằng tên thực tế
         _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
@@ -209,23 +283,33 @@ else
         var response = await CinemaService.Delete(guid);
         if (response.Status == StatusCodes.Status200OK)
         {
-        await JSRuntime.InvokeVoidAsync("alert", response.Message);
-        NavigationManager.NavigateTo("/cinema", forceLoad: true);
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            // await Task.Delay(100);
+            // _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null);
+            // StateHasChanged();
+            NavigationManager.NavigateTo("/cinema", forceLoad: true);
         }
         else
         {
-        await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
         }
     }
 
-    private async Task OpenEditModal(Guid id)
+    private async Task OpenUpdateCinemaModal(Guid id)
     {   
         guid = id;
-        Task.Delay(300);
+        await Task.Delay(100);
         await JSRuntime.InvokeVoidAsync("openModal", "UpdateCinemaModal");
     }
 
-    private async Task OpenCreateModal(string cinemaCenterName)
+    private async Task OpenCinemaDetailModal(Guid id)
+    {   
+        guid = id;
+        await Task.Delay(300); // Delay to rerender CinemaDetailModal, avoid displaying old data
+        await JSRuntime.InvokeVoidAsync("openModal", "CinemaDetailModal");
+    }
+
+    private async Task OpenCreateCinemaModal(string cinemaCenterName)
     {   
         selectedCinemaCenterName = cinemaCenterName;
         if (selectedCinemaCenterName == "Tên Rạp Phim")
@@ -233,7 +317,70 @@ else
             await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn rạp phim trước khi tạo phòng chiếu");
             NavigationManager.NavigateTo("/cinema", forceLoad: true);
         }
-        Task.Delay(300);
-        JSRuntime.InvokeVoidAsync("openModal", "CreateCinemaModal");
+        createCinemaModalRef.ResetForm(); //Reset form mỗi khi mở modal
+        await JSRuntime.InvokeVoidAsync("openModal", "CreateCinemaModal");
+    }
+
+    private async Task HandleUpdateCinemaSuccess(string cinemaCenterName) //Xử lý hiển thị khi update thành công
+    {
+        selectedCinemaCenterName = cinemaCenterName; //trả về tên rạp phim từ UpdateCinemaModal
+        _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
+        StateHasChanged();
+        await JSRuntime.InvokeVoidAsync("closeModal", "UpdateCinemaModal"); //Đóng modal
+    }
+
+    private async Task HandleCreateCinemaSuccess(string cinemaCenterName) //Xử lý hiển thị khi thêm rạp thành công
+    {
+        selectedCinemaCenterName = cinemaCenterName; //trả về tên rạp phim từ CreateCinemaModal
+        _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
+        StateHasChanged();
+        await JSRuntime.InvokeVoidAsync("closeModal", "CreateCinemaModal"); //Đóng modal
+    }
+
+    private void HandleSeatSelected(Guid seatId) //mở modal chi tiết ghế
+    {
+        SeatId = seatId;
+        JSRuntime.InvokeVoidAsync("closeModal", "CinemaDetailModal");
+        seatDetailModalRef.ResetForm();
+        JSRuntime.InvokeVoidAsync("openModal", "SeatDetailModal");
+    }
+
+    private async Task CloseSeatDetail() //đóng modal chi tiết ghế
+    {
+        await JSRuntime.InvokeVoidAsync("closeModal", "SeatDetailModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "CinemaDetailModal");
+    }
+    private async Task CloseRowUpdate() //đóng modal sửa hàng ghế
+    {
+        await JSRuntime.InvokeVoidAsync("closeModal", "RowUpdateModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "CinemaDetailModal");
+    }
+
+    private async Task HandleSeatUpdated() //nhận trả về khi sửa ghế thành công
+    {
+        await JSRuntime.InvokeVoidAsync("closeModal", "SeatDetailModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "CinemaDetailModal");
+        // Refresh the cinema details to show updated seat list
+        var result = await CinemaService.GetCinemaById(guid);
+        var cinema = result.Data;
+        var seats = await SeatService.GetSeats(guid);
+        StateHasChanged();
+    }
+    private async Task HandleRowSelected(List<SeatDTO> seatsRow) //nhận trả về khi chọn hàng ghế
+    {
+        lstSeatsRow = seatsRow;
+        await JSRuntime.InvokeVoidAsync("closeModal", "CinemaDetailModal");
+        rowUpdateModalRef.ResetForm();
+        await JSRuntime.InvokeVoidAsync("openModal", "RowUpdateModal");
+    }
+    private async Task HandleRowUpdated() //nhận trả về khi sửa hàng ghế thành công
+    {   
+        await Task.Delay(100);
+        await JSRuntime.InvokeVoidAsync("closeModal", "RowUpdateModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "CinemaDetailModal");
+        var result = await CinemaService.GetCinemaById(guid);
+        var cinema = result.Data;
+        var seats = await SeatService.GetSeats(guid);
+        StateHasChanged();
     }
 }

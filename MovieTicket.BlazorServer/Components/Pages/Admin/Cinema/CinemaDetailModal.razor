@@ -1,0 +1,294 @@
+﻿@page "/cinema/{id:guid}"
+@attribute [Authorize(Roles = "Admin")]
+
+@if (cinema != null && lstSeats != null)
+{
+    <div class="title">
+        <h2 class="text-center">@cinema.Name - @cinema.CinemaCenterName</h2>
+    </div>
+
+    <div class="container-modal">
+        <!--Seats Layout-->
+        <div class="seat-grid text-center">
+            @for (int x = 1; x <= cinema.Row; x++)
+            {
+                int row = x;
+                <div class="row row-cols-auto">
+                    @for (int y = 1; y <= cinema.Column; y++)
+                    {
+                        var seat = lstSeats.FirstOrDefault(s => s.Row == x && s.Column == y);
+                        <div class="col">
+                            <button type="button" id="seat" data-seat-status="@(seat.Status == SeatStatus.Unavailable ? "Unavailable" : @seat.SeatTypeName)" class="btn seat-btn" data-id="@seat.Id" @onclick="() => OpenSeatDetail(seat.Id)">
+                                @seat.Position
+                            </button>
+                        </div>
+                    }
+                    <div class="col">
+                        <button type="button" class="btn edit-btn" data-id="@x" id="btnUpdate" @onclick="()=>RowUpdate(row)">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+        <hr>
+    </div>
+}
+else
+{
+    <p>Không có dữ liệu</p>
+
+}
+
+<div class="seatInfo">
+    <div class="mx-2">
+        <button type="button" class="btn seat-Normal">
+        </button>
+        <label>Ghế thường</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-VIP">
+        </button>
+        <label>Ghế VIP</label>
+    </div>
+
+    <div class="mx-2">
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Couple">
+        </button>
+        <label>Ghế Couple</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Unavailable">
+        </button>
+        <label>Không khả dụng</label>
+    </div>
+</div>
+
+
+<style>
+    .seat-btn {
+        background-color: #fff;
+        outline: solid 1px #000;
+        color: #000;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+    }
+
+        .seat-btn:hover {
+            background-color: #fff;
+            color: #000;
+            outline: solid 1px #000;
+        }
+
+    .seat-Normal {
+        background-color: #7C4DFF;
+        outline: none;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-Unavailable {
+        background-color: #263238;
+        outline: none;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-VIP {
+        background-color: #DD2C00;
+        outline: none;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+        .seat-VIP:hover {
+            background-color: #DD2C00;
+            outline: none;
+            width: 50px;
+            height: 50px;
+            margin: 0px;
+            padding: 10px;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+    .seat-Couple {
+        background-color: #FF8A80;
+        outline: none;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+        .seat-Couple:hover {
+            background-color: #FF8A80;
+            outline: none;
+            width: 50px;
+            height: 50px;
+            margin: 0px;
+            padding: 10px;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+    [data-seat-status="Unavailable"] {
+        background-color: #263238;
+        color: white;
+        outline: none;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+    }
+
+        [data-seat-status="Unavailable"]:hover {
+            color: white;
+            background-color: #263238;
+            outline: none;
+        }
+
+    [data-seat-status="Normal"] {
+        background-color: #7C4DFF;
+        outline: none;
+        color: #fff;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+    }
+
+        [data-seat-status="Normal"]:hover {
+            outline: none;
+            background-color: #7C4DFF;
+            color: #fff;
+        }
+
+    [data-seat-status="VIP"] {
+        background-color: #DD2C00;
+        outline: none;
+        color: #fff;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+    }
+
+        [data-seat-status="VIP"]:hover {
+            background-color: #DD2C00;
+            outline: none;
+            color: #fff;
+        }
+
+    [data-seat-status="Couple"] {
+        background-color: #FF8A80;
+        outline: none;
+        color: #fff;
+        width: 50px;
+        height: 50px;
+        margin: 0px;
+        padding: 10px;
+    }
+
+        [data-seat-status="Couple"]:hover {
+            background-color: #FF8A80;
+            outline: none;
+            color: #fff;
+        }
+
+    .btn {
+        -webkit-transition: all 0.3s ease-in-out;
+    }
+
+        .btn:hover {
+            -webkit-transform: scale(1.1);
+        }
+
+    .row {
+        padding: 0px;
+        margin: 0.5rem;
+    }
+
+    .col {
+        padding: 0rem;
+        width: 50px;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+
+    .seat-grid {
+        width: max-content;
+    }
+
+    .seatInfo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .container-modal {
+        display: grid;
+        justify-content: center;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public Guid CinemaId { get; set; }
+    [Parameter]
+    public EventCallback<Guid> OnSeatSelected { get; set; }
+    [Parameter]
+    public EventCallback<List<SeatDTO>> OnRowSelected { get; set; }
+
+    private CinemaDto cinema { get; set; } = new();
+    private IQueryable<SeatDTO> lstSeats { get; set; }
+    public Guid SeatId = Guid.Empty;
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (CinemaId != Guid.Empty)
+        {
+            var result = await CinemaService.GetCinemaById(CinemaId);
+            cinema = result.Data;
+            lstSeats = await SeatService.GetSeats(CinemaId);
+        }
+    }
+
+    private async Task OpenSeatDetail(Guid seatId)
+    {
+        SeatId = seatId;
+        Console.WriteLine(SeatId);
+        //await Task.Delay(100);
+        await OnSeatSelected.InvokeAsync(seatId);
+    }
+
+    private async Task RowUpdate(int row)
+    {
+        Console.WriteLine("row: ", row);
+        var lstSeatsRow = lstSeats.Where(s => s.Row == row).ToList();
+        await OnRowSelected.InvokeAsync(lstSeatsRow);
+    }
+}

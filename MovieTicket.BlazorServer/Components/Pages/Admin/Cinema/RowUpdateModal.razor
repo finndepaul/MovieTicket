@@ -1,0 +1,106 @@
+﻿@if (SeatDTOs != null)
+{
+    <div class="container-modal">
+        <!--Seats Layout-->
+        <div class="seat-grid text-center">
+            <div class="row row-cols-auto" style="flex-wrap:wrap">
+                @foreach (var seat in lstSeatDTOs)
+                {
+                    <div class="col">
+                        <button type="button" id="seat" data-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id">
+                            @seat.Position
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+        <hr>
+        <div class="container-input">
+            <EditForm Model="request" OnValidSubmit="UpdateSeats">
+                <DataAnnotationsValidator />
+
+                <div class="input-group mt-3">
+                    <label class="input-group-text" for="SeatType">Loại ghế</label>
+                    <div id="SeatType" class="form-control">
+                        @foreach (var type in seatTypes)
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="seatType" id="@type.Name" @onchange="@(()=> request.SeatTypeId = type.Id.ToString())" />
+                                <label class="form-check-label" for="@type.Name">@type.Name</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="validate mt-1"><ValidationMessage For="@(() => request.SeatTypeId)" /></div>
+
+                <div class="input-group mt-3">
+                    <label class="input-group-text" for="SeatStatus">Trạng thái ghế</label>
+                    <div id="SeatStatus" class="form-control">
+                        @foreach (SeatStatus status in Enum.GetValues(typeof(SeatStatus)).Cast<SeatStatus>())
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="seatStatus" id="@status" @onchange="@(()=> request.Status = status)" />
+                                <label class="form-check-label" for="@status">@status</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="validate mt-1"><ValidationMessage For="@(() => request.Status)" /></div>
+
+                <div class="my-3 d-flex justify-content-center">
+                    <input type="submit" class="btn btn-success" value="Sửa" />
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <p>Không có ghế nào</p>
+}
+
+
+@code {
+    [Parameter]
+    public List<SeatDTO> SeatDTOs { get; set; }
+    [Parameter]
+    public EventCallback<string> OnRowUpdated { get; set; }
+
+    private List<SeatDTO> lstSeatDTOs = new();
+    private SeatUpdateRequest request { get; set; } = new();
+    private List<SeatTypeDto> seatTypes = new();
+    private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
+
+    protected override async void OnParametersSet()
+    {
+        if (SeatDTOs != null)
+        {
+            seatTypes = await SeatTypeService.GetListSeatTypesAsync();
+            lstSeatDTOs = SeatDTOs;
+        }
+    }
+    public void ResetForm() => request = new SeatUpdateRequest();
+
+    private async Task UpdateSeats()
+    {
+        foreach (var seat in lstSeatDTOs)
+        {
+            lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                {
+                    Id = seat.Id,
+                    SeatTypeId = request.SeatTypeId,
+                    Status = request.Status
+                });
+        }
+        var response = await SeatService.UpdateRange(lstSeatUpdateRequests);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            await OnRowUpdated.InvokeAsync();
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+}

@@ -37,7 +37,7 @@
 	</button>
 </div>
 
-<div class="container ">
+<div class="container">
 	<div class="tab my-5 d-flex justify-content-center border-bottom">
 		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
 		<button class="tablinks" onclick="openCity(event, 'DangChieu')" id="defaultOpen">PHIM ĐANG CHIẾU</button>
@@ -46,29 +46,30 @@
 	<div class="m-5">
 		<!-- Tab content -->
 		<div id="SapChieu" class="tabcontent">
-			<div class="row ">
-				@if (listObj == null)
+			<div class="row">
+				@if (listObjFilm == null)
 				{
 					<p>Chưa có phim</p>
 				}
 				else
 				{
 					<!-- Movie 1 -->
-					@foreach (var item in listObj)
+					@foreach (var item in listObjFilm)
 					{
 						@if (item.SType == ScheduleType.Early)
 						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
 										<h5 class="text-primary">@item.Name</h5>
 										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
-										<p><strong>Ngày khởi chiếu:</strong> 18/10/2024</p>
+										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
 									</div>
 
 								</div>
@@ -85,20 +86,21 @@
 		<div id="DangChieu" class="tabcontent">
 			<div class="row">
 				<!-- Movie 1 -->
-				@if (listObj == null)
+				@if (listObjFilm == null)
 				{
 					<p>Chưa có phim</p>
 				}
 				else
 				{
-					@foreach (var item in listObj)
+					@foreach (var item in listObjFilm)
 					{
 						@if (item.SType == ScheduleType.Regular)
 						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
@@ -106,7 +108,7 @@
 										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 									</div>
-									<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
 										<span><i class="bi bi-ticket-perforated"></i></span>
 										MUA VÉ
 									</a>
@@ -121,20 +123,21 @@
 
 		<div id="Dacbiet" class="tabcontent">
 			<div class="row">
-				@if (listObj == null)
+				@if (listObjFilm == null)
 				{
 					<p>Chưa có phim</p>
 				}
 				else
 				{
-					@foreach (var item in listObj)
+					@foreach (var item in listObjFilm)
 					{
 						@if (item.SType == ScheduleType.Special)
 						{
+							var rating = "c"+"-"+item.Rating.Value.ToString()+".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="img/posterFilm/@item.Poster" alt="Movie Poster">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/c-16.png" /></span>
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+                                    <span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
@@ -142,7 +145,7 @@
 										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 									</div>
-									<a style="display: block;" href="#showtimes-pop-up" onclick="openModal()" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
 										<span><i class="bi bi-ticket-perforated"></i></span>
 										MUA VÉ
 									</a>
@@ -151,7 +154,6 @@
 						}
 					}
 				}
-
 			</div>
 		</div>
 	</div>
@@ -161,213 +163,28 @@
 	<div class="modal-size">
 		<div class="modal-content-buy d-flex justify-content-between border-bottom ">
 			<span class="close-modal-btn" onclick="closeModal()">&times;</span>
-			<h5>LỊCH CHIẾU - Cô Dâu Hào Môn</h5>
+			<h5>LỊCH CHIẾU - @filmName</h5>
 		</div>
-		<div></div>
-
+		<div class="modal-body">
+			<ViewShowTimeModal OnShowtimeSelected="OpenSeatSelectionModal" Id="@IdFilm"></ViewShowTimeModal>
+		</div>
 	</div>
 </div>
-<style>
-	/* Chỉnh phần movie-card để căn giữa */
+<!--Modal chọn ghế -->
+<div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Chọn ghế</h4>
+				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" />
+			</div>
+		</div>
+	</div>
+</div>
 
-
-	.col-lg-3 {
-		flex: 0 0 25%; /* Đặt chiều rộng mỗi cột là 25% (tương đương với 3 cột trên một hàng) */
-		max-width: 25%;
-	}
-
-	.carousel-item img {
-		width: 100%;
-		height: 700px;
-		object-fit: cover;
-	}
-	/* Hover effect for prev/next buttons */
-
-
-	.carousel-control.left {
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		width: 5%;
-		text-align: center;
-		opacity: 0.5;
-		background: none;
-		border: none;
-	}
-
-	.carousel-control.right {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		width: 5%;
-		opacity: 0.5;
-		text-align: center;
-		background: none;
-		border: none;
-	}
-
-		.carousel-control.left:hover, .carousel-control.right:hover, .carousel-control.left:focus, .carousel-control.right:focus {
-			background-image: -webkit-linear-gradient(left, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
-			background-image: -o-linear-gradient(left, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
-			background-image: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0.5)), to(rgba(0,0,0,0.0001)));
-			background-image: linear-gradient(to right, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
-		}
-
-	.movie-card {
-		position: relative;
-		margin: 0 auto; /* Căn giữa phần tử */
-		width: 200px;
-		text-align: center; /* Căn giữa nội dung bên trong */
-	}
-
-		.movie-card img {
-			width: 100%;
-			border-radius: 10px;
-		}
-
-
-
-	.movie-info {
-		text-align: left; /* Căn giữa thông tin phim */
-		margin: 3px;
-	}
-
-		.movie-info h5 {
-			font-size: 16px;
-			font-weight: bold;
-		}
-
-		.movie-info p {
-			margin: 0;
-		}
-
-	.sticker {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 63px !important;
-		height: 63px !important;
-	}
-
-	.sticker-new {
-		background: url(https://betacinemas.vn/assets/frontend/layout/img/hot.png) no-repeat;
-		left: auto;
-		right: 0;
-	}
-	/* Style the tab */
-	.tab {
-		width: 100%;
-		overflow: hidden;
-		display: flex;
-		justify-content: center;
-		background: none;
-	}
-
-		/* Style the buttons that are used to open the tab content */
-		.tab button {
-			background: none;
-			float: left;
-			border: none;
-			width: 300px;
-			outline: none;
-			cursor: pointer;
-			padding: 14px 16px;
-			transition: 0.3s;
-			color: black;
-			font-size: 25px;
-			width: 300px;
-			font-weight: bold;
-			transition: transform 0.2s;
-		}
-
-			/* Change background color of buttons on hover */
-			/* 	.tab button:hover {
-										border-bottom: 2px solid blue;
-									} */
-
-			/* Create an active/current tablink class */
-			.tab button.active {
-				padding-top: 3px;
-				color: rgb(56, 172, 239);
-				border-bottom: 3px solid rgb(56, 172, 239);
-			}
-
-	.btn-mua-ve2 {
-		/*padding: 10px 70px;*/
-		position: relative;
-		font-size: large;
-		border: none;
-		font-weight: bold;
-		color: #fff;
-		background-color: rgb(19, 113, 180);
-		border-radius: 4px !important;
-		transition: transform 0.2s ease-in-out;
-	}
-
-		.btn-mua-ve2:hover {
-			background-image: linear-gradient(to right, #0a64a7 0%, #258dcf 51%, #3db1f3 100%) !important;
-			color: #fff;
-		}
-
-	.mr3 {
-		font-size: 70px;
-		position: absolute;
-		left: -10px;
-		opacity: 0.5;
-		color: #fff;
-	}
-
-	.open-modal-btn {
-		background-color: #007bff;
-		color: white;
-		padding: 10px 20px;
-		border: none;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 16px;
-	}
-
-	/* Định dạng cho modal */
-	.modal-buy {
-		display: none; /* Ẩn modal mặc định */
-		position: fixed;
-		z-index: 1;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
-		justify-content: center;
-		align-items: center;
-	}
-
-	.modal-size {
-		width: 50%;
-		min-height: 50%;
-		background-color: #fff;
-	}
-	/* Nội dung của modal */
-	.modal-content-buy {
-		background-color: #fff;
-		padding: 20px;
-		border-radius: 5px;
-		position: relative;
-	}
-
-	/* Nút đóng modal */
-	.close-modal-btn {
-		position: absolute;
-		top: 10px;
-		right: 15px;
-		color: #333;
-		font-size: 20px;
-		font-weight: bold;
-		cursor: pointer;
-	}
-
-</style>
 <script>
 	document.getElementById("defaultOpen").click();
 	function openCity(evt, cityName) {
@@ -390,7 +207,7 @@
 		document.getElementById(cityName).style.display = "block";
 		evt.currentTarget.className += " active";
 	}
-	function openModal() {
+	function openModalShowTime() {
 		document.getElementById('myModalBuyTicket').style.display = 'flex';
 	}
 
@@ -405,14 +222,61 @@
 			closeModal();
 		}
 	}
+
+	function openModal(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = new bootstrap.Modal(modalElement);
+		modal.show();
+	}
+	function closeModall(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+			modal.hide();
+		}
+	}
 </script>
 
 @code {
-	private List<UserHomeDto> listObj = new List<UserHomeDto>();
+	private List<UserHomeDto> listObjFilm = new List<UserHomeDto>();
+	private string IdFilm;
+	private string filmName { get; set; }
+	private Guid ShowTimeId;
+	private SeatSelectionModal seatSelectionModalref;
 
 	protected async override Task OnInitializedAsync()
 	{
-		listObj = await _service.GetAllFilmForUserHome();
+		listObjFilm = await _service.GetAllFilmForUserHome();
 	}
-
+	private async Task OpenModalShowTime(string id)
+	{
+		IdFilm = id;
+		var listObj = await _service.GetAllFilmForUserHome();
+		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(id)).Name;
+		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+	private async Task OpenSeatSelectionModal(Guid id)
+	{
+		Task.Delay(100);
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("closeModal");
+		seatSelectionModalref.Reset();
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+	}
+	private async Task CloseSeatSelectionModal()
+	{
+		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
+		seatSelectionModalref.Reset();
+		var listObj = await _service.GetAllFilmForUserHome();
+		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
+		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+	private async void ShowCloseConfirmation()
+	{
+		bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận hủy đặt vé?");
+		if (confirmed)
+		{
+			await CloseSeatSelectionModal();
+		}
+	}
 }

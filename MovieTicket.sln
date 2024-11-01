@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{2E65E18D-A516-4402-8540-663A02FD5EBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.API", "MovieTicket.API\MovieTicket.API.csproj", "{52516D10-5581-4A24-91E4-2507CE3B9347}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.API", "MovieTicket.API\MovieTicket.API.csproj", "{099018DC-8D95-4A77-8E97-02517E0F3015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Domain", "MovieTicket.Domain\MovieTicket.Domain.csproj", "{715E3BC1-EBD6-4D24-9BDC-53C7610ABA71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Application", "MovieTicket.Application\MovieTicket.Application.csproj", "{652AF9AB-C022-43E9-998E-2FFD5DE2E060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Infrastructure", "MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj", "{5F202A07-2332-423C-A138-993D3DD770FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Domain", "MovieTicket.Domain\MovieTicket.Domain.csproj", "{6B434BC2-FEDE-4BE5-ACD6-E4AC8322C45F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{DC986FE6-810D-4399-93E7-EABB2052127B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Infrastructure", "MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj", "{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Application", "MovieTicket.Application\MovieTicket.Application.csproj", "{9D4031D6-3657-4E1E-82CF-93C0976F1B0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{350341B6-A79C-4DF7-BB20-E3C694E45ABF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{81AD37CE-6DE0-4E68-B72E-434BA1A2678F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,35 +21,35 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{099018DC-8D95-4A77-8E97-02517E0F3015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{099018DC-8D95-4A77-8E97-02517E0F3015}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{099018DC-8D95-4A77-8E97-02517E0F3015}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{099018DC-8D95-4A77-8E97-02517E0F3015}.Release|Any CPU.Build.0 = Release|Any CPU
-		{652AF9AB-C022-43E9-998E-2FFD5DE2E060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{652AF9AB-C022-43E9-998E-2FFD5DE2E060}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{652AF9AB-C022-43E9-998E-2FFD5DE2E060}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{652AF9AB-C022-43E9-998E-2FFD5DE2E060}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B434BC2-FEDE-4BE5-ACD6-E4AC8322C45F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B434BC2-FEDE-4BE5-ACD6-E4AC8322C45F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B434BC2-FEDE-4BE5-ACD6-E4AC8322C45F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B434BC2-FEDE-4BE5-ACD6-E4AC8322C45F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{350341B6-A79C-4DF7-BB20-E3C694E45ABF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52516D10-5581-4A24-91E4-2507CE3B9347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52516D10-5581-4A24-91E4-2507CE3B9347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52516D10-5581-4A24-91E4-2507CE3B9347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52516D10-5581-4A24-91E4-2507CE3B9347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{715E3BC1-EBD6-4D24-9BDC-53C7610ABA71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{715E3BC1-EBD6-4D24-9BDC-53C7610ABA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{715E3BC1-EBD6-4D24-9BDC-53C7610ABA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{715E3BC1-EBD6-4D24-9BDC-53C7610ABA71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F202A07-2332-423C-A138-993D3DD770FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F202A07-2332-423C-A138-993D3DD770FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F202A07-2332-423C-A138-993D3DD770FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F202A07-2332-423C-A138-993D3DD770FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D4031D6-3657-4E1E-82CF-93C0976F1B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D4031D6-3657-4E1E-82CF-93C0976F1B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D4031D6-3657-4E1E-82CF-93C0976F1B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D4031D6-3657-4E1E-82CF-93C0976F1B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81AD37CE-6DE0-4E68-B72E-434BA1A2678F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81AD37CE-6DE0-4E68-B72E-434BA1A2678F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81AD37CE-6DE0-4E68-B72E-434BA1A2678F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81AD37CE-6DE0-4E68-B72E-434BA1A2678F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{099018DC-8D95-4A77-8E97-02517E0F3015} = {2E65E18D-A516-4402-8540-663A02FD5EBE}
-		{652AF9AB-C022-43E9-998E-2FFD5DE2E060} = {2E65E18D-A516-4402-8540-663A02FD5EBE}
-		{6B434BC2-FEDE-4BE5-ACD6-E4AC8322C45F} = {2E65E18D-A516-4402-8540-663A02FD5EBE}
-		{B9B94C54-23FF-4DB5-8B92-755860E4C5D1} = {2E65E18D-A516-4402-8540-663A02FD5EBE}
+		{52516D10-5581-4A24-91E4-2507CE3B9347} = {DC986FE6-810D-4399-93E7-EABB2052127B}
+		{715E3BC1-EBD6-4D24-9BDC-53C7610ABA71} = {DC986FE6-810D-4399-93E7-EABB2052127B}
+		{5F202A07-2332-423C-A138-993D3DD770FF} = {DC986FE6-810D-4399-93E7-EABB2052127B}
+		{9D4031D6-3657-4E1E-82CF-93C0976F1B0E} = {DC986FE6-810D-4399-93E7-EABB2052127B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4322D78-A3A0-4125-B7CF-22D29168123F}

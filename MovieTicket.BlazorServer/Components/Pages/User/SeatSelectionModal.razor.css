@@ -1,0 +1,100 @@
+﻿.seat-btn[open] {
+    outline: solid 1px #000;
+}
+
+.btn {
+    -webkit-transition: all 0.3s ease-in-out;
+}
+
+    .btn:hover {
+        -webkit-transform: scale(1.1);
+    }
+
+.seat-unavailable {
+    display: none;
+}
+
+[data-seat-status="Normal"] {
+    background-color: #7C4DFF;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    margin: 0px;
+    padding: 10px;
+}
+
+    [data-seat-status="Normal"]:hover {
+        background-color: #7C4DFF;
+        color: #fff;
+    }
+
+[data-seat-status="VIP"] {
+    background-color: #DD2C00;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    margin: 0px;
+    padding: 10px;
+}
+
+    [data-seat-status="VIP"]:hover {
+        background-color: #DD2C00;
+        color: #fff;
+    }
+
+[data-seat-status="Couple"] {
+    background-color: #FF8A80;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    margin: 0px;
+    padding: 10px;
+}
+
+    [data-seat-status="Couple"]:hover {
+        background-color: #FF8A80;
+        color: #fff;
+    }
+
+.row {
+    padding: 0px;
+    margin: 0.5rem;
+}
+
+.col {
+    padding: 0rem;
+    width: 50px;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
+
+.seat-grid {
+    width: max-content;
+}
+
+.seatInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.container-modal {
+    display: grid;
+    justify-content: center;
+}
+
+.detail {
+    display: grid;
+    width: 100%;
+}
+
+.selectedSeats {
+}
+
+.ticketPrices {
+}
+
+.checkout {
+    align-content: center;
+}
