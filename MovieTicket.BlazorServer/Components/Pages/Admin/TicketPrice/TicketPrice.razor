@@ -12,7 +12,7 @@
 @inject IScreenTypeServices _serScreenType;
 @inject ICinemaTypeService _serCinemaType;
 @inject ISeatTypeService _serSeatType;
-<div class="modal fade" id="CreateTicketPriceModalToggle" aria-hidden="true" aria-labelledby="CreateTicketPriceToggleLabel" tabindex="-1">
+<div class="modal fade" id="CreateTicketPriceModalToggle" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="CreateTicketPriceToggleLabel" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header" data-bs-theme="dark">
@@ -36,7 +36,6 @@
 			<div class="modal-body">
 				<UpdateTicketPrice Id="@SelectTicketPriceId" />
 			</div>
-
 		</div>
 	</div>
 </div>
