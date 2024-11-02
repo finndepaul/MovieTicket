@@ -57,6 +57,11 @@
         }
     </div>
 </EditForm>
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
 @code {
     private CreateComboRequest createComboRequest = new CreateComboRequest();
     private string? _directoryPath { get; set; }

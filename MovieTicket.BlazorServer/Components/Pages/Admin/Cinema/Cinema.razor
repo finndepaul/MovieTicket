@@ -1,5 +1,4 @@
 ﻿@page "/cinema"
-@using static Microsoft.EntityFrameworkCore.DbLoggerCategory
 @attribute [Authorize(Roles = "Admin")]
 
 @if (_lstCinemaCenters != null)
@@ -147,11 +146,9 @@
                                 <td>
                                     <button class="btn edit-btn" data-id="@cinema.Id" @onclick="() => OpenUpdateCinemaModal(cinema.Id)">
                                         <i class="bi bi-pencil-square"></i>
-                                        Sửa
                                     </button>
                                     <button class="btn btn-danger" data-id="@cinema.Id" @onclick="() => ShowDeleteConfirmation(cinema.Id)">
                                         <i class="bi bi-trash"></i>
-                                        Xóa
                                     </button>
                                 </td>
                             </tr>
@@ -167,58 +164,6 @@ else
 {
     <h3>Loading...</h3>
 }
-
-<style>
-    .add-btn {
-        -webkit-transition: all 0.3s ease-in-out;
-        background-color: #64B5F6;
-        color: #fff;
-    }
-
-        .add-btn:hover {
-            -webkit-transform: scale(1.1);
-            background-color: #64B5F6;
-            color: #fff;
-        }
-
-    .bg-soon {
-        background-color: #B3E5FC;
-        color: #03A9F4;
-        outline: thin solid #03A9F4;
-    }
-
-    .bg-now {
-        background-color: #F1F8E9;
-        color: #76FF03;
-        outline: thin solid #76FF03;
-    }
-
-    .edit-btn {
-        background-color: #FFA726;
-        color: #fff;
-    }
-
-        .edit-btn:hover {
-            background-color: #FFA726;
-            color: #fff;
-        }
-
-    .btn {
-        -webkit-transition: all 0.3s ease-in-out;
-    }
-
-        .btn:hover {
-            -webkit-transform: scale(1.1);
-        }
-
-    .cinemaName {
-       text-decoration: none;
-    }
-        .cinemaName:hover {
-            cursor: pointer;
-            color: #007bff;
-        }
-</style>
 
 <script>
     function openModal(modalId) {

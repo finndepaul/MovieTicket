@@ -1,5 +1,4 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Combo;
-using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer.Services.Implements
@@ -12,6 +11,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
         {
             _httpClient = httpClient;
         }
+
         public async Task<ComboDto> Create(CreateComboRequest combo)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Combo/Create", combo);
