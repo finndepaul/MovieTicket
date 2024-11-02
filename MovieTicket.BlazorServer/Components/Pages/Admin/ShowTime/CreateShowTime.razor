@@ -73,6 +73,7 @@
 	[Parameter] public Guid? CinemaCenterId { get; set; }
 	[Parameter] public Guid? CinemaId { get; set; }
 	[Parameter] public DateTime Date { get; set; }
+	[Parameter]public EventCallback<(Guid CinemaCenterId, Guid CinemaId, DateTime ShowtimeDate)> OnCreateSuccess { get; set; }
 	private IEnumerable<FilmDto> Films = new List<FilmDto>();
 	private IEnumerable<FilmDto> FilmValidate = new List<FilmDto>();
 	private ShowTimeCreateRequest ShowTime = new ShowTimeCreateRequest();
@@ -102,6 +103,9 @@
 
 		ShowTime.Desciption = "Đang chiếu";
 	}
+
+	public void ResetForm() => ShowTime = new ShowTimeCreateRequest();
+
 	private async Task OnFilmChange(ChangeEventArgs e)
 	{
 		var selectedFilmId = e.Value.ToString();
@@ -131,15 +135,15 @@
 	private async Task OnStartTime(ChangeEventArgs e)
 	{
 		var startTime = e.Value.ToString();
-		if (DateTime.TryParse(startTime, out DateTime time))
+		if (TimeSpan.TryParse(startTime, out TimeSpan time))
 		{
-			ShowTime.StartTime = time;
+			ShowTime.StartTime = Date.Date + time;
 			int endTime = Films.FirstOrDefault(x => x.Id == idFilm).RunningTime.Value;
 			if (endTime != null)
 			{
 				if (ShowTime.StartTime.HasValue)
 				{
-					ShowTime.EndTime = time.AddMinutes(endTime);
+					ShowTime.EndTime = ShowTime.StartTime.Value.AddMinutes(endTime);
 				}
 			}
 		}
@@ -151,9 +155,8 @@
 		
 		if (result.Status == 200)
 		{
-			await _IJSRuntime.ToastrSuccess(result.Message);
-			await Task.Delay(100);
-			NavigationManager.NavigateTo("/showtime", true);
+			await _IJSRuntime.ToastrSuccess(result.Message);		
+			await OnCreateSuccess.InvokeAsync((CinemaCenterId.Value, CinemaId.Value, ShowTime.ShowtimeDate.Value));
 		}
 		else
 		{
