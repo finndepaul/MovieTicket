@@ -12,5 +12,7 @@ namespace MovieTicket.Application.DataTransferObjs.Seat
 
         [Required(ErrorMessage = "Chưa chọn trạng thái ghế")]
         public SeatStatus Status { get; set; }
+
+        public SeatSelection Selection { get; set; }
     }
 }

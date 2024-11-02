@@ -73,6 +73,7 @@ else
     [Parameter] public EventCallback<List<TicketPriceDto>> eventCallback { get; set; }
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
+    private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
     private List<TicketPriceDto> lstTicketPrices { get; set; }
     private Guid SeatId = Guid.Empty;
     private List<SeatDTO> lstSeatsSelected = new();//list ghế đã chọn
@@ -100,15 +101,15 @@ else
             lstTicketPrices = responseTicket.Item.ToList();
             AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
             user = AuthenState.User.Identity.Name; //lấy username của user đang đăng nhập
-            //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
+                                                   //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
         }
     }
 
     private async Task SeatSelection(Guid id)
     {
+        Task.Delay(100);
         if(id != null)
         {
-            Task.Delay(100);
             SeatId = id;
             var response = await SeatService.GetById(SeatId);
             var seat = response.Data;
@@ -121,7 +122,7 @@ else
                     SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
                 }
                 lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
-                CalculateTotal();
+                lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
             }
             else
             {
@@ -131,14 +132,16 @@ else
                     SeatsSelectedstr += seat.Position + " ";
                 }
                 lstSeatsSelected.Add(seat);
-                CalculateTotal();
+                lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                    {
+                        Id = seat.Id,
+                        Selection = Domain.Enums.SeatSelection.Checked
+                    });
             };
-
             //update hóa đơn chờ ở đây
-
+            CalculateTotal();
             StateHasChanged();
         }
-        
     }
 
     private string CalculateTotal() //tính tổng tiền
@@ -167,15 +170,33 @@ else
             return "T2-T6";
         }
     }
-    public void Reset()
+    public void Reset() //not working
     {
         lstSeatsSelected.Clear();
         SeatsSelectedstr = "";
         total = null;
+        StateHasChanged();
     }
 
     private async Task HandleCheckout()
     {
-        //khi bấm nút check out thì chuyển sang trang thanh toán 
+        //khi bấm nút check out thì chuyển sang trang thanh toán
+        if(lstSeatsSelected.Count > 0)
+        {
+            foreach(var s in lstSeatsSelected)
+            {
+                if(s.Selection == Domain.Enums.SeatSelection.Checked)
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn");
+                    Reset();
+                    return;
+                }
+            }
+            await SeatService.UpdateRange(lstSeatUpdateRequests);
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
+        }
     }
 }
