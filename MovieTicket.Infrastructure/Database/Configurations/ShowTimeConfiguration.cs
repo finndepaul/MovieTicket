@@ -8,6 +8,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<ShowTime> builder)
         {
+            builder.ToTable("ShowTime");
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.ScreenType).WithMany(x => x.ShowTime).HasForeignKey(x => x.ScreenTypeId);
             builder.HasOne(x => x.Cinema).WithMany(x => x.ShowTimes).HasForeignKey(x => x.CinemaId);

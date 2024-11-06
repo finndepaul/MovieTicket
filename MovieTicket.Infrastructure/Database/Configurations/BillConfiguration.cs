@@ -8,12 +8,13 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<Bill> builder)
         {
+            builder.ToTable("Bill");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.TotalMoney).HasColumnType("decimal(18,2)");
             builder.Property(x => x.CreateTime).HasColumnType("date");
             builder.HasOne(x => x.Membership).WithMany(x => x.Bills).HasForeignKey(x => x.MembershipId);
-            builder.HasOne(x => x.Voucher).WithMany(x => x.Bills).HasForeignKey(x => x.VoucherId);
+            builder.HasOne(x => x.Coupon).WithMany(x => x.Bills).HasForeignKey(x => x.CouponId);
         }
     }
 }

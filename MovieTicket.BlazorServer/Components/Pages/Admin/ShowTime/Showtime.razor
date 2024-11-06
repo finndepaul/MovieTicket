@@ -95,14 +95,14 @@
 									<span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.ScreenTypeName</span>
 								}
 							</td>
-							<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
-							<td><span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
+							<td><span class="p-2 m-2 badge text-dark bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
+							<td><span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
 							<td>
 								@if (item.ShowtimeDate.HasValue && item.StartDate.HasValue && item.EndDate.HasValue)
 								{
 									if (item.ShowtimeDate.Value < item.StartDate.Value)
 									{
-										<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Suất chiếu sớm</span>
+										<span class="p-2 m-2 badge text-dark bg-warning bg-opacity-10 border border-warning">Suất chiếu sớm</span>
 									}
 									else if (item.ShowtimeDate.Value >= item.StartDate.Value && item.ShowtimeDate.Value <= item.EndDate.Value)
 									{
@@ -121,7 +121,7 @@
 							<td>
 								@if (item.Status == Domain.Enums.ShowtimeStatus.ComingSoon)
 								{
-									<span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">Sắp chiếu</span>
+									<span class="p-2 m-2 badge text-dark bg-warning bg-opacity-10 border border-warning">Sắp chiếu</span>
 								}
 								@if (item.Status == Domain.Enums.ShowtimeStatus.Showing)
 								{
@@ -145,26 +145,34 @@
 
 	<div class="mt-3">
 		<!-- Button to Open Modal -->
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal">
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CreateShowTime">
 			+ Thêm suất chiếu
 		</button>
 	</div>
 
-	<div class="modal fade" id="scheduleModal" tabindex="-1" aria-labelledby="scheduleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="CreateShowTime" tabindex="-1" aria-labelledby="CreateShowTimeLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="scheduleModalLabel">Thêm suất chiếu (@CinemaCenterName - @CinemaName)</h5>
+					<h5 class="modal-title" id="CreateShowTimeLabel">Thêm suất chiếu (@CinemaCenterName - @CinemaName)</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<CreateShowTime CinemaCenterId="@ShowTimeSearchs.CinemaCenterId" CinemaId="@ShowTimeSearchs.CinemaId" Date="@Date"></CreateShowTime>
+					<CreateShowTime CinemaCenterId="@ShowTimeSearchs.CinemaCenterId" CinemaId="@ShowTimeSearchs.CinemaId" Date="@Date" OnCreateSuccess="HandleCreateCinemaSuccess"></CreateShowTime>
 				</div>				
 			</div>
 		</div>
 	</div>
 </div>
-
+<script>
+	function closeModal(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+			modal.hide();
+		}
+	}
+</script>
 @code {
 	private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
 	private ShowTimeSearch ShowTimeSearchs = new ShowTimeSearch();
@@ -178,7 +186,7 @@
 	private DateTime Date = DateTime.Today;
 	private IQueryable<CinemaDto> cinemaSearch;
 	private string _lstCinema = string.Empty;
-
+	private CreateShowTime CreateShowTime;
 	protected override async Task OnInitializedAsync()
 	{
 		_lstCinema = "Select a cinema";
@@ -249,5 +257,19 @@
 			MetaData = pagingResponse.MetaData;
 			StateHasChanged();
 		}
+	}
+	private async Task HandleCreateCinemaSuccess()
+	{
+		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
+		{
+			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, new PagingParameters()
+				{
+					PageSize = 20
+				});
+			ShowTimes = pagingResponse.Item.ToList();
+			MetaData = pagingResponse.MetaData;
+			StateHasChanged();
+		}
+		await JSRuntime.InvokeVoidAsync("closeModal", "CreateShowTime");
 	}
 }
