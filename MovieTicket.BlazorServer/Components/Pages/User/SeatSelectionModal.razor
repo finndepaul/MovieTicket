@@ -192,12 +192,15 @@ else
                     Reset();
                     return;
                 }
+               
             }
             await SeatService.UpdateRange(lstSeatUpdateRequests);
+            await OnSeatSelection.InvokeAsync(ShowtimeId);
         }
         else
         {
             await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
         }
+
     }
 }

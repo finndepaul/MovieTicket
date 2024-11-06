@@ -24,20 +24,20 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 		{
 			var showTimes = (from showTime in _db.ShowTimes
 							 join cinema in _db.Cinemas on showTime.CinemaId equals cinema.Id
-							 join cinemaCenter in _db.CinemaCenters on showTime.CinemaCenterId equals cinemaCenter.Id
-							 join film in _db.Films on showTime.FilmId equals film.Id
+							 join cinemaCenter in _db.CinemaCenters on cinema.CinemaCenterId equals cinemaCenter.Id
 							 join schedule in _db.Schedules on showTime.ScheduleId equals schedule.Id
+							 join film in _db.Films on schedule.FilmId equals film.Id
 							 join screenType in _db.ScreenTypes on showTime.ScreenTypeId equals screenType.Id
 							 join translationType in _db.TranslationTypes on showTime.TranslationTypeId equals translationType.Id
 							 select new ShowTimeDto
 							 {
 								 Id = showTime.Id,
-								 CinemaId = showTime.Cinema.Id,  
-								 CinemaCenterId = showTime.CinemaCenter.Id, 
+								 CinemaId = showTime.Cinema.Id,
+								 CinemaCenterId = cinemaCenter.Id,
 								 CinemaName = cinema.Name,
 								 CinemaCenterName = cinemaCenter.Name,
-								 FilmId = showTime.Film.Id,
 								 FilmName = film.Name,
+								 FilmId = film.Id,
 								 StartDate = schedule.StartDate,
 								 EndDate = schedule.EndDate,
 								 ScreenTypeName = screenType.Type,
@@ -74,20 +74,21 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         {
             var showTimes = await (from showTime in _db.ShowTimes
                                    join cinema in _db.Cinemas on showTime.CinemaId equals cinema.Id
-                                   join cinemaCenter in _db.CinemaCenters on showTime.CinemaCenterId equals cinemaCenter.Id
-                                   join film in _db.Films on showTime.FilmId equals film.Id
-                                   join schedule in _db.Schedules on showTime.ScheduleId equals schedule.Id
-                                   join screenType in _db.ScreenTypes on showTime.ScreenTypeId equals screenType.Id
+								   join cinemaCenter in _db.CinemaCenters on cinema.CinemaCenterId equals cinemaCenter.Id
+								   join schedule in _db.Schedules on showTime.ScheduleId equals schedule.Id
+								   join film in _db.Films on schedule.FilmId equals film.Id
+								   join screenType in _db.ScreenTypes on showTime.ScreenTypeId equals screenType.Id
                                    join translationType in _db.TranslationTypes on showTime.TranslationTypeId equals translationType.Id
                                    where showTime.Id == id
                                    select new ShowTimeDto
                                    {
 									   Id = showTime.Id,
 									   CinemaId = showTime.Cinema.Id,
-									   CinemaCenterId = showTime.CinemaCenter.Id,
+									   CinemaCenterId = cinemaCenter.Id,
 									   CinemaName = cinema.Name,
 									   CinemaCenterName = cinemaCenter.Name,
 									   FilmName = film.Name,
+									   FilmId = film.Id,
 									   StartDate = schedule.StartDate,
 									   EndDate = schedule.EndDate,
 									   ScreenTypeName = screenType.Type,
