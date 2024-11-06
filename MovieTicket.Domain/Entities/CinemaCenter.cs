@@ -14,6 +14,4 @@ public class CinemaCenter
     public virtual ICollection<Cinema> Cinemas { get; set; } = new List<Cinema>();
 
     public virtual ICollection<ShowTime> ShowTimes { get; set; } = new List<ShowTime>();
-
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

@@ -8,6 +8,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<Account> builder)
         {
+            builder.ToTable("Account");
             builder.HasKey(x => x.Id);
         }
     }
