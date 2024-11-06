@@ -1,0 +1,50 @@
+﻿<div class="container-fluid">
+	<div class="row row-cols-1 row-cols-md-2 g-4">
+		@foreach (var item in lstCombo)
+		{
+			<div class="col">
+				<div class="card mb-3" style="max-width: 540px;">
+					<div class="row g-0">
+						<div class="col-md-4">
+							<img src="@item.Image" class="img-fluid object-fit-contain rounded-start" alt="...">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">@item.Name</h5>
+								<p class="card-text">@item.Description</p>
+								<p class="card-text">Giá: <span class="fw-bold">@item.Price.Value.ToString("#,##0")đ</span></p>
+								<div class="input-group mb-3" style="width:50%">
+									<span class="btn btn-danger input-group-text"><i class="bi bi-dash-lg"></i></span>
+									<input type="text" class="form-control text-center" style="font-size: 18px" @bind-value="count" disabled />
+									<span class="btn btn-danger input-group-text"><i class="bi bi-plus-lg"></i></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+@code {
+	private List<ComboDto> lstCombo = new List<ComboDto>();
+	private int count { get; set; } = 0;
+	protected async override Task OnInitializedAsync()
+	{
+		lstCombo = await ComboService.GetAll();
+	}
+	public void Reset()
+	{
+		lstCombo.Clear();
+	}
+	private void Plus()
+	{
+		count++;
+	}
+	private void Minus()
+	{
+		count--;
+		if (count < 0) count = 0; // Đảm bảo count không giảm dưới 0
+	}
+}
