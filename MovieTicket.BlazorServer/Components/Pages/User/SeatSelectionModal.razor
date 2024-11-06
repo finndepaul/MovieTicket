@@ -58,7 +58,7 @@
                 }
             </div>
             <div class="checkout col">
-                <button class="btn btn-success" @onclick="() => HandleCheckout()">Thanh toán</button>
+                <button class="btn btn-success bi bi-chevron-right" @onclick="() => Next()">Tiếp theo</button>
             </div>
         </div>
     </div>
@@ -70,7 +70,7 @@ else
 
 @code {
     [Parameter] public Guid ShowtimeId { get; set; }
-    [Parameter] public EventCallback<List<TicketPriceDto>> eventCallback { get; set; }
+    [Parameter] public EventCallback<Guid> OnSeatSelection { get; set; }
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
     private List<TicketPriceDto> lstTicketPrices { get; set; }
@@ -174,8 +174,8 @@ else
         total = null;
     }
 
-    private async Task HandleCheckout()
+    private async Task Next()
     {
-        //khi bấm nút check out thì chuyển sang trang thanh toán 
+        await OnSeatSelection.InvokeAsync(ShowtimeId);
     }
 }

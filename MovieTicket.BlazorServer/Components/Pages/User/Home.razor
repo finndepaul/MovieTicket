@@ -73,7 +73,7 @@
 						}
 					}
 				}
-				
+
 
 
 			</div>
@@ -129,11 +129,11 @@
 					{
 						@if (item.SType == ScheduleType.Special)
 						{
-							var rating = "c"+"-"+item.Rating.Value.ToString()+".png";
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
 									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
-                                    <span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
@@ -175,7 +175,24 @@
 				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" />
+				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="OpenComboSelectionModal" />
+			</div>
+		</div>
+	</div>
+</div>
+<!--Modal combo -->
+<div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Chọn Combo</h4>
+			</div>
+			<div class="modal-body">
+				<ComboSelectionModal @ref="comboSelectionModalref"/>
+			</div>
+			<div class="modal-footer d-flex justify-content-between">
+				<button type="button" class="p-2 btn btn-primary text-light bi bi-chevron-left" @onclick="PreComboSelectionModal" aria-label="Close" style="border: none">Quay lại</button>
+				<button type="button" class="p-2 btn btn-success text-light bi bi-chevron-right" aria-label="Close" style="border: none">Tiếp theo</button>
 			</div>
 		</div>
 	</div>
@@ -212,13 +229,6 @@
 		document.getElementById('myModalBuyTicket').style.display = 'none';
 	}
 
-	// Đóng modal khi nhấn ngoài modal
-	window.onclick = function (event) {
-		if (event.target === document.getElementById('myModalBuyTicket')) {
-			closeModal();
-		}
-	}
-
 	function openModal(modalId) {
 		var modalElement = document.getElementById(modalId);
 		var modal = new bootstrap.Modal(modalElement);
@@ -239,6 +249,7 @@
 	private string filmName { get; set; }
 	private Guid ShowTimeId;
 	private SeatSelectionModal seatSelectionModalref;
+	private ComboSelectionModal comboSelectionModalref;
 
 	protected async override Task OnInitializedAsync()
 	{
@@ -261,6 +272,13 @@
 		seatSelectionModalref.Reset();
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
+	private async Task OpenComboSelectionModal(Guid id)
+	{
+		Task.Delay(300);
+		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+		comboSelectionModalref.Reset();
+		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
+	}
 	private async Task CloseSeatSelectionModal()
 	{
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
@@ -268,6 +286,14 @@
 		var listObj = await UserHomeService.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+	private async Task PreComboSelectionModal()
+	{
+		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal"); //đóng seat selection modal
+		comboSelectionModalref.Reset();
+		var listObj = await UserHomeService.GetAllFilmForUserHome();
+		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
 	private async void ShowCloseConfirmation()
 	{

@@ -41,7 +41,6 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
 		public async Task<PageList<TicketPriceDto>> GetAllAsync(TicketPriceWithPaginationRequest request, PagingParameters pagingParameters)
 		{
-
 			var queryParameters = new Dictionary<string, string>
 			{
 				["pageNumber"] = pagingParameters.PageNumber.ToString(),
