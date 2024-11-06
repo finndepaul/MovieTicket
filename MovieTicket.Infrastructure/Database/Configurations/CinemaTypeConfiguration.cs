@@ -8,6 +8,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<CinemaType> builder)
         {
+            builder.ToTable("CinemaType");
             builder.HasKey(x => x.Id);
         }
     }

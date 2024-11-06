@@ -21,57 +21,28 @@ public class MovieTicketReadOnlyDbContext : DbContext
     #region DbSet
 
     public virtual DbSet<Account> Accounts { get; set; }
-
     public virtual DbSet<Bill> Bills { get; set; }
-
     public virtual DbSet<BillCombo> BillCombos { get; set; }
-
     public virtual DbSet<Cinema> Cinemas { get; set; }
-
     public virtual DbSet<CinemaCenter> CinemaCenters { get; set; }
-
     public virtual DbSet<CinemaType> CinemaTypes { get; set; }
-
     public virtual DbSet<Combo> Combos { get; set; }
-
     public virtual DbSet<ConfirmedEmail> ConfirmedEmails { get; set; }
-
     public virtual DbSet<Film> Films { get; set; }
-
     public virtual DbSet<FilmScreenType> FilmScreenTypes { get; set; }
-
     public virtual DbSet<FilmTranslationType> FilmTranslationTypes { get; set; }
-
     public virtual DbSet<Membership> Memberships { get; set; }
-
-    public virtual DbSet<Promotion> Promotions { get; set; }
-
-    public virtual DbSet<PromotionDetail> PromotionDetails { get; set; }
-
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-
     public virtual DbSet<Schedule> Schedules { get; set; }
-
     public virtual DbSet<ScreenType> ScreenTypes { get; set; }
-
     public virtual DbSet<ScreeningDay> ScreeningDays { get; set; }
-
     public virtual DbSet<Seat> Seats { get; set; }
-
     public virtual DbSet<SeatType> SeatTypes { get; set; }
-
     public virtual DbSet<ShowTime> ShowTimes { get; set; }
-
     public virtual DbSet<Ticket> Tickets { get; set; }
-
     public virtual DbSet<TicketPrice> TicketPrices { get; set; }
-
     public virtual DbSet<TranslationType> TranslationTypes { get; set; }
-
-    public virtual DbSet<Voucher> Vouchers { get; set; }
-
-    public virtual DbSet<VoucherDetail> VoucherDetails { get; set; }
-    public virtual DbSet<BillSeat> BillSeats { get; set; }
+    public virtual DbSet<Coupon> Coupons { get; set; }
     public virtual DbSet<Banner> Banners { get; set; }
 
     #endregion DbSet
@@ -91,7 +62,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         //optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
         // Đông:
-        //optionsBuilder.UseSqlServer("Data Source=DESKTOP-V6M0EF7\\SQLEXPRESS;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+        optionsBuilder.UseSqlServer("Data Source=DESKTOP-V6M0EF7\\SQLEXPRESS;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -110,7 +81,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Username = "Admin",
             Password = Hash.EncryptPassword("123"),
             Role = Domain.Enums.AccountRole.Admin, // 1, 2, or 3
-            Avatar = $"avatar1.png",
+            Avatar = "img/Avatar/avatar.jpg",
             Name = "AdminTest",
             Phone = "000-000-000",
             Email = "azusachan307@gmail.com",
@@ -123,7 +94,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Username = "User",
             Password = Hash.EncryptPassword("123"),
             Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
-            Avatar = $"avatar2.png",
+            Avatar = "img/Avatar/avatar.jpg",
             Name = "ClientTest",
             Phone = "000-000-000",
             Email = "azusachan309@gmail.com",
@@ -142,14 +113,14 @@ public class MovieTicketReadOnlyDbContext : DbContext
         .RuleFor(f => f.Director, f => f.Name.FullName())
         .RuleFor(f => f.Cast, f => $"{f.Name.FirstName()} {f.Name.LastName()}")
         .RuleFor(f => f.Rating, f => f.PickRandom(12, 16, 18))
-        .RuleFor(f => f.StartDate, f => f.Date.Between(new DateTime(2024, 9, 1), new DateTime(2024, 10, 30)))
+        .RuleFor(f => f.StartDate, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(10)))
         .RuleFor(f => f.ReleaseYear, 2024)
         .RuleFor(f => f.RunningTime, f => f.Random.Int(60, 180))
         .RuleFor(f => f.Status, Domain.Enums.FilmStatus.NowShowing)
         .RuleFor(f => f.Nation, f => f.PickRandom("USA", "Japan"))
         .RuleFor(f => f.Poster, "img/posterFilm/film_modomdom.jpg")
         .RuleFor(f => f.Language, f => f.PickRandom("English", "Japanese"))
-        .RuleFor(f => f.CreatDate, f => f.Date.Between(new DateTime(2024, 9, 1), new DateTime(2024, 10, 30)));
+        .RuleFor(f => f.CreatDate, DateTime.Now);
         // Generate list of films
         var films = filmFaker.Generate(15);
         modelBuilder.Entity<Film>().HasData(films);
@@ -163,22 +134,46 @@ public class MovieTicketReadOnlyDbContext : DbContext
         modelBuilder.Entity<Membership>().HasData(membershipFaker.Generate(1));
 
         // Faker for CinemaCenter
-        var cinemaCenterFaker = new Faker<CinemaCenter>("vi")
-            .RuleFor(c => c.Id, f => Guid.NewGuid())
-            .RuleFor(c => c.Name, f => $"VHD Vincom {f.Address.StreetAddress()}")
-            .RuleFor(c => c.Address, f => f.Address.FullAddress());
-        var cinemaCenters = cinemaCenterFaker.Generate(5);
-        modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
+        List<CinemaCenter> cinemaCenters = new List<CinemaCenter>();
 
+        cinemaCenters.Add(new CinemaCenter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "VHD Vincom Mỹ Đình",
+            Address = "Số 1 Mỹ Đình, Nam Từ Liêm,Hà Nội",
+            AddressMap = "https://goo.gl/maps/1",
+            CreateDate = DateTime.Now,
+        });
+        cinemaCenters.Add(new CinemaCenter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "VHD Vincom Nguyễn Chí Thanh",
+            Address = "Số 1 Nguyễn Chí Thanh, Ba Đình,Hà Nội",
+            AddressMap = "https://goo.gl/maps/2",
+            CreateDate = DateTime.Now,
+        });
+        cinemaCenters.Add(new CinemaCenter()
+        {
+            Id = Guid.NewGuid(),
+            Name = "VHD TimeCity",
+            Address = "Số 1 Minh Khai, Hai Bà Trưng,Hà Nội",
+            AddressMap = "https://goo.gl/maps/2",
+            CreateDate = DateTime.Now,
+        });
+        modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
         // Faker for Combo
         var comboFaker = new Faker<Combo>()
-            .RuleFor(c => c.Id, f => Guid.NewGuid())
-            .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
-            .RuleFor(c => c.Price, f => f.Random.Int(10000, 100000));
+               .RuleFor(c => c.Id, f => Guid.NewGuid())
+               .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
+               .RuleFor(c => c.Price, f => f.Random.Int(40000, 100000))
+               .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
+               .RuleFor(c => c.ComboStatus, ComboStatus.Available)
+               .RuleFor(c => c.Image, "img/Combo/combo.png");
+
         modelBuilder.Entity<Combo>().HasData(comboFaker.Generate(5));
         // Faker for ScreeningDay (ensure unique values)
         // Faker for ScreeningDay
-        var screeningDayList = new List<string> { "T2-CN", "T2-T6", "T7-CN" };
+        var screeningDayList = new List<string> { "T2-T6", "T7-CN" };
         var screeningDayFaker = new Faker<ScreeningDay>()
             .RuleFor(s => s.Id, f => Guid.NewGuid())
             .RuleFor(s => s.Day, f =>
@@ -188,7 +183,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
                 return day;
             });
 
-        var screeningDays = screeningDayFaker.Generate(3); // Sinh ra đúng 3 loại ngày
+        var screeningDays = screeningDayFaker.Generate(2); // Sinh ra đúng 3 loại ngày
         modelBuilder.Entity<ScreeningDay>().HasData(screeningDays);
 
         // Faker for SeatType
@@ -280,13 +275,13 @@ public class MovieTicketReadOnlyDbContext : DbContext
         // Faker for Bill
         var billFaker = new Faker<Bill>()
             .RuleFor(b => b.Id, f => Guid.NewGuid())
-            .RuleFor(b => b.TotalMoney, f => f.Finance.Amount(50000, 300000))
-            .RuleFor(b => b.CreateTime, f => f.Date.Between(new DateTime(2024, 9, 1), new DateTime(2024, 10, 30)))
+            .RuleFor(b => b.TotalMoney, f => f.Finance.Amount(70000, 300000))
+            .RuleFor(b => b.CreateTime, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(30)))
             .RuleFor(b => b.BarCode, f => $"barcode{f.IndexFaker}.jpg")
             .RuleFor(b => b.Status, BillStatus.Paid)
             .RuleFor(b => b.ActivationStatus, true)
             .RuleFor(b => b.MembershipId, Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"))
-            .RuleFor(b => b.VoucherId, (Guid?)null);
+            .RuleFor(b => b.CouponId, (Guid?)null);
         var bills = billFaker.Generate(10);
         modelBuilder.Entity<Bill>().HasData(bills);
 
@@ -299,9 +294,9 @@ public class MovieTicketReadOnlyDbContext : DbContext
             var schedule = new Faker<Schedule>()
                 .RuleFor(s => s.Id, f => Guid.NewGuid())
                 .RuleFor(s => s.FilmId, f => film.Id)
-                .RuleFor(s => s.StartDate, f => f.Date.Between(new DateTime(2024, 10, 1), DateTime.Now))
-            .RuleFor(s => s.EndDate, (f, s) => s.StartDate.AddDays(10))
-                .RuleFor(s => s.Type, f => f.PickRandom<ScheduleType>())
+                .RuleFor(s => s.StartDate, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(20)))
+            .RuleFor(s => s.EndDate, (f, s) => s.StartDate.AddDays(30))
+                .RuleFor(s => s.Type, ScheduleType.Regular)
                 .RuleFor(s => s.Status, ScheduleStatus.Showing)
                 .Generate();
 
@@ -309,36 +304,46 @@ public class MovieTicketReadOnlyDbContext : DbContext
         }
         // Generate list of schedules
         modelBuilder.Entity<Schedule>().HasData(schedules);
-        //List<TicketPrice> ticketPrices = new List<TicketPrice>();
-        //List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
-        //List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
-        //List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
-        //List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
+        List<TicketPrice> ticketPrices = new List<TicketPrice>();
+        List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
+        List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
+        List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
+        List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
 
-        //// Sinh ra tất cả các tổ hợp SeatTypeId, ScreeningDayId, CinemaTypeId, ScreenTypeId
-        //var combinations = from seat in seatTypeIds
-        //				   from day in screeningDayIds
-        //				   from cinema in cinemaTypeIds
-        //				   from screen in screenTypeIds
-        //				   select new { seat, day, cinema, screen };
+        // Sử dụng HashSet để kiểm tra tính duy nhất của từng tổ hợp
+        HashSet<(Guid seat, Guid day, Guid cinema, Guid screen)> uniqueCombinations = new HashSet<(Guid, Guid, Guid, Guid)>();
 
-        //// Chọn 1365 tổ hợp và tạo TicketPrice cho mỗi tổ hợp
-        //foreach (var combo in combinations.Take(1365))
-        //{
-        //	TicketPrice ticket = new TicketPrice
-        //	{
-        //		Id = Guid.NewGuid(),
-        //		Price = 30000, // Tính giá ngẫu nhiên hoặc dựa vào logic của bạn
-        //		SeatTypeId = combo.seat,
-        //		ScreeningDayId = combo.day,
-        //		CinemaTypeId = combo.cinema,
-        //		ScreenTypeId = combo.screen,
-        //		Status = TicketPriceStatus.Active
-        //	};
-        //	ticketPrices.Add(ticket);
-        //}
+        // Sinh ra tất cả các tổ hợp SeatTypeId, ScreeningDayId, CinemaTypeId, ScreenTypeId
+        var combinations = from seat in seatTypeIds
+                           from day in screeningDayIds
+                           from cinema in cinemaTypeIds
+                           from screen in screenTypeIds
+                           select new { seat, day, cinema, screen };
 
-        //// Seed dữ liệu vào database
-        //modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
+        // Chỉ tạo các bản ghi với tổ hợp duy nhất
+        foreach (var combo in combinations)
+        {
+            var uniqueKey = (combo.seat, combo.day, combo.cinema, combo.screen);
+
+            // Kiểm tra nếu tổ hợp là duy nhất
+            if (uniqueCombinations.Contains(uniqueKey)) continue; // Bỏ qua nếu đã tồn tại
+            uniqueCombinations.Add(uniqueKey); // Thêm vào tập hợp duy nhất
+
+            // Tạo bản ghi TicketPrice mới
+            TicketPrice ticket = new TicketPrice
+            {
+                Id = Guid.NewGuid(),
+                Price = 100000,
+                SeatTypeId = combo.seat,
+                ScreeningDayId = combo.day,
+                CinemaTypeId = combo.cinema,
+                ScreenTypeId = combo.screen,
+                Status = TicketPriceStatus.Active
+            };
+            ticketPrices.Add(ticket);
+        }
+
+        // Seed dữ liệu vào database
+        modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
     }
 }

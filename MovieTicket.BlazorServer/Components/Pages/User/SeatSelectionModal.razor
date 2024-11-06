@@ -149,7 +149,8 @@ else
         decimal x = 0;
         foreach (var item in lstSeatsSelected)
         {
-            var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+            var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
+                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
             if (ticketPrice != null)
             {
                 x += (Decimal)ticketPrice.Price;

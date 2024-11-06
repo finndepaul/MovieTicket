@@ -4,10 +4,11 @@ using MovieTicket.Domain.Entities;
 
 namespace MovieTicket.Infrastructure.Database.Configurations
 {
-    internal class VoucherConfiguration : IEntityTypeConfiguration<Voucher>
+    internal class CouponConfiguration : IEntityTypeConfiguration<Coupon>
     {
-        public void Configure(EntityTypeBuilder<Voucher> builder)
+        public void Configure(EntityTypeBuilder<Coupon> builder)
         {
+            builder.ToTable("Coupon");
             builder.HasKey(x => x.Id);
         }
     }
