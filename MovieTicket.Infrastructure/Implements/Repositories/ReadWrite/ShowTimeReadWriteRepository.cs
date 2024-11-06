@@ -155,9 +155,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			var newShowTime = new ShowTime
 			{
 				Id = Guid.NewGuid(),
-				FilmId = showTime.FilmId.Value,
 				ScheduleId = showTime.ScheduleId.Value,
-				CinemaCenterId = showTime.CinemaCenterId.Value,
 				CinemaId = showTime.CinemaId.Value,
 				ScreenTypeId = showTime.ScreenTypeId.Value,
 				TranslationTypeId = showTime.TranslationTypeId.Value,
