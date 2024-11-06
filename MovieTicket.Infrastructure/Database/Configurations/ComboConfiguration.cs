@@ -8,6 +8,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<Combo> builder)
         {
+            builder.ToTable("Combo");
             builder.HasKey(x => x.Id);
         }
     }

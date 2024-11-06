@@ -13,7 +13,8 @@ public class Cinema
     public int MaxSeatCapacity { get; set; }
     public string Name { get; set; }
     public int Row { get; set; }
+    public DateTime UpdateTime { get; set; }
+
     public virtual ICollection<Seat> Seats { get; set; } = new List<Seat>();
     public virtual ICollection<ShowTime> ShowTimes { get; set; } = new List<ShowTime>();
-    public DateTime UpdateTime { get; set; }
 }

@@ -4,7 +4,6 @@ namespace MovieTicket.Domain.Entities;
 
 public class Seat
 {
-    public virtual ICollection<BillSeat> BillSeats { get; set; } = new List<BillSeat>();
     public virtual Cinema? Cinema { get; set; }
     public Guid? CinemaId { get; set; }
     public int? Column { get; set; }

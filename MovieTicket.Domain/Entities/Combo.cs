@@ -13,6 +13,6 @@ public class Combo
     public string? Description { get; set; }
 
     public string? Image { get; set; }
-    public ComboStatus? comboStatus { get; set; }
+    public ComboStatus? ComboStatus { get; set; }
     public virtual ICollection<BillCombo> BillCombos { get; set; } = new List<BillCombo>();
 }

@@ -8,12 +8,12 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<Ticket> builder)
         {
+            builder.ToTable("Ticket");
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Bill).WithMany(x => x.Tickets).HasForeignKey(x => x.BillId);
             builder.HasOne(x => x.Seat).WithMany(x => x.Tickets).HasForeignKey(x => x.SeatId);
             builder.HasOne(x => x.ShowTime).WithMany(x => x.Tickets).HasForeignKey(x => x.ShowTimeId);
             builder.HasOne(x => x.TicketPrice).WithOne(x => x.Ticket).HasForeignKey<Ticket>(x => x.TicketPriceId);
-            builder.HasOne(x => x.CinemaCenter).WithMany(x => x.Tickets).HasForeignKey(x => x.CinemaCenterId);
         }
     }
 }
