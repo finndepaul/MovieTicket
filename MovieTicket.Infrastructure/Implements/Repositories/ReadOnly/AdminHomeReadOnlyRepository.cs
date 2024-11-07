@@ -66,33 +66,36 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             var lstTicket = _db.Tickets.AsNoTracking();
             //join bảng lấy tất cả bản dữ liệu
             var lstShowTime = _db.ShowTimes.AsNoTracking();
-            var query = await lstBill
+            var lstCinema = _db.Cinemas.AsNoTracking();
+			var query = await lstBill
                .Join(lstTicket, bill => bill.Id, ticket => ticket.BillId, (bill, ticket) => new { bill, ticket })
-               .Join(lstShowTime, bt => bt.ticket.ShowTimeId, showtime => showtime.Id, (bt, showtime) => new { bt.bill, bt.ticket, showtime })
-               .GroupBy(x => x.showtime.CinemaCenterId)
-               .OrderByDescending(x => x.Sum(x => x.bill.AfterDiscount))
-               .Where(x => x.FirstOrDefault().bill.CreateTime >= startDate && x.FirstOrDefault().bill.CreateTime <= endDate)
+               .Join(lstShowTime, bt => bt.ticket.ShowTimeId, showtime => showtime.Id, (bt, showtime) => new { bt, showtime })
+			   .Join(lstCinema, s => s.showtime.CinemaId, cinema => cinema.Id, (s, cinema) => new { s, cinema })
+			   .GroupBy(x => x.cinema.CinemaCenterId)
+               .OrderByDescending(x => x.Sum(x => x.s.bt.bill.AfterDiscount))
+               .Where(x => x.FirstOrDefault().s.bt.bill.CreateTime >= startDate && x.FirstOrDefault().s.bt.bill.CreateTime <= endDate)
                .Select(x => new RevenueByCinemaDto
                {
-                   Name = x.FirstOrDefault().showtime.CinemaCenter.Name,
+                   Name = x.FirstOrDefault().cinema.CinemaCenter.Name,
                    TotalTicket = x.Count(),
-                   TotalRevenue = x.Sum(x => x.bill.AfterDiscount)
+                   TotalRevenue = x.Sum(x => x.s.bt.bill.AfterDiscount)
                }).ToListAsync();
             // Đếm tổng số phần tử
             var count = query.Count();
             //  phân trang
             var data = await lstBill
               .Join(lstTicket, bill => bill.Id, ticket => ticket.BillId, (bill, ticket) => new { bill, ticket })
-               .Join(lstShowTime, bt => bt.ticket.ShowTimeId, showtime => showtime.Id, (bt, showtime) => new { bt.bill, bt.ticket, showtime })
-               .GroupBy(x => x.showtime.CinemaCenterId)
-               .OrderByDescending(x => x.Sum(x => x.bill.AfterDiscount))
-               .Where(x => x.FirstOrDefault().bill.CreateTime >= startDate && x.FirstOrDefault().bill.CreateTime <= endDate)
-               .Select(x => new RevenueByCinemaDto
-               {
-                   Name = x.FirstOrDefault().showtime.CinemaCenter.Name,
-                   TotalTicket = x.Count(),
-                   TotalRevenue = x.Sum(x => x.bill.AfterDiscount)
-               }).Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+			   .Join(lstShowTime, bt => bt.ticket.ShowTimeId, showtime => showtime.Id, (bt, showtime) => new { bt, showtime })
+			   .Join(lstCinema, s => s.showtime.CinemaId, cinema => cinema.Id, (s, cinema) => new { s, cinema })
+			   .GroupBy(x => x.cinema.CinemaCenterId)
+			   .OrderByDescending(x => x.Sum(x => x.s.bt.bill.AfterDiscount))
+			   .Where(x => x.FirstOrDefault().s.bt.bill.CreateTime >= startDate && x.FirstOrDefault().s.bt.bill.CreateTime <= endDate)
+			   .Select(x => new RevenueByCinemaDto
+			   {
+				   Name = x.FirstOrDefault().cinema.CinemaCenter.Name,
+				   TotalTicket = x.Count(),
+				   TotalRevenue = x.Sum(x => x.s.bt.bill.AfterDiscount)
+			   }).Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
                 .Take(pagingParameters.PageSize)
                 .ToListAsync();
 
@@ -105,30 +108,37 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             var lstBill = _db.Bills.AsNoTracking();
             var lstTicket = _db.Tickets.AsNoTracking();
             var lstShowTime = _db.ShowTimes.AsNoTracking();
+            var lstLC = _db.Schedules.AsNoTracking();
+            var lstFilm = _db.Films.AsNoTracking();
             var query = await lstBill.Join(lstTicket, b => b.Id, t => t.BillId, (b, t) => new { b, t })
                 .Join(lstShowTime, b => b.t.ShowTimeId, s => s.Id, (b, s) => new { b, s })
-                .GroupBy(x => x.s.FilmId)
-                .OrderByDescending(x => x.Sum(x => x.b.b.TotalMoney))
-                .Where(x => x.FirstOrDefault().b.b.CreateTime >= startDate && x.FirstOrDefault().b.b.CreateTime <= endDate)
+                .Join(lstLC, s => s.s.ScheduleId, lc => lc.Id, (s, lc) => new { s, lc })
+                .Join(lstFilm, slc => slc.lc.FilmId, f => f.Id, (slc, f) => new { slc, f})
+				.GroupBy(x => x.f.Id)
+                .OrderByDescending(x => x.Sum(x => x.slc.s.b.b.AfterDiscount))
+                .Where(x => x.FirstOrDefault().slc.s.b.b.CreateTime >= startDate && x.FirstOrDefault().slc.s.b.b.CreateTime <= endDate)
                 .Select(x => new RevenueByMovieDto
                 {
-                    FilmName = x.FirstOrDefault().s.Film.Name,
+                    FilmName = x.FirstOrDefault().f.Name,
                     TotalTicket = x.Count(),
-                    TotalRevenue = x.Sum(x => x.b.b.TotalMoney)
+                    TotalRevenue = x.Sum(x => x.slc.s.b.b.AfterDiscount)
                 }
             ).ToListAsync();
             var count = query.Count();
             var data = await lstBill.Join(lstTicket, b => b.Id, t => t.BillId, (b, t) => new { b, t })
-                .Join(lstShowTime, b => b.t.ShowTimeId, s => s.Id, (b, s) => new { b, s })
-                .GroupBy(x => x.s.FilmId)
-                .OrderByDescending(x => x.Sum(x => x.b.b.TotalMoney))
-                .Where(x => x.FirstOrDefault().b.b.CreateTime >= startDate && x.FirstOrDefault().b.b.CreateTime <= endDate)
-                .Select(x => new RevenueByMovieDto
-                {
-                    FilmName = x.FirstOrDefault().s.Film.Name,
-                    TotalTicket = x.Count(),
-                    TotalRevenue = x.Sum(x => x.b.b.TotalMoney)
-                }).Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+				.Join(lstShowTime, b => b.t.ShowTimeId, s => s.Id, (b, s) => new { b, s })
+				.Join(lstLC, s => s.s.ScheduleId, lc => lc.Id, (s, lc) => new { s, lc })
+				.Join(lstFilm, slc => slc.lc.FilmId, f => f.Id, (slc, f) => new { slc, f })
+				.GroupBy(x => x.f.Id)
+				.OrderByDescending(x => x.Sum(x => x.slc.s.b.b.AfterDiscount))
+				.Where(x => x.FirstOrDefault().slc.s.b.b.CreateTime >= startDate && x.FirstOrDefault().slc.s.b.b.CreateTime <= endDate)
+				.Select(x => new RevenueByMovieDto
+				{
+					FilmName = x.FirstOrDefault().f.Name,
+					TotalTicket = x.Count(),
+					TotalRevenue = x.Sum(x => x.slc.s.b.b.AfterDiscount)
+				}
+			).Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
                     .Take(pagingParameters.PageSize)
                     .ToListAsync();
             return new PageList<RevenueByMovieDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
