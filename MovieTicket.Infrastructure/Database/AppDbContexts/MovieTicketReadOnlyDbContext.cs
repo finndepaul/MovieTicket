@@ -304,46 +304,82 @@ public class MovieTicketReadOnlyDbContext : DbContext
         }
         // Generate list of schedules
         modelBuilder.Entity<Schedule>().HasData(schedules);
-        List<TicketPrice> ticketPrices = new List<TicketPrice>();
-        List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
-        List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
-        List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
-        List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
+		List<TicketPrice> ticketPrices = new List<TicketPrice>();
+		List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
+		List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
+		List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
+		List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
 
-        // Sử dụng HashSet để kiểm tra tính duy nhất của từng tổ hợp
-        HashSet<(Guid seat, Guid day, Guid cinema, Guid screen)> uniqueCombinations = new HashSet<(Guid, Guid, Guid, Guid)>();
+		HashSet<(Guid seat, Guid day, Guid cinema, Guid screen)> uniqueCombinations = new HashSet<(Guid, Guid, Guid, Guid)>();
 
-        // Sinh ra tất cả các tổ hợp SeatTypeId, ScreeningDayId, CinemaTypeId, ScreenTypeId
-        var combinations = from seat in seatTypeIds
-                           from day in screeningDayIds
-                           from cinema in cinemaTypeIds
-                           from screen in screenTypeIds
-                           select new { seat, day, cinema, screen };
+		var combinations = from seat in seatTypeIds
+						   from day in screeningDayIds
+						   from cinema in cinemaTypeIds
+						   from screen in screenTypeIds
+						   select new { seat, day, cinema, screen };
 
-        // Chỉ tạo các bản ghi với tổ hợp duy nhất
-        foreach (var combo in combinations)
-        {
-            var uniqueKey = (combo.seat, combo.day, combo.cinema, combo.screen);
+		foreach (var combo in combinations)
+		{
+			var uniqueKey = (combo.seat, combo.day, combo.cinema, combo.screen);
 
-            // Kiểm tra nếu tổ hợp là duy nhất
-            if (uniqueCombinations.Contains(uniqueKey)) continue; // Bỏ qua nếu đã tồn tại
-            uniqueCombinations.Add(uniqueKey); // Thêm vào tập hợp duy nhất
+			if (uniqueCombinations.Contains(uniqueKey)) continue;
+			uniqueCombinations.Add(uniqueKey);
 
-            // Tạo bản ghi TicketPrice mới
-            TicketPrice ticket = new TicketPrice
-            {
-                Id = Guid.NewGuid(),
-                Price = 100000,
-                SeatTypeId = combo.seat,
-                ScreeningDayId = combo.day,
-                CinemaTypeId = combo.cinema,
-                ScreenTypeId = combo.screen,
-                Status = TicketPriceStatus.Active
-            };
-            ticketPrices.Add(ticket);
-        }
+			// Set default price
+			decimal price = 100000;
 
-        // Seed dữ liệu vào database
-        modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
-    }
+			// Identify the screening day (T2-T6 or T7-CN) and assign price accordingly
+			var isWeekday = screeningDays.First(sd => sd.Id == combo.day).Day == "T2-T6";
+
+			// Determine the seat type and assign prices based on the day and seat type
+			var seatTypeName = seatTypes.First(st => st.Id == combo.seat).Name;
+
+			if (isWeekday)
+			{
+				switch (seatTypeName)
+				{
+					case "Normal":
+						price = 45000;
+						break;
+					case "VIP":
+						price = 50000;
+						break;
+					case "Couple":
+						price = 50000;
+						break;
+				}
+			}
+			else // T7-CN
+			{
+				switch (seatTypeName)
+				{
+					case "Normal":
+						price = 60000;
+						break;
+					case "VIP":
+						price = 65000;
+						break;
+					case "Couple":
+						price = 65000;
+						break;
+				}
+			}
+
+			TicketPrice ticket = new TicketPrice
+			{
+				Id = Guid.NewGuid(),
+				Price = price,
+				SeatTypeId = combo.seat,
+				ScreeningDayId = combo.day,
+				CinemaTypeId = combo.cinema,
+				ScreenTypeId = combo.screen,
+				Status = TicketPriceStatus.Active
+			};
+
+			ticketPrices.Add(ticket);
+		}
+
+		modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
+
+	}
 }
