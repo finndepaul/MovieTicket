@@ -38,7 +38,6 @@ public class Film
 
     public DateTime? CreatDate { get; set; }
 
-    public virtual ICollection<ShowTime> ShowTimes { get; set; } = new List<ShowTime>();
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
     public virtual ICollection<FilmScreenType> FilmScreenTypes { get; set; } = new List<FilmScreenType>();
     public virtual ICollection<FilmTranslationType> FilmTranslationTypes { get; set; } = new List<FilmTranslationType>();
