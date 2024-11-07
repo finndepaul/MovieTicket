@@ -1,6 +1,7 @@
 ﻿@page "/list-film"
 @using MovieTicket.Application.DataTransferObjs.Film
 @using MovieTicket.Domain.Enums
+@attribute [Authorize(Roles = "Admin")]
 @inject IFilmService FilmService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime _JSRuntime

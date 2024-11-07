@@ -1,5 +1,4 @@
-﻿@using MovieTicket.Application.DataTransferObjs.ShowTime
-@if (cinemaDto != null)
+﻿@if (cinemaDto != null)
 {
     <div class="container-modal">
         <!--Seats Layout-->
@@ -59,7 +58,7 @@
                 }
             </div>
             <div class="checkout col">
-                <button class="btn btn-success" @onclick="() => HandleCheckout()">Thanh toán</button>
+                <button class="btn btn-success bi bi-chevron-right" @onclick="() => Next()">Tiếp theo</button>
             </div>
         </div>
     </div>
@@ -71,9 +70,10 @@ else
 
 @code {
     [Parameter] public Guid ShowtimeId { get; set; }
-    [Parameter] public EventCallback<List<TicketPriceDto>> eventCallback { get; set; }
+    [Parameter] public EventCallback<Guid> OnSeatSelection { get; set; }
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
+    private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
     private List<TicketPriceDto> lstTicketPrices { get; set; }
     private Guid SeatId = Guid.Empty;
     private List<SeatDTO> lstSeatsSelected = new();//list ghế đã chọn
@@ -81,6 +81,8 @@ else
     private string total = null;
     private ShowTimeDto showtimeDto = new();
     string today = DateTime.Now.DayOfWeek.ToString();
+    private AuthenticationState AuthenState;
+    private string user = null;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -97,19 +99,19 @@ else
                 PageSize = 180
             });
             lstTicketPrices = responseTicket.Item.ToList();
-
-            //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
+            AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+            user = AuthenState.User.Identity.Name; //lấy username của user đang đăng nhập
+                                                   //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
         }
     }
 
     private async Task SeatSelection(Guid id)
     {
+        Task.Delay(100);
         if(id != null)
         {
-            Task.Delay(100);
             SeatId = id;
             var response = await SeatService.GetById(SeatId);
-
             var seat = response.Data;
 
             if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn
@@ -120,7 +122,7 @@ else
                     SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
                 }
                 lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
-                CalculateTotal();
+                lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
             }
             else
             {
@@ -130,14 +132,16 @@ else
                     SeatsSelectedstr += seat.Position + " ";
                 }
                 lstSeatsSelected.Add(seat);
-                CalculateTotal();
+                lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                    {
+                        Id = seat.Id,
+                        Selection = Domain.Enums.SeatSelection.Checked
+                    });
             };
-
             //update hóa đơn chờ ở đây
-
+            CalculateTotal();
             StateHasChanged();
         }
-        
     }
 
     private string CalculateTotal() //tính tổng tiền
@@ -145,7 +149,8 @@ else
         decimal x = 0;
         foreach (var item in lstSeatsSelected)
         {
-            var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+            var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
+                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
             if (ticketPrice != null)
             {
                 x += (Decimal)ticketPrice.Price;
@@ -166,15 +171,36 @@ else
             return "T2-T6";
         }
     }
-    public void Reset()
+    public void Reset() //not working
     {
         lstSeatsSelected.Clear();
         SeatsSelectedstr = "";
         total = null;
+        StateHasChanged();
     }
 
-    private async Task HandleCheckout()
+    private async Task Next()
     {
-        //khi bấm nút check out thì chuyển sang trang thanh toán 
+        //khi bấm nút check out thì chuyển sang trang thanh toán
+        if(lstSeatsSelected.Count > 0)
+        {
+            foreach(var s in lstSeatsSelected)
+            {
+                if(s.Selection == Domain.Enums.SeatSelection.Checked)
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn");
+                    Reset();
+                    return;
+                }
+               
+            }
+            await SeatService.UpdateRange(lstSeatUpdateRequests);
+            await OnSeatSelection.InvokeAsync(ShowtimeId);
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
+        }
+
     }
 }

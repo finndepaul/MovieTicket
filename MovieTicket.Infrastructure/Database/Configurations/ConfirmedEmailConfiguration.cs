@@ -8,6 +8,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<ConfirmedEmail> builder)
         {
+            builder.ToTable("ConfirmedEmail");
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Account).WithMany(x => x.ConfirmedEmails).HasForeignKey(x => x.AccountId);
         }

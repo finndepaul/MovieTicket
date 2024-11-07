@@ -17,11 +17,8 @@
                 <input type="submit" class="btn btn-success" value="Tạo" />
             </div>
         </EditForm>
-    @* @if(!string.IsNullOrEmpty(_uploadedImgUrl))
-    {
-        <img src="@_uploadedImgUrl" class="img-fluid" />
-    } *@
 </div>
+
 @code {
     [SupplyParameterFromForm(FormName = "add-form")]
     private FileModel UploadModel { get; set; } = new();

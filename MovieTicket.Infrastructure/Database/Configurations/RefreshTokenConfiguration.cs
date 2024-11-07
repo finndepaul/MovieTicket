@@ -8,6 +8,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
+            builder.ToTable("RefreshToken");
             builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Account)
                 .WithMany(x => x.RefreshTokens)

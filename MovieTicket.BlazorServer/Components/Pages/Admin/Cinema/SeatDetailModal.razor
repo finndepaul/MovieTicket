@@ -1,6 +1,4 @@
 ﻿@page "/seat/{id:guid}"
-@using MovieTicket.Application.DataTransferObjs.SeatType
-@using MovieTicket.Domain.Enums
 @attribute [Authorize(Roles = "Admin")]
 
 @if(seatTypes.Count > 0 && seat != null)
@@ -60,6 +58,7 @@ else
 {
     <h3>Loading...</h3>
 }
+
 @code {
     [Parameter] 
     public Guid SeatId { get; set; }
