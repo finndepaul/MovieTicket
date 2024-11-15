@@ -1,4 +1,6 @@
-﻿@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
+
 @if (cinemaDto != null)
 {
     <div class="container-modal">
@@ -32,37 +34,6 @@
         <hr>
         
     </div>
-    <div class="detail">
-        <div class="row">
-            <div class="info col">
-                <label class="me-2">Phim:</label>
-                @showtimeDto.FilmName
-                <br />
-                <label class="me-2">Rạp:</label>
-                @showtimeDto.CinemaCenterName
-                <br />
-                <label class="me-2">Phòng chiếu:</label>
-                @cinemaDto.Name
-            </div>
-            <div class="selectedSeats col">
-                <label class="me-2">Ghế đã chọn:</label>
-                @if (lstSeatsSelected != null)
-                {
-                    @SeatsSelectedstr
-                }
-            </div>
-            <div class="ticketPrices col">
-                <label class="me-2">Tổng tiền:</label>
-                @if (total != null)
-                {
-                    @total
-                }
-            </div>
-            <div class="checkout col">
-                <button class="btn btn-success bi bi-chevron-right" @onclick="Next">Tiếp theo</button>
-            </div>
-        </div>
-    </div>
 }
 else
 {
@@ -71,7 +42,8 @@ else
 
 @code {
     [Parameter] public Guid ShowtimeId { get; set; }
-    [Parameter] public EventCallback<Guid> OnSeatSelection { get; set; }
+    [Parameter] public EventCallback<EventCallbackArgs> OnSeatSelection { get; set; }
+    public EventCallbackArgs args { get; set; }
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
     private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
@@ -104,7 +76,7 @@ else
             lstTicketPrices = responseTicket.Item.ToList();
             AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
             user = AuthenState.User.Identity.Name; //lấy username của user đang đăng nhập
-                                                   //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
+                                      //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
         }
     }
 
@@ -141,8 +113,14 @@ else
                         Selection = Domain.Enums.SeatSelection.Checked
                     });
             };
-            //update hóa đơn chờ ở đây
             CalculateTotal();
+            args = new EventCallbackArgs
+                {
+                    lstSeats = lstSeatsSelected,
+                    str = SeatsSelectedstr,
+                    totalMoney = total
+                };
+            await OnSeatSelection.InvokeAsync(args);
             StateHasChanged();
         }
     }
@@ -181,7 +159,6 @@ else
         total = null;
         StateHasChanged();
     }
-
     private async Task Next()
     {
         //khi bấm nút check out thì chuyển sang trang chọn combo
