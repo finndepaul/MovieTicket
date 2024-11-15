@@ -17,5 +17,5 @@ public class Bill
     public virtual Membership? Membership { get; set; }
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     public virtual Coupon? Coupon { get; set; }
-    public virtual ICollection<BillCombo> BillCombos { get; set; } = new List<BillCombo>();
+    public virtual ICollection<BillCombo>? BillCombos { get; set; } = new List<BillCombo>();
 }

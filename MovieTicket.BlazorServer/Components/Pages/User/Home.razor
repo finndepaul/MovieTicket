@@ -191,7 +191,7 @@
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
 			<div class="modal-body">
-				<ComboSelectionModal @ref="comboSelectionModalref" />
+				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:150px">
 				<FooterModal ShowtimeId="@ShowTimeId" SeatDTOs="lstSeats" @ref="footerModalref" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" PreSelectionModal="PreComboSelectionModal" />
@@ -253,17 +253,15 @@
 	private Guid ShowTimeId;
 	private SeatSelectionModal seatSelectionModalref;
 	private ComboSelectionModal comboSelectionModalref;
+  private Guid BillId;
 	private FooterModal footerModalref;
 	private string SeatsSelectedstr;
 	private string TotalMoney;
 	public class EventCallbackArgs
 	{
 		public List<SeatDTO> lstSeats { get; set; }
-
 		public string str { get; set; }
-
 		public string totalMoney { get; set; }
-
 		public List<ComboDto>? lstCombo { get; set; }
 	}
 	protected async override Task OnInitializedAsync()
@@ -298,8 +296,9 @@
 	}
 	private async Task OpenComboSelectionModal(Guid id)
 	{
+		Task.Delay(300);
+		BillId = id;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
-		comboSelectionModalref.Reset();
 		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
 	}
 	private async Task CloseSeatSelectionModal()

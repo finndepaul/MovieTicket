@@ -9,10 +9,12 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
     public interface IUserHomeReadWriteRepository
     {
-        Task<string> CreateCheckAsyc(CreateCheckRequest request, CancellationToken cancellationToken);
+        Task<string> CreateCheckAsync(CreateCheckRequest request, CancellationToken cancellationToken);
 
-        Task<string> UpdateCheckAsyc(UpdateCheckRequest request, CancellationToken cancellationToken);
+        Task<string> UpdateCheckAsync(UpdateCheckRequest request, CancellationToken cancellationToken);
 
-        Task<string> DeleteCheckAsyc(Guid billId, CancellationToken cancellationToken);
+        Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken);
+
+        Task<string> CheckOutSuccessAsync(Guid billId, CancellationToken cancellationToken);
     }
 }

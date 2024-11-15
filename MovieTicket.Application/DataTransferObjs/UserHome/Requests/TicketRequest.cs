@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.DataTransferObjs.UserHome.Requests
 {
-    public class UpdateCheckRequest
+    public class TicketRequest
     {
-        public Guid BillId { get; set; }
-        public List<ComboRequest>? LstCombos { get; set; }
-        public string? CouponCode { get; set; }
+        public Guid SeatId { get; set; }
+        public Guid TicketPriceId { get; set; }
     }
 }

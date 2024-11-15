@@ -1,4 +1,6 @@
-﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
+
 @if (cinemaDto != null)
 {
     <div class="container-modal">
@@ -54,7 +56,9 @@ else
     string today = DateTime.Now.DayOfWeek.ToString();
     private AuthenticationState AuthenState;
     private string user = null;
-
+    private CreateCheckRequest request = new(); 
+    private List<TicketRequest> lstTicketRequests = new();
+    private CancellationToken cancellationToken;
     protected override async Task OnParametersSetAsync()
     {
         if (ShowtimeId != Guid.Empty)
@@ -155,28 +159,43 @@ else
         total = null;
         StateHasChanged();
     }
+    private async Task Next()
+    {
+        //khi bấm nút check out thì chuyển sang trang chọn combo
+        if(lstSeatsSelected.Count > 0)
+        {
+            foreach(var s in lstSeatsSelected)
+            {
+                if(s.Selection == Domain.Enums.SeatSelection.Checked)
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn");
+                    Reset();
+                    return;
+                }
 
-    // private async Task Next()
-    // {
-    //     //khi bấm nút check out thì chuyển sang trang thanh toán
-    //     if(lstSeatsSelected.Count > 0)
-    //     {
-    //         foreach(var s in lstSeatsSelected)
-    //         {
-    //             if(s.Selection == Domain.Enums.SeatSelection.Checked)
-    //             {
-    //                 await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn");
-    //                 Reset();
-    //                 return;
-    //             }
-               
-    //         }
-    //         await SeatService.UpdateRange(lstSeatUpdateRequests);
-    //         await OnSeatSelection.InvokeAsync(ShowtimeId);
-    //     }
-    //     else
-    //     {
-    //         await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
-    //     }
-    // }
+            }
+            await SeatService.UpdateRange(lstSeatUpdateRequests);
+
+            request.AccountId = Guid.Parse("35FF4CC4-7823-4FFB-95E4-C2E73DACE190");
+            request.ShowTimeId = ShowtimeId;
+            foreach (var item in lstSeatsSelected)
+            {
+                var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
+               == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+                lstTicketRequests.Add(new TicketRequest
+                    {
+                        SeatId = item.Id,
+                        TicketPriceId = ticketPrice.Id
+                    });
+            }
+            request.LstSeatAndTicketPrice = lstTicketRequests;
+            string billId =  await UserHomeService.CreateCheckAsync(request, cancellationToken);
+            await OnSeatSelection.InvokeAsync(Guid.Parse(billId));
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
+        }
+
+    }
 }
