@@ -2,10 +2,10 @@
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
-    public interface IBillReadOnlyRepository
-    {
-        Task<IQueryable<BillDto>> GetAllAsync();
+	public interface IBillReadOnlyRepository
+	{
+		Task<IQueryable<BillDto>> GetAllAsync();
 
-        Task<BillDtoGetById?> GetByIdAsync(Guid Id);
-    }
+		Task<BillDetailDto?> GetByIdAsync(Guid Id);
+	}
 }

@@ -2,8 +2,8 @@
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
 {
-    public interface IUserHomeReadOnlyRepository
-    {
-        Task<IQueryable<UserHomeDto>> GetAllFilmForUserHome();
-    }
+	public interface IUserHomeReadOnlyRepository
+	{
+		Task<IQueryable<UserHomeDto>> GetAllFilmForUserHome();
+	}
 }

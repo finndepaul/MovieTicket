@@ -29,14 +29,28 @@ namespace MovieTicket.API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateCheck(CreateCheckRequest request, CancellationToken cancellationToken)
         {
-            var model = await _userHomeReadWrite.CreateCheckAsyc(request, cancellationToken);
+            var model = await _userHomeReadWrite.CreateCheckAsync(request, cancellationToken);
+            return Ok(model);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateCheck(UpdateCheckRequest request, CancellationToken cancellationToken)
+        {
+            var model = await _userHomeReadWrite.UpdateCheckAsync(request, cancellationToken);
+            return Ok(model);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> CheckOutSuccess(Guid billId, CancellationToken cancellationToken)
+        {
+            var model = await _userHomeReadWrite.CheckOutSuccessAsync(billId, cancellationToken);
             return Ok(model);
         }
 
         [HttpDelete]
         public async Task<ActionResult> DeleteCheck(Guid billId, CancellationToken cancellationToken)
         {
-            var model = await _userHomeReadWrite.DeleteCheckAsyc(billId, cancellationToken);
+            var model = await _userHomeReadWrite.DeleteCheckAsync(billId, cancellationToken);
             return Ok(model);
         }
     }
