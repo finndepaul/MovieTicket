@@ -16,7 +16,7 @@
 	<ValidationSummary />
 	<div class="mb-3">
 		<label for="movieTitle" class="form-label">Phim chiếu</label>
-		<select class="form-select" id="movieTitle" @onchange="OnFilmChange">
+		<select class="form-select" id="movieTitle" value="@selectedFilmId" @onchange="OnFilmChange">
 			<option value="">Select a film</option>
 			@foreach (var film in FilmValidate)
 			{
@@ -57,7 +57,7 @@
 		<label for="screeningTime" class="form-label">Thời gian chiếu</label>
 		<div class="row">
 			<div class="col">
-				<input type="time" class="form-control" id="startTime" @onchange="OnStartTime">
+				<input type="time" class="form-control" id="startTime" value="@startTimeValue" @onchange="OnStartTime">
 			</div>
 			<div class="col">
 				<input type="time" class="form-control" id="endTime" @bind="ShowTime.EndTime" disabled>
@@ -83,6 +83,8 @@
 	private List<TranslationTypeDto> TranslationTypeValidate = new List<TranslationTypeDto>();
 	private IEnumerable<ScheduleDto> scheduleDtos = new List<ScheduleDto>();
 	public Guid idFilm;
+	private string selectedFilmId = "";
+	private string startTimeValue = "";
 	protected override async Task OnParametersSetAsync()
 	{
 		ShowTime.ShowtimeDate = Date;
@@ -104,11 +106,22 @@
 		ShowTime.Desciption = "Đang chiếu";
 	}
 
-	public void ResetForm() => ShowTime = new ShowTimeCreateRequest();
+	public void ResetForm()
+	{
+		idFilm = Guid.Empty;
+		ShowTime.FilmId = Guid.Empty;
+		ShowTime.StartTime = null;
+		ShowTime.EndTime = null;
+		ShowTime.ScreenTypeId = Guid.Empty;
+		ShowTime.TranslationTypeId = Guid.Empty;
+		selectedFilmId = "";    
+		startTimeValue = "";
+	}
+
 
 	private async Task OnFilmChange(ChangeEventArgs e)
 	{
-		var selectedFilmId = e.Value.ToString();
+		selectedFilmId = e.Value.ToString();
 		if (Guid.TryParse(selectedFilmId, out Guid filmId))
 		{
 			ShowTime.FilmId = filmId;
@@ -134,8 +147,8 @@
 
 	private async Task OnStartTime(ChangeEventArgs e)
 	{
-		var startTime = e.Value.ToString();
-		if (TimeSpan.TryParse(startTime, out TimeSpan time))
+		startTimeValue = e.Value.ToString();
+		if (TimeSpan.TryParse(startTimeValue, out TimeSpan time))
 		{
 			ShowTime.StartTime = Date.Date + time;
 			int endTime = Films.FirstOrDefault(x => x.Id == idFilm).RunningTime.Value;
@@ -152,15 +165,17 @@
 	private async Task HandleCreateAsync()
 	{
 		var result = await ShowTimeService.Create(ShowTime);
-		
+
 		if (result.Status == 200)
 		{
-			await _IJSRuntime.ToastrSuccess(result.Message);		
+			await _IJSRuntime.ToastrSuccess(result.Message);
 			await OnCreateSuccess.InvokeAsync((CinemaCenterId.Value, CinemaId.Value, ShowTime.ShowtimeDate.Value));
+			ResetForm();
 		}
 		else
 		{
 			await _IJSRuntime.ToastrError(result.Message);
 		}
 	}
+
 }
