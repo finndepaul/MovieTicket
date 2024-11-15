@@ -1,0 +1,102 @@
+﻿@using MovieTicket.Application.DataTransferObjs.Film
+<div class="container-fluid">
+	<div class="row">
+		<div class="col align-self-center" style="width:10%">
+			<button class="btn btn-primary text-light bi bi-chevron-left  fs-5" style="padding:10px;width:130px;height:50px" aria-label="Close" @onclick="PreSelection">Quay lại</button>
+		</div>
+		@if (showtimeDto != null && cinemaDto != null)
+		{
+			<div class="col" style="width:40%">
+				<div class="d-flex">
+					<img src="@filmDto.Poster" class="object-fit-cover" style="width: 75px;height:110px" />
+					<div class="ms-2">
+						<span class="fw-bold">
+							@showtimeDto.FilmName
+						</span>
+						<br />
+						@showtimeDto.ScreenTypeName
+						<br />
+						@formatRating
+					</div>
+
+				</div>
+
+			</div>
+			<div class="col" style="width:20%">
+				<label class="me-2">Rạp:</label>
+				<span class="fw-bold">@showtimeDto.CinemaCenterName</span>
+
+				<br />
+				<label class="me-2">Phòng chiếu:</label>
+				<span class="fw-bold">@cinemaDto.Name</span>
+
+			</div>
+			<div class="selectedSeats col" style="width:10%">
+				<label class="me-2">Suất chiếu:</label>
+				<br />
+				<span class="fw-bold">@formatStartTime</span>
+
+				<br />
+				<label class="me-2">Ghế đã chọn:</label>
+				<br />
+				<span class="fw-bold">@SeatsSelectedstr</span>
+
+			</div>
+			<div class="ticketPrices col" style="width:10%">
+				<label class="me-2">Combo:</label>
+				<br />
+				<span class="fw-bold">0 VND</span>
+				<br />
+				<label class="me-2">Tổng tiền:</label>
+				<br />
+				@if (Total != null)
+				{
+					<span class="fw-bold">@Total </span>
+
+				}
+			</div>
+		}
+		<div class="col align-self-center text-end" style="width:10%;">
+			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:130px;height:50px" @onclick="NextSelection" aria-label="Close">Tiếp theo<i class="bi bi-chevron-right"></i></button>
+			
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public Guid ShowtimeId { get; set; }
+	[Parameter] public List<SeatDTO> SeatDTOs { get; set; }
+	[Parameter] public string SeatsSelectedstr { get; set; }
+	[Parameter] public string Total { get; set; }
+	[Parameter] public EventCallback<Guid> PreSelectionModal { get; set; }
+	[Parameter] public EventCallback<Guid> NextSelectionModal { get; set; }
+	private ShowTimeDto showtimeDto = new();
+	private CinemaDto cinemaDto { get; set; } = new();
+	private FilmDto filmDto = new();
+	private string formatStartTime = "";
+	private string formatRating = "";
+
+	protected async override Task OnParametersSetAsync()
+	{
+		if (ShowtimeId != Guid.Empty)
+		{
+			var response = await ShowTimeService.GetById(ShowtimeId);
+			showtimeDto = response.Data;
+			var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+			cinemaDto = cinema.Data;
+			var film = await FilmService.GetById(showtimeDto.FilmId);
+			filmDto = film;
+			formatRating = "T" + filmDto.Rating;
+			formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
+		}
+	}
+	private async Task PreSelection()
+	{
+		await PreSelectionModal.InvokeAsync(ShowtimeId);
+	}
+	private async Task NextSelection()
+	{
+		await NextSelectionModal.InvokeAsync(ShowtimeId);
+	}
+
+}
