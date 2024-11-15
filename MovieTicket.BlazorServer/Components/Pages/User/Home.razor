@@ -188,11 +188,7 @@
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
 			<div class="modal-body">
-				<ComboSelectionModal @ref="comboSelectionModalref"/>
-			</div>
-			<div class="modal-footer d-flex justify-content-between">
-				<button type="button" class="p-2 btn btn-primary text-light bi bi-chevron-left" @onclick="PreComboSelectionModal" aria-label="Close" style="border: none">Quay lại</button>
-				<button type="button" class="p-2 btn btn-success text-light bi bi-chevron-right" aria-label="Close" style="border: none">Tiếp theo</button>
+				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId"/>
 			</div>
 		</div>
 	</div>
@@ -250,6 +246,7 @@
 	private Guid ShowTimeId;
 	private SeatSelectionModal seatSelectionModalref;
 	private ComboSelectionModal comboSelectionModalref;
+	private Guid BillId;
 
 	protected async override Task OnInitializedAsync()
 	{
@@ -275,8 +272,8 @@
 	private async Task OpenComboSelectionModal(Guid id)
 	{
 		Task.Delay(300);
+		BillId = id;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
-		comboSelectionModalref.Reset();
 		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
 	}
 	private async Task CloseSeatSelectionModal()
@@ -286,14 +283,6 @@
 		var listObj = await UserHomeService.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
-	}
-	private async Task PreComboSelectionModal()
-	{
-		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal"); //đóng seat selection modal
-		comboSelectionModalref.Reset();
-		var listObj = await UserHomeService.GetAllFilmForUserHome();
-		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
-		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
 	private async void ShowCloseConfirmation()
 	{
