@@ -52,7 +52,6 @@ else
 	private List<ComboDto> lstCombo = new List<ComboDto>();
 	private Dictionary<Guid, int> comboQuantities = new();
 	private List<ComboRequest> lstComboSelected = new List<ComboRequest>();
-	private string? CouponCode { get; set; }
 	CancellationToken cancellationToken;
 	protected async override Task OnParametersSetAsync()
 	{
