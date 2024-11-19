@@ -1,4 +1,7 @@
-﻿@page "/bill-detail"
+﻿@page "/bill-detail/{Id}"
+@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Application.DataTransferObjs.Ticket
 
 <div class="container-fluid">
 	<div class="mb-2">
@@ -8,31 +11,38 @@
 		<!-- Thông tin đơn hàng -->
 		<div class="col-md-6 mb-3">
 			<div class="row">
-				<div class="col-md-6 mb-3">
-					<div class="py-2 mb-4 border-bottom"><h5>Thông tin đơn hàng</h5></div>
-					<p><strong>Mã đơn hàng:</strong> 96175515</p>
-					<div><strong>Phim:</strong><span class="text-primary"> Chú thuật sư (Phần cuối)</span></div>
-					<p><strong>Giờ chiếu:</strong> <span class="badge bg-danger">20:25 - 22:20</span></p>
-					<p><strong>Ngày chiếu:</strong> 06-05-2024</p>
-					<p><strong>Phòng chiếu:</strong> IMAX</p>
-					<p><strong>Rạp chiếu:</strong><span class="text-primary"> HCinema Aeon Hà Đông</span></p>
-					<p><strong>Ngày đặt:</strong> 06-05-2024</p>
-				</div>
-
-				<!-- Thông tin khách hàng -->
-				<div class="col-md-6 mb-3">
-					<div class="py-2 mb-4 border-bottom">
-						<h5>Thông tin khách hàng</h5>
+			@if (objBill != null && objShowTime != null)
+				{
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom"><h5>Thông tin đơn hàng</h5></div>
+						<p><strong>Mã đơn hàng:</strong>@objBill.Id</p>
+						<div><strong>Phim:</strong><span class="text-primary">@objShowTime.FilmName</span></div>
+						<p><strong>Giờ chiếu:</strong><span class="badge bg-danger">@objShowTime.StartTime - @objShowTime.EndTime</span></p>
+						<p><strong>Ngày chiếu:</strong>@objShowTime.ShowtimeDate</p>
+						<p><strong>Phòng chiếu:</strong>@objShowTime.CinemaName</p>
+						<p><strong>Rạp chiếu:</strong><span class="text-primary">@objShowTime.CinemaCenterName</span></p>
+						<p><strong>Ngày đặt:</strong>@objBill.CreateTime</p>
 					</div>
-					<p><strong>Khách hàng:</strong> Bùi Duy Đông</p>
-					<p><strong>Điện thoại:</strong> 093668888</p>
-					<p><strong>Email:</strong> dong@gmail.com</p>
-					<p><strong>Trạng thái:</strong> <span class="badge bg-success">Đã xác nhận</span></p>
-					<p><strong>Thành tiền:</strong> 1,066,000</p>
-					<p><strong>Giảm giá:</strong> 0</p>
-					<p><strong>Tổng tiền:</strong> 1,066,000</p>
-				</div>
-				
+
+					<!-- Thông tin khách hàng -->
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin khách hàng</h5>
+						</div>
+						<p><strong>Khách hàng:</strong> Bùi Duy Đông</p>
+						<p><strong>Điện thoại:</strong> 093668888</p>
+						<p><strong>Email:</strong> dong@gmail.com</p>
+						<p><strong>Trạng thái:</strong> <span class="badge bg-success">@objBill.Status</span></p>
+						<p><strong>Thành tiền:</strong> 1,066,000</p>
+						<p><strong>Giảm giá:</strong> 0</p>
+						<p><strong>Tổng tiền:</strong> @objBill.TotalMoney</p>
+					</div>
+				}
+				else
+				{
+					<p>Không có dữ liệu</p>
+				}	
+
 			</div><div class="">
 				<img src="https://tritonstore.com.au/wp-content/uploads/MSI-Plessey.webp" width="100%" height="200" class="object-fit-contain border rounded" />
 			</div>
@@ -118,5 +128,20 @@
 </div>
 
 @code {
+	[Parameter] public string Id { get; set; }
+	private List<TicketDto> lstTicket = new List<TicketDto>();
+	private TicketDto objTicket = new TicketDto();
+	private ShowTimeDto objShowTime = new ShowTimeDto();
+	private BillDetailDto objBill = new BillDetailDto();
 
+	protected async override Task OnInitializedAsync()
+	{
+		objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
+		lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
+		objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
+		var showtimeId = objTicket.ShowTimeId.Value;
+		var findShowtime = await ShowTimeService.GetById(showtimeId);
+		objShowTime = findShowtime.Data;
+	}
+	
 }
