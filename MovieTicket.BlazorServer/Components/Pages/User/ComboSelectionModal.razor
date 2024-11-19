@@ -56,7 +56,9 @@ else
 	CancellationToken cancellationToken;
 	protected async override Task OnParametersSetAsync()
 	{
-		lstCombo = await ComboService.GetAll();
+		if(BillId != Guid.Empty){
+			lstCombo = await ComboService.GetAll();
+		}
 	}
 	private async Task Plus(Guid comboId)
 	{
@@ -110,8 +112,6 @@ else
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}
-
-
 	private async Task HandleCheckOut()
 	{
 		// Update bill

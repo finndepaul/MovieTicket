@@ -1,4 +1,4 @@
-﻿using MovieTicket.Domain.Enums;
+using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.Domain.Entities;
 

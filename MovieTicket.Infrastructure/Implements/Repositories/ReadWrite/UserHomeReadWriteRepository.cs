@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieTicket.Application.DataTransferObjs.Cinema;
-using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.DataTransferObjs.UserHome.Requests;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;

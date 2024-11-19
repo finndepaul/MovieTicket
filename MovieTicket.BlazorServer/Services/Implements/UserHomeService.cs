@@ -2,7 +2,6 @@
 using MovieTicket.Application.DataTransferObjs.UserHome;
 using MovieTicket.Application.DataTransferObjs.UserHome.Requests;
 using MovieTicket.BlazorServer.Services.Interfaces;
-using MovieTicket.Domain.Entities;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {

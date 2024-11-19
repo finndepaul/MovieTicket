@@ -162,33 +162,39 @@
 			<h5>LỊCH CHIẾU - @filmName</h5>
 		</div>
 		<div class="modal-body">
-			<ViewShowTimeModal OnShowtimeSelected="OpenSeatSelectionModal" Id="@IdFilm"></ViewShowTimeModal>
+			<ViewShowTimeModal OnShowtimeSelected="OpenSeatSelectionModal" Id="@IdFilm" LoginCallback="RedirectToLogin"></ViewShowTimeModal>
 		</div>
 	</div>
 </div>
 <!--Modal chọn ghế -->
 <div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header" data-bs-theme="dark">
-				<h4 class="modal-title">Chọn ghế</h4>
+				<h4 class="modal-title text-center">Chọn ghế</h4>
 				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="OpenComboSelectionModal" />
+			<div class="modal-body" style="background-color: #fdfcf0">
+				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
+			</div>
+			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+				<SeatFooter ShowtimeId="@ShowTimeId" SeatDTOs="lstSeats" @ref="seatFooterRef" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" NextToComboModal="OpenComboSelectionModal" BackToShowtimeModal="CloseSeatSelectionModal" />
 			</div>
 		</div>
 	</div>
 </div>
 <!--Modal combo -->
 <div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-	<div class="modal-dialog modal-xl modal-dialog-scrollable">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header" data-bs-theme="dark">
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
 			<div class="modal-body">
-				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId"/>
+				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" />
+			</div>
+			<div class="modal-footer" style="width:100%;height:150px">
+				<ComboFooter ShowtimeId="@ShowTimeId" CheckedSeats="lstCheckedSeats" BillId="@BillId" @ref="comboFooterRef" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" BackToSeatModal="PreComboSelectionModal" />
 			</div>
 		</div>
 	</div>
@@ -241,18 +247,41 @@
 
 @code {
 	private List<UserHomeDto> listObjFilm = new List<UserHomeDto>();
+	private List<SeatDTO> lstSeats = new List<SeatDTO>();
+	private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
 	private string IdFilm;
 	private string filmName { get; set; }
 	private Guid ShowTimeId;
-	private SeatSelectionModal seatSelectionModalref;
-	private ComboSelectionModal comboSelectionModalref;
-	private Guid BillId;
+	public SeatSelectionModal seatSelectionModalref;
+	public ComboSelectionModal comboSelectionModalref;
+	private Guid BillId = Guid.Empty;
+	private SeatFooter seatFooterRef;
+	private ComboFooter comboFooterRef;
+	private string SeatsSelectedstr;
+	private string TotalMoney;
+
+	public class EventCallbackArgs
+	{
+		public List<SeatDTO> lstSeats { get; set; }
+		public string str { get; set; }
+		public string totalMoney { get; set; }
+		public List<ComboDto>? lstCombo { get; set; }
+		public Guid BillId { get; set; }
+		public List<SeatDTO> lstCheckedSeat { get; set; }
+	}
 
 	protected async override Task OnInitializedAsync()
 	{
 		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
 	}
 
+	private async Task RedirectToLogin()
+	{
+		await JSRuntime.InvokeVoidAsync("closeModal");
+		NavigationManager.NavigateTo("/");
+		StateHasChanged();
+		await JSRuntime.InvokeVoidAsync("openLoginModal");
+	}
 
 	private async Task OpenModalShowTime(string id)
 	{
@@ -261,6 +290,7 @@
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(id)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
 	}
+
 	private async Task OpenSeatSelectionModal(Guid id)
 	{
 		Task.Delay(300);
@@ -269,24 +299,54 @@
 		seatSelectionModalref.Reset();
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
-	private async Task OpenComboSelectionModal(Guid id)
+
+	private void HandleSelectedSeats(EventCallbackArgs args)
+	{
+		lstSeats = args.lstSeats;
+		SeatsSelectedstr = args.str;
+		TotalMoney = args.totalMoney;
+		StateHasChanged();
+	}
+
+	private async Task OpenComboSelectionModal(EventCallbackArgs args)
 	{
 		Task.Delay(300);
-		BillId = id;
+		BillId = args.BillId;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
 	}
+
 	private async Task CloseSeatSelectionModal()
-	{
+	{	
+		lstSeats.Clear();
+		SeatsSelectedstr = "";
+		BillId = Guid.Empty;
+		TotalMoney = "";
+		await seatFooterRef.Reset();
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
 		seatSelectionModalref.Reset();
 		var listObj = await UserHomeService.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
 	}
-	private async void ShowCloseConfirmation()
+
+	private async Task PreComboSelectionModal(Guid id)
+	{
+		lstSeats.Clear();
+		SeatsSelectedstr = "";
+		BillId = Guid.Empty;
+		TotalMoney = "";
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+		await comboFooterRef.Reset();
+		await seatFooterRef.Reset();
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+	}
+
+	public async void ShowCloseConfirmation()
 	{
 		bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận hủy đặt vé?");
+		
 		if (confirmed)
 		{
 			await CloseSeatSelectionModal();
