@@ -6,41 +6,47 @@ using MovieTicket.Infrastructure.Database.AppDbContexts;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
-    public class UserHomeReadOnlyRepository : IUserHomeReadOnlyRepository
-    {
-        private readonly MovieTicketReadOnlyDbContext _context;
+	public class UserHomeReadOnlyRepository : IUserHomeReadOnlyRepository
+	{
+		private readonly MovieTicketReadOnlyDbContext _context;
 
-        public UserHomeReadOnlyRepository(MovieTicketReadOnlyDbContext context)
-        {
-            _context = context;
-        }
+		public UserHomeReadOnlyRepository(MovieTicketReadOnlyDbContext context)
+		{
+			_context = context;
+		}
 
-        public async Task<IQueryable<UserHomeDto>> GetAllFilmForUserHome()
-        {
-            return (from s in _context.Schedules
-                    join f in _context.Films on s.FilmId equals f.Id
-                    where s.Status != ScheduleStatus.Ended
-                    select new UserHomeDto
-                    {
-                        Id = f.Id,
-                        Poster = f.Poster,
-                        Name = f.Name,
-                        Gerne = f.Gerne,
-                        RunningTime = f.RunningTime,
-                        SType = s.Type,
-                        Rating = f.Rating,
+		public async Task<IQueryable<UserHomeDto>> GetAllFilmForUserHome()
+		{
+			return (from s in _context.Schedules
+					join f in _context.Films on s.FilmId equals f.Id
+					where s.Status != ScheduleStatus.Ended
+					select new UserHomeDto
+					{
+						Id = f.Id,
+						Poster = f.Poster,
+						Name = f.Name,
+						Gerne = f.Gerne,
+						RunningTime = f.RunningTime,
+						SType = s.Type,
+						Rating = f.Rating,
 						StartDate = s.StartDate
-                    }).AsNoTracking();
+					}).AsNoTracking();
 
-            //.Select(x => new UserHomeDto
-            //{
-            //    Id = x.Id,
-            //    Poster = x.Poster,
-            //    Name = x.Name,
-            //    Gerne = x.Gerne,
-            //    RunningTime = x.RunningTime
-            //})
-            //.AsNoTracking();
-        }
-    }
+			//.Select(x => new UserHomeDto
+			//{
+			//    Id = x.Id,
+			//    Poster = x.Poster,
+			//    Name = x.Name,
+			//    Gerne = x.Gerne,
+			//    RunningTime = x.RunningTime
+			//})
+			//.AsNoTracking();
+		}
+
+		public async Task<int> GetPointOfMembershipAsync(Guid accountId, CancellationToken cancellationToken)
+		{
+			var member = _context.Memberships.FirstOrDefault(x => x.Id == accountId); // đã đăng nhập đc là tìm thấy
+			return member.Point.Value;
+		}
+	}
 }

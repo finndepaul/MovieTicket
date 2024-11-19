@@ -1,5 +1,4 @@
 @using static MovieTicket.BlazorServer.Components.Pages.User.Home
-@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
 
 @if (cinemaDto != null)
 {
@@ -16,7 +15,7 @@
                         <div class="col">
                             @if (seat.Status == SeatStatus.Available)
                             {
-                                <button type="button" id="seat" data-seat-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" @onclick="(() => SeatSelection(seat.Id))" >
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" @onclick="(() => SeatSelection(seat.Id))">
                                     @seat.Position
                                 </button>
                             }
@@ -32,7 +31,6 @@
             }
         </div>
         <hr>
-        
     </div>
 }
 else
@@ -40,10 +38,19 @@ else
     <p>Không có dữ liệu</p>
 }
 
+<script>
+    function toggleButtonById(buttonId) {
+    var button = document.querySelector(`button[data-id='${buttonId}']`);
+    if (button) {
+    button.classList.toggle('active');
+    }
+    }
+</script>
+
 @code {
     [Parameter] public Guid ShowtimeId { get; set; }
     [Parameter] public EventCallback<EventCallbackArgs> OnSeatSelection { get; set; }
-    public EventCallbackArgs args { get; set; }
+    public EventCallbackArgs args = new();
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
     private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
@@ -55,10 +62,11 @@ else
     private ShowTimeDto showtimeDto = new();
     string today = DateTime.Now.DayOfWeek.ToString();
     private AuthenticationState AuthenState;
-    private string user = null;
+    private Guid userId = Guid.Empty;
     private CreateCheckRequest request = new(); 
     private List<TicketRequest> lstTicketRequests = new();
     private CancellationToken cancellationToken;
+
     protected override async Task OnParametersSetAsync()
     {
         if (ShowtimeId != Guid.Empty)
@@ -75,53 +83,124 @@ else
             });
             lstTicketPrices = responseTicket.Item.ToList();
             AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
-            user = AuthenState.User.Identity.Name; //lấy username của user đang đăng nhập
-                                      //logic tạo hóa đơn chờ luôn ở đây, sau đó sẽ update hóa đơn chờ ở SeatSelection()
+            var getUser = AuthenState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            userId = Guid.Parse(getUser);
         }
     }
 
     private async Task SeatSelection(Guid id)
     {
-        Task.Delay(100);
-        if(id != null)
+        await Task.Delay(300);
+        if (id != Guid.Empty)
         {
             SeatId = id;
             var response = await SeatService.GetById(SeatId);
             var seat = response.Data;
-
-            if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn
+            List<SeatDTO> Couple = new();
+            SeatDTO seat2 = new();
+            if (seat.SeatTypeName == "Couple")
             {
-                //nếu đã tồn tại thì xóa
-                if (SeatsSelectedstr.Contains(seat.Position))
+                Couple.Add(seat);
+                if (seat.Column % 2 == 0)
                 {
-                    SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
+                    seat2 = lstSeats.FirstOrDefault(s => s.Row == seat.Row && s.Column == seat.Column - 1);
+                    Couple.Add(seat2);
+                    await JSRuntime.InvokeVoidAsync("toggleButtonById", seat2.Id.ToString());
                 }
-                lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
-                lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
+                else
+                {
+                    seat2 = lstSeats.FirstOrDefault(s => s.Row == seat.Row && s.Column == seat.Column + 1);
+                    Couple.Add(seat2);
+                    await JSRuntime.InvokeVoidAsync("toggleButtonById", seat2.Id.ToString());
+                }
+                foreach (var item in Couple)
+                {
+                    if (lstSeatsSelected.Any(s => s.Id == item.Id)) //check tồn tại trong list ghế đã chọn
+                    {
+                        //nếu đã tồn tại thì xóa
+                        if (SeatsSelectedstr.Contains(item.Position))
+                        {
+                            SeatsSelectedstr = SeatsSelectedstr.Replace(item.Position, "");
+                        }
+                        lstSeatsSelected.RemoveAll(s => s.Id == item.Id);
+                        lstSeatUpdateRequests.RemoveAll(s => s.Id == item.Id);
+                    }
+                    else
+                    {
+                        //nếu chưa tồn tại thì thêm
+                        if (lstSeatsSelected.Count >= 8)
+                        {
+                            await JSRuntime.InvokeVoidAsync("alert", "Bạn chỉ được chọn tối đa 8 ghế");
+                            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat2.Id.ToString());
+                            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+                            StateHasChanged();
+                            return;
+                        }
+                        if (!SeatsSelectedstr.Contains(item.Position))
+                        {
+                            SeatsSelectedstr += item.Position + " ";
+                        }
+                        lstSeatsSelected.Add(item);
+                        lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                            {
+                                Id = item.Id,
+                                Selection = Domain.Enums.SeatSelection.Checked
+                            });
+                    };
+                }
+                CalculateTotal();
+                args = new EventCallbackArgs
+                    {
+                        lstSeats = lstSeatsSelected,
+                        str = SeatsSelectedstr,
+                        totalMoney = total
+                    };
+                await OnSeatSelection.InvokeAsync(args);
+                StateHasChanged();
             }
             else
             {
-                //nếu chưa tồn tại thì thêm
-                if (!SeatsSelectedstr.Contains(seat.Position))
+                if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn
                 {
-                    SeatsSelectedstr += seat.Position + " ";
-                }
-                lstSeatsSelected.Add(seat);
-                lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                    //nếu đã tồn tại thì xóa
+                    if (SeatsSelectedstr.Contains(seat.Position))
                     {
-                        Id = seat.Id,
-                        Selection = Domain.Enums.SeatSelection.Checked
-                    });
-            };
-            CalculateTotal();
-            args = new EventCallbackArgs
+                        SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
+                    }
+                    lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
+                    lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
+                }
+                else
                 {
-                    lstSeats = lstSeatsSelected,
-                    str = SeatsSelectedstr,
-                    totalMoney = total
+                    //nếu chưa tồn tại thì thêm
+                    if (lstSeatsSelected.Count >= 8)
+                    {
+                        await JSRuntime.InvokeVoidAsync("alert", "Bạn chỉ được chọn tối đa 8 ghế");
+                        await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+                        StateHasChanged();
+                        return;
+                    }
+                    if (!SeatsSelectedstr.Contains(seat.Position))
+                    {
+                        SeatsSelectedstr += seat.Position + " ";
+                    }
+                    lstSeatsSelected.Add(seat);
+                    lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                        {
+                            Id = seat.Id,
+                            Selection = Domain.Enums.SeatSelection.Checked
+                        });
                 };
-            await OnSeatSelection.InvokeAsync(args);
-            StateHasChanged();
+                CalculateTotal();
+                args = new EventCallbackArgs
+                    {
+                        lstSeats = lstSeatsSelected,
+                        str = SeatsSelectedstr,
+                        totalMoney = total
+                    };
+                await OnSeatSelection.InvokeAsync(args);
+                StateHasChanged();
+            }
         }
     }
 
@@ -158,44 +237,5 @@ else
         SeatsSelectedstr = "";
         total = null;
         StateHasChanged();
-    }
-    private async Task Next()
-    {
-        //khi bấm nút check out thì chuyển sang trang chọn combo
-        if(lstSeatsSelected.Count > 0)
-        {
-            foreach(var s in lstSeatsSelected)
-            {
-                if(s.Selection == Domain.Enums.SeatSelection.Checked)
-                {
-                    await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn");
-                    Reset();
-                    return;
-                }
-
-            }
-            await SeatService.UpdateRange(lstSeatUpdateRequests);
-
-            request.AccountId = Guid.Parse("35FF4CC4-7823-4FFB-95E4-C2E73DACE190");
-            request.ShowTimeId = ShowtimeId;
-            foreach (var item in lstSeatsSelected)
-            {
-                var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
-               == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
-                lstTicketRequests.Add(new TicketRequest
-                    {
-                        SeatId = item.Id,
-                        TicketPriceId = ticketPrice.Id
-                    });
-            }
-            request.LstSeatAndTicketPrice = lstTicketRequests;
-            string billId =  await UserHomeService.CreateCheckAsync(request, cancellationToken);
-            await OnSeatSelection.InvokeAsync();
-        }
-        else
-        {
-            await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
-        }
-
-    }
+    } 
 }

@@ -12,10 +12,14 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
 
 		Task<string> CreateCheckAsync(CreateCheckRequest request, CancellationToken cancellationToken);
 
-		Task<string> UpdateCheckAsync(UpdateCheckRequest request, CancellationToken cancellationToken);
+		Task<string> AddComboToCheckAsync(ComboCheckRequest request, CancellationToken cancellationToken);
+
+		Task<string> AddDiscountToCheckAsync(DiscountCheckRequest request, CancellationToken cancellationToken);
+
+		Task<int> GetPointOfMembershipAsync(Guid accountId, CancellationToken cancellationToken);
 
 		Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken);
 
-		Task<string> CheckOutSuccessAsync(Guid billId, CancellationToken cancellationToken);
+		Task CheckOutSuccessAsync(Guid billId, CancellationToken cancellationToken);
 	}
 }

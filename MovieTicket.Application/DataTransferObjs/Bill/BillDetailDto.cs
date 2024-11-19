@@ -12,6 +12,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 		public int BillCode { get; set; }
 
 		public decimal? TotalMoney { get; set; }
+		public decimal? AfterDiscount { get; set; }
 
 		public string FilmName { get; set; }
 
@@ -19,7 +20,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 
 		public string? BarCode { get; set; }
 
-		public BillStatus? Status { get; set; }
+		public string Status { get; set; }
 		public List<ComboDto>? Combos { get; set; } = new List<ComboDto>();
 	}
 }
