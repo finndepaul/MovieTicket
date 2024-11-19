@@ -1,6 +1,8 @@
 @using System.Net.Http
 @using System.Net.Http.Json
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -8,21 +10,25 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.JSInterop
+
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
 @using static Microsoft.EntityFrameworkCore.DbLoggerCategory
 @using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses
+
+@using MovieTicket.Domain.Enums
+
 @using MovieTicket.BlazorServer
 @using MovieTicket.BlazorServer.Components
 @using MovieTicket.BlazorServer.Helper
 @using MovieTicket.BlazorServer.Services.Implements
 @using MovieTicket.BlazorServer.Services.Interfaces
 @using MovieTicket.BlazorServer.Authentication
-@using MovieTicket.Domain.Enums
-@using MovieTicket.Application.DataTransferObjs.Auth.Requests
+
 @using MovieTicket.Application.ValueObjs.ViewModels
+@using MovieTicket.Application.ValueObjs.Paginations
+@using MovieTicket.Application.DataTransferObjs.Auth.Requests
 @using MovieTicket.Application.DataTransferObjs.Banner
 @using MovieTicket.Application.DataTransferObjs.AdminHome
-@using MovieTicket.Application.ValueObjs.Paginations
 @using MovieTicket.Application.DataTransferObjs.Cinema
 @using MovieTicket.Application.DataTransferObjs.CinemaCenter
 @using MovieTicket.Application.DataTransferObjs.Cinema.Request
@@ -33,6 +39,11 @@
 @using MovieTicket.Application.DataTransferObjs.Combo
 @using MovieTicket.Application.DataTransferObjs.ShowTime
 @using MovieTicket.Application.DataTransferObjs.UserHome
+@using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
+
+@using Net.payOS
+@using Net.payOS.Types
 
 @inject IAuthenService AuthenService
 @inject IBannerService BannerService

@@ -14,7 +14,6 @@ public class Ticket
     public TicketStatus? Status { get; set; }
     public virtual Bill? Bill { get; set; }
     public virtual TicketPrice? TicketPrice { get; set; }
-
     public virtual Seat? Seat { get; set; }
     public virtual ShowTime? ShowTime { get; set; }
 }

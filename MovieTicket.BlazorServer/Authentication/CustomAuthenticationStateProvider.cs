@@ -29,7 +29,7 @@ namespace MovieTicket.BlazorServer.Authentication
 			}
 		}
 
-		public static ClaimsPrincipal SetClaimPrincipal(CustomeUserClaims claims)
+		public static ClaimsPrincipal SetClaimPrincipal(CustomUserClaims claims)
 		{
 			if (claims.Username is null) return new ClaimsPrincipal();
 			return new ClaimsPrincipal(new ClaimsIdentity(
@@ -37,7 +37,8 @@ namespace MovieTicket.BlazorServer.Authentication
 			{
 								new Claim(ClaimTypes.Name, claims.Username),
 								new Claim(ClaimTypes.Email, claims.Email),
-								new Claim(ClaimTypes.Role, claims.Role)
+								new Claim(ClaimTypes.Role, claims.Role),
+								new Claim(ClaimTypes.NameIdentifier, claims.UserId)
 			}, "jwt"));
 		}
 
