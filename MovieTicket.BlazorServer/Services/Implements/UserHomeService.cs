@@ -15,11 +15,24 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			_http = http;
 		}
 
-		public async Task<string> CheckOutSuccessAsync(Guid billId, CancellationToken cancellationToken)
+		public async Task<string> AddComboToCheckAsync(ComboCheckRequest request, CancellationToken cancellationToken)
 		{
-			var result = await _http.PutAsJsonAsync($"api/UserHome/CheckOutSuccess", billId, cancellationToken);
+			var result = await _http.PutAsJsonAsync($"api/UserHome/AddComboToCheck", request, cancellationToken);
 			var message = await result.Content.ReadAsStringAsync();
 			return message;
+		}
+
+		public async Task<string> AddDiscountToCheckAsync(DiscountCheckRequest request, CancellationToken cancellationToken)
+		{
+			var result = await _http.PutAsJsonAsync($"api/UserHome/AddDiscountToCheck", request, cancellationToken);
+			var message = await result.Content.ReadAsStringAsync();
+			return message;
+		}
+
+		public async Task CheckOutSuccessAsync(Guid id, CancellationToken cancellationToken)
+		{
+			var result = await _http.GetAsync($"api/UserHome/CheckOutSuccess?billId={id}", cancellationToken);
+			return;
 		}
 
 		public async Task<string> CreateCheckAsync(CreateCheckRequest request, CancellationToken cancellationToken)
@@ -48,11 +61,22 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			return result;
 		}
 
-		public async Task<string> UpdateCheckAsync(UpdateCheckRequest request, CancellationToken cancellationToken)
+		public async Task<int> GetPointOfMembershipAsync(Guid accountId, CancellationToken cancellationToken)
 		{
-			var result = await _http.PutAsJsonAsync($"api/UserHome/UpdateCheck", request, cancellationToken);
-			var message = await result.Content.ReadAsStringAsync();
-			return message;
+			// Construct the request URL
+			var url = $"api/Bill/GetPointOfMembership?accountId={accountId}";
+
+			// Make the HTTP GET request
+			var response = await _http.GetAsync(url, cancellationToken);
+
+			// Ensure the request was successful
+			response.EnsureSuccessStatusCode();
+
+			// Deserialize the response into an int
+			var resultString = await response.Content.ReadAsStringAsync();
+			var result = int.Parse(resultString);
+
+			return result;
 		}
 	}
 }

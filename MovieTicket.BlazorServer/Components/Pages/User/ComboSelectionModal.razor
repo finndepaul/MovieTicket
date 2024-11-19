@@ -1,63 +1,141 @@
-﻿@using Net.payOS
+﻿@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
+@using Net.payOS
 @using Net.payOS.Types
-<div class="container-fluid">
-	<div class="row row-cols-1 row-cols-md-2 g-4">
-		@foreach (var item in lstCombo)
-		{
-			<div class="col">
-				<div class="card mb-3" style="max-width: 540px;">
-					<div class="row g-0">
-						<div class="col-md-4">
-							<img src="@item.Image" class="img-fluid object-fit-contain rounded-start" alt="...">
-						</div>
-						<div class="col-md-8">
-							<div class="card-body">
-								<h5 class="card-title">@item.Name</h5>
-								<p class="card-text">@item.Description</p>
-								<p class="card-text">Giá: <span class="fw-bold">@item.Price.Value.ToString("#,##0")đ</span></p>
-								<div class="input-group mb-3" style="width:50%">
-									<span class="btn btn-danger input-group-text"><i class="bi bi-dash-lg"></i></span>
-									<input type="text" class="form-control text-center" style="font-size: 18px" @bind-value="count" disabled />
-									<span class="btn btn-danger input-group-text"><i class="bi bi-plus-lg"></i></span>
+@if (lstCombo == null)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+	<div class="container-fluid">
+		<div class="row row-cols-1 row-cols-md-2 g-4">
+			@foreach (var item in lstCombo)
+			{
+				<div class="col">
+					<div class="card mb-3" style="max-width: 540px;">
+						<div class="row g-0">
+							<div class="col-md-4">
+								<img src="@item.Image" class="img-fluid object-fit-contain rounded-start" alt="...">
+							</div>
+							<div class="col-md-8">
+								<div class="card-body">
+									<h5 class="card-title">@item.Name</h5>
+									<p class="card-text">@item.Description</p>
+									<p class="card-text">Giá: <span class="fw-bold">@item.Price.Value.ToString("#,##0")đ</span></p>
+									<div class="input-group mb-3" style="width:50%">
+										<span class="btn btn-danger input-group-text">
+											<i class="bi bi-dash-lg" @onclick="() => Minus(item.Id)"></i>
+										</span>
+										<input type="text" class="form-control text-center" style="font-size: 18px"
+											   value="@comboQuantities.GetValueOrDefault(item.Id, 0)" disabled />
+										<span class="btn btn-danger input-group-text">
+											<i class="bi bi-plus-lg" @onclick="() => Plus(item.Id)"></i>
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		}
+			}
+		</div>
 	</div>
-</div>
-<div class="modal-footer d-flex justify-content-between">
-	<button type="button" class="p-2 btn btn-primary text-light bi bi-chevron-left" aria-label="Close" style="border: none">Quay lại</button>
-	<button type="button" class="p-2 btn btn-success text-light bi bi-chevron-right" @onclick="HandleCheckOut" aria-label="Close" style="border: none">Tiếp theo</button>
-</div>
+	<div class="modal-footer d-flex justify-content-between">
+		<button type="button" class="p-2 btn btn-primary text-light bi bi-chevron-left" aria-label="Close" style="border: none">Quay lại</button>
+		<button type="button" class="p-2 btn btn-success text-light bi bi-chevron-right" @onclick="HandleCheckOut" aria-label="Close" style="border: none">Tiếp theo</button>
+	</div>
+}
 @code {
 	[Parameter] public Guid BillId { get; set; }
 	private List<ComboDto> lstCombo = new List<ComboDto>();
-	private int count { get; set; } = 0;
+	private Dictionary<Guid, int> comboQuantities = new();
+	private List<ComboRequest> lstComboSelected = new List<ComboRequest>();
+	private string? CouponCode { get; set; }
+	CancellationToken cancellationToken;
 	protected async override Task OnParametersSetAsync()
 	{
 		lstCombo = await ComboService.GetAll();
 	}
-	private void Plus()
+	private async Task Plus(Guid comboId)
 	{
-		count++;
+		if (!comboQuantities.ContainsKey(comboId))
+		{
+			comboQuantities[comboId] = 0;
+		}
+		comboQuantities[comboId]++;
+
+		// Cập nhật lstComboSelected
+		var existingItem = lstComboSelected.FirstOrDefault(x => x.ComboId == comboId);
+		if (existingItem != null)
+		{
+			existingItem.Quantity = comboQuantities[comboId];
+		}
+		else
+		{
+			lstComboSelected.Add(new ComboRequest { ComboId = comboId, Quantity = comboQuantities[comboId] });
+		}
+
+		// Làm mới giao diện ngay lập tức
+		StateHasChanged();
 	}
-	private void Minus()
+
+
+	private async Task Minus(Guid comboId)
 	{
-		count--;
-		if (count < 0) count = 0; // Đảm bảo count không giảm dưới 0
+		if (comboQuantities.ContainsKey(comboId) && comboQuantities[comboId] > 0)
+		{
+			comboQuantities[comboId]--;
+		}
+		else
+		{
+			comboQuantities[comboId] = 0;
+		}
+
+		// Cập nhật lstComboSelected
+		var existingItem = lstComboSelected.FirstOrDefault(x => x.ComboId == comboId);
+		if (existingItem != null)
+		{
+			if (comboQuantities[comboId] == 0)
+			{
+				lstComboSelected.Remove(existingItem);
+			}
+			else
+			{
+				existingItem.Quantity = comboQuantities[comboId];
+			}
+		}
+
+		// Làm mới giao diện ngay lập tức
+		StateHasChanged();
 	}
+
+
 	private async Task HandleCheckOut()
 	{
+		// Update bill
+		var billCombo = new ComboCheckRequest // coupon sẽ ở đây  
+		{
+            BillId = BillId,
+            LstCombos = lstComboSelected,
+        };
+		var result = await UserHomeService.AddComboToCheckAsync(billCombo, cancellationToken);
 		var bill = await UserHomeService.GetBillForCheckOut(BillId);
 		PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
 		"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
-		ItemData itemData = new ItemData(bill.FilmName, 1, Convert.ToInt32(bill.TotalMoney));
+		ItemData itemData = new ItemData(bill.FilmName, 1, Convert.ToInt32(bill.AfterDiscount));
 		List<ItemData> lstItemDatas = new List<ItemData>();
 		lstItemDatas.Add(itemData);
-		PaymentData paymentData = new PaymentData(bill.BillCode, Convert.ToInt32(bill.TotalMoney), "VHD Cinema", lstItemDatas, "https://localhost:7239/", "https://localhost:7239/");
+		PaymentData paymentData = new PaymentData
+		(
+			bill.BillCode,
+			Convert.ToInt32(bill.TotalMoney),
+			"VHD Cinema",
+			lstItemDatas,
+			"https://localhost:7239/",
+			$"https://localhost:7239/check-out-success/{BillId}"
+		);
 		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
 	}

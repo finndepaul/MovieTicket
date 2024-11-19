@@ -35,7 +35,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 					TotalMoney = b.TotalMoney,
 					CreateTime = b.CreateTime,
 					BarCode = b.BarCode,
-					Status = b.Status
+					Status = b.Status.ToString()
 				});
 
 			// Nếu không có Bill nào, ném ra ngoại lệ
@@ -64,6 +64,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 						Id = b.Id,
 						BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
 						TotalMoney = b.TotalMoney,
+						AfterDiscount = b.AfterDiscount,
 						FilmName = (from ticket in _dbContext.Tickets
 									join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
 									join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
@@ -72,7 +73,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 									select film.Name).FirstOrDefault(),
 						CreateTime = b.CreateTime,
 						BarCode = b.BarCode,
-						Status = b.Status,
+						Status = b.Status.ToString(),
 						Combos = b.BillCombos.Select(bc => mapper.Map<ComboDto>(bc.Combo)!).ToList()
 					})
 					.FirstOrDefaultAsync();
