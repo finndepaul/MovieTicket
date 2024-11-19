@@ -117,6 +117,7 @@
 	[Parameter]
 	public string Id { get; set; }
 	[Parameter] public EventCallback<Guid> OnShowtimeSelected { get; set; }
+	[Parameter] public EventCallback LoginCallback { get; set; }
 	private AuthenticationState AuthenState;
 	private List<DateTime> dateRange = new List<DateTime>();
 	private DateTime selectedDate = DateTime.Today;
@@ -173,7 +174,7 @@
 		AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
 	}
 
-	private async Task CheckLogged(Guid id,DateTime startTime)
+	private async Task CheckLogged(Guid showtimeId,DateTime startTime)
 	{
 		if (AuthenState.User.Identity.IsAuthenticated)
 		{
@@ -183,14 +184,14 @@
 			}
 			else
 			{
-				await OpenSeatSelection(id);
+				await OpenSeatSelection(showtimeId);
 			}
 			
 		}
 		else
 		{
 			await JSRuntime.InvokeVoidAsync("alert", "Bạn cần đăng nhập để chọn ghế");
-			NavigationManager.NavigateTo("login");
+			await LoginCallback.InvokeAsync();
 		}
 	}
 

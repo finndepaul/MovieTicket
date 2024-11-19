@@ -1,8 +1,9 @@
-﻿@using MovieTicket.Application.DataTransferObjs.Film
+﻿@using MovieTicket.Application.DataTransferObjs.Bill
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col align-self-center" style="width:10%">
-			<button class="btn btn-primary text-light bi bi-chevron-left  fs-5" style="padding:10px;width:130px;height:50px" aria-label="Close" @onclick="PreSelection">Quay lại</button>
+			<button class="btn btn-primary text-light bi bi-chevron-left  fs-5" style="padding:10px;width:130px;height:50px" @onclick="PreSelection">Quay lại</button>
 		</div>
 		@if (showtimeDto != null && cinemaDto != null)
 		{
@@ -18,9 +19,7 @@
 						<br />
 						@formatRating
 					</div>
-
 				</div>
-
 			</div>
 			<div class="col" style="width:20%">
 				<label class="me-2">Rạp:</label>
@@ -57,24 +56,29 @@
 			</div>
 		}
 		<div class="col align-self-center text-end" style="width:10%;">
-			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:130px;height:50px" @onclick="NextSelection" aria-label="Close">Tiếp theo<i class="bi bi-chevron-right"></i></button>
-			
+			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:130px;height:50px" @onclick="NextSelection">Tiếp theo<i class="bi bi-chevron-right"></i></button>
 		</div>
 	</div>
 </div>
 
 @code {
 	[Parameter] public Guid ShowtimeId { get; set; }
-	[Parameter] public List<SeatDTO> SeatDTOs { get; set; }
+	[Parameter] public Guid  BillId { get; set; }
+	[Parameter] public List<SeatDTO> CheckedSeats { get; set; }
 	[Parameter] public string SeatsSelectedstr { get; set; }
 	[Parameter] public string Total { get; set; }
-	[Parameter] public EventCallback<Guid> PreSelectionModal { get; set; }
-	[Parameter] public EventCallback<Guid> NextSelectionModal { get; set; }
+	[Parameter] public EventCallback<Guid> BackToSeatModal { get; set; }
+
+	private List<ComboDto> lstCombo = new List<ComboDto>();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
 	private string formatStartTime = "";
 	private string formatRating = "";
+	private AuthenticationState AuthenState;
+	private BillDetailDto Bill = new();
+	private CancellationToken cancellationToken;
+	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
 
 	protected async override Task OnParametersSetAsync()
 	{
@@ -88,15 +92,46 @@
 			filmDto = film;
 			formatRating = "T" + filmDto.Rating;
 			formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
+			lstCombo = await ComboService.GetAll();
+			if(BillId != Guid.Empty)
+            {
+                Bill = await UserHomeService.GetBillForCheckOut(BillId);
+			}
 		}
 	}
+
 	private async Task PreSelection()
 	{
-		await PreSelectionModal.InvokeAsync(ShowtimeId);
-	}
-	private async Task NextSelection()
-	{
-		await NextSelectionModal.InvokeAsync(ShowtimeId);
+		foreach (var s in CheckedSeats)
+        {
+            lstSeatUpdateRequests.Add(new SeatUpdateRequest
+            {
+                Id = s.Id,
+                Status = SeatStatus.Available
+            });
+        }
+		await SeatService.UpdateRange(lstSeatUpdateRequests);
+		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+		await BackToSeatModal.InvokeAsync(ShowtimeId);
 	}
 
+	private async Task NextSelection()
+	{
+		PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
+		"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
+		ItemData itemData = new ItemData(Bill.FilmName, 1, Convert.ToInt32(Bill.TotalMoney));
+		List<ItemData> lstItemDatas = new List<ItemData>();
+		lstItemDatas.Add(itemData);
+		PaymentData paymentData = new PaymentData(Bill.BillCode, Convert.ToInt32(Bill.TotalMoney), "VHD Cinema", lstItemDatas, "https://localhost:7239/", "https://localhost:7239/");
+		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
+	}
+	public Task Reset()
+    {
+        CheckedSeats.Clear();
+        SeatsSelectedstr = "";
+        Total = null;
+		StateHasChanged();
+        return Task.CompletedTask;
+    }
 }

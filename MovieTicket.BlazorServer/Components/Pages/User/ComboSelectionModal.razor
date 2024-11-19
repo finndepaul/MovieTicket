@@ -1,6 +1,4 @@
-﻿@using Net.payOS
-@using Net.payOS.Types
-<div class="container-fluid">
+﻿<div class="container-fluid">
 	<div class="row row-cols-1 row-cols-md-2 g-4">
 		@foreach (var item in lstCombo)
 		{
@@ -28,17 +26,16 @@
 		}
 	</div>
 </div>
-<div class="modal-footer d-flex justify-content-between">
-	<button type="button" class="p-2 btn btn-primary text-light bi bi-chevron-left" aria-label="Close" style="border: none">Quay lại</button>
-	<button type="button" class="p-2 btn btn-success text-light bi bi-chevron-right" @onclick="HandleCheckOut" aria-label="Close" style="border: none">Tiếp theo</button>
-</div>
 @code {
 	[Parameter] public Guid BillId { get; set; }
 	private List<ComboDto> lstCombo = new List<ComboDto>();
 	private int count { get; set; } = 0;
+
 	protected async override Task OnParametersSetAsync()
 	{
-		lstCombo = await ComboService.GetAll();
+		if(BillId != Guid.Empty){
+			lstCombo = await ComboService.GetAll();
+		}
 	}
 	private void Plus()
 	{
@@ -48,17 +45,5 @@
 	{
 		count--;
 		if (count < 0) count = 0; // Đảm bảo count không giảm dưới 0
-	}
-	private async Task HandleCheckOut()
-	{
-		var bill = await UserHomeService.GetBillForCheckOut(BillId);
-		PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
-		"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
-		ItemData itemData = new ItemData(bill.FilmName, 1, Convert.ToInt32(bill.TotalMoney));
-		List<ItemData> lstItemDatas = new List<ItemData>();
-		lstItemDatas.Add(itemData);
-		PaymentData paymentData = new PaymentData(bill.BillCode, Convert.ToInt32(bill.TotalMoney), "VHD Cinema", lstItemDatas, "https://localhost:7239/", "https://localhost:7239/");
-		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
 	}
 }

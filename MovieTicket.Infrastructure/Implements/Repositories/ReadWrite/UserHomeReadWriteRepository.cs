@@ -1,16 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieTicket.Application.DataTransferObjs.Cinema;
-using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.DataTransferObjs.UserHome.Requests;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {

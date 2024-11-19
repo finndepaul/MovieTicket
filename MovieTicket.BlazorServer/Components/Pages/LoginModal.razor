@@ -1,6 +1,7 @@
 ﻿@page "/login"
 @using MovieTicket.Application.DataTransferObjs.Auth
 @using MovieTicket.BlazorServer.Components.Layout
+@layout UserLayout
 
 <EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLogin">
    <DataAnnotationsValidator />
@@ -27,7 +28,7 @@
         }
         var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
         customState.UpdateAuthenticationState(response.JWTToken);
-        CustomeUserClaims claims = DecryptJWTService.DecryptToken(response.JWTToken);
+        CustomUserClaims claims = DecryptJWTService.DecryptToken(response.JWTToken);
         if(claims.Role == "Admin")
         {
             NavigationManager.NavigateTo("/admin", forceLoad: true);
