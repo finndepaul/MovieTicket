@@ -1,11 +1,9 @@
-﻿@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
-@using Net.payOS
-@using Net.payOS.Types
+﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
 @if (lstCombo == null)
 {
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
+	<div class="spinner-border text-primary" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 }
 else
 {
@@ -42,23 +40,24 @@ else
 			}
 		</div>
 	</div>
-	<div class="modal-footer d-flex justify-content-between">
-		<button type="button" class="p-2 btn btn-primary text-light bi bi-chevron-left" aria-label="Close" style="border: none">Quay lại</button>
-		<button type="button" class="p-2 btn btn-success text-light bi bi-chevron-right" @onclick="HandleCheckOut" aria-label="Close" style="border: none">Tiếp theo</button>
-	</div>
 }
 @code {
 	[Parameter] public Guid BillId { get; set; }
+	[Parameter] public EventCallback<EventCallbackArgs> OnComboSelection { get; set; }
+	public EventCallbackArgs args = new();
 	private List<ComboDto> lstCombo = new List<ComboDto>();
 	private Dictionary<Guid, int> comboQuantities = new();
 	private List<ComboRequest> lstComboSelected = new List<ComboRequest>();
 	CancellationToken cancellationToken;
+
 	protected async override Task OnParametersSetAsync()
 	{
-		if(BillId != Guid.Empty){
+		if (BillId != Guid.Empty)
+		{
 			lstCombo = await ComboService.GetAll();
 		}
 	}
+
 	private async Task Plus(Guid comboId)
 	{
 		if (!comboQuantities.ContainsKey(comboId))
@@ -78,10 +77,15 @@ else
 			lstComboSelected.Add(new ComboRequest { ComboId = comboId, Quantity = comboQuantities[comboId] });
 		}
 
+		args = new EventCallbackArgs
+			{
+				_lstCombo = lstComboSelected,
+				TotalCombo = CalculateTotal()
+			};
+		await OnComboSelection.InvokeAsync(args);
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}
-
 
 	private async Task Minus(Guid comboId)
 	{
@@ -108,17 +112,23 @@ else
 			}
 		}
 
+		args = new EventCallbackArgs
+			{
+				_lstCombo = lstComboSelected,
+				TotalCombo = CalculateTotal()
+			};
+		await OnComboSelection.InvokeAsync(args);
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}
 	private async Task HandleCheckOut()
 	{
 		// Update bill
-		var billCombo = new ComboCheckRequest // coupon sẽ ở đây  
-		{
-            BillId = BillId,
-            LstCombos = lstComboSelected,
-        };
+		var billCombo = new ComboCheckRequest // coupon sẽ ở đây
+			{
+				BillId = BillId,
+				LstCombos = lstComboSelected,
+			};
 		var result = await UserHomeService.AddComboToCheckAsync(billCombo, cancellationToken);
 		var bill = await UserHomeService.GetBillForCheckOut(BillId);
 		PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
@@ -137,5 +147,16 @@ else
 		);
 		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
+	}
+
+	private decimal CalculateTotal()
+	{
+		decimal totalCombo = 0;
+		foreach (var item in lstComboSelected)
+		{
+			var combo = lstCombo.FirstOrDefault(x => x.Id == item.ComboId);
+			totalCombo += (Decimal)combo.Price.Value * item.Quantity;
+		}
+		return totalCombo;
 	}
 }
