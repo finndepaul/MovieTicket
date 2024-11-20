@@ -43,20 +43,13 @@
 
 			</div>
 			<div class="ticketPrices col" style="width:10%">
-				<label class="me-2">Combo:</label>
-				<br />
-				<span class="fw-bold">0 VND</span>
-				<br />
 				<label class="me-2">Tổng giá vé:</label>
 				<br />
-				<span class="fw-bold">@Total</span>
+				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
 				<br />
 				<label class="me-2">Tổng tiền:</label>
 				<br />
-				@if (Total != null)
-				{
-					<span class="fw-bold">@Total</span>
-				}
+				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
 			</div>
 		}
 		<div class="col align-self-center text-end" style="width:10%;">
@@ -69,7 +62,7 @@
 	[Parameter] public Guid ShowtimeId { get; set; }
 	[Parameter] public List<SeatDTO> SeatDTOs { get; set; }
 	[Parameter] public string SeatsSelectedstr { get; set; }
-	[Parameter] public string Total { get; set; }
+	[Parameter] public decimal TotalTicket { get; set; }
 	[Parameter] public EventCallback<Guid> BackToShowtimeModal { get; set; }
 	[Parameter] public EventCallback<EventCallbackArgs> NextToComboModal { get; set; }
 	private EventCallbackArgs args = new();
@@ -119,7 +112,7 @@
 
 	private async Task NextToCombo()
 	{
-		if(SeatDTOs.Count == 0)
+		if (SeatDTOs.Count == 0)
 		{
 			await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
 			StateHasChanged();
@@ -176,11 +169,11 @@
 	}
 
 	public Task Reset()
-    {
-        lstSeatUpdateRequests.Clear();
-        SeatsSelectedstr = "";
-        Total = null;
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
+	{
+		lstSeatUpdateRequests.Clear();
+		SeatsSelectedstr = "";
+		TotalTicket = 0;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
 }
