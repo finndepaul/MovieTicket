@@ -15,7 +15,7 @@
                         <div class="col">
                             @if (seat.Status == SeatStatus.Available)
                             {
-                                <button type="button" id="seat" data-bs-toggle="button" data-seat-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" @onclick="(() => SeatSelection(seat.Id))">
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" aria-pressed="false" @onclick="(() => SeatSelection(seat.Id))">
                                     @seat.Position
                                 </button>
                             }
@@ -58,12 +58,13 @@ else
     private Guid SeatId = Guid.Empty;
     private List<SeatDTO> lstSeatsSelected = new();//list ghế đã chọn
     private string SeatsSelectedstr = "";
-    private string total = null;
+    private string TickeTotalString = null;
+    private decimal TotalTicket;
     private ShowTimeDto showtimeDto = new();
     string today = DateTime.Now.DayOfWeek.ToString();
     private AuthenticationState AuthenState;
     private Guid userId = Guid.Empty;
-    private CreateCheckRequest request = new(); 
+    private CreateCheckRequest request = new();
     private List<TicketRequest> lstTicketRequests = new();
     private CancellationToken cancellationToken;
 
@@ -77,10 +78,10 @@ else
             cinemaDto = cinema.Data;
             lstSeats = await SeatService.GetSeats(cinemaDto.Id);
             var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
-            {
-                PageNumber = 1,
-                PageSize = 180
-            });
+                {
+                    PageNumber = 1,
+                    PageSize = 180
+                });
             lstTicketPrices = responseTicket.Item.ToList();
             AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
             var getUser = AuthenState.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -149,11 +150,13 @@ else
                     };
                 }
                 CalculateTotal();
+                TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
                 args = new EventCallbackArgs
                     {
                         lstSeats = lstSeatsSelected,
                         str = SeatsSelectedstr,
-                        totalMoney = total
+                        TotalTicket = TotalTicket,
+
                     };
                 await OnSeatSelection.InvokeAsync(args);
                 StateHasChanged();
@@ -192,11 +195,12 @@ else
                         });
                 };
                 CalculateTotal();
+                TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
                 args = new EventCallbackArgs
                     {
                         lstSeats = lstSeatsSelected,
                         str = SeatsSelectedstr,
-                        totalMoney = total
+                        TotalTicket = TotalTicket,
                     };
                 await OnSeatSelection.InvokeAsync(args);
                 StateHasChanged();
@@ -204,24 +208,23 @@ else
         }
     }
 
-    private string CalculateTotal() //tính tổng tiền
+    private decimal CalculateTotal() //tính tổng tiền
     {
-        decimal x = 0;
+        TotalTicket = 0;
         foreach (var item in lstSeatsSelected)
         {
             var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
                 == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
             if (ticketPrice != null)
             {
-                x += (Decimal)ticketPrice.Price;
+                TotalTicket += (Decimal)ticketPrice.Price;
             }
         }
-        total = x.ToString("#,##0") + "VND";
-        return total;
+        return TotalTicket;
     }
 
     private string DayOfTheWeek(string day) //check ngày
-    {   
+    {
         if (day.Equals("Saturday") || day.Equals("Sunday"))
         {
             return "T7-CN";
@@ -231,11 +234,16 @@ else
             return "T2-T6";
         }
     }
-    public void Reset() //not working
+    public async Task Reset()
     {
+        foreach (var seat in lstSeatsSelected)
+        {
+            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+        }
         lstSeatsSelected.Clear();
         SeatsSelectedstr = "";
-        total = null;
+        TotalTicket = 0;
         StateHasChanged();
-    } 
+    }
+
 }
