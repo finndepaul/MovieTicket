@@ -1,0 +1,58 @@
+﻿@page "/update-about/{Id:guid}"
+@using MovieTicket.Application.DataTransferObjs.About
+@using MovieTicket.BlazorServer.Components.Pages.Admin.FroalaEditor
+@inject IAboutService aboutService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "Admin")]
+<EditForm Model="updateAboutDto" OnValidSubmit="HandleOnSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <a class="btn btn-light me-2" href="/list-about">Quay lại</a>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+
+    <div class="mb-3">
+        <label for="Title" class="form-label">Title</label>
+        <InputText id="Title" class="form-control" @bind-Value="updateAboutDto.Title" />
+        <ValidationMessage For="@(() => updateAboutDto.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Content" class="form-label">Content</label>
+        <FroalaEditor @bind-Content="updateAboutDto.Content" />
+        <ValidationMessage For="@(() => updateAboutDto.Content)" />
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private AboutDto aboutDto = new AboutDto();
+    private UpdateAboutDto updateAboutDto = new UpdateAboutDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        aboutDto = await aboutService.GetByIdAsync(Id);
+        updateAboutDto = new UpdateAboutDto
+            {
+                Title = aboutDto.Title,
+                Content = aboutDto.Content
+            };
+    }
+
+    private async Task HandleOnSubmit()
+    {
+        var result = await aboutService.UpdateAsync(Id, updateAboutDto);
+        if (result != null)
+        {
+            await JSRuntime.ToastrSuccess("Cập nhật thành công");
+            NavigationManager.NavigateTo("/list-about");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Cập nhật thất bại");
+        }
+    }
+}

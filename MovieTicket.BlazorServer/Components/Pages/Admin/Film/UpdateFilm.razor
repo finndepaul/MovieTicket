@@ -160,7 +160,11 @@
         </div>
     </EditForm>
 </div>
-
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
 @code {
     [Parameter]
     public Guid Id { get; set; }
@@ -206,7 +210,7 @@
         }
         else
         {
-            await _JSRuntime.ToastrError("Update film failed");
+            await _JSRuntime.ToastrError("Có lỗi");
         }
         
     }
@@ -218,12 +222,12 @@
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
         if (response != null)
         {
-            await _JSRuntime.ToastrSuccess("Update film successfully");
+            await _JSRuntime.ToastrSuccess("Cập nhật thành công");
             NavigationManager.NavigateTo("/list-film");
         }
         else
         {
-            await _JSRuntime.ToastrError("Update film failed");
+            await _JSRuntime.ToastrError("Cập nhật thất bại");
         }
 
     }
