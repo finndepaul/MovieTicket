@@ -79,6 +79,7 @@
 	private List<TicketRequest> lstTicketRequests = new();
 	private List<TicketPriceDto> lstTicketPrices { get; set; }
 	private CancellationToken cancellationToken;
+    private List<SeatTypeDto> seatTypeDtos = new();
 
 	protected async override Task OnParametersSetAsync()
 	{
@@ -100,6 +101,7 @@
 					PageNumber = 1,
 					PageSize = 180
 				});
+			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
 			lstTicketPrices = responseTicket.Item.ToList();
 			ClaimsPrincipal currentUser = AuthenState.User;
 		}
@@ -131,6 +133,8 @@
 				lstSeatUpdateRequests.Add(new SeatUpdateRequest
 					{
 						Id = s.Id,
+                        SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
+						Status = Domain.Enums.SeatStatus.Available,
 						Selection = Domain.Enums.SeatSelection.Checked
 					});
 				var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == s.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
@@ -153,6 +157,7 @@
 						BillId = Guid.Parse(billId)
 					};
 			}
+			Console.WriteLine("check");
 			await NextToComboModal.InvokeAsync(args);
 		}
 	}
