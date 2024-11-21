@@ -312,7 +312,6 @@
 	private async Task PreComboSelectionModal()
 	{
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal"); //đóng seat selection modal
-		comboSelectionModalref.Reset();
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
 	private async void ShowCloseConfirmation()

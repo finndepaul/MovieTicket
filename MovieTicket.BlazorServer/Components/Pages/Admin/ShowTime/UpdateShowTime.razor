@@ -1,4 +1,4 @@
-﻿@page "/showtime-create/{Date}"
+﻿@page "/showtime-update/{Id:guid}"
 @using MovieTicket.Application.DataTransferObjs.Film
 @using MovieTicket.Application.DataTransferObjs.Schedule
 @using MovieTicket.Application.DataTransferObjs.ScreenType
@@ -9,18 +9,20 @@
 @inject IScreenTypeServices ScreenTypeService
 @inject ITranslationTypeService TranslationTypeService
 @inject IScheduelService ScheduelService
-@inject IShowTimeService ShowTimeService  
+@inject IShowTimeService ShowTimeService
 @inject IJSRuntime _IJSRuntime;
-<EditForm Model="ShowTime" OnValidSubmit="HandleCreateAsync">
+
+<EditForm Model="ShowTime" OnValidSubmit="HandleUpdateAsync">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
+
 	<div class="mb-3">
 		<label for="movieTitle" class="form-label">Phim chiếu</label>
 		<select class="form-select" id="movieTitle" value="@selectedFilmId" @onchange="OnFilmChange">
 			<option value="">Select a film</option>
 			@foreach (var film in FilmValidate)
 			{
-				<option value="@film.Id">@film.Name</option>
+				<option value="@film.Id" selected="@(film.Id == ShowTime.FilmId ? true : false)">@film.Name</option>
 			}
 		</select>
 		<small class="text-success">Đang chiếu</small>
@@ -28,7 +30,7 @@
 
 	<div class="mb-3">
 		<label for="screeningDate" class="form-label">Ngày chiếu</label>
-		<input type="date" class="form-control" id="screeningDate" @bind="@Date" disabled>
+		<input type="date" class="form-control" id="screeningDate" @bind="@Date" disabled />
 	</div>
 
 	<div class="mb-3">
@@ -37,7 +39,7 @@
 			<option value="">Select a screen type</option>
 			@foreach (var item in ScreenTypeValidate)
 			{
-				<option value="@item.Id">@item.Type</option>
+				<option value="@item.Id" selected="@(item.Id == ShowTime.ScreenTypeId ? true : false)">@item.Type</option>
 			}
 		</select>
 	</div>
@@ -48,7 +50,7 @@
 			<option value="">Select a translation type</option>
 			@foreach (var item in TranslationTypeValidate)
 			{
-				<option value="@item.Id">@item.Type</option>
+				<option value="@item.Id" selected="@(item.Id == ShowTime.TranslationTypeId ? true : false)">@item.Type</option>
 			}
 		</select>
 	</div>
@@ -57,66 +59,120 @@
 		<label for="screeningTime" class="form-label">Thời gian chiếu</label>
 		<div class="row">
 			<div class="col">
-				<input type="time" class="form-control" id="startTime" value="@startTimeValue" @onchange="OnStartTime">
+				<input type="time" class="form-control" id="startTime" value="@startTimeValue" @onchange="OnStartTime" />
 			</div>
 			<div class="col">
-				<input type="time" class="form-control" id="endTime" @bind="ShowTime.EndTime" disabled>
+				<input type="time" class="form-control" id="endTime" @bind="ShowTime.EndTime" disabled />
 			</div>
 		</div>
 	</div>
+
 	<div class="modal-footer">
-		<button type="submit" class="btn btn-primary">Tạo suất chiếu</button>
+		<button type="submit" class="btn btn-primary">Update suất chiếu</button>
 	</div>
 </EditForm>
 
 @code {
+	[Parameter] public string Id { get; set; }
 	[Parameter] public Guid? CinemaCenterId { get; set; }
 	[Parameter] public Guid? CinemaId { get; set; }
 	[Parameter] public DateTime Date { get; set; }
-	[Parameter]public EventCallback<(Guid CinemaCenterId, Guid CinemaId, DateTime ShowtimeDate)> OnCreateSuccess { get; set; }
+	[Parameter] public EventCallback<(Guid CinemaCenterId, Guid CinemaId, DateTime ShowtimeDate)> OnUpdateSuccess { get; set; }
 	private IEnumerable<FilmDto> Films = new List<FilmDto>();
 	private IEnumerable<FilmDto> FilmValidate = new List<FilmDto>();
-	private ShowTimeCreateRequest ShowTime = new ShowTimeCreateRequest();
+	private ShowTimeUpdateRequest ShowTime = new ShowTimeUpdateRequest();
+	private ShowTimeDto _ShowTimeDto = new ShowTimeDto();
 	private List<ScreenTypeDto> ScreenTypeDtos = new List<ScreenTypeDto>();
 	private List<ScreenTypeDto> ScreenTypeValidate = new List<ScreenTypeDto>();
-	private CinemaDto cinemas;
 	private List<TranslationTypeDto> TranslationTypeDtos = new List<TranslationTypeDto>();
 	private List<TranslationTypeDto> TranslationTypeValidate = new List<TranslationTypeDto>();
 	private IEnumerable<ScheduleDto> scheduleDtos = new List<ScheduleDto>();
-	private CinemaTypeDto cinemaTypes;
 	public Guid idFilm;
+	private CinemaTypeDto cinemaTypes;
+	private CinemaDto cinemas;
 	private string selectedFilmId = "";
 	private string startTimeValue = "";
+
 	protected override async Task OnParametersSetAsync()
 	{
-		ShowTime.ShowtimeDate = Date;
-		ShowTime.CinemaCenterId = CinemaCenterId;
-		ShowTime.CinemaId = CinemaId;		
+		if (!string.IsNullOrEmpty(Id))
+		{
+			var response = await ShowTimeService.GetById(Guid.Parse(Id));
+			if (response != null && response.Data != null)
+			{
+				_ShowTimeDto = response.Data;
+				ShowTime.Id = _ShowTimeDto.Id;
+				ShowTime.ScheduleId = _ShowTimeDto.ScheduleId;
+				ShowTime.CinemaId = _ShowTimeDto.CinemaId;
+				ShowTime.ScreenTypeId = _ShowTimeDto.ScreenTypeId;
+				ShowTime.TranslationTypeId = _ShowTimeDto.TranslationTypeId;
+				ShowTime.StartTime = _ShowTimeDto.StartTime.Value;
+				ShowTime.EndTime = _ShowTimeDto.EndTime.Value;
+				ShowTime.FilmId = _ShowTimeDto.FilmId;
+				ShowTime.ShowtimeDate = Date;
 
+				// Thiết lập selectedFilmId
+				selectedFilmId = ShowTime.FilmId.ToString();
+				startTimeValue = _ShowTimeDto.StartTime.HasValue?_ShowTimeDto.StartTime.Value.ToString("HH:mm"): "";
+
+				// Cập nhật danh sách ScreenType và TranslationType
+				var selectedFilm = Films.FirstOrDefault(f => f.Id == ShowTime.FilmId);
+				if (selectedFilm != null)
+				{
+					ScreenTypeValidate = selectedFilm.ScreenTypeDtos.ToList();
+					TranslationTypeValidate = selectedFilm.TranslationTypeDtos.ToList();
+				}
+				var result = await CinemaService.GetCinemaById(CinemaId.Value);
+				cinemas = result.Data;
+				var cinemaTypeDtosData = await CinemaTypeService.GetListCinemaTypesAsync();
+				cinemaTypes = cinemaTypeDtosData.FirstOrDefault(x => x.Id == cinemas.CinemaTypeId);
+				var schedule = scheduleDtos.FirstOrDefault(x => x.FilmId == ShowTime.FilmId);
+				ScreenTypeValidate.Clear();
+				TranslationTypeValidate.Clear();
+
+				if (Films.Any())
+				{
+					var film = Films.FirstOrDefault(x => x.Id == ShowTime.FilmId);
+					if (film != null)
+					{
+						// Danh sách hình thức chiếu phù hợp với loại phòng chiếu
+						var lstScreenTypeValidate = film.ScreenTypeDtos
+							.Where(x =>
+								x.Type == cinemaTypes.Name || // Hình thức chiếu giống loại phòng chiếu
+								((cinemaTypes.Name == "Premium Class" || cinemaTypes.Name == "Gold Class") && x.Type == "2D") // Điều kiện loại phòng đặc biệt
+							).ToList();
+						TranslationTypeValidate = film.TranslationTypeDtos.ToList();
+						ScreenTypeValidate = lstScreenTypeValidate;
+					}
+				}
+
+				if (schedule != null)
+				{
+					ShowTime.ScheduleId = schedule.Id;
+				}
+			}
+		}
 	}
+
+
 	protected override async Task OnInitializedAsync()
 	{
 		Films = await FilmService.GetAllFilms();
 		scheduleDtos = await ScheduelService.GetAllAsync();
-		ScreenTypeDtos = await ScreenTypeService.GetAllScreenTypes();	
+		ScreenTypeDtos = await ScreenTypeService.GetAllScreenTypes();
 		TranslationTypeDtos = await TranslationTypeService.GetAllTranslationTypes();
+
 		FilmValidate = from film in Films
 								join schedule in scheduleDtos on film.Id equals schedule.FilmId
 								where (schedule.StartDate.Date <= Date && Date <= schedule.EndDate)
 								select film;
-
-		ShowTime.Desciption = "Đang chiếu";
 	}
 
 	public void ResetForm()
 	{
 		idFilm = Guid.Empty;
-		ShowTime.FilmId = Guid.Empty;
-		ShowTime.StartTime = null;
-		ShowTime.EndTime = null;
-		ShowTime.ScreenTypeId = Guid.Empty;
-		ShowTime.TranslationTypeId = Guid.Empty;
-		selectedFilmId = "";    
+		ShowTime = new ShowTimeUpdateRequest();
+		selectedFilmId = "";
 		startTimeValue = "";
 	}
 
@@ -124,11 +180,6 @@
 	private async Task OnFilmChange(ChangeEventArgs e)
 	{
 		selectedFilmId = e.Value.ToString();
-		var result = await CinemaService.GetCinemaById(CinemaId.Value);
-		cinemas = result.Data;
-		var cinemaTypeDtosData = await CinemaTypeService.GetListCinemaTypesAsync();
-		cinemaTypes = cinemaTypeDtosData.FirstOrDefault(x => x.Id == cinemas.CinemaTypeId);
-
 		if (Guid.TryParse(selectedFilmId, out Guid filmId))
 		{
 			ShowTime.FilmId = filmId;
@@ -147,7 +198,7 @@
 						.Where(x =>
 							x.Type == cinemaTypes.Name || // Hình thức chiếu giống loại phòng chiếu
 							((cinemaTypes.Name == "Premium Class" || cinemaTypes.Name == "Gold Class") && x.Type == "2D") // Điều kiện loại phòng đặc biệt
-						).ToList();				
+						).ToList();
 					TranslationTypeValidate = film.TranslationTypeDtos.ToList();
 					ScreenTypeValidate = lstScreenTypeValidate;
 				}
@@ -156,42 +207,39 @@
 			if (schedule != null)
 			{
 				ShowTime.ScheduleId = schedule.Id;
-				ShowTime.Status = Domain.Enums.ShowtimeStatus.ComingSoon;
 			}
 		}
 	}
 
 	private async Task OnStartTime(ChangeEventArgs e)
 	{
-		startTimeValue = e.Value.ToString();
+		startTimeValue = e.Value?.ToString() ?? string.Empty;
+
 		if (TimeSpan.TryParse(startTimeValue, out TimeSpan time))
 		{
 			ShowTime.StartTime = Date.Date + time;
-			int endTime = Films.FirstOrDefault(x => x.Id == idFilm).RunningTime.Value;
-			if (endTime != null)
-			{
-				if (ShowTime.StartTime.HasValue)
-				{
-					ShowTime.EndTime = ShowTime.StartTime.Value.AddMinutes(endTime);
-				}
-			}
+
+			int runningTime = Films.FirstOrDefault(x => x.Id == ShowTime.FilmId)?.RunningTime ?? 0;
+			ShowTime.EndTime = ShowTime.StartTime.Value.AddMinutes(runningTime);
 		}
+
+		StateHasChanged(); // Làm mới giao diện
 	}
 
-	private async Task HandleCreateAsync()
+	private async Task HandleUpdateAsync()
 	{
-		var result = await ShowTimeService.Create(ShowTime);
+		var result = await ShowTimeService.Update(ShowTime);
 
 		if (result.Status == 200)
 		{
 			await _IJSRuntime.ToastrSuccess(result.Message);
-			await OnCreateSuccess.InvokeAsync((CinemaCenterId.Value, CinemaId.Value, ShowTime.ShowtimeDate.Value));
+			await OnUpdateSuccess.InvokeAsync((CinemaCenterId.Value, CinemaId.Value, ShowTime.ShowtimeDate.Value));
 			ResetForm();
+			StateHasChanged();
 		}
 		else
 		{
 			await _IJSRuntime.ToastrError(result.Message);
 		}
 	}
-
 }

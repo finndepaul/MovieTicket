@@ -1,0 +1,329 @@
+﻿@page "/cinema-system"
+@using MovieTicket.Application.DataTransferObjs.Film
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+<div class="container">
+    <div class="theatre-list">
+        <h1 class="header">VHD CINEMAS</h1>
+        <div class="cinemas">
+            @foreach (var item in CinemaCenterDtos)
+            {
+                <p @onclick="() => OnCinemaCenterSelected(item.Id)"
+                   class="cinema-item @(showTimeSearch.CinemaCenterId == item.Id ? "selected" : "")">
+                    @item.Name
+                </p>
+            }
+        </div>
+        <hr />
+        <h1 class="header">Phòng Chiếu</h1>
+        <div class="cinemas">
+            @foreach (var item in CinemaDtos)
+            {
+                <p @onclick="() => OnCinemaSelected(item.Id)"
+                   class="cinema-item @(showTimeSearch.CinemaId == item.Id ? "selected" : "")">
+                    @item.Name
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="theatre-cinema">
+        <h3 class="header2">@Cinema.Name</h3>
+    </div>
+
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="/img/banner/bannerCinema1.jpg" class="d-block w-100" alt="Slide 1">
+            </div>
+            <div class="carousel-item">
+                <img src="/img/banner/bannerCinema2.jpg" class="d-block w-100" alt="Slide 2">
+            </div>
+            <div class="carousel-item">
+                <img src="/img/banner/bannerCinema3.jpg" class="d-block w-100" alt="Slide 3">
+            </div>
+        </div>
+        <button class="left carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="right carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <div class="schedule-container">
+        <div class="date-navigation">
+            <button class="nav-btn" @onclick="PreviousPage" disabled="@(PageIndex == 0)"> &lt; </button>
+            <div class="dates">
+                @foreach (var date in VisibleDates)
+                {
+                    <div class="date-item @(date == showTimeSearch.ShowtimeDate ? "active" : "")"
+                         @onclick="() => OnDateSelected(date)">
+                        @date.ToString("dd/MM")
+                    </div>
+                }
+            </div>
+            <button class="nav-btn" @onclick="NextPage" disabled="@(PageIndex == TotalPages - 1)"> > </button>
+        </div>
+
+        <div class="movie-info">
+            @if (showTimeDtos.Any())
+            {
+                <div class="movie-schedule">
+                    @foreach (var group in showTimeDtos.GroupBy(s => s.FilmId))
+                    {
+                        var film = filmDto.FirstOrDefault(f => f.Id == group.Key);
+                        if (film != null)
+                        {
+                            <div class="movie-info">
+                                <h3 class="movie-title">@film.Name</h3>
+                                <div class="rating-tag">@film.Rating</div>
+                                <div class="movie-details">
+                                    <img src="@film.Poster" alt="@film.Name" class="poster">
+                                    <div class="showtimes">
+                                        @foreach (var subGroup in group.GroupBy(s => new { s.ScreenTypeName, s.TranslationTypeName }))
+                                        {
+                                            <p><b>Suất chiếu:</b> @subGroup.Key.ScreenTypeName | @subGroup.Key.TranslationTypeName</p>
+                                            <div class="time-slots">
+                                                @foreach (var showtime in subGroup)
+                                                {
+                                                    <button @onclick="() => CheckLogged(showtime.Id, showtime.StartTime.Value)"
+                                                            class="time-slot @(ShowTimeId == showtime.Id ? "selected" : "")">
+                                                        @showtime.StartTime.Value.ToString("HH:mm")
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Không có suất chiếu nào cho ngày đã chọn.</p>
+            }
+
+        </div>
+    </div>
+</div>
+
+<!--Modal chọn ghế -->
+<div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h4 class="modal-title">Chọn ghế</h4>
+                <button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
+            </div>
+            <div class="modal-footer" style="width:100%;height:150px">
+                <FooterModal ShowtimeId="@ShowTimeId" SeatDTOs="lstSeats" @ref="footerModalref" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" NextSelectionModal="OpenComboSelectionModal" />
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal combo -->
+<div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h4 class="modal-title">Chọn Combo</h4>
+            </div>
+            <div class="modal-body">
+                <ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" />
+            </div>
+            <div class="modal-footer" style="width:100%;height:150px">
+                <FooterModal ShowtimeId="@ShowTimeId" SeatDTOs="lstSeats" @ref="footerModalref" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" PreSelectionModal="PreComboSelectionModal" />
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function closeModal() {
+        document.getElementById('myModalBuyTicket').style.display = 'none';
+    }
+
+    function openModal(modalId) {
+        var modalElement = document.getElementById(modalId);
+        var modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+    function closeModall(modalId) {
+        var modalElement = document.getElementById(modalId);
+        var modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+        }
+    }
+</script>
+
+@code {
+    private IQueryable<CinemaCenterDto> CinemaCenterDtos = Enumerable.Empty<CinemaCenterDto>().AsQueryable();
+    private List<CinemaDto> AllCinemas = new List<CinemaDto>();
+    private List<CinemaDto> CinemaDtos = new List<CinemaDto>();
+    private List<ShowTimeDto> showTimeDtos = new List<ShowTimeDto>();
+    private CinemaCenterSearch CinemaCenterSearch = new CinemaCenterSearch();
+    private PagingParameters PagingParameters = new PagingParameters();
+    private CinemaDto Cinema = new CinemaDto();
+    private ShowTimeSearch showTimeSearch = new ShowTimeSearch();
+    private IEnumerable<FilmDto> filmDto { get; set; } = new List<FilmDto>();
+    private AuthenticationState AuthenState;
+    private List<SeatDTO> lstSeats = new List<SeatDTO>();
+    private Guid ShowTimeId;
+    private List<DateTime> Dates = new();
+    private List<DateTime> VisibleDates => Dates.Skip(PageIndex * ItemsPerPage).Take(ItemsPerPage).ToList();
+    private int PageIndex = 0;
+    private int ItemsPerPage = 9;
+    private int TotalPages => (int)Math.Ceiling((double)Dates.Count / ItemsPerPage);
+    private SeatSelectionModal seatSelectionModalref;
+    private ComboSelectionModal comboSelectionModalref;
+    private string SeatsSelectedstr;
+    private string TotalMoney;
+    private Guid BillId;
+    private string IdFilm;
+    private string filmName { get; set; }
+    private FooterModal footerModalref;
+   
+    protected override async Task OnInitializedAsync()
+    {
+        CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(CinemaCenterSearch);
+        AllCinemas = await CinemaService.GetAll();
+        Dates = Enumerable.Range(0, 28).Select(offset => DateTime.Today.AddDays(offset)).ToList();
+        showTimeSearch.ShowtimeDate = DateTime.Today;
+        AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+        await LoadShowTimes(); // Load mặc định showtimes cho ngày hôm nay
+    }
+
+    private async Task OnCinemaCenterSelected(Guid cinemaCenterId)
+    {
+        showTimeSearch.CinemaCenterId = cinemaCenterId; // Lưu trạng thái rạp
+        CinemaDtos = AllCinemas.Where(c => c.CinemaCenterId == cinemaCenterId).ToList();
+        showTimeSearch.CinemaId = null; // Reset phòng chiếu
+        Cinema = new CinemaDto(); // Xóa thông tin phòng chiếu
+        await LoadShowTimes();
+    }
+
+    private async Task OnCinemaSelected(Guid cinemaId)
+    {
+        showTimeSearch.CinemaId = cinemaId; // Lưu trạng thái phòng chiếu
+        Cinema = CinemaDtos.Find(c => c.Id == cinemaId);
+        await LoadShowTimes();
+    }
+
+    private async Task OnDateSelected(DateTime date)
+    {
+        showTimeSearch.ShowtimeDate = date; // Lưu trạng thái ngày được chọn
+        await LoadShowTimes();
+    }
+
+    private async Task LoadShowTimes()
+    {
+        if (showTimeSearch.CinemaCenterId.HasValue && showTimeSearch.CinemaId.HasValue && showTimeSearch.ShowtimeDate.HasValue)
+        {
+            var pagingResponse = await ShowTimeService.GetAll(showTimeSearch, new PagingParameters() { PageSize = 50 });
+            showTimeDtos = pagingResponse.Item.ToList();
+
+            // Lấy danh sách phim từ showtimes
+            var filmIds = showTimeDtos.Select(s => s.FilmId).Distinct();
+            filmDto = (await FilmService.GetAllFilms()).Where(f => filmIds.Contains(f.Id)).ToList();
+        }
+        else
+        {
+            showTimeDtos.Clear();
+            filmDto = new List<FilmDto>();
+        }
+    }
+
+
+    private void PreviousPage()
+    {
+        if (PageIndex > 0)
+        {
+            PageIndex--;
+        }
+    }
+
+    private void NextPage()
+    {
+        if (PageIndex < TotalPages - 1)
+        {
+            PageIndex++;
+        }
+    }
+    private async Task CheckLogged(Guid id, DateTime startTime)
+    {
+        if (AuthenState.User.Identity.IsAuthenticated)
+        {
+            if (DateTime.Now.AddMinutes(15) >= startTime)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Lịch chiếu sẽ bắt đầu ngay sau đây, hãy đặt vé tại địa điểm bạn muốn xem phim.");
+            }
+            else
+            {
+                await OpenSeatSelectionModal(id);
+            }
+
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Bạn cần đăng nhập để chọn ghế");
+            NavigationManager.NavigateTo("login");
+        }
+    }
+    private async Task OpenSeatSelectionModal(Guid id)
+    {
+        Task.Delay(300);
+        ShowTimeId = id;
+    
+        seatSelectionModalref.Reset();
+        await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+    }
+
+    private void HandleSelectedSeats(EventCallbackArgs args)
+    {
+        // Task.Delay(300);
+        lstSeats = args.lstSeats;
+        SeatsSelectedstr = args.str;
+        TotalMoney = args.totalMoney;
+        StateHasChanged();
+
+    }
+    private async Task OpenComboSelectionModal(Guid id)
+    {
+        Task.Delay(300);
+        BillId = id;
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
+    }
+    private async Task CloseSeatSelectionModal()
+    {
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
+        seatSelectionModalref.Reset();
+    }
+    private async Task PreComboSelectionModal()
+    {
+        await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal"); //đóng seat selection modal
+        await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+    }
+    private async void ShowCloseConfirmation()
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận hủy đặt vé?");
+        if (confirmed)
+        {
+            await CloseSeatSelectionModal();
+        }
+    }
+
+}

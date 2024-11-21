@@ -190,7 +190,7 @@ else
             }
             request.LstSeatAndTicketPrice = lstTicketRequests;
             string billId =  await UserHomeService.CreateCheckAsync(request, cancellationToken);
-            await OnSeatSelection.InvokeAsync(Guid.Parse(billId));
+            await OnSeatSelection.InvokeAsync();
         }
         else
         {

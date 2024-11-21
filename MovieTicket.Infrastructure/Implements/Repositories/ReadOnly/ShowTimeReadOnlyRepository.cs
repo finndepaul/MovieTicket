@@ -41,7 +41,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 								 StartDate = schedule.StartDate,
 								 EndDate = schedule.EndDate,
 								 ScreenTypeName = screenType.Type,
+								 ScheduleId = showTime.Schedule.Id,
+								 ScreenTypeId = showTime.ScreenType.Id,
 								 TranslationTypeName = translationType.Type,
+								 TranslationTypeId = showTime.TranslationType.Id,
 								 StartTime = showTime.StartTime,
 								 EndTime = showTime.EndTime,
 								 ShowtimeDate = showTime.ShowtimeDate,
@@ -92,19 +95,23 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 									   StartDate = schedule.StartDate,
 									   EndDate = schedule.EndDate,
 									   ScreenTypeName = screenType.Type,
+									   ScheduleId = showTime.Schedule.Id,
+									   ScreenTypeId = showTime.ScreenType.Id,
 									   TranslationTypeName = translationType.Type,
+									   TranslationTypeId = showTime.TranslationType.Id,
 									   StartTime = showTime.StartTime,
 									   EndTime = showTime.EndTime,
 									   ShowtimeDate = showTime.ShowtimeDate,
 									   Desciption = showTime.Desciption,
 									   Status = showTime.Status
+									   
 								   }).FirstOrDefaultAsync();
             if (showTimes == null)
             {
                 return new ResponseObject<ShowTimeDto>
                 {
                     Status = StatusCodes.Status404NotFound,
-                    Message = "ShowTime not found",
+                    Message = "Không tìm thấy rạp",
                     Data = null
                 };
             }
@@ -112,7 +119,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             {
                 Data = showTimes,
                 Status = StatusCodes.Status200OK,
-                Message = "Get ShowTime success"
+                Message = "Tìm rạp thành công"
             };
         }
     }
