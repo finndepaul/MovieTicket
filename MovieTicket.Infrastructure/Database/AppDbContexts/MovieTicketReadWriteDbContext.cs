@@ -67,6 +67,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 
         public virtual DbSet<Banner> Banners { get; set; }
 
+        public virtual DbSet<About> Abouts { get; set; }
         #endregion DbSet
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

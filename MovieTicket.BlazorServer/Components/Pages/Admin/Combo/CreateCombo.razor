@@ -76,12 +76,12 @@
         var result = await ComboService.Create(createComboRequest);
         if (result != null)
         {
-            await JSRuntime.ToastrSuccess("Create combo successfully");
+            await JSRuntime.ToastrSuccess("Tạo thành công");
             NavigationManager.NavigateTo("/listcombo");
         }
         else
         {
-            await JSRuntime.ToastrError("Create combo failed");
+            await JSRuntime.ToastrError("Tạo thất bại");
         }
 
     }

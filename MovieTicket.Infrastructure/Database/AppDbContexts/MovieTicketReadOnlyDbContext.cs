@@ -44,6 +44,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
     public virtual DbSet<TranslationType> TranslationTypes { get; set; }
     public virtual DbSet<Coupon> Coupons { get; set; }
     public virtual DbSet<Banner> Banners { get; set; }
+    public virtual DbSet<About> Abouts { get; set; }
 
     #endregion DbSet
 

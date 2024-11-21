@@ -1,10 +1,12 @@
 ﻿@page "/list-film"
 @using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.ValueObjs.Paginations
 @using MovieTicket.Domain.Enums
 @attribute [Authorize(Roles = "Admin")]
 @inject IFilmService FilmService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime _JSRuntime
+
 <style>
     .badge-coming-soon {
         background-color: yellow;
@@ -30,18 +32,61 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
                 <p>Bạn có chắc chắn muốn xóa phim này không?</p>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteFilm(SelectedDeleteFilmId)">Xóa</button>
-
             </div>
-
         </div>
     </div>
 </div>
 
 <div class="container-fluid">
-    <button class="btn btn-primary mb-3" @onclick="CreateFilm">+ Tạo phim</button>
+
+    <div class="row align-items-center">
+        <!-- Nút Tạo Phim -->
+        <div class="col-auto">
+            <button class="btn btn-primary" @onclick="CreateFilm">+ Tạo phim</button>
+        </div>
+
+        <!-- Tìm kiếm theo tên -->
+        <div class="col-auto">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Tìm kiếm theo tên"
+                   @bind="searchName"
+                   @oninput="OnSearchNameInput" />
+        </div>
+
+        <!-- Tìm kiếm theo năm phát hành -->
+        <div class="col-auto">
+            <input type="number"
+                   class="form-control"
+                   placeholder="Tìm kiếm theo năm phát hành"
+                   @bind="searchReleaseYear"
+                   @oninput="OnSearchReleaseYearInput" />
+        </div>
+
+        <!-- Lọc theo ngày bắt đầu -->
+        <div class="col-auto">
+            <input type="date"
+                   class="form-control"
+                   @bind="searchStartDate"
+                   @oninput="OnSearchStartDateInput" />
+        </div>
+
+        <!-- Lọc theo ngày tạo -->
+        <div class="col-auto">
+            <input type="date"
+                   class="form-control"
+                   @bind="searchCreateDate"
+                   @oninput="OnSearchCreateDateInput" />
+        </div>
+
+        <!-- Nút Huỷ Lọc -->
+        <div class="col-auto">
+            <button class="btn btn-secondary" @onclick="CancelFilters">Huỷ Lọc</button>
+        </div>
+    </div>
+
 
     <!-- Movie Table -->
     <div class="table-responsive mb-3">
@@ -58,7 +103,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (filmDto != null) 
+                @if (filmDto != null)
                 {
                     @if (filmDto.Any())
                     {
@@ -76,8 +121,12 @@
                                 </td>
                                 <td>@film.CreatDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
-                                    <a class="btn btn-outline-primary" href="@($"film/update/{film.Id}")">Update</a>
-                                    <button class="btn btn-outline-danger" @onclick="() => GetFilmDeleteId(film.Id)">Delete</button>
+                                    <a class="btn btn-outline-primary" href="@($"film/update/{film.Id}")">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger" @onclick="() => GetFilmDeleteId(film.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -85,48 +134,52 @@
                     else
                     {
                         <tr>
-                            <td colspan="6"><em>No film found</em></td>
+                            <td colspan="7"><em>No film found</em></td>
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="6"><em>Loading...</em></td>
+                        <td colspan="7"><em>Loading...</em></td>
                     </tr>
                 }
             </tbody>
-
+            <tfoot>
+                <Pagination MetaData="metaData" SelectedPage="SelectedPage" Spread="2" />
+            </tfoot>
         </table>
     </div>
 
-    <!-- Pagination -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-    </nav>
 </div>
+
 <script>
     function openModalDelete(modalId) {
         var modal = new bootstrap.Modal(document.getElementById(modalId));
         modal.show();
     }
 </script>
+
 @code {
     private IEnumerable<FilmDto> filmDto { get; set; } = new List<FilmDto>();
-
+    private PagingParameters pagingParameters = new PagingParameters { PageNumber = 1, PageSize = 10 };
+    private MetaData metaData = new MetaData();
+    private string searchName = string.Empty;
+    private int? searchReleaseYear;
+    private DateTime? searchCreateDate;
+    private DateTime? searchStartDate;
     private Guid SelectedDeleteFilmId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        filmDto = await FilmService.GetAllFilms();
+        await LoadFilms();
+    }
+
+    private async Task LoadFilms()
+    {
+        var pagedFilms = await FilmService.GetAllPaging(pagingParameters);
+        filmDto = pagedFilms.Item;
+        metaData = pagedFilms.MetaData;
     }
 
     private async Task GetFilmDeleteId(Guid id)
@@ -140,14 +193,15 @@
         var result = await FilmService.DeleteFilm(id);
         if (result != null)
         {
-            await _JSRuntime.ToastrSuccess("Delete film successfully");
-            filmDto = await FilmService.GetAllFilms();
+            await _JSRuntime.ToastrSuccess("Xóa thành công");
+            await ApplyFilters();
         }
         else
         {
-            await _JSRuntime.ToastrError("Delete film failed");
+            await _JSRuntime.ToastrError("Xóa thất bại");
         }
     }
+
     private void CreateFilm()
     {
         NavigationManager.NavigateTo("/create-film");
@@ -162,5 +216,77 @@
             FilmStatus.Ended => "badge-ended",
             _ => "badge-secondary"
         };
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        pagingParameters.PageNumber = page;
+        await ApplyFilters();
+    }
+
+    private async Task OnSearchNameInput(ChangeEventArgs e)
+    {
+        searchName = e.Value.ToString();
+        pagingParameters.PageNumber = 1;
+        await ApplyFilters();
+    }
+
+    private async Task OnSearchReleaseYearInput(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int year))
+        {
+            searchReleaseYear = year;
+        }
+        else
+        {
+            searchReleaseYear = null;
+        }
+        pagingParameters.PageNumber = 1;
+        await ApplyFilters();
+    }
+
+    private async Task OnSearchCreateDateInput(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out DateTime date))
+        {
+            searchCreateDate = date;
+        }
+        else
+        {
+            searchCreateDate = null;
+        }
+        pagingParameters.PageNumber = 1;
+        await ApplyFilters();
+    }
+
+    private async Task OnSearchStartDateInput(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out DateTime date))
+        {
+            searchStartDate = date;
+        }
+        else
+        {
+            searchStartDate = null;
+        }
+        pagingParameters.PageNumber = 1;
+        await ApplyFilters();
+    }
+
+    private async Task ApplyFilters()
+    {
+        var pagedFilms = await FilmService.GetFiltering(searchName, searchReleaseYear, searchCreateDate, searchStartDate, pagingParameters);
+        filmDto = pagedFilms.Item;
+        metaData = pagedFilms.MetaData;
+    }
+
+    private async Task CancelFilters()
+    {
+        searchName = string.Empty;
+        searchReleaseYear = null;
+        searchCreateDate = null;
+        searchStartDate = null;
+        pagingParameters.PageNumber = 1;
+        await LoadFilms();
     }
 }

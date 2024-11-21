@@ -41,6 +41,7 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<IShowTimeService, ShowTimeSevice>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IComboService, ComboService>();
+            builder.Services.AddScoped<IAboutService, AboutService>();
             builder.Services.AddScoped<IBillService, BillService>();
             builder.Services.AddScoped<ITicketService, TicketService>();
             builder.Services.AddAuthentication()

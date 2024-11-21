@@ -128,12 +128,12 @@
         {
             accountUpdateRequest.Id = Id;
             await AccountService.UpdateAsync(accountUpdateRequest);
-            await JSRuntime.ToastrSuccess("Update user successfully");
+            await JSRuntime.ToastrSuccess("Cập nhật thành công");
             NavigationManager.NavigateTo("/list-user");
         }
         else
         {
-            await JSRuntime.ToastrError("Update user failed");
+            await JSRuntime.ToastrError("Cập nhật thất bại");
         }
     }
 

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Domain.Entities;
+using ZXing;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -21,6 +23,16 @@ namespace MovieTicket.API.Controllers
             _filmReadWriteRepository = filmReadWriteRepository;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetAllPaging([FromQuery]PagingParameters pagingParameters)
+        {
+            var result = await _filmReadOnlyRepository.GetFilmPageList(pagingParameters);
+            var data = result.Item.ToList();
+            return Ok(new PageList<FilmDto>(data.ToList(),
+                result.MetaData.TotalCount,
+                result.MetaData.CurrentPage,
+                result.MetaData.PageSize));
+        }
         // GET: api/<FilmController>
         [HttpGet]
         public async Task<ActionResult> GetAll()
@@ -28,7 +40,19 @@ namespace MovieTicket.API.Controllers
             var data = await _filmReadOnlyRepository.GetAllFilm();
             return Ok(data);
         }
-
+        [HttpGet]
+        public async Task<ActionResult> FilteringFilms([FromQuery] string? name,
+          [FromQuery] int? releaseYear,[FromQuery] DateTime? createDate,[FromQuery] DateTime? startDate, 
+          [FromQuery] PagingParameters pagingParameters)
+        {
+            var result = await _filmReadOnlyRepository.FilterFilms(name, 
+                releaseYear, createDate, startDate, pagingParameters); 
+            var data = result.Item.ToList();
+            return Ok(new PageList<FilmDto>(data.ToList(),
+                result.MetaData.TotalCount,
+                result.MetaData.CurrentPage,
+                result.MetaData.PageSize));
+        }
         // GET api/<FilmController>/5
         [HttpGet]
         public async Task<ActionResult> GetById(Guid id)
