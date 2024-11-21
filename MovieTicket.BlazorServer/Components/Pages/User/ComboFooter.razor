@@ -1,0 +1,146 @@
+﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+<div class="container-fluid">
+	<div class="row">
+		<div class="col align-self-center" style="width:10%">
+			<button class="btn btn-primary text-light bi bi-chevron-left  fs-5" style="padding:10px;width:130px;height:50px" @onclick="PreSelection">Quay lại</button>
+		</div>
+		@if (showtimeDto != null && cinemaDto != null)
+		{
+			<div class="col" style="width:40%">
+				<div class="d-flex">
+					<img src="@filmDto.Poster" class="object-fit-cover" style="width: 75px;height:110px" />
+					<div class="ms-2">
+						<span class="fw-bold">
+							@showtimeDto.FilmName
+						</span>
+						<br />
+						@showtimeDto.ScreenTypeName
+						<br />
+						@formatRating
+					</div>
+				</div>
+			</div>
+			<div class="col" style="width:20%">
+				<label class="me-2">Rạp:</label>
+				<span class="fw-bold">@showtimeDto.CinemaCenterName</span>
+
+				<br />
+				<label class="me-2">Phòng chiếu:</label>
+				<span class="fw-bold">@cinemaDto.Name</span>
+
+			</div>
+			<div class="selectedSeats col" style="width:10%">
+				<label class="me-2">Suất chiếu:</label>
+				<br />
+				<span class="fw-bold">@formatStartTime</span>
+
+				<br />
+				<label class="me-2">Ghế đã chọn:</label>
+				<br />
+				<span class="fw-bold">@SeatsSelectedstr</span>
+
+			</div>
+			<div class="ticketPrices col" style="width:10%">
+				<label>Giá vé: </label>
+				<br />
+				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
+				<br />
+				<label class="me-2">Combo:</label>
+				<br />
+				<span class="fw-bold">@TotalCombo.ToString("#,##0") VND</span>
+				<br />
+				<label class="me-2">Tổng tiền:</label>
+				<br />
+				<span class="fw-bold">@TotalMoney.ToString("#,##0") VND</span>
+			</div>
+		}
+		<div class="col align-self-center text-end" style="width:10%;">
+			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:130px;height:50px" @onclick="NextSelection">Tiếp theo<i class="bi bi-chevron-right"></i></button>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public Guid ShowtimeId { get; set; }
+	[Parameter] public Guid BillId { get; set; }
+	[Parameter] public List<SeatDTO> CheckedSeats { get; set; }
+	[Parameter] public List<ComboRequest> SelectedCombos { get; set; }
+	[Parameter] public string SeatsSelectedstr { get; set; }
+	[Parameter] public decimal TotalTicket { get; set; }
+	[Parameter] public decimal TotalCombo { get; set; }
+	[Parameter] public decimal TotalMoney { get; set; }
+	[Parameter] public EventCallback<Guid> BackToSeatModal { get; set; }
+	[Parameter] public EventCallback<EventCallbackArgs> NextToDiscount { get; set; }
+	private EventCallbackArgs args = new();
+	private ShowTimeDto showtimeDto = new();
+	private CinemaDto cinemaDto { get; set; } = new();
+	private FilmDto filmDto = new();
+	private string formatStartTime = "";
+	private string formatRating = "";
+	private AuthenticationState AuthenState;
+	private BillDetailDto Bill = new();
+	private CancellationToken cancellationToken;
+	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
+
+	protected async override Task OnParametersSetAsync()
+	{
+		if (ShowtimeId != Guid.Empty)
+		{
+			var response = await ShowTimeService.GetById(ShowtimeId);
+			showtimeDto = response.Data;
+			var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+			cinemaDto = cinema.Data;
+			var film = await FilmService.GetById(showtimeDto.FilmId);
+			filmDto = film;
+			formatRating = "T" + filmDto.Rating;
+			formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
+			if (BillId != Guid.Empty)
+			{
+				Bill = await UserHomeService.GetBillForCheckOut(BillId);
+			}
+		}
+	}
+
+	private async Task PreSelection()
+	{
+		foreach (var s in CheckedSeats)
+		{
+			lstSeatUpdateRequests.Add(new SeatUpdateRequest
+				{
+					Id = s.Id,
+					Status = SeatStatus.Available
+				});
+		}
+		await SeatService.UpdateRange(lstSeatUpdateRequests);
+		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+		await BackToSeatModal.InvokeAsync(ShowtimeId);
+	}
+
+	private async Task NextSelection()
+	{
+		if (SelectedCombos.Count > 0)
+		{
+			var billCombo = new ComboCheckRequest
+				{
+					BillId = BillId,
+					LstCombos = SelectedCombos,
+				};
+			args = new EventCallbackArgs
+				{
+					ComboCheckRequest = billCombo
+				};
+		}
+		await NextToDiscount.InvokeAsync(args);
+	}
+
+	public Task Reset()
+	{
+		CheckedSeats.Clear();
+		SeatsSelectedstr = "";
+		TotalMoney = 0;
+		TotalCombo = 0;
+		SelectedCombos.Clear();
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+}

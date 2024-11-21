@@ -188,7 +188,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             var comboFaker = new Faker<Combo>()
                    .RuleFor(c => c.Id, f => Guid.NewGuid())
                    .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
-                   .RuleFor(c => c.Price, f => f.Random.Int(40000, 100000))
+                   .RuleFor(c => c.Price, 90000)
                    .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
                    .RuleFor(c => c.ComboStatus, ComboStatus.Available)
                    .RuleFor(c => c.Image, "img/Combo/combo.png");
@@ -327,83 +327,86 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             }
             // Generate list of schedules
             modelBuilder.Entity<Schedule>().HasData(schedules);
-			List<TicketPrice> ticketPrices = new List<TicketPrice>();
-			List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
-			List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
-			List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
-			List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
+            List<TicketPrice> ticketPrices = new List<TicketPrice>();
+            List<Guid> seatTypeIds = seatTypes.Select(s => s.Id).ToList();
+            List<Guid> screeningDayIds = screeningDays.Select(s => s.Id).ToList();
+            List<Guid> cinemaTypeIds = cinemaTypes.Select(c => c.Id).ToList();
+            List<Guid> screenTypeIds = screenTypes.Select(s => s.Id).ToList();
 
-			HashSet<(Guid seat, Guid day, Guid cinema, Guid screen)> uniqueCombinations = new HashSet<(Guid, Guid, Guid, Guid)>();
+            HashSet<(Guid seat, Guid day, Guid cinema, Guid screen)> uniqueCombinations = new HashSet<(Guid, Guid, Guid, Guid)>();
 
-			var combinations = from seat in seatTypeIds
-							   from day in screeningDayIds
-							   from cinema in cinemaTypeIds
-							   from screen in screenTypeIds
-							   select new { seat, day, cinema, screen };
+            var combinations = from seat in seatTypeIds
+                               from day in screeningDayIds
+                               from cinema in cinemaTypeIds
+                               from screen in screenTypeIds
+                               select new { seat, day, cinema, screen };
 
-			foreach (var combo in combinations)
-			{
-				var uniqueKey = (combo.seat, combo.day, combo.cinema, combo.screen);
+            foreach (var combo in combinations)
+            {
+                var uniqueKey = (combo.seat, combo.day, combo.cinema, combo.screen);
 
-				if (uniqueCombinations.Contains(uniqueKey)) continue;
-				uniqueCombinations.Add(uniqueKey);
+                if (uniqueCombinations.Contains(uniqueKey)) continue;
+                uniqueCombinations.Add(uniqueKey);
 
-				// Set default price
-				decimal price = 100000;
+                // Set default price
+                decimal price = 100000;
 
-				// Identify the screening day (T2-T6 or T7-CN) and assign price accordingly
-				var isWeekday = screeningDays.First(sd => sd.Id == combo.day).Day == "T2-T6";
+                // Identify the screening day (T2-T6 or T7-CN) and assign price accordingly
+                var isWeekday = screeningDays.First(sd => sd.Id == combo.day).Day == "T2-T6";
 
-				// Determine the seat type and assign prices based on the day and seat type
-				var seatTypeName = seatTypes.First(st => st.Id == combo.seat).Name;
+                // Determine the seat type and assign prices based on the day and seat type
+                var seatTypeName = seatTypes.First(st => st.Id == combo.seat).Name;
 
-				if (isWeekday)
-				{
-					switch (seatTypeName)
-					{
-						case "Normal":
-							price = 45000;
-							break;
-						case "VIP":
-							price = 50000;
-							break;
-						case "Couple":
-							price = 50000;
-							break;
-					}
-				}
-				else // T7-CN
-				{
-					switch (seatTypeName)
-					{
-						case "Normal":
-							price = 60000;
-							break;
-						case "VIP":
-							price = 65000;
-							break;
-						case "Couple":
-							price = 65000;
-							break;
-					}
-				}
+                if (isWeekday)
+                {
+                    switch (seatTypeName)
+                    {
+                        case "Normal":
+                            price = 45000;
+                            break;
 
-				TicketPrice ticket = new TicketPrice
-				{
-					Id = Guid.NewGuid(),
-					Price = price,
-					SeatTypeId = combo.seat,
-					ScreeningDayId = combo.day,
-					CinemaTypeId = combo.cinema,
-					ScreenTypeId = combo.screen,
-					Status = TicketPriceStatus.Active
-				};
+                        case "VIP":
+                            price = 50000;
+                            break;
 
-				ticketPrices.Add(ticket);
-			}
+                        case "Couple":
+                            price = 50000;
+                            break;
+                    }
+                }
+                else // T7-CN
+                {
+                    switch (seatTypeName)
+                    {
+                        case "Normal":
+                            price = 60000;
+                            break;
 
-			modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
+                        case "VIP":
+                            price = 65000;
+                            break;
 
-		}
-	}
+                        case "Couple":
+                            price = 65000;
+                            break;
+                    }
+                }
+
+                TicketPrice ticket = new TicketPrice
+                {
+                    Id = Guid.NewGuid(),
+                    Price = price,
+                    SeatTypeId = combo.seat,
+                    ScreeningDayId = combo.day,
+                    CinemaTypeId = combo.cinema,
+                    ScreenTypeId = combo.screen,
+                    Status = TicketPriceStatus.Active
+                };
+
+                ticketPrices.Add(ticket);
+            }
+
+            modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
+        }
+    }
 }

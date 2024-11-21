@@ -166,7 +166,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         var comboFaker = new Faker<Combo>()
                .RuleFor(c => c.Id, f => Guid.NewGuid())
                .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
-               .RuleFor(c => c.Price, f => f.Random.Int(40000, 100000))
+               .RuleFor(c => c.Price, 90000)
                .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
                .RuleFor(c => c.ComboStatus, ComboStatus.Available)
                .RuleFor(c => c.Image, "img/Combo/combo.png");
