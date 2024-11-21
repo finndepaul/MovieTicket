@@ -15,13 +15,35 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _dbContext = dbContext;
         }
 
-        public async Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName)
+		public async Task<IQueryable<CinemaDto>> GetAll()
+		{
+			var query = await _dbContext.Cinemas.Select(c => new CinemaDto
+			{
+				Id = c.Id,
+				Name = c.Name,
+                CinemaCenterId = c.CinemaCenterId,
+                CinemaTypeId = c.CinemaTypeId,
+                CinemaTypeName = c.CinemaType.Name,
+				CinemaCenterName = c.CinemaCenter.Name,
+				MaxSeatCapacity = c.MaxSeatCapacity,
+				Column = c.Column,
+				Row = c.Row,
+				Description = c.Description,
+				CreateTime = c.CreateTime,
+				UpdateTime = c.UpdateTime
+			}).ToListAsync();
+            return query.AsQueryable();
+		}
+
+		public async Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName)
         {
             var query = _dbContext.Cinemas.Select(c => new CinemaDto
             {
                 Id = c.Id,
                 Name = c.Name,
-                CinemaTypeName = c.CinemaType.Name,
+				CinemaCenterId = c.CinemaCenterId,
+				CinemaTypeId = c.CinemaTypeId,
+				CinemaTypeName = c.CinemaType.Name,
                 CinemaCenterName = c.CinemaCenter.Name,
                 MaxSeatCapacity = c.MaxSeatCapacity,
                 Column = c.Column,
@@ -66,7 +88,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Id = result.Id,
                     Name = result.Name,
                     CinemaTypeName = cinemaType?.Name ?? string.Empty,
-                    CinemaCenterName = cinemaCenter?.Name ?? string.Empty,
+					CinemaTypeId = result.CinemaTypeId,
+					CinemaCenterName = cinemaCenter?.Name ?? string.Empty,
                     MaxSeatCapacity = result.MaxSeatCapacity,
                     Column = result.Column,
                     Row = result.Row,

@@ -11,7 +11,7 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
         Task<ResponseObject<ShowTimeDto>> GetById(Guid id);
 
         Task<ResponseObject<ShowTimeCreateRequest>> Create(ShowTimeCreateRequest showTime);
-
+        Task<ResponseObject<ShowTimeUpdateRequest>> Update(ShowTimeUpdateRequest showTime);
         Task<ResponseObject<ShowTimeDto>> Delete(Guid id);
     }
 }

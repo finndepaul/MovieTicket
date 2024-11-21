@@ -56,6 +56,10 @@ namespace MovieTicket.BlazorServer.Services.Implements
             {
                 queryParam.Add("address", search.Address.ToString());
             }
+            if (!string.IsNullOrEmpty(search.AddresCity))
+            {
+                queryParam.Add("addresCity", search.AddresCity.ToString());
+            }
             string url = QueryHelpers.AddQueryString("api/CinemaCenter/GetAllCinemaCenter", queryParam);
             var result = await _httpClient.GetFromJsonAsync<PageList<CinemaCenterDto>>(url);
             return result;

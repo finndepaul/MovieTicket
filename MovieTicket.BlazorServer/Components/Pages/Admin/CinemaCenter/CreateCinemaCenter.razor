@@ -27,6 +27,17 @@
 		</div>
 
 		<div class="row mt-3">
+			<!-- Địa chỉ -->
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
+					<textarea class="form-control" id="diaChiCity" rows="3" @bind="cinemaCenterCreateRequest.AddresCity"></textarea>
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddresCity)" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3">
 			<!-- Địa chỉ map -->
 			<div class="col-md-12">
 				<div class="form-group">
