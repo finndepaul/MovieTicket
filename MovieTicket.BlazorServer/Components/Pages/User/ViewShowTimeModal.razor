@@ -1,156 +1,155 @@
 @using MovieTicket.Application.DataTransferObjs.ShowTime
+
 <div class="container-fluid ">
-	<ul class="nav" style="flex-wrap: wrap">
-		@if (dateRange != null)
-		{
-			@foreach (var item in dateRange)
-			{
-				<li class="date @(selectedDate == item ? "active" : "")" id="myButton">
-					<a class="nav-link" @onclick="() => GetDate(item)">
-						<span class="tab-number">@item.ToString("dd")</span>
-						<span class="month">/@item.ToString("MM")</span>
-						<span class="month"> - @ChangeDayOfWeek(item.DayOfWeek.ToString())</span>
-					</a>
-				</li>
-			}
-		}
-	</ul>
-	<ul class="nav mt-3">
-		@if (ShowTimes.Any())
-		{
-			@foreach (var item in ShowTimeSort.Distinct(new ShowTimeComparer()))
-			{
-				var isActive = (item.ScreenTypeName == selectedScreenTypeSort && item.TranslationTypeName == selectedTranslationTypeSort) ? "active" : "";
+    <ul class="nav" style="flex-wrap: wrap">
+        @if (dateRange != null)
+        {
+            @foreach (var item in dateRange)
+            {
+                <li class="date @(selectedDate == item ? "active" : "")" id="myButton">
+                    <a class="nav-link" @onclick="() => GetDate(item)">
+                        <span class="tab-number">@item.ToString("dd")</span>
+                        <span class="month">/@item.ToString("MM")</span>
+                        <span class="month"> - @ChangeDayOfWeek(item.DayOfWeek.ToString())</span>
+                    </a>
+                </li>
+            }
+        }
+    </ul>
+    <ul class="nav mt-3">
+        @if (ShowTimes.Any())
+        {
+            @foreach (var item in ShowTimeSort.Distinct(new ShowTimeComparer()))
+            {
+                var isActive = (item.ScreenTypeName == selectedScreenTypeSort && item.TranslationTypeName == selectedTranslationTypeSort) ? "active" : "";
 
-				<li class="sort-show-time @isActive" @onclick="() => SelectedSort(item.ScreenTypeName, item.TranslationTypeName)" id="myButton1">
-					@item.ScreenTypeName - @item.TranslationTypeName
-				</li>
-			
-			}
+                <li class="sort-show-time @isActive" @onclick="() => SelectedSort(item.ScreenTypeName, item.TranslationTypeName)" id="myButton1">
+                    @item.ScreenTypeName - @item.TranslationTypeName
+                </li>
 
-		}
-	</ul>
+            }
+        }
+    </ul>
 </div>
 
 <div class="container-fluid px-3 scrollable" style="height: 580px">
-	@if (ShowTimes.Any())
-	{
-		string previousCinemaCenter = null;
-		string previousScreenType = null;
+    @if (ShowTimes.Any())
+    {
+        string previousCinemaCenter = null;
+        string previousScreenType = null;
 
-		foreach (var item in ShowTimes)
-		{
-			if (item.CinemaCenterName != previousCinemaCenter || item.ScreenTypeName != previousScreenType)
-			{
-				<hr />
-				<div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
-				<div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
-				previousCinemaCenter = item.CinemaCenterName;
-				previousScreenType = item.ScreenTypeName;
-			}
-			<button class="btn btn-outline-secondary me-2 my-2" @onclick="() => CheckLogged(item.Id,item.StartTime.Value)">
-				@item.StartTime.Value.ToString("HH:mm")
-			</button>
-		}
-	}
-	else
-	{
-		<div class="">Xin lỗi, không có suất chiếu vào ngày này, hãy chọn một ngày khác.</div>
-	}
+        foreach (var item in ShowTimes)
+        {
+            if (item.CinemaCenterName != previousCinemaCenter || item.ScreenTypeName != previousScreenType)
+            {
+                <hr />
+                <div class="text-dark fs-3 mb-2">@item.CinemaCenterName</div>
+                <div class="text-dark fs-5 mb-2">Rạp @item.ScreenTypeName</div>
+                previousCinemaCenter = item.CinemaCenterName;
+                previousScreenType = item.ScreenTypeName;
+            }
+            <button class="btn btn-outline-secondary me-2 my-2" @onclick="() => CheckLogged(item.Id,item.StartTime.Value)">
+                @item.StartTime.Value.ToString("HH:mm")
+            </button>
+        }
+    }
+    else
+    {
+        <div class="">Xin lỗi, không có suất chiếu vào ngày này, hãy chọn một ngày khác.</div>
+    }
 </div>
 
 <style>
-	.sort-show-time.active {
-		background-color: #0056b3;
-		color: white;
-	}
+    .sort-show-time.active {
+    background-color: #0056b3;
+    color: white;
+    }
 
-	.sort-show-time {
-		background-color: white;
-		color: black;
-		border: 1px solid #0056b3;
-		border-radius: 5px;
-		padding: 5px 10px;
-		margin-right: 5px;
-		cursor: pointer;
-	}
+    .sort-show-time {
+    background-color: white;
+    color: black;
+    border: 1px solid #0056b3;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    }
 
-	.date.active {
-		border-bottom: 3px solid #0056b3;
-	}
+    .date.active {
+    border-bottom: 3px solid #0056b3;
+    }
 
-		.date.active a {
-			color: #0056b3;
-		}
+    .date.active a {
+    color: #0056b3;
+    }
 
-	.date a {
-		color: black;
-	}
+    .date a {
+    color: black;
+    }
 
-	.date {
-		border-bottom: 1px solid rgb(199, 200, 201);
-		transition: background-color 0.3s ease, color 0.3s ease;
-	}
+    .date {
+    border-bottom: 1px solid rgb(199, 200, 201);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-		.date:hover {
-			background-color: #f8f9fa;
-			cursor: pointer;
-		}
+    .date:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    }
 
-	.nav-tabs .nav-link {
-		font-size: 24px;
-		font-weight: bold;
-	}
+    .nav-tabs .nav-link {
+    font-size: 24px;
+    font-weight: bold;
+    }
 
-	.tab-number {
-		font-size: 40px;
-	}
+    .tab-number {
+    font-size: 40px;
+    }
 
-	.scrollable {
-		height: 100%;
-		accent-color: rgb(56, 172, 239);
-		overflow-y: scroll;
-	}
+    .scrollable {
+    height: 100%;
+    accent-color: rgb(56, 172, 239);
+    overflow-y: scroll;
+    }
 </style>
 
 @code {
-	[Parameter]
-	public string Id { get; set; }
-	[Parameter] public EventCallback<Guid> OnShowtimeSelected { get; set; }
-	[Parameter] public EventCallback LoginCallback { get; set; }
-	private AuthenticationState AuthenState;
-	private List<DateTime> dateRange = new List<DateTime>();
-	private DateTime selectedDate = DateTime.Today;
-	private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
-	private PagingParameters PagingParameters = new PagingParameters();
-	private List<ShowTimeDto> ShowTimeSort = new List<ShowTimeDto>();
-	public MetaData MetaData { get; set; } = new MetaData();
-	private string selectedScreenTypeSort;
-	private string selectedTranslationTypeSort;
-	private Guid ShowTimeId;
+    [Parameter] public string Id { get; set; }
+    [Parameter] public EventCallback<Guid> OnShowtimeSelected { get; set; }
+    [Parameter] public EventCallback LoginCallback { get; set; }
+    private AuthenticationState AuthenState;
+    private List<DateTime> dateRange = new List<DateTime>();
+    private DateTime selectedDate = DateTime.Today;
+    private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
+    private PagingParameters PagingParameters = new PagingParameters();
+    private List<ShowTimeDto> ShowTimeSort = new List<ShowTimeDto>();
+    public MetaData MetaData { get; set; } = new MetaData();
+    private string selectedScreenTypeSort;
+    private string selectedTranslationTypeSort;
+    private Guid ShowTimeId;
+    private string UserRole = null;
 
-	protected async override Task OnParametersSetAsync()
-	{
-		if (!String.IsNullOrEmpty(Id))
-		{
-			var lstObjScheduel = await ScheduelService.GetAllAsync();
-			var film = lstObjScheduel.FirstOrDefault(x => x.FilmId == Guid.Parse(Id));
+    protected async override Task OnParametersSetAsync()
+    {
+        if (!String.IsNullOrEmpty(Id))
+        {
+            var lstObjScheduel = await ScheduelService.GetAllAsync();
+            var film = lstObjScheduel.FirstOrDefault(x => x.FilmId == Guid.Parse(Id));
 
-			if (film != null)
-			{
-				dateRange = GetDatesInRange(DateTime.Now, DateTime.Now.AddDays(14));
-			}
-
-			await LoadShowTimesAsync();
-			// Set the first item's ScreenType and TranslationType as active by default
-			if (ShowTimeSort.Any())
-			{
-				var firstItem = ShowTimeSort.Distinct(new ShowTimeComparer()).First();
-				selectedScreenTypeSort = firstItem.ScreenTypeName;
-				selectedTranslationTypeSort = firstItem.TranslationTypeName;
-			}
-		}
-	}
+            if (film != null)
+            {
+                dateRange = GetDatesInRange(DateTime.Now, DateTime.Now.AddDays(14));
+            }
+            await LoadShowTimesAsync();
+            // Set the first item's ScreenType and TranslationType as active by default
+            if (ShowTimeSort.Any())
+            {
+                var firstItem = ShowTimeSort.Distinct(new ShowTimeComparer()).First();
+                selectedScreenTypeSort = firstItem.ScreenTypeName;
+                selectedTranslationTypeSort = firstItem.TranslationTypeName;
+            }
+        }
+    }
 
 	private async Task LoadShowTimesAsync()
 	{
@@ -170,13 +169,15 @@
 		{
 			ShowTimes = ShowTimeSort.Where(x => x.ScreenTypeName == ShowTimeSort[0].ScreenTypeName && x.TranslationTypeName == ShowTimeSort[0].TranslationTypeName).ToList();
 		}
+        Console.WriteLine($"ShowTimes count: {ShowTimes.Count}");
 		MetaData = paginationResponse.MetaData;
 		AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+		UserRole = AuthenState.User.FindFirstValue(ClaimTypes.Role);
 	}
 
 	private async Task CheckLogged(Guid showtimeId,DateTime startTime)
 	{
-		if (AuthenState.User.Identity.IsAuthenticated)
+		if (UserRole=="User")
 		{
 			if (DateTime.Now.AddMinutes(15) >= startTime)
 			{
@@ -186,7 +187,6 @@
 			{
 				await OpenSeatSelection(showtimeId);
 			}
-			
 		}
 		else
 		{

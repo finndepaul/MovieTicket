@@ -12,82 +12,84 @@ using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
-	public class AuthenService : IAuthenService
-	{
-		private const string JWTToken = nameof(JWTToken);
+    public class AuthenService : IAuthenService
+    {
+        private const string JWTToken = nameof(JWTToken);
 
-		private readonly HttpClient httpClient;
-		private readonly ILocalStorageService localStorageService;
-		private readonly IConfiguration configuration;
-		private readonly ProtectedLocalStorage protectedLocalStorage;
-		private readonly NavigationManager navigationManager;
+        private readonly HttpClient httpClient;
+        private readonly ILocalStorageService localStorageService;
+        private readonly IConfiguration configuration;
+        private readonly ProtectedLocalStorage protectedLocalStorage;
+        private readonly NavigationManager navigationManager;
 
-		public AuthenService(ProtectedLocalStorage protectedLocalStorage, NavigationManager navigationManager, IConfiguration configuration, HttpClient httpClient)
-		{
-			this.configuration = configuration;
-			this.protectedLocalStorage = protectedLocalStorage;
-			this.navigationManager = navigationManager;
-			this.httpClient = httpClient;
-		}
+        public AuthenService(ProtectedLocalStorage protectedLocalStorage, NavigationManager navigationManager, IConfiguration configuration, HttpClient httpClient, ILocalStorageService localStorageService)
+        {
+            this.configuration = configuration;
+            this.protectedLocalStorage = protectedLocalStorage;
+            this.navigationManager = navigationManager;
+            this.httpClient = httpClient;
+            this.localStorageService = localStorageService;
+        }
 
-		public async Task<LoginRespone> LoginAsync(LoginDTO loginModel)
-		{
-			var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/Login", loginModel);
-			var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
-			await protectedLocalStorage.SetAsync(JWTToken, result.JWTToken);
-			return result;
-		}
+        public async Task<LoginRespone> LoginAsync(LoginDTO loginModel)
+        {
+            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/Login", loginModel);
+            var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
+            await localStorageService.SetItemAsync(JWTToken, result.JWTToken);
+            //Constants.JWTToken = result.JWTToken;
+            return result;
+        }
 
-		public async Task<RegisterResponse> RegisterAsync(AccountRegisterRequest registerModel)
-		{
-			var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Account/Register", registerModel);
-			var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
-			return result;
-		}
+        public async Task<RegisterResponse> RegisterAsync(AccountRegisterRequest registerModel)
+        {
+            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Account/Register", registerModel);
+            var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
+            return result;
+        }
 
-		public async Task<LoginRespone> RefreshToken(UserSession session)
-		{
-			var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", session);
-			var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
-			return result;
-		}
+        public async Task<LoginRespone> RefreshToken(UserSession session)
+        {
+            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", session);
+            var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
+            return result;
+        }
 
-		private void GetProtectedClient()
-		{
-			if (Constants.JWTToken == "") return;
-			httpClient.DefaultRequestHeaders.Authorization =
-				new AuthenticationHeaderValue("Bearer", Constants.JWTToken);
-		}
+        private void GetProtectedClient()
+        {
+            if (Constants.JWTToken == "") return;
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", Constants.JWTToken);
+        }
 
-		private static bool CheckIfUnauthorized(HttpResponseMessage message)
-		{
-			if (message.StatusCode == HttpStatusCode.Unauthorized)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+        private static bool CheckIfUnauthorized(HttpResponseMessage message)
+        {
+            if (message.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-		private async Task GetRefreshToken()
-		{
-			var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", new UserSession() { JWTToken = Constants.JWTToken });
-			var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
-			Constants.JWTToken = result!.JWTToken;
-		}
+        private async Task GetRefreshToken()
+        {
+            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", new UserSession() { JWTToken = Constants.JWTToken });
+            var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
+            Constants.JWTToken = result!.JWTToken;
+        }
 
-		public async Task Logout()
-		{
-			await protectedLocalStorage.DeleteAsync(JWTToken);
-			Constants.JWTToken = "";
-			CustomAuthenticationStateProvider customAuthStateProvider = new CustomAuthenticationStateProvider(localStorageService);
-			await customAuthStateProvider.GetAuthenticationStateAsync();
-			customAuthStateProvider.UpdateAuthenticationState("");
-			httpClient.DefaultRequestHeaders.Authorization = null;
-			httpClient.DefaultRequestHeaders.Remove("Authorization");
-			navigationManager.NavigateTo("/");
-		}
-	}
+        public async Task Logout()
+        {
+            await localStorageService.RemoveItemAsync(JWTToken);
+            Constants.JWTToken = "";
+            CustomAuthenticationStateProvider customAuthStateProvider = new CustomAuthenticationStateProvider(localStorageService);
+            await customAuthStateProvider.GetAuthenticationStateAsync();
+            customAuthStateProvider.UpdateAuthenticationState("");
+            httpClient.DefaultRequestHeaders.Authorization = null;
+            httpClient.DefaultRequestHeaders.Remove("Authorization");
+            navigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
 }

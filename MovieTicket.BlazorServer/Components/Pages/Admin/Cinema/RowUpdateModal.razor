@@ -88,7 +88,8 @@ else
                 {
                     Id = seat.Id,
                     SeatTypeId = request.SeatTypeId,
-                    Status = request.Status
+                    Status = request.Status,
+                    Selection = seat.Selection
                 });
         }
         var response = await SeatService.UpdateRange(lstSeatUpdateRequests);
