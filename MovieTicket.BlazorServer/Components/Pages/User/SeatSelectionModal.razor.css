@@ -6,55 +6,71 @@
     -webkit-transition: all 0.3s ease-in-out;
 }
 
-    .btn:hover {
+    /*.btn:hover {
         -webkit-transform: scale(1.1);
+    }*/
+
+    .btn.active {
+        background-color: orangered;
+        color: white;
+        outline: none;
     }
+
+/*[aria-pressed="false"] {
+    outline: solid;
+}*/
 
 .seat-unavailable {
     display: none;
 }
 
 [data-seat-status="Normal"] {
-    background-color: #7C4DFF;
-    color: #fff;
-    width: 50px;
-    height: 50px;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
     margin: 0px;
     padding: 10px;
+    outline: solid 3px #005a32 !important;
+    outline-offset: -4px;
 }
 
-    [data-seat-status="Normal"]:hover {
+/*[data-seat-status="Normal"]:hover {
         background-color: #7C4DFF;
         color: #fff;
-    }
+    }*/
 
 [data-seat-status="VIP"] {
-    background-color: #DD2C00;
-    color: #fff;
-    width: 50px;
-    height: 50px;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
     margin: 0px;
     padding: 10px;
+    outline: solid 3px #DD2C00 !important;
+    outline-offset: -4px;
 }
 
-    [data-seat-status="VIP"]:hover {
+/*[data-seat-status="VIP"]:hover {
         background-color: #DD2C00;
         color: #fff;
-    }
+    }*/
 
 [data-seat-status="Couple"] {
-    background-color: #FF8A80;
-    color: #fff;
-    width: 50px;
-    height: 50px;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
     margin: 0px;
     padding: 10px;
+    outline: solid 3px #FF8A80 !important;
+    outline-offset: -4px;
 }
 
-    [data-seat-status="Couple"]:hover {
+/*[data-seat-status="Couple"]:hover {
         background-color: #FF8A80;
         color: #fff;
-    }
+    }*/
 
 .row {
     padding: 0px;
@@ -64,8 +80,10 @@
 .col {
     padding: 0rem;
     width: 50px;
-    margin-left: 0.25rem;
+    /*margin-left: 0.25rem;
     margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+    margin-top: 0.25rem;*/
 }
 
 .seat-grid {

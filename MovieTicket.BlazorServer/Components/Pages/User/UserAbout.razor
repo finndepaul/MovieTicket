@@ -1,0 +1,28 @@
+﻿@page "/UserAbout/{Id:guid}"
+@using MovieTicket.Application.DataTransferObjs.About
+@inject IAboutService AboutService
+@layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+@if (about == null)
+{
+    <div class="container mt-4 text-center">
+        <p>Đang tải nội dung...</p>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="fr-view">
+            @((MarkupString)about.Content)
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private AboutDto about;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        about = await AboutService.GetByIdAsync(Id);
+    }
+}

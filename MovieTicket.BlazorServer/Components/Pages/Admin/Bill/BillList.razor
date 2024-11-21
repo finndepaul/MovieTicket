@@ -1,4 +1,6 @@
 ﻿@page "/bill-list"
+@using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Application.DataTransferObjs.Ticket
 <div class="container-fluid mt-4">
     <div class="row mb-3">
         <div class="col">
@@ -23,23 +25,34 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>Chú thuật sư (Phần cuối)</td>
-                <td><span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">Suất chiếu thường</span></td>
-                <td>GOLD CLASS HCinema Aeon Hà Đông</td>
-                <td><span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Đã thanh toán</span></td>
-                <td>20,000,000</td>
-                <td>23-09-2024 22:00:00</td>
-
-                <td>
-                    <a class="btn btn-info btn-sm" href="/bill-detail">View</a>
-                </td>
-            </tr>
+            @foreach (var item in lstBills)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.FilmName</td>
+                    <td><span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">Suất chiếu thường</span></td>
+                    <td>GOLD CLASS HCinema Aeon Hà Đông</td>
+                    <td><span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.Status</span></td>
+                    <td>@item.TotalMoney</td>
+                    <td>@item.CreateTime</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="bill-detail/@item.Id.ToString()">View</a>
+                    </td>
+                </tr>
+            }
+           
         </tbody>
     </table>
 </div>
 
 @code {
+    private List<BillDto> lstBills = new List<BillDto>();
+    private List<TicketDto> lstTicketDto = new List<TicketDto>();
+    private TicketDto ticketDto = new TicketDto();
+
+    protected async override Task OnInitializedAsync()
+    {
+       lstBills = await BillService.GetListBillAsync();       
+    }
 
 }

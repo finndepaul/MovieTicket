@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Domain.Entities;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
@@ -29,6 +31,16 @@ namespace MovieTicket.API.Controllers
             var register = _mapper.Map<Account>(registerRequest);
             var check = await _accountReadWrite.RegisterAsync(register);
             return Ok(check);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetAllAccPaging([FromQuery]PagingParameters pagingParameters)
+        {
+            var accounts = await _accountReadOnly.GetAllAccPaging(pagingParameters);
+            var data = accounts.Item.ToList();
+            return Ok(new PageList<AccountDto>(data.ToList(),
+                accounts.MetaData.TotalCount,
+                accounts.MetaData.CurrentPage,
+                accounts.MetaData.PageSize));
         }
 
         [HttpGet]

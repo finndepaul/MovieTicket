@@ -1,5 +1,8 @@
-﻿using MovieTicket.Application.DataTransferObjs.Account;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
+using MovieTicket.Application.DataTransferObjs.Film;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
@@ -38,6 +41,22 @@ namespace MovieTicket.BlazorServer.Services.Implements
         {
             var response = await _httpClient.PutAsJsonAsync($"api/Account/UpdateAccount", accountUpdateRequest);
             return await response.Content.ReadFromJsonAsync<AccountDto>();
+        }
+
+        public async Task<PageList<AccountDto>> GetAllAccPaginition(PagingParameters pagingParameters)
+        {
+            var queryParameters = new Dictionary<string, string>
+            {
+                ["pageNumber"] = pagingParameters.PageNumber.ToString(),
+                ["pageSize"] = pagingParameters.PageSize.ToString()
+            };
+
+            var url = QueryHelpers.AddQueryString("api/Account/GetAllAccPaging", queryParameters);
+            var response = await _httpClient.GetFromJsonAsync<PageList<AccountDto>>(url);
+            return response ?? new PageList<AccountDto>
+            {
+                Item = new List<AccountDto>(),
+            };
         }
     }
 }

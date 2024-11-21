@@ -1,0 +1,44 @@
+﻿@page "/create-about"
+@using MovieTicket.Application.DataTransferObjs.About
+@using MovieTicket.BlazorServer.Components.Pages.Admin.FroalaEditor
+@inject IAboutService aboutService
+@attribute [Authorize(Roles = "Admin")]
+<EditForm Model="createAboutDto" OnValidSubmit="HandleOnSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <a type="button" class="btn btn-light me-2" href="/list-about">Quay lại</a>
+        <button type="submit" class="btn btn-primary me-2">Tạo Nội dung</button>
+    </div>
+
+    <div class="mb-3">
+        <label for="Title" class="form-label">Title</label>
+        <InputText id="Title" class="form-control" @bind-Value="createAboutDto.Title" />
+        <ValidationMessage For="@(() => createAboutDto.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Content" class="form-label">Content</label>
+        <FroalaEditor @bind-Content="createAboutDto.Content" />
+        <ValidationMessage For="@(() => createAboutDto.Content)" />
+    </div>
+
+</EditForm>
+
+@code {
+    private CreateAboutDto createAboutDto = new CreateAboutDto();
+
+    private async Task HandleOnSubmit()
+    {
+        var result = await aboutService.CreateAsync(createAboutDto);
+        if (result != null)
+        {
+            await JSRuntime.ToastrSuccess("Tạo thành công");
+            NavigationManager.NavigateTo("/list-about");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Tạo thất bại");
+        }
+    }
+
+}

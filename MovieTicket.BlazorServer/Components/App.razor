@@ -20,7 +20,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-
+    <link href='https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js'></script>
+  
     <style>
         *{
             font-family: 'Roboto', sans-serif;
@@ -45,6 +47,13 @@
     <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/froala-blazor.js"></script>
+    <script>
+            function openLoginModal() {
+                   var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+               }
+    </script>
 </body>
 
 </html>

@@ -93,12 +93,12 @@
         var result = await ComboService.Update(Id, updateComboRequest);
         if (result != null)
         {
-            await JSRuntime.ToastrSuccess("Update combo successfully");
+            await JSRuntime.ToastrSuccess("Cập nhật thành công");
             NavigationManager.NavigateTo("/listcombo");
         }
         else
         {
-            await JSRuntime.ToastrError("Update combo failed");
+            await JSRuntime.ToastrError("Cập nhật thất bại");
         }
 
     }

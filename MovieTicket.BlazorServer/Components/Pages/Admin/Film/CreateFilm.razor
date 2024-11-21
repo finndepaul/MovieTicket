@@ -161,7 +161,11 @@
         </div>
     </EditForm>
 </div>
-
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
 @code {
     private FilmCreateRequest filmCreateRequest = new FilmCreateRequest();
     private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
@@ -182,7 +186,7 @@
         filmCreateRequest.ScreenTypeIds = selectedScreenTypeIds ;
         filmCreateRequest.TranslationTypeIds = selectedTranslationTypeId;
         await FilmService.CreateFilm(filmCreateRequest);
-        await _JSRuntime.ToastrSuccess("Create film successfully");
+        await _JSRuntime.ToastrSuccess("Tạo thành công");
         NavigationManager.NavigateTo("/list-film");
 
     }
