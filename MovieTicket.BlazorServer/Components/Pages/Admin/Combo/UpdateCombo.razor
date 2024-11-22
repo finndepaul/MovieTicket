@@ -4,7 +4,7 @@
 <EditForm Model="updateComboRequest" OnValidSubmit="HandleOnSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <a type="button" class="btn btn-light me-2" href="/listcombo">Quay lại</a>
+        <a type="button" class="btn btn-light me-2" href="/combo">Quay lại</a>
         <button type="submit" class="btn btn-primary me-2">Update</button>
     </div>
 
@@ -94,7 +94,7 @@
         if (result != null)
         {
             await JSRuntime.ToastrSuccess("Update combo successfully");
-            NavigationManager.NavigateTo("/listcombo");
+            NavigationManager.NavigateTo("/combo");
         }
         else
         {

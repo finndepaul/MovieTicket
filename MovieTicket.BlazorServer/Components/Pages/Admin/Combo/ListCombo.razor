@@ -1,4 +1,4 @@
-﻿@page "/listcombo"
+﻿@page "/combo"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 <div class="modal fade" id="DeleteFilmModalToggle" aria-hidden="true" aria-labelledby="DeleteFilmModalToggle" tabindex="-1">
@@ -19,7 +19,7 @@
 </div>
 
 <div class="container-fluid">
-    <a class="btn btn-primary mb-3" href="/createcombo">+ Tạo khuyến mại</a>
+    <a class="btn btn-primary mb-3" href="/combo/create">+ Tạo khuyến mại</a>
     <button class="btn btn-outline-secondary mb-3">
         <i class="bi bi-arrow-clockwise"></i> Refresh
     </button>
