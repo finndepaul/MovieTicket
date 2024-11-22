@@ -12,6 +12,9 @@ namespace MovieTicket.Application.DataTransferObjs.CinemaCenter
         [MinLength(10, ErrorMessage = "Địa chỉ phải có ít nhất 10 ký tự")]
         public string Address { get; set; }
 
+        [Required(ErrorMessage = "Địa chỉ thành phố là bắt buộc")]
+        public string AddresCity { get; set; }
+
         [Required(ErrorMessage = "Địa chỉ bản đồ là bắt buộc")]
         [MinLength(15, ErrorMessage = "Địa chỉ map phải có ít nhất 15 ký tự")]
         public string AddressMap { get; set; }

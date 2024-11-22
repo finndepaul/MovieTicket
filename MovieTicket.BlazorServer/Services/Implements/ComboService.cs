@@ -1,4 +1,7 @@
-﻿using MovieTicket.Application.DataTransferObjs.Combo;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using MovieTicket.Application.DataTransferObjs.Combo;
+using MovieTicket.Application.DataTransferObjs.Film;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer.Services.Implements
@@ -27,6 +30,22 @@ namespace MovieTicket.BlazorServer.Services.Implements
         public async Task<List<ComboDto>> GetAll()
         {
             return await _httpClient.GetFromJsonAsync<List<ComboDto>>("api/Combo/GetAll");
+        }
+
+        public async Task<PageList<ComboDto>> GetAllPaging(PagingParameters pagingParameters)
+        {
+            var queryParameters = new Dictionary<string, string>
+            {
+                ["pageNumber"] = pagingParameters.PageNumber.ToString(),
+                ["pageSize"] = pagingParameters.PageSize.ToString()
+            };
+
+            var url = QueryHelpers.AddQueryString("api/Combo/GetAllPaging", queryParameters);
+            var response = await _httpClient.GetFromJsonAsync<PageList<ComboDto>>(url);
+            return response ?? new PageList<ComboDto>
+            {
+                Item = new List<ComboDto>(),
+            };
         }
 
         public async Task<ComboDto> GetById(Guid id)

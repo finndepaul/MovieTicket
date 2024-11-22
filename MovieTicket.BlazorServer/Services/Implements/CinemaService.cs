@@ -84,5 +84,11 @@ namespace MovieTicket.BlazorServer.Services.Implements
             var result = await response.Content.ReadFromJsonAsync<ResponseObject<CinemaDto>>();
             return result;
         }
-    }
+
+		public async Task<List<CinemaDto>> GetAll()
+		{
+			var result = await _httpClient.GetFromJsonAsync<List<CinemaDto>>("api/Cinema/GetAllCinema");
+            return result;
+		}
+	}
 }

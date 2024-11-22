@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Combo;
+using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -27,7 +29,16 @@ namespace MovieTicket.API.Controllers
         {
             return Ok(await comboReadOnly.GetAllAsync());
         }
-
+        [HttpGet]
+        public async Task<IActionResult> GetAllPaging([FromQuery] PagingParameters pagingParameters)
+        {
+            var result = await comboReadOnly.GetAllPaging(pagingParameters);
+            var data = result.Item.ToList();
+            return Ok(new PageList<ComboDto>(data.ToList(),
+                result.MetaData.TotalCount,
+                result.MetaData.CurrentPage,
+                result.MetaData.PageSize));
+        }
         [HttpGet]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {

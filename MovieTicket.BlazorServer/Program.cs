@@ -41,12 +41,32 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<IShowTimeService, ShowTimeSevice>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IComboService, ComboService>();
+            builder.Services.AddScoped<IAboutService, AboutService>();
             builder.Services.AddScoped<IBillService, BillService>();
             builder.Services.AddScoped<ITicketService, TicketService>();
 			builder.Services.AddScoped<IBillComboService, BillComboService>();
 			builder.Services.AddAuthentication()
                .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
             builder.Services.AddSingleton<AppState>();
+            //builder.Services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(options =>
+            //{
+            //    var jwtSettings = builder.Configuration.GetSection("JWTSettings");
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuer = true,
+            //        ValidateAudience = true,
+            //        ValidateLifetime = true,
+            //        ValidateIssuerSigningKey = true,
+            //        ValidIssuer = jwtSettings["ValidIssuer"],
+            //        ValidAudience = jwtSettings["ValidAudience"],
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"])),
+            //        ClockSkew = TimeSpan.Zero
+            //    };
+            //});
 
             var cultureInfo = new CultureInfo("en-UK");
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
@@ -64,7 +84,7 @@ namespace MovieTicket.BlazorServer
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            //app.UseAuthentication();
             app.UseAuthorization();
             app.UseAntiforgery();
             app.UseStaticFiles();

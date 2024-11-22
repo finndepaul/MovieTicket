@@ -1,4 +1,4 @@
-﻿@page "/combo/update/{Id:guid}"
+@page "/combo/update/{Id:guid}"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 <EditForm Model="updateComboRequest" OnValidSubmit="HandleOnSubmit">
@@ -93,12 +93,12 @@
         var result = await ComboService.Update(Id, updateComboRequest);
         if (result != null)
         {
-            await JSRuntime.ToastrSuccess("Update combo successfully");
+            await JSRuntime.ToastrSuccess("Cập nhật thành công");
             NavigationManager.NavigateTo("/combo");
         }
         else
         {
-            await JSRuntime.ToastrError("Update combo failed");
+            await JSRuntime.ToastrError("Cập nhật thất bại");
         }
 
     }

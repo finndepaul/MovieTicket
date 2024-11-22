@@ -13,5 +13,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadOnly
         Task<IQueryable<CinemaDto>> GetAllAsync(string? cinemaCenterName);
 
         Task<ResponseObject<CinemaDto>> GetCinemaById(Guid id);
+        Task<IQueryable<CinemaDto>> GetAll();
     }
 }

@@ -79,9 +79,11 @@
 	private ShowTimeCreateRequest ShowTime = new ShowTimeCreateRequest();
 	private List<ScreenTypeDto> ScreenTypeDtos = new List<ScreenTypeDto>();
 	private List<ScreenTypeDto> ScreenTypeValidate = new List<ScreenTypeDto>();
+	private CinemaDto cinemas;
 	private List<TranslationTypeDto> TranslationTypeDtos = new List<TranslationTypeDto>();
 	private List<TranslationTypeDto> TranslationTypeValidate = new List<TranslationTypeDto>();
 	private IEnumerable<ScheduleDto> scheduleDtos = new List<ScheduleDto>();
+	private CinemaTypeDto cinemaTypes;
 	public Guid idFilm;
 	private string selectedFilmId = "";
 	private string startTimeValue = "";
@@ -96,7 +98,7 @@
 	{
 		Films = await FilmService.GetAllFilms();
 		scheduleDtos = await ScheduelService.GetAllAsync();
-		ScreenTypeDtos = await ScreenTypeService.GetAllScreenTypes();
+		ScreenTypeDtos = await ScreenTypeService.GetAllScreenTypes();	
 		TranslationTypeDtos = await TranslationTypeService.GetAllTranslationTypes();
 		FilmValidate = from film in Films
 								join schedule in scheduleDtos on film.Id equals schedule.FilmId
@@ -122,6 +124,11 @@
 	private async Task OnFilmChange(ChangeEventArgs e)
 	{
 		selectedFilmId = e.Value.ToString();
+		var result = await CinemaService.GetCinemaById(CinemaId.Value);
+		cinemas = result.Data;
+		var cinemaTypeDtosData = await CinemaTypeService.GetListCinemaTypesAsync();
+		cinemaTypes = cinemaTypeDtosData.FirstOrDefault(x => x.Id == cinemas.CinemaTypeId);
+
 		if (Guid.TryParse(selectedFilmId, out Guid filmId))
 		{
 			ShowTime.FilmId = filmId;
@@ -129,14 +136,23 @@
 			var schedule = scheduleDtos.FirstOrDefault(x => x.FilmId == filmId);
 			ScreenTypeValidate.Clear();
 			TranslationTypeValidate.Clear();
+
 			if (Films.Any())
 			{
-				var dateFilm = FilmValidate.FirstOrDefault(x => x.Id == filmId);
-
-				var lstScreenTypeValidate = Films.FirstOrDefault(x => x.Id == filmId).ScreenTypeDtos.ToList();
-				TranslationTypeValidate = Films.FirstOrDefault(x => x.Id == filmId).TranslationTypeDtos.ToList();
-				ScreenTypeValidate = lstScreenTypeValidate;
+				var film = Films.FirstOrDefault(x => x.Id == filmId);
+				if (film != null)
+				{
+					// Danh sách hình thức chiếu phù hợp với loại phòng chiếu
+					var lstScreenTypeValidate = film.ScreenTypeDtos
+						.Where(x =>
+							x.Type == cinemaTypes.Name || // Hình thức chiếu giống loại phòng chiếu
+							((cinemaTypes.Name == "Premium Class" || cinemaTypes.Name == "Gold Class") && x.Type == "2D") // Điều kiện loại phòng đặc biệt
+						).ToList();				
+					TranslationTypeValidate = film.TranslationTypeDtos.ToList();
+					ScreenTypeValidate = lstScreenTypeValidate;
+				}
 			}
+
 			if (schedule != null)
 			{
 				ShowTime.ScheduleId = schedule.Id;

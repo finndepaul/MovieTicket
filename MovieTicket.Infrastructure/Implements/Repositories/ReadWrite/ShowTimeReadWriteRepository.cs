@@ -172,7 +172,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			return new ResponseObject<ShowTime>
 			{
 				Data = newShowTime,
-				Message = "Showtime created successfully.",
+				Message = "Tạo thành công suất chiếu",
 				Status = StatusCodes.Status200OK
 			};
 		}
@@ -185,19 +185,160 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				return new ResponseObject<ShowTime>
 				{
 					Data = null,
-					Message = "ShowTime not found",
+					Message = "Không tìm thấy suất chiếu",
 					Status = StatusCodes.Status404NotFound
 				};
 			}
-			_db.ShowTimes.Remove(showTime);
+			var checkShowTime = await _db.Tickets.AnyAsync(x => x.ShowTimeId == id);
+			if (checkShowTime)
+			{
+				return new ResponseObject<ShowTime>
+				{
+					Data = null,
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = "Không thể xóa suất chiếu vì nó được tham chiếu",
+				};
+			}
+            _db.ShowTimes.Remove(showTime);
 			await _db.SaveChangesAsync();
 			return new ResponseObject<ShowTime>
 			{
 				Data = showTime,
-				Message = "Delete success",
+				Message = "Xóa thành công",
 				Status = StatusCodes.Status200OK
 			};
 		}
 
-	}
+        public async Task<ResponseObject<ShowTime>> Update(ShowTimeUpdateRequest showTime)
+        {
+            // Lấy suất chiếu cần cập nhật
+            var existingShowTime = await _db.ShowTimes.FindAsync(showTime.Id);
+            if (existingShowTime == null)
+            {
+                return new ResponseObject<ShowTime>
+                {
+                    Data = null,
+                    Message = "không tìm thấy",
+                    Status = StatusCodes.Status404NotFound
+                };
+            }
+
+            // Check null các trường bắt buộc
+            if (!showTime.FilmId.HasValue || !showTime.ScheduleId.HasValue || !showTime.CinemaId.HasValue ||
+                !showTime.ScreenTypeId.HasValue || !showTime.TranslationTypeId.HasValue ||
+                !showTime.StartTime.HasValue || !showTime.EndTime.HasValue)
+            {
+                return new ResponseObject<ShowTime>
+                {
+                    Data = null,
+                    Message = "Thiếu dữ liệu",
+                    Status = StatusCodes.Status400BadRequest
+                };
+            }
+
+            var eightAM = new TimeSpan(8, 0, 0);
+            var eightPM = new TimeSpan(23, 0, 0);
+
+            // Tìm suất chiếu gần nhất trước thời gian bắt đầu của suất chiếu đang cập nhật
+            var previousTimeShowTime = await _db.ShowTimes
+                .Where(st => st.CinemaId == showTime.CinemaId && st.ShowtimeDate == showTime.ShowtimeDate && st.Id != showTime.Id)
+                .Where(st => st.EndTime < showTime.StartTime)
+                .OrderByDescending(st => st.EndTime)
+                .FirstOrDefaultAsync();
+
+            // Tìm suất chiếu có thời gian bắt đầu gần nhất sau thời gian kết thúc của suất chiếu đang cập nhật
+            var nextShowTime = await _db.ShowTimes
+                .Where(st => st.CinemaId == showTime.CinemaId && st.ShowtimeDate == showTime.ShowtimeDate && st.Id != showTime.Id)
+                .Where(st => st.StartTime > showTime.EndTime)
+                .OrderBy(st => st.StartTime)
+                .FirstOrDefaultAsync();
+
+            // Tìm suất chiếu có thời gian trùng nhau trong cùng một ngày
+            var overlappingShowTime = await _db.ShowTimes
+                .Where(st => st.CinemaId == showTime.CinemaId && st.ShowtimeDate == showTime.ShowtimeDate && st.Id != showTime.Id)
+                .Where(st => (showTime.StartTime >= st.StartTime && showTime.StartTime <= st.EndTime)
+                             || (showTime.EndTime >= st.StartTime && showTime.EndTime <= st.EndTime))
+                .FirstOrDefaultAsync();
+
+            // Kiểm tra trùng giờ suất chiếu
+            if (overlappingShowTime != null)
+            {
+                return new ResponseObject<ShowTime>
+                {
+                    Data = null,
+                    Message = "Giờ chiếu phim trùng với giờ chiếu phim hiện tại.",
+                    Status = StatusCodes.Status400BadRequest
+                };
+            }
+
+            // Kiểm tra giờ bắt đầu
+            if (showTime.StartTime.Value.TimeOfDay < eightAM)
+            {
+                return new ResponseObject<ShowTime>
+                {
+                    Data = null,
+                    Message = "Giờ bắt đầu phải lớn hơn hoặc bằng 8 giờ sáng.",
+                    Status = StatusCodes.Status400BadRequest
+                };
+            }
+
+            if (showTime.StartTime.Value.TimeOfDay > eightPM)
+            {
+                return new ResponseObject<ShowTime>
+                {
+                    Data = null,
+                    Message = "Giờ bắt đầu phải nhỏ hơn hoặc bằng 23 giờ.",
+                    Status = StatusCodes.Status400BadRequest
+                };
+            }
+
+            // Kiểm tra khoảng cách thời gian với suất chiếu trước đó
+            if (previousTimeShowTime != null)
+            {
+                var checkStartTime = showTime.StartTime.Value - previousTimeShowTime.EndTime.Value;
+                if (checkStartTime.TotalMinutes < 30)
+                {
+                    return new ResponseObject<ShowTime>
+                    {
+                        Data = null,
+                        Message = "Giờ chiếu phải cách giờ chiếu trước ít nhất 30 phút.",
+                        Status = StatusCodes.Status400BadRequest
+                    };
+                }
+            }
+
+            // Kiểm tra khoảng cách thời gian với suất chiếu tiếp theo
+            if (nextShowTime != null)
+            {
+                var checkEndTime = nextShowTime.StartTime.Value - showTime.EndTime.Value;
+                if (checkEndTime.TotalMinutes < 30)
+                {
+                    return new ResponseObject<ShowTime>
+                    {
+                        Data = null,
+                        Message = "Giờ chiếu phải cách giờ chiếu tiếp theo 30 phút.",
+                        Status = StatusCodes.Status400BadRequest
+                    };
+                }
+            }
+
+            // Cập nhật thông tin suất chiếu
+            existingShowTime.ScheduleId = showTime.ScheduleId.Value;
+            existingShowTime.CinemaId = showTime.CinemaId.Value;
+            existingShowTime.ScreenTypeId = showTime.ScreenTypeId.Value;
+            existingShowTime.TranslationTypeId = showTime.TranslationTypeId.Value;
+            existingShowTime.StartTime = showTime.StartTime.Value;
+            existingShowTime.EndTime = showTime.EndTime.Value;
+            _db.ShowTimes.Update(existingShowTime);
+            await _db.SaveChangesAsync();
+
+            return new ResponseObject<ShowTime>
+            {
+                Data = existingShowTime,
+                Message = "Update thành công",
+                Status = StatusCodes.Status200OK
+            };
+        }
+
+    }
 }
