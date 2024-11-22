@@ -8,24 +8,20 @@ namespace MovieTicket.BlazorServer.Authentication
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService _localStorageService;
+
         public CustomAuthenticationStateProvider(ILocalStorageService localStorageService)
         {
             _localStorageService = localStorageService;
         }
         private ClaimsPrincipal anon = new ClaimsPrincipal(new ClaimsIdentity());
 
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
-                //if (string.IsNullOrEmpty(Constants.JWTToken))
-                //    return await Task.FromResult(new AuthenticationState(anon));
-
-                //var getUserClaims = DecryptJWTService.DecryptToken(Constants.JWTToken);
-                //if (getUserClaims == null)
-                //    return await Task.FromResult(new AuthenticationState(anon));
-
-                var jwtToken = await _localStorageService.GetItemAsync<string>("JWTToken");
+                var jwtToken = Constants.JWTToken;
+                //Constants.JWTToken = "";
                 if (string.IsNullOrEmpty(jwtToken))
                     return await Task.FromResult(new AuthenticationState(anon));
 
@@ -53,6 +49,7 @@ namespace MovieTicket.BlazorServer.Authentication
                     new Claim(ClaimTypes.Role, claims.Role),
                     new Claim(ClaimTypes.NameIdentifier, claims.UserId)
             }, "jwt"));
+
         }
 
         public async Task UpdateAuthenticationState(string jwtToken)
