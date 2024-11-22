@@ -36,7 +36,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
             var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/Login", loginModel);
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
             await localStorageService.SetItemAsync(JWTToken, result.JWTToken);
-            //Constants.JWTToken = result.JWTToken;
+            Constants.JWTToken = result.JWTToken;
             return result;
         }
 
@@ -86,7 +86,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
             Constants.JWTToken = "";
             CustomAuthenticationStateProvider customAuthStateProvider = new CustomAuthenticationStateProvider(localStorageService);
             await customAuthStateProvider.GetAuthenticationStateAsync();
-            customAuthStateProvider.UpdateAuthenticationState("");
+            await customAuthStateProvider.UpdateAuthenticationState("");
             httpClient.DefaultRequestHeaders.Authorization = null;
             httpClient.DefaultRequestHeaders.Remove("Authorization");
             navigationManager.NavigateTo("/", forceLoad: true);
