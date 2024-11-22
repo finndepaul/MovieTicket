@@ -1,47 +1,52 @@
-﻿@page "/bill-detail/{Id}"
+﻿@page "/bill/detail/{Id}"
+@using BarcodeStandard
+@using System.Drawing
 @using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Application.DataTransferObjs.BillCombo
 @using MovieTicket.Application.DataTransferObjs.Ticket
-
+@attribute [Authorize(Roles = "Admin")]
 <div class="container-fluid">
 	<div class="mb-2">
-		<NavLink href="bill-list" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
+		<NavLink href="bill" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
 	</div>
 	<div class="row">
 		<!-- Thông tin đơn hàng -->
 		<div class="col-md-6 mb-3">
 			<div class="row">
-			@if (objBill != null && objShowTime != null)
+				@if (objBill != null && objShowTime != null)
 				{
-					<div class="col-md-6 mb-3">
-						<div class="py-2 mb-4 border-bottom"><h5>Thông tin đơn hàng</h5></div>
-						<p><strong>Mã đơn hàng:</strong>@objBill.Id</p>
-						<div><strong>Phim:</strong><span class="text-primary">@objShowTime.FilmName</span></div>
-						<p><strong>Giờ chiếu:</strong><span class="badge bg-danger">@objShowTime.StartTime - @objShowTime.EndTime</span></p>
-						<p><strong>Ngày chiếu:</strong>@objShowTime.ShowtimeDate</p>
-						<p><strong>Phòng chiếu:</strong>@objShowTime.CinemaName</p>
-						<p><strong>Rạp chiếu:</strong><span class="text-primary">@objShowTime.CinemaCenterName</span></p>
-						<p><strong>Ngày đặt:</strong>@objBill.CreateTime</p>
-					</div>
+                    <div class="col-md-6 mb-3">
+                        <div class="py-2 mb-4 border-bottom">
+                            <h5>Thông tin đơn hàng</h5>
+                        </div>
+                        <p><strong>Mã đơn hàng:</strong> @(objBill?.Id)</p>
+                        <div><strong class="me-2">Phim:</strong><span class="text-primary">@objShowTime?.FilmName</span></div>
+                        <p><strong class="me-2">Giờ chiếu:</strong><span class="badge bg-danger"> @(objShowTime?.StartTime?.ToString("HH:mm")) - @(objShowTime?.EndTime?.ToString("HH:mm"))</span></p>
+                        <p><strong>Ngày chiếu:</strong> @(objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"))</p>
+                        <p><strong>Phòng chiếu:</strong> @objShowTime?.CinemaName</p>
+                        <p><strong class="me-2">Rạp chiếu:</strong><span class="text-primary"> @objShowTime?.CinemaCenterName</span></p>
+                        <p><strong>Ngày đặt:</strong> @(objBill?.CreateTime?.ToString("dd/MM/yyyy"))</p>
+                    </div>
 
-					<!-- Thông tin khách hàng -->
-					<div class="col-md-6 mb-3">
-						<div class="py-2 mb-4 border-bottom">
-							<h5>Thông tin khách hàng</h5>
-						</div>
-						<p><strong>Khách hàng:</strong> Bùi Duy Đông</p>
-						<p><strong>Điện thoại:</strong> 093668888</p>
-						<p><strong>Email:</strong> dong@gmail.com</p>
-						<p><strong>Trạng thái:</strong> <span class="badge bg-success">@objBill.Status</span></p>
-						<p><strong>Thành tiền:</strong> 1,066,000</p>
-						<p><strong>Giảm giá:</strong> 0</p>
-						<p><strong>Tổng tiền:</strong> @objBill.TotalMoney</p>
-					</div>
+                    <!-- Thông tin khách hàng -->
+                    <div class="col-md-6 mb-3">
+                        <div class="py-2 mb-4 border-bottom">
+                            <h5>Thông tin khách hàng</h5>
+                        </div>
+                        <p><strong>Khách hàng:</strong> @(objAccount?.Name)</p>
+                        <p><strong>Điện thoại:</strong> @(objAccount?.Phone)</p>
+                        <p><strong>Email:</strong> @(objAccount?.Email)</p>
+                        <p><strong class="me-2">Trạng thái:</strong><span class="badge bg-success"> @objBill?.Status</span></p>
+                        <p><strong>Thành tiền:</strong> @(objBill?.TotalMoney?.ToString("#,##0"))</p>
+                        <p><strong>Giảm giá:</strong> @((objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"))</p>
+                        <p><strong>Tổng tiền:</strong> @(objBill?.AfterDiscount?.ToString("#,##0"))</p>
+                    </div>
 				}
 				else
 				{
 					<p>Không có dữ liệu</p>
-				}	
+				}
 
 			</div><div class="">
 				<img src="https://tritonstore.com.au/wp-content/uploads/MSI-Plessey.webp" width="100%" height="200" class="object-fit-contain border rounded" />
@@ -64,31 +69,24 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>A1</td>
-						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
-						<td>100,000</td>
-					</tr>
-					<tr>
-						<td>C2</td>
-						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
-						<td>100,000</td>
-					</tr>
-					<tr>
-						<td>C3</td>
-						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
-						<td>100,000</td>
-					</tr>
-					<tr>
-						<td>C4</td>
-						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
-						<td>100,000</td>
-					</tr>
-					<tr>
-						<td>D4</td>
-						<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Ghế thường</span></td>
-						<td>100,000</td>
-					</tr>
+					@if (lstSeat.Count > 0)
+					{
+						@foreach (var item in lstSeat)
+						{
+							<tr>
+								<td>@item.SeatName</td>
+								<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">@item.SeatType</span></td>
+								<td>@item.Price.ToString("#,##0")</td>
+							</tr>
+						}
+
+					}
+					else
+					{
+						<tr>
+							<td colspan="3">Không có dữ liệu</td>
+						</tr>
+					}
 				</tbody>
 			</table>
 
@@ -103,24 +101,26 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>HCinema Combo</td>
-						<td>1</td>
-						<td>113,000</td>
-						<td>113,000</td>
-					</tr>
-					<tr>
-						<td>My Combo</td>
-						<td>1</td>
-						<td>87,000</td>
-						<td>87,000</td>
-					</tr>
-					<tr>
-						<td>Ladies Love Set</td>
-						<td>2</td>
-						<td>183,000</td>
-						<td>366,000</td>
-					</tr>
+					@if (lstBillCombo.Count > 0)
+					{
+						@foreach (var item in lstBillCombo)
+						{
+							<tr>
+								<td>@item.ComboName</td>
+								<td>@item.Quantity</td>
+								<td>@item.Price</td>
+								<td>@item.TotalPrice</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="4">Không có dữ liệu</td>
+						</tr>
+					}
+
+
 				</tbody>
 			</table>
 		</div>
@@ -132,16 +132,59 @@
 	private List<TicketDto> lstTicket = new List<TicketDto>();
 	private TicketDto objTicket = new TicketDto();
 	private ShowTimeDto objShowTime = new ShowTimeDto();
-	private BillDetailDto objBill = new BillDetailDto();
+    private class BillSeat
+    {
+        public string SeatName { get; set; }
+        public string SeatType { get; set; }
+        public decimal Price { get; set; }
+    }
+    private class SeatPrice
+    {
+        public Guid SeatId { get; set; }
+        public decimal Price { get; set; }
+    }
+    private List<BillComboDto> lstBillCombo = new List<BillComboDto>();
+    private List<BillSeat> lstSeat = new List<BillSeat>();
+    private List<SeatPrice> lstSeatId = new List<SeatPrice>();
+    private BillDetailDto objBill = new BillDetailDto();
+    private AccountDto objAccount = new AccountDto();
 
-	protected async override Task OnInitializedAsync()
-	{
-		objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
-		lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
-		objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
-		var showtimeId = objTicket.ShowTimeId.Value;
-		var findShowtime = await ShowTimeService.GetById(showtimeId);
-		objShowTime = findShowtime.Data;
-	}
+    protected async override Task OnInitializedAsync()
+    {
+        //lay bill theo id
+        objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
+        //lay account theo bill id
+        objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+        //lay list ticket theo bill id
+        lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
+        //lay 1 ticket dau tien cua bill id do
+        objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
+        //lay showtimeid cua ticket
+        var showtimeId = objTicket.ShowTimeId.Value;
+        //tim showtime theo id
+        var findShowtime = await ShowTimeService.GetById(showtimeId);
+        //lay showtime
+        objShowTime = findShowtime.Data;
+        lstSeatId = lstTicket.Select(x => new SeatPrice
+			{
+				SeatId = x.SeatId.Value,
+				Price = x.Price
+			}).ToList();
+        foreach (var item in lstSeatId)
+        {
+            var obj = await SeatService.GetById(item.SeatId);
+            var seat = obj.Data;
+            lstSeat.Add(new BillSeat
+				{
+					SeatType = seat.SeatTypeName,
+					SeatName = seat.Position,
+					Price = item.Price
+				});
+        }
+        lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
+        
+
+
+    }
 	
 }

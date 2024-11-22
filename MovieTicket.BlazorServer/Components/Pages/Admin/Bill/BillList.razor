@@ -1,58 +1,268 @@
-﻿@page "/bill-list"
+﻿@page "/bill"
+@attribute [Authorize(Roles = "Admin")]
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Application.DataTransferObjs.Ticket
 <div class="container-fluid mt-4">
-    <div class="row mb-3">
-        <div class="col">
-            <input type="text" class="form-control" placeholder="Search by BarCode or Status" />
-        </div>
-        <div class="col-auto">
-            <button class="btn btn-primary">Search</button>
-        </div>
-    </div>
+	<div class="row mb-3">
+		<div class="col">
+			<input type="text" class="form-control" @bind-value="request.BarCode" placeholder="Search by BarCode or Status" />
+		</div>
+		<div class="col-auto">
+			<button class="btn btn-primary" @onclick="SearchBarCode">Search</button>
+		</div>
+	</div>
 
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Mã đơn hàng</th>
-                <th>Tên phim</th>
-                <th>Suất chiếu</th>
-                <th>Phòng chiếu </th>
-                <th>Trạng thái</th>
-                <th>Tổng tiền</th>
-                <th>Ngày đặt</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in lstBills)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@item.FilmName</td>
-                    <td><span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">Suất chiếu thường</span></td>
-                    <td>GOLD CLASS HCinema Aeon Hà Đông</td>
-                    <td><span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.Status</span></td>
-                    <td>@item.TotalMoney</td>
-                    <td>@item.CreateTime</td>
-                    <td>
-                        <a class="btn btn-info btn-sm" href="bill-detail/@item.Id.ToString()">View</a>
-                    </td>
-                </tr>
-            }
-           
-        </tbody>
-    </table>
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Mã thanh toán</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("BarCode"))"></i>
+							
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Tên phim</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("FilmName"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("FilmName", e.Value.ToString()))">
+								<option value="@Guid.Empty">Tất cả</option>
+								@foreach (var item in lstFilmName)
+								{
+									<option class="dropdown-item" value="@item">@item</option>
+								} 
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Suất chiếu</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Type"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("Type", e.Value.ToString()))">
+								<option value="@Guid.Empty">Tất cả</option>
+								@foreach (var item in Enum.GetValues(typeof(ScheduleType)))
+								{
+									<option value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Phòng chiếu </p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("CinemaTypeName"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("CinemaTypeName", e.Value.ToString()))">
+								<option value="@Guid.Empty">Tất cả</option>
+								@foreach (var item in lstCinemaType_Name)
+								{
+									<option class="dropdown-item" value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Trạng thái</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Status"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("Status", e.Value.ToString()))">
+								<option value="@Guid.Empty">Tất cả</option>
+								@foreach (var item in Enum.GetValues(typeof(BillStatus)))
+								{
+									<option value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Tổng tiền</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("TotalMoney"))"></i>
+							
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p>Ngày đặt</p>
+						<div class="d-flex">
+							<!-- Sort Icon -->
+							<i class="bi bi-sort-alpha-down" style="width: 20px; height: 24px;"
+							   @onclick="@(() => SortTable("CreateTime"))"></i>
+
+							<!-- Filter Dropdown -->
+							<i class="bi bi-funnel-fill" style="width: 20px; height: 24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+
+							<!-- Date Range Filter -->
+							<div class="dropdown-menu p-3">
+								<label>From:</label>
+								<input type="datetime-local" class="form-control mb-2" @bind="StartTime">
+								<label>To:</label>
+								<input type="datetime-local" class="form-control mb-2" @bind="EndTime">
+								<button class="btn btn-primary w-100" @onclick="@(() => ApplyFilter("CreateTime", null, StartTime.Value, EndTime.Value))">
+									Apply
+								</button>
+							</div>
+						</div>
+					</div>
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in lstBills)
+			{
+				<tr>
+					<td>@item.BarCode</td>
+					<td>@item.FilmName</td>
+					<td><span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">@item.Type</span></td>
+					<td>@item.CinemaType_Name</td>
+					<td><span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.Status</span></td>
+					<td>@item.TotalMoney</td>
+					<td>@item.CreateTime</td>
+					<td>
+						<a class="btn btn-info btn-sm" href="bill/detail/@item.Id.ToString()">View</a>
+					</td>
+				</tr>
+			}
+
+		</tbody>
+		<tfoot>
+			<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+		</tfoot>
+	</table>
 </div>
 
 @code {
-    private List<BillDto> lstBills = new List<BillDto>();
-    private List<TicketDto> lstTicketDto = new List<TicketDto>();
-    private TicketDto ticketDto = new TicketDto();
+	private List<BillsDto> lstBills = new List<BillsDto>();
+	private List<TicketDto> lstTicketDto = new List<TicketDto>();
+	private TicketDto ticketDto = new TicketDto();
+	private MetaData metaData { get; set; } = new MetaData();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private BillWithPaginationRequest request = new BillWithPaginationRequest();
+	private List<string> lstFilmName = new List<string>();
+	private List<string> lstCinemaType_Name = new List<string>();
+	private string currentSortColumn;
+	private DateTime? StartTime { get; set; }
+	private DateTime? EndTime { get; set; }
 
-    protected async override Task OnInitializedAsync()
-    {
-       lstBills = await BillService.GetListBillAsync();       
-    }
+	private bool ascending = true;
 
+	protected async override Task OnInitializedAsync()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(new BillWithPaginationRequest(), new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		lstFilmName = pageList.Item.Select(x => x.FilmName).Distinct().ToList();
+		lstCinemaType_Name = pageList.Item.Select(x => x.CinemaType_Name).Distinct().ToList();
+		metaData = pageList.MetaData;
+		StateHasChanged();
+	}
+	private async Task Refresh()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		metaData = pageList.MetaData;
+	}
+	private async Task SelectedPage(int page)
+	{
+		pagingParameters.PageNumber = page;
+		await Refresh();
+
+	}
+	private async Task SearchBarCode()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		metaData = pageList.MetaData;
+		StateHasChanged();
+	}
+	private async Task SortTable(string column)
+	{
+		if (currentSortColumn == column)
+		{
+			ascending = !ascending; // Toggle sorting direction
+		}
+		else
+		{
+			currentSortColumn = column;
+			ascending = true; // Default to ascending on new column
+		}
+
+		lstBills = column switch
+		{
+			"BarCode" => ascending ? lstBills.OrderBy(x => x.BarCode).ToList() : lstBills.OrderByDescending(x => x.BarCode).ToList(),
+			"FilmName" => ascending ? lstBills.OrderBy(x => x.FilmName).ToList() : lstBills.OrderByDescending(x => x.FilmName).ToList(),
+			"Type" => ascending ? lstBills.OrderBy(x => x.Type).ToList() : lstBills.OrderByDescending(x => x.Type).ToList(),
+			"CinemaTypeName" => ascending ? lstBills.OrderBy(x => x.CinemaType_Name).ToList() : lstBills.OrderByDescending(x => x.CinemaType_Name).ToList(),
+			"Status" => ascending ? lstBills.OrderBy(x => x.Status).ToList() : lstBills.OrderByDescending(x => x.Status.Value).ToList(),
+			"TotalMoney" => ascending ? lstBills.OrderBy(x => x.TotalMoney).ToList() : lstBills.OrderByDescending(x => x.TotalMoney).ToList(),
+			"CreateTime" => ascending ? lstBills.OrderBy(x => x.CreateTime).ToList() : lstBills.OrderByDescending(x => x.CreateTime).ToList(),
+			_ => lstBills
+		};
+	}
+	// Phương thức chọn bộ lọc
+	private async Task ApplyFilter(string filterType, string value, DateTime? startTime = null, DateTime? endTime = null)
+	{
+		switch (filterType)
+		{
+			case "FilmName":
+				request.FilmName = value;
+				break;
+			case "Type":
+				request.Type = (ScheduleType)Enum.Parse(typeof(ScheduleType), value);
+				break;
+			case "CinemaTypeName":
+				request.CinemaType_Name = value;
+				Console.WriteLine(value);
+				break;
+			case "Status":
+				request.Status = (BillStatus)Enum.Parse(typeof(BillStatus), value);
+				break;
+			case "CreateTime":
+				request.StartTime = startTime;
+				request.EndTime = endTime;
+				break;
+
+		}
+		await SelectedPage(1);
+		await Refresh();
+
+	}
 }
