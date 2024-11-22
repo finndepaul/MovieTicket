@@ -129,7 +129,7 @@
                 <SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
-                <FooterModal ShowtimeId="@ShowTimeId" SeatDTOs="lstSeats" @ref="footerModalref" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" NextSelectionModal="OpenComboSelectionModal" />
+               
             </div>
         </div>
     </div>
@@ -145,7 +145,7 @@
                 <ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
-                <FooterModal ShowtimeId="@ShowTimeId" SeatDTOs="lstSeats" @ref="footerModalref" SeatsSelectedstr="@SeatsSelectedstr" Total="@TotalMoney" PreSelectionModal="PreComboSelectionModal" />
+                
             </div>
         </div>
     </div>
@@ -194,7 +194,7 @@
     private Guid BillId;
     private string IdFilm;
     private string filmName { get; set; }
-    private FooterModal footerModalref;
+    // private FooterModal footerModalref;
    
     protected override async Task OnInitializedAsync()
     {
@@ -296,7 +296,7 @@
         // Task.Delay(300);
         lstSeats = args.lstSeats;
         SeatsSelectedstr = args.str;
-        TotalMoney = args.totalMoney;
+        // TotalMoney = args.totalMoney;
         StateHasChanged();
 
     }

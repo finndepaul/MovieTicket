@@ -162,7 +162,10 @@
 			<h5>LỊCH CHIẾU - @filmName</h5>
 		</div>
 		<div class="modal-body">
-			<ViewShowTimeModal OnShowtimeSelected="OpenSeatSelectionModal" Id="@IdFilm" LoginCallback="RedirectToLogin"></ViewShowTimeModal>
+			<ViewShowTimeModal
+				OnShowtimeSelected="OpenSeatSelectionModal" 
+				Id="@IdFilm" 
+				LoginCallback="RedirectToLogin" />
 		</div>
 	</div>
 </div>
@@ -179,12 +182,12 @@
 			</div>
 			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
 				<SeatFooter ShowtimeId="@ShowTimeId"
-							SeatDTOs="lstSeats"
-							@ref="seatFooterRef"
-							SeatsSelectedstr="@SeatsSelectedstr"
-							TotalTicket="@TotalTicket"
-							NextToComboModal="OpenComboSelectionModal"
-							BackToShowtimeModal="ShowCloseConfirmation" />
+				SeatDTOs="lstSeats"
+				@ref="seatFooterRef"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalTicket="@TotalTicket"
+				NextToComboModal="OpenComboSelectionModal"
+				BackToShowtimeModal="ShowCloseConfirmation" />
 			</div>
 		</div>
 	</div>
@@ -201,15 +204,15 @@
 			</div>
 			<div class="modal-footer" style="width:100%;height:150px">
 				<ComboFooter ShowtimeId="@ShowTimeId"
-							 CheckedSeats="lstCheckedSeats"
-							 SelectedCombos="lstSelectedCombos"
-							 BillId="@BillId" @ref="comboFooterRef"
-							 SeatsSelectedstr="@SeatsSelectedstr"
-							 TotalCombo="@TotalCombo"
-							 TotalMoney="@TotalMoney"
-							 TotalTicket="@TotalTicket"
-							 BackToSeatModal="PreComboSelectionModal"
-							 NextToDiscount="OpenDiscountModal" />
+				CheckedSeats="lstCheckedSeats"
+				SelectedCombos="lstSelectedCombos"
+				BillId="@BillId" @ref="comboFooterRef"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalCombo="@TotalCombo"
+				TotalMoney="@TotalMoney"
+				TotalTicket="@TotalTicket"
+				BackToSeatModal="PreComboSelectionModal"
+				NextToDiscount="OpenDiscountModal" />
 			</div>
 		</div>
 	</div>
@@ -226,13 +229,13 @@
 			</div>
 			<div class="modal-footer" style="width:100%;height:150px">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
-								CheckedSeats="lstCheckedSeats"
-								SeatsSelectedstr="@SeatsSelectedstr"
-								TotalCombo="@TotalCombo"
-								TotalMoney="@TotalMoney"
-								TotalTicket="@TotalTicket"
-								BillCombo="ComboCheckRequest"
-								BackToSeat="CancelCheckout" />
+				CheckedSeats="lstCheckedSeats"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalCombo="@TotalCombo"
+				TotalMoney="@TotalMoney"
+				TotalTicket="@TotalTicket"
+				BillCombo="ComboCheckRequest"
+				BackToSeat="CancelCheckout" />
 			</div>
 		</div>
 	</div>
@@ -267,6 +270,8 @@
 	// Đóng modal
 	function closeModal() {
 	document.getElementById('myModalBuyTicket').style.display = 'none';
+	localStorage.removeItem('showtimeModalOpen');
+	localStorage.removeItem('showtimeModalFilmId');
 	}
 
 	function openModal(modalId) {
@@ -302,6 +307,8 @@
 	private decimal TotalMoney = 0;
 	private decimal Discount;
 	private ComboCheckRequest ComboCheckRequest;
+	private bool isFirstRender = true;
+
 
 	public class EventCallbackArgs
 	{
@@ -319,8 +326,24 @@
 	}
 
 	protected async override Task OnInitializedAsync()
-	{
+	{	
 		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
+        base.OnInitialized();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var showtimeModalOpen = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalOpen");
+			var showtimeModalFilmId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalFilmId");
+
+			if (showtimeModalOpen == "true" && !String.IsNullOrEmpty(showtimeModalFilmId))
+			{
+				await OpenModalShowTime(showtimeModalFilmId);
+				StateHasChanged();
+			}
+		}
 	}
 
 	private async Task RedirectToLogin()
@@ -336,13 +359,15 @@
 		IdFilm = id;
 		var listObj = await UserHomeService.GetAllFilmForUserHome();
 		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(id)).Name;
+		await JSRuntime.InvokeVoidAsync("localStorage.setItem", "showtimeModalOpen", "true");
+		await JSRuntime.InvokeVoidAsync("localStorage.setItem", "showtimeModalFilmId", id);
+		await Task.Delay(100);
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
 	}
 
 	private async Task OpenSeatSelectionModal(Guid id)
 	{
 		await seatSelectionModalref.Reset();
-		Task.Delay(300);
 		ShowTimeId = id;
 		await JSRuntime.InvokeVoidAsync("closeModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
@@ -374,8 +399,7 @@
 		BillId = Guid.Empty;
 		TotalMoney = 0;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
-		var listObj = await UserHomeService.GetAllFilmForUserHome();
-		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
+        filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
 	}
 
@@ -393,6 +417,7 @@
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
+
 	private async Task CancelCheckout(Guid id)
 	{
 		await seatSelectionModalref.Reset();

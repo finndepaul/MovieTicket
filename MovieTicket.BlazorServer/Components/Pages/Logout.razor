@@ -1,12 +1,8 @@
 ﻿@page "/logout"
-
+@layout MovieTicket.BlazorServer.Components.Layout.UserLayout
 @code {
     protected async override Task OnInitializedAsync()
     {
-        Constants.JWTToken = "";
-        var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
-        var response = await customState.GetAuthenticationStateAsync();
-        customState.UpdateAuthenticationState("");
-        NavigationManager.NavigateTo("/", forceLoad: true);
+        await AuthenService.Logout();
     }
 }
