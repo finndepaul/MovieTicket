@@ -1,4 +1,4 @@
-﻿@page "/update-detail-user/{Id:guid}"
+@page "/user/detail/{Id:guid}"
 @using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Domain.Enums
@@ -23,7 +23,7 @@
             <EditForm Model="accountUpdateRequest" OnValidSubmit="UpdateAccount">
                 <DataAnnotationsValidator />
                 <div class="mb-3">
-                    <a type="button" class="btn btn-light me-2" href="/list-user">Quay lại</a>
+                    <a type="button" class="btn btn-light me-2" href="/user">Quay lại</a>
                     <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
                 </div>
 
@@ -170,7 +170,8 @@
             accountUpdateRequest.Id = Id;
             await AccountService.UpdateAsync(accountUpdateRequest);
             await JSRuntime.ToastrSuccess("Cập nhật thành công");
-            NavigationManager.NavigateTo("/list-user");
+            NavigationManager.NavigateTo("/user");
+
         }
         else
         {

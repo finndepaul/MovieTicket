@@ -1,4 +1,4 @@
-﻿@page "/create-cinema-center"
+﻿@page "/cinema-center/create"
 @inject IJSRuntime _IJSRuntime;
 @attribute [Authorize(Roles = "Admin")]
 <EditForm Model="cinemaCenterCreateRequest" OnValidSubmit="HandCreateCinemaCenter">
@@ -22,6 +22,17 @@
 					<label for="diaChi">Địa chỉ:</label>
 					<textarea class="form-control" id="diaChi" rows="3" @bind="cinemaCenterCreateRequest.Address"></textarea>
 					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Address)" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3">
+			<!-- Địa chỉ -->
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
+					<textarea class="form-control" id="diaChiCity" rows="3" @bind="cinemaCenterCreateRequest.AddresCity"></textarea>
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddresCity)" />
 				</div>
 			</div>
 		</div>

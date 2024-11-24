@@ -6,5 +6,6 @@ namespace MovieTicket.Application.ValueObjs.ViewModels
     {
         public string? Name { get; set; }
         public string? Address { get; set; }
+        public string? AddresCity { get; set; }
     }
 }

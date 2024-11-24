@@ -24,7 +24,9 @@
     display: none;
 }
 
-[data-seat-status="Normal"] {
+
+
+[data-seat-type="Normal"] {
     background-color: #fff;
     color: #000;
     width: 45px;
@@ -40,7 +42,7 @@
         color: #fff;
     }*/
 
-[data-seat-status="VIP"] {
+[data-seat-type="VIP"] {
     background-color: #fff;
     color: #000;
     width: 45px;
@@ -56,7 +58,7 @@
         color: #fff;
     }*/
 
-[data-seat-status="Couple"] {
+[data-seat-type="Couple"] {
     background-color: #fff;
     color: #000;
     width: 45px;
@@ -115,4 +117,14 @@
 
 .checkout {
     align-content: center;
+}
+
+[data-seat-selection="Checked"] {
+    background-color: #808080 !important;
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    cursor: not-allowed !important;
 }

@@ -406,6 +406,26 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             }
 
             modelBuilder.Entity<TicketPrice>().HasData(ticketPrices);
-        }
+			var coupon = new List<Coupon>();
+			coupon.Add(new Coupon()
+			{
+				Id = Guid.NewGuid(),
+				CouponCode = "HELLOWORLD",
+				AmountValue = 25000,
+				StartDate = DateTime.Now,
+				EndDate = DateTime.Now.AddDays(30),
+				IsActive = false,
+			});
+			coupon.Add(new Coupon()
+			{
+				Id = Guid.NewGuid(),
+				CouponCode = "VHDKHAITRUONG",
+				AmountValue = 25000,
+				StartDate = DateTime.Now,
+				EndDate = DateTime.Now.AddDays(30),
+				IsActive = false,
+			});
+			modelBuilder.Entity<Coupon>().HasData(coupon);
+		}
     }
 }

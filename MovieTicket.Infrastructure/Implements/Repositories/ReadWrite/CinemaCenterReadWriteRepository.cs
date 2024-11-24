@@ -26,7 +26,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return new ResponseObject<CinemaCenter>
                 {
                     Status = StatusCodes.Status400BadRequest,
-                    Message = "Cinema Center is null",
+                    Message = "Rạp chiếu không được để trống",
                     Data = null
                 };
             }
@@ -61,7 +61,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				{
 					Data = null,
 					Status = StatusCodes.Status400BadRequest,
-					Message = "Cinema Center does not exist"
+					Message = "Không tìm rạp chiếu"
 				};
 			}
 			
@@ -84,7 +84,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			{
 				Data = cinemaCenter,
 				Status = StatusCodes.Status200OK,
-				Message = "Delete Cinema Center successful"
+				Message = "Xóa rạp chiếu thành công"
 			};
 		}
 
@@ -99,7 +99,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				{
 					Data = null,
 					Status = StatusCodes.Status400BadRequest,
-					Message = "Cinema Center does not exist"
+					Message = "Rạp chiếu không tồn tại"
 				};
 			}
 
@@ -112,13 +112,14 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				{
 					Data = null,
 					Status = StatusCodes.Status400BadRequest,
-					Message = "Cinema Center name already exists"
+					Message = "Tên rạp chiếu đã tồn tại"
 				};
 			}
 
 			cinemaCenterItem.Name = cinemaCenter.Name;
 			cinemaCenterItem.Address = cinemaCenter.Address;
-			cinemaCenterItem.AddressMap = cinemaCenter.AddressMap;
+			cinemaCenterItem.AddresCity = cinemaCenter.AddresCity;
+            cinemaCenterItem.AddressMap = cinemaCenter.AddressMap;
 
 			_movieTicket.CinemaCenters.Update(cinemaCenterItem);
 			await _movieTicket.SaveChangesAsync();
@@ -127,7 +128,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			{
 				Data = cinemaCenterItem,
 				Status = StatusCodes.Status200OK,
-				Message = "Update Cinema Center successful"
+				Message = "Update thành công"
 			};
 		}
 

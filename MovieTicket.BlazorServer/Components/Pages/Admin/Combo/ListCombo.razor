@@ -1,4 +1,4 @@
-﻿@page "/listcombo"
+@page "/combo"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 
@@ -18,7 +18,7 @@
 </div>
 
 <div class="container-fluid">
-    <a class="btn btn-primary mb-3" href="/createcombo">+ Tạo khuyến mại</a>
+    <a class="btn btn-primary mb-3" href="/combo/create">+ Tạo khuyến mại</a>
     <div class="table-responsive mb-3">
         <table class="table">
             <thead class="table-light">

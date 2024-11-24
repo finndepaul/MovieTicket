@@ -53,6 +53,7 @@ namespace MovieTicket.Infrastructure.Extensions
             return services;
           
 			services.AddScoped<ITicketReadOnlyRepository, TicketReadOnlyRepository>();
+			services.AddScoped<IBillComboReadOnlyRepository, BillComboReadOnlyRepository>();
 			return services;
         }
     }

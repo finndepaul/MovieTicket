@@ -3,6 +3,7 @@ using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Domain.Enums;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -46,7 +47,12 @@ namespace MovieTicket.API.Controllers
             var showTime = await _readWrite.Create(showTimeCreate);
 			return Ok(showTime);
 		}
-
+        [HttpPut]
+        public async Task<ActionResult> Put([FromBody] ShowTimeUpdateRequest showTimeUpdate)
+        {
+            var showTime = await _readWrite.Update(showTimeUpdate);
+            return Ok(showTime);
+        }
         // DELETE api/<ShowTimeController>/5
         [HttpDelete]
         public async Task<ActionResult> Delete(Guid id)
@@ -54,5 +60,11 @@ namespace MovieTicket.API.Controllers
 			var showTime = await _readWrite.Delete(id);
 			return Ok(showTime);
 		}
-    }
+        [HttpPut]
+		public async Task<ActionResult> UpdateStatus(ShowTimeUpdateStatus updateStatus)
+		{
+			var showTime = await _readWrite.UpdateStatus(updateStatus);
+			return Ok(showTime);
+		}
+	}
 }
