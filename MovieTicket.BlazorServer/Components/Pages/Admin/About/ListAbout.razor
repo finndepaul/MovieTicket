@@ -1,4 +1,4 @@
-﻿@page "/list-about"
+﻿@page "/about"
 @using MovieTicket.Application.DataTransferObjs.About
 @inject IAboutService aboutService
 @attribute [Authorize(Roles = "Admin")]
@@ -38,7 +38,7 @@
                             <tr>
                                 <td>@about.Title</td>
                                 <td>
-                                    <a class="btn btn-outline-primary btn-sm" href="@($"/update-about/{about.Id}")">
+                                    <a class="btn btn-outline-primary btn-sm" href="@($"/about/update/{about.Id}")">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <button class="btn btn-outline-danger btn-sm" @onclick="() => GetDeleteId(about.Id)">

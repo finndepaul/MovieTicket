@@ -20,7 +20,7 @@
 						<p class="">Mã thanh toán</p>
 						<div class="d-flex">
 							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("BarCode"))"></i>
-							
+
 						</div>
 					</div>
 				</th>
@@ -33,11 +33,11 @@
 							   data-bs-toggle="dropdown"
 							   aria-expanded="false"></i>
 							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("FilmName", e.Value.ToString()))">
-								<option value="@Guid.Empty">Tất cả</option>
+								<option value="">Tất cả</option>
 								@foreach (var item in lstFilmName)
 								{
 									<option class="dropdown-item" value="@item">@item</option>
-								} 
+								}
 							</select>
 						</div>
 					</div>
@@ -51,7 +51,7 @@
 							   data-bs-toggle="dropdown"
 							   aria-expanded="false"></i>
 							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("Type", e.Value.ToString()))">
-								<option value="@Guid.Empty">Tất cả</option>
+								<option value="">Tất cả</option>
 								@foreach (var item in Enum.GetValues(typeof(ScheduleType)))
 								{
 									<option value="@item">@item</option>
@@ -69,7 +69,7 @@
 							   data-bs-toggle="dropdown"
 							   aria-expanded="false"></i>
 							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("CinemaTypeName", e.Value.ToString()))">
-								<option value="@Guid.Empty">Tất cả</option>
+								<option value="">Tất cả</option>
 								@foreach (var item in lstCinemaType_Name)
 								{
 									<option class="dropdown-item" value="@item">@item</option>
@@ -87,7 +87,7 @@
 							   data-bs-toggle="dropdown"
 							   aria-expanded="false"></i>
 							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("Status", e.Value.ToString()))">
-								<option value="@Guid.Empty">Tất cả</option>
+								<option value="">Tất cả</option>
 								@foreach (var item in Enum.GetValues(typeof(BillStatus)))
 								{
 									<option value="@item">@item</option>
@@ -101,7 +101,7 @@
 						<p class="">Tổng tiền</p>
 						<div class="d-flex">
 							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("TotalMoney"))"></i>
-							
+
 						</div>
 					</div>
 				</th>
@@ -140,9 +140,9 @@
 				<tr>
 					<td>@item.BarCode</td>
 					<td>@item.FilmName</td>
-					<td><span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">@item.Type</span></td>
+					<td><span class="p-2 m-2 badge text-@(FormatScheduleType(@item.Type.Value,"css")) bg-@(FormatScheduleType(@item.Type.Value,"css")) bg-opacity-10 border border-@(FormatScheduleType(@item.Type.Value,"css"))">@(FormatScheduleType(@item.Type.Value, "ui"))</span></td>
 					<td>@item.CinemaType_Name</td>
-					<td><span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.Status</span></td>
+					<td><span class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))">@(FormatBillStatus(@item.Status.Value, "ui"))</span></td>
 					<td>@item.TotalMoney</td>
 					<td>@item.CreateTime</td>
 					<td>
@@ -246,14 +246,28 @@
 				request.FilmName = value;
 				break;
 			case "Type":
-				request.Type = (ScheduleType)Enum.Parse(typeof(ScheduleType), value);
+				if (String.IsNullOrEmpty(value))
+				{
+					request.Type = null;
+				}
+				else
+				{
+					request.Type = (ScheduleType)Enum.Parse(typeof(ScheduleType), value);
+				}
 				break;
 			case "CinemaTypeName":
 				request.CinemaType_Name = value;
 				Console.WriteLine(value);
 				break;
 			case "Status":
-				request.Status = (BillStatus)Enum.Parse(typeof(BillStatus), value);
+				if (String.IsNullOrEmpty(value))
+				{
+					request.Status = null;
+				}
+				else
+				{
+					request.Status = (BillStatus)Enum.Parse(typeof(BillStatus), value);
+				}
 				break;
 			case "CreateTime":
 				request.StartTime = startTime;
@@ -263,6 +277,45 @@
 		}
 		await SelectedPage(1);
 		await Refresh();
-
+	}
+	private string FormatScheduleType(ScheduleType type, string formatType)
+	{
+		if (formatType == "css")
+		{
+			return type switch
+			{
+				ScheduleType.Special => "warning",
+				ScheduleType.Early => "primary",
+				ScheduleType.Regular => "success",
+				_ => "Không xác định"
+			};
+		}
+		return type switch
+		{
+			ScheduleType.Special => "Suất chiếu đặc biệt",
+			ScheduleType.Early => "Suất chiếu sớm",
+			ScheduleType.Regular => "Đang chiếu",
+			_ => "Không xác định"
+		};
+	}
+	private string FormatBillStatus(BillStatus status, string formatType)
+	{
+		if (formatType == "css")
+		{
+			return status switch
+			{
+				BillStatus.Pending => "warning",
+				BillStatus.Cancelled => "danger",
+				BillStatus.Paid => "success",
+				_ => "Không xác định"
+			};
+		}
+		return status switch
+		{
+			BillStatus.Pending => "Chờ thanh toán",
+			BillStatus.Cancelled => "Đã Hủy",
+			BillStatus.Paid => "Đã thanh toán",
+			_ => "Không xác định"
+		};
 	}
 }
