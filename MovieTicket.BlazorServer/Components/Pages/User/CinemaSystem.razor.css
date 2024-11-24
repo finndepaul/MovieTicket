@@ -16,52 +16,37 @@
     margin-bottom: 20px;
 }
 
-.header2 {
-    text-align: center;
-    font-size: 36px;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 20px;
-}
-
-/* Phần cột */
-.column {
-    width: 22%;
-}
-
-    .column p {
-        margin: 5px 0;
-    }
-
-.highlight {
-    color: red;
-    font-weight: bold;
-}
-
-.divider {
-    border: 1px solid #444;
-    margin: 20px 0;
-}
-
-/* Danh sách rạp chiếu */
 .cinemas {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    display: flex;
+    flex-wrap: wrap; /* Cho phép các phần tử xuống hàng khi không đủ không gian */
+    gap: 15px; /* Khoảng cách giữa các phần tử */
 }
 
-    .cinemas p {
-        margin: 0;
-        padding: 5px;
-        background-color: #2c2c2c;
-        border-radius: 5px;
-        text-align: center;
-        transition: background-color 0.3s ease;
+.cinema-item {
+    margin: 0;
+    padding: 10px;
+    background-color: #2c2c2c;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    flex-basis: calc(25% - 15px); /* Đảm bảo mỗi phần tử chiếm 1/4 chiều rộng của container, trừ khoảng cách */
+    box-sizing: border-box; /* Đảm bảo padding và margin không ảnh hưởng đến kích thước phần tử */
+}
+
+    .cinema-item:hover {
+        background-color: red;
     }
 
-        .cinemas p:hover {
-            background-color: red;
-            cursor: pointer;
+    .cinema-item.selected {
+        background-color: red;
+        font-weight: bold;
+        transition: none; /* Tắt transition cho phần tử đã chọn */
+    }
+
+        .cinema-item.selected:hover {
+            background-color: #cc0000;
         }
 
 /* Carousel */

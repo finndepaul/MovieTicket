@@ -117,7 +117,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		.RuleFor(f => f.StartDate, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(10)))
 		.RuleFor(f => f.ReleaseYear, 2024)
 		.RuleFor(f => f.RunningTime, f => f.Random.Int(60, 180))
-		.RuleFor(f => f.Status, Domain.Enums.FilmStatus.NowShowing)
 		.RuleFor(f => f.Nation, f => f.PickRandom("USA", "Japan"))
 		.RuleFor(f => f.Poster, "img/posterFilm/film_modomdom.jpg")
 		.RuleFor(f => f.Language, f => f.PickRandom("English", "Japanese"))
