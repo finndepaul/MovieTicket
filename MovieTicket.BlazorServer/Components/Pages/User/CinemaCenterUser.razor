@@ -55,7 +55,7 @@
             <p><strong>Tên rạp:</strong> @cinemaCenterDto.Name</p>
             <p><strong>Địa chỉ:</strong> @cinemaCenterDto.Address</p>
             <div>
-                <strong>Address Map:</strong>
+                <strong>Địa chỉ Map:</strong>
                 <div class="map-container" style="height: 300px;">
                     <iframe src="@ExtractedMapUrl" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
@@ -68,7 +68,6 @@
     </div>
 
 </div>
-
 <style>
     .container {
         max-width: 1200px;
@@ -193,7 +192,23 @@
     protected override async Task OnInitializedAsync()
     {
         CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(CinemaCenterSearch);
+
+        if (CinemaCenterDtos.Any())
+        {
+            var firstCinemaCenter = CinemaCenterDtos.First();
+            cinemaCenterDto = firstCinemaCenter;
+            ExtractedMapUrl = ExtractUrlFromIframe(cinemaCenterDto.AddressMap);
+
+            // Gọi API để lấy chi tiết rạp nếu cần
+            var data = await CinemaCenterService.GetCinemaCenterById(firstCinemaCenter.Id);
+            if (data.Data != null)
+            {
+                cinemaCenterDto = data.Data;
+                ExtractedMapUrl = ExtractUrlFromIframe(cinemaCenterDto.AddressMap);
+            }
+        }
     }
+
     private async Task OnCinemaCenterSelected(Guid cinemaCenterId)
     {
         var data = await CinemaCenterService.GetCinemaCenterById(cinemaCenterId);

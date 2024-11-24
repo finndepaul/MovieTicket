@@ -14,8 +14,6 @@
 
 <EditForm Model="ShowTime" OnValidSubmit="HandleUpdateAsync">
 	<DataAnnotationsValidator />
-	<ValidationSummary />
-
 	<div class="mb-3">
 		<label for="movieTitle" class="form-label">Phim chiếu</label>
 		<select class="form-select" id="movieTitle" value="@selectedFilmId" @onchange="OnFilmChange">
@@ -25,7 +23,7 @@
 				<option value="@film.Id" selected="@(film.Id == ShowTime.FilmId ? true : false)">@film.Name</option>
 			}
 		</select>
-		<small class="text-success">Đang chiếu</small>
+		<ValidationMessage For="@(() => ShowTime.FilmId)" class="text-danger" />
 	</div>
 
 	<div class="mb-3">
@@ -42,6 +40,11 @@
 				<option value="@item.Id" selected="@(item.Id == ShowTime.ScreenTypeId ? true : false)">@item.Type</option>
 			}
 		</select>
+		@if (!string.IsNullOrEmpty(screenTypeErrorMessage))
+		{
+			<small class="text-danger">@screenTypeErrorMessage</small>
+		}
+		<ValidationMessage For="@(() => ShowTime.ScreenTypeId)" class="text-danger" />
 	</div>
 
 	<div class="mb-3">
@@ -53,6 +56,7 @@
 				<option value="@item.Id" selected="@(item.Id == ShowTime.TranslationTypeId ? true : false)">@item.Type</option>
 			}
 		</select>
+		<ValidationMessage For="@(() => ShowTime.TranslationTypeId)" class="text-danger" />
 	</div>
 
 	<div class="mb-3">
@@ -60,9 +64,11 @@
 		<div class="row">
 			<div class="col">
 				<input type="time" class="form-control" id="startTime" value="@startTimeValue" @onchange="OnStartTime" />
+				<ValidationMessage For="@(() => ShowTime.StartTime)" class="text-danger" />
 			</div>
 			<div class="col">
 				<input type="time" class="form-control" id="endTime" @bind="ShowTime.EndTime" disabled />
+				<ValidationMessage For="@(() => ShowTime.EndTime)" class="text-danger" />
 			</div>
 		</div>
 	</div>
@@ -92,7 +98,7 @@
 	private CinemaDto cinemas;
 	private string selectedFilmId = "";
 	private string startTimeValue = "";
-
+	private string screenTypeErrorMessage = "";
 	protected override async Task OnParametersSetAsync()
 	{
 		if (!string.IsNullOrEmpty(Id))
@@ -110,6 +116,7 @@
 				ShowTime.EndTime = _ShowTimeDto.EndTime.Value;
 				ShowTime.FilmId = _ShowTimeDto.FilmId;
 				ShowTime.ShowtimeDate = Date;
+				ShowTime.Status = _ShowTimeDto.Status;
 
 				// Thiết lập selectedFilmId
 				selectedFilmId = ShowTime.FilmId.ToString();
@@ -145,7 +152,6 @@
 						ScreenTypeValidate = lstScreenTypeValidate;
 					}
 				}
-
 				if (schedule != null)
 				{
 					ShowTime.ScheduleId = schedule.Id;
@@ -174,41 +180,63 @@
 		ShowTime = new ShowTimeUpdateRequest();
 		selectedFilmId = "";
 		startTimeValue = "";
+
 	}
-
-
 	private async Task OnFilmChange(ChangeEventArgs e)
 	{
-		selectedFilmId = e.Value.ToString();
+		selectedFilmId = e.Value?.ToString();
+
+		// Reset các trường khi chọn phim mới
+		ShowTime.FilmId = Guid.Empty;
+		ShowTime.ScreenTypeId = null;
+		ShowTime.TranslationTypeId = null;
+		ScreenTypeValidate.Clear();
+		TranslationTypeValidate.Clear();
+
 		if (Guid.TryParse(selectedFilmId, out Guid filmId))
 		{
 			ShowTime.FilmId = filmId;
 			idFilm = filmId;
+
+			// Lấy thông tin lịch chiếu của phim
 			var schedule = scheduleDtos.FirstOrDefault(x => x.FilmId == filmId);
-			ScreenTypeValidate.Clear();
-			TranslationTypeValidate.Clear();
-
-			if (Films.Any())
-			{
-				var film = Films.FirstOrDefault(x => x.Id == filmId);
-				if (film != null)
-				{
-					// Danh sách hình thức chiếu phù hợp với loại phòng chiếu
-					var lstScreenTypeValidate = film.ScreenTypeDtos
-						.Where(x =>
-							x.Type == cinemaTypes.Name || // Hình thức chiếu giống loại phòng chiếu
-							((cinemaTypes.Name == "Premium Class" || cinemaTypes.Name == "Gold Class") && x.Type == "2D") // Điều kiện loại phòng đặc biệt
-						).ToList();
-					TranslationTypeValidate = film.TranslationTypeDtos.ToList();
-					ScreenTypeValidate = lstScreenTypeValidate;
-				}
-			}
-
 			if (schedule != null)
 			{
 				ShowTime.ScheduleId = schedule.Id;
 			}
+
+			// Lấy thông tin phim
+			var film = Films.FirstOrDefault(x => x.Id == filmId);
+			if (film != null)
+			{
+				// Xác định danh sách ScreenType và TranslationType phù hợp
+				var lstScreenTypeValidate = film.ScreenTypeDtos
+					.Where(x =>
+						x.Type == cinemaTypes.Name || // Hình thức chiếu giống loại phòng chiếu
+						((cinemaTypes.Name == "Premium Class" || cinemaTypes.Name == "Gold Class") && x.Type == "2D") // Điều kiện loại phòng đặc biệt
+					).ToList();
+
+				// Kiểm tra xem có hình thức chiếu nào phù hợp không
+				if (lstScreenTypeValidate.Any())
+				{
+					// Nếu có hình thức chiếu phù hợp, cập nhật danh sách
+					ScreenTypeValidate = lstScreenTypeValidate;
+					TranslationTypeValidate = film.TranslationTypeDtos.ToList();
+					screenTypeErrorMessage = "";
+				}
+				else
+				{
+					// Nếu không có hình thức chiếu phù hợp, thông báo cho người dùng
+					screenTypeErrorMessage = "Phim không có hình thức chiếu nào phù hợp.";
+					ShowTime.ScreenTypeId = null;
+					ShowTime.TranslationTypeId = null;
+					ScreenTypeValidate.Clear();
+					TranslationTypeValidate.Clear();
+				}
+			}
 		}
+
+		StateHasChanged(); // Cập nhật giao diện
 	}
 
 	private async Task OnStartTime(ChangeEventArgs e)

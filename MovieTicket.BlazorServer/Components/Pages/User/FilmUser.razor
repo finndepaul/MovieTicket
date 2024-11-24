@@ -1,0 +1,416 @@
+﻿@page "/film-user"
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+
+<div class="container">
+	<div class="tab my-5 d-flex justify-content-center border-bottom">
+		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
+		<button class="tablinks" onclick="openCity(event, 'DangChieu')" id="defaultOpen">PHIM ĐANG CHIẾU</button>
+		<button class="tablinks" onclick="openCity(event, 'Dacbiet')">SUẤT CHIẾU ĐẶC BIỆT</button>
+	</div>
+	<div class="m-5">
+		<!-- Tab content -->
+		<div id="SapChieu" class="tabcontent">
+			<div class="row">
+				@if (listObjFilm == null)
+				{
+					<p>Chưa có phim</p>
+				}
+				else
+				{
+					<!-- Movie 1 -->
+					@foreach (var item in listObjFilm)
+					{
+						@if (item.SType == ScheduleType.Early)
+						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
+									<span class="sticker sticker-new"></span>
+
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
+									</div>
+
+								</div>
+							</div>
+						}
+					}
+				}
+
+
+
+			</div>
+		</div>
+
+		<div id="DangChieu" class="tabcontent">
+			<div class="row">
+				<!-- Movie 1 -->
+				@if (listObjFilm == null)
+				{
+					<p>Chưa có phim</p>
+				}
+				else
+				{
+					@foreach (var item in listObjFilm)
+					{
+						@if (item.SType == ScheduleType.Regular)
+						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
+									<span class="sticker sticker-new"></span>
+
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+									</div>
+									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+										<span><i class="bi bi-ticket-perforated"></i></span>
+										MUA VÉ
+									</a>
+								</div>
+							</div>
+						}
+					}
+				}
+
+			</div>
+		</div>
+
+		<div id="Dacbiet" class="tabcontent">
+			<div class="row">
+				@if (listObjFilm == null)
+				{
+					<p>Chưa có phim</p>
+				}
+				else
+				{
+					@foreach (var item in listObjFilm)
+					{
+						@if (item.SType == ScheduleType.Special)
+						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
+									<span class="sticker sticker-new"></span>
+
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+									</div>
+									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+										<span><i class="bi bi-ticket-perforated"></i></span>
+										MUA VÉ
+									</a>
+								</div>
+							</div>
+						}
+					}
+				}
+			</div>
+		</div>
+	</div>
+
+</div>
+<div id="myModalBuyTicket" class="modal-buy">
+	<div class="modal-size">
+		<div class="modal-content-buy d-flex justify-content-between border-bottom ">
+			<span class="close-modal-btn" onclick="closeModal()">&times;</span>
+			<h5>LỊCH CHIẾU - @filmName</h5>
+		</div>
+		<div class="modal-body">
+			<ViewShowTimeModal
+				OnShowtimeSelected="OpenSeatSelectionModal" 
+				Id="@IdFilm" 
+				LoginCallback="RedirectToLogin" />
+		</div>
+	</div>
+</div>
+<!--Modal chọn ghế -->
+<div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title text-center">Chọn ghế</h4>
+				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" style="background-color: #fdfcf0">
+				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
+			</div>
+			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+				<SeatFooter ShowtimeId="@ShowTimeId"
+				SeatDTOs="lstSeats"
+				@ref="seatFooterRef"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalTicket="@TotalTicket"
+				NextToComboModal="OpenComboSelectionModal"
+				BackToShowtimeModal="ShowCloseConfirmation" />
+			</div>
+		</div>
+	</div>
+</div>
+<!--Modal combo -->
+<div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Chọn Combo</h4>
+			</div>
+			<div class="modal-body">
+				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelection="HandleSelectedCombos" />
+			</div>
+			<div class="modal-footer" style="width:100%;height:150px">
+				<ComboFooter ShowtimeId="@ShowTimeId"
+				CheckedSeats="lstCheckedSeats"
+				SelectedCombos="lstSelectedCombos"
+				BillId="@BillId" @ref="comboFooterRef"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalCombo="@TotalCombo"
+				TotalMoney="@TotalMoney"
+				TotalTicket="@TotalTicket"
+				BackToSeatModal="PreComboSelectionModal"
+				NextToDiscount="OpenDiscountModal" />
+			</div>
+		</div>
+	</div>
+</div>
+<!--Modal Discount-->
+<div class="modal fade" id="DiscountSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Thanh toán</h4>
+			</div>
+			<div class="modal-body">
+				<DiscountSelectionModal />
+			</div>
+			<div class="modal-footer" style="width:100%;height:150px">
+				<DiscountFooter ShowtimeId="@ShowTimeId"
+				CheckedSeats="lstCheckedSeats"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalCombo="@TotalCombo"
+				TotalMoney="@TotalMoney"
+				TotalTicket="@TotalTicket"
+				BillCombo="ComboCheckRequest"
+				BackToSeat="CancelCheckout" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	document.getElementById("defaultOpen").click();
+	function openCity(evt, cityName) {
+	// Declare all variables
+	var i, tabcontent, tablinks;
+
+	// Get all elements with class="tabcontent" and hide them
+	tabcontent = document.getElementsByClassName("tabcontent");
+	for (i = 0; i < tabcontent.length; i++) {
+	tabcontent[i].style.display = "none";
+	}
+
+	// Get all elements with class="tablinks" and remove the class "active"
+	tablinks = document.getElementsByClassName("tablinks");
+	for (i = 0; i < tablinks.length; i++) {
+	tablinks[i].className = tablinks[i].className.replace(" active", "");
+	}
+
+	// Show the current tab, and add an "active" class to the button that opened the tab
+	document.getElementById(cityName).style.display = "block";
+	evt.currentTarget.className += " active";
+	}
+	function openModalShowTime() {
+	document.getElementById('myModalBuyTicket').style.display = 'flex';
+	}
+
+	// Đóng modal
+	function closeModal() {
+	document.getElementById('myModalBuyTicket').style.display = 'none';
+	localStorage.removeItem('showtimeModalOpen');
+	localStorage.removeItem('showtimeModalFilmId');
+	}
+
+	function openModal(modalId) {
+	var modalElement = document.getElementById(modalId);
+	var modal = new bootstrap.Modal(modalElement);
+	modal.show();
+	}
+	function closeModall(modalId) {
+	var modalElement = document.getElementById(modalId);
+	var modal = bootstrap.Modal.getInstance(modalElement);
+	if (modal) {
+	modal.hide();
+	}
+	}
+</script>
+
+@code {
+	private List<UserHomeDto> listObjFilm = new List<UserHomeDto>();
+	private List<SeatDTO> lstSeats = new List<SeatDTO>();
+	private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
+	private List<ComboRequest> lstSelectedCombos = new();
+	private string IdFilm;
+	private string filmName { get; set; }
+	private Guid ShowTimeId;
+	public SeatSelectionModal seatSelectionModalref;
+	public ComboSelectionModal comboSelectionModalref;
+	private Guid BillId = Guid.Empty;
+	private SeatFooter seatFooterRef;
+	private ComboFooter comboFooterRef;
+	private string SeatsSelectedstr;
+	private decimal TotalTicket;
+	private decimal TotalCombo = 0;
+	private decimal TotalMoney = 0;
+	private decimal Discount;
+	private ComboCheckRequest ComboCheckRequest;
+	private bool isFirstRender = true;
+
+	protected async override Task OnInitializedAsync()
+	{	
+		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
+        base.OnInitialized();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var showtimeModalOpen = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalOpen");
+			var showtimeModalFilmId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalFilmId");
+
+			if (showtimeModalOpen == "true" && !String.IsNullOrEmpty(showtimeModalFilmId))
+			{
+				await OpenModalShowTime(showtimeModalFilmId);
+				StateHasChanged();
+			}
+		}
+	}
+
+	private async Task RedirectToLogin()
+	{
+		await JSRuntime.InvokeVoidAsync("closeModal");
+		NavigationManager.NavigateTo("/");
+		StateHasChanged();
+		await JSRuntime.InvokeVoidAsync("openLoginModal");
+	}
+
+	private async Task OpenModalShowTime(string id)
+	{
+		IdFilm = id;
+		var listObj = await UserHomeService.GetAllFilmForUserHome();
+		filmName = listObj.FirstOrDefault(x => x.Id == Guid.Parse(id)).Name;
+		await JSRuntime.InvokeVoidAsync("localStorage.setItem", "showtimeModalOpen", "true");
+		await JSRuntime.InvokeVoidAsync("localStorage.setItem", "showtimeModalFilmId", id);
+		await Task.Delay(100);
+		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+
+	private async Task OpenSeatSelectionModal(Guid id)
+	{
+		await seatSelectionModalref.Reset();
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("closeModal");
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+	}
+
+	private void HandleSelectedSeats(EventCallbackArgs args)
+	{
+		lstSeats = args.lstSeats;
+		SeatsSelectedstr = args.str;
+		TotalTicket = args.TotalTicket;
+		TotalMoney = TotalTicket;
+		StateHasChanged();
+	}
+
+	private async Task OpenComboSelectionModal(EventCallbackArgs args)
+	{
+		Task.Delay(300);
+		BillId = args.BillId;
+		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
+	}
+
+	private async Task CloseSeatSelectionModal()
+	{
+		await seatSelectionModalref.Reset();
+		await seatFooterRef.Reset();
+		lstSeats.Clear();
+		SeatsSelectedstr = "";
+		BillId = Guid.Empty;
+		TotalMoney = 0;
+		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
+        filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
+		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+
+	private async Task PreComboSelectionModal(Guid id)
+	{
+		await seatSelectionModalref.Reset();
+		await comboFooterRef.Reset();
+		await seatFooterRef.Reset();
+		lstSeats.Clear();
+		SeatsSelectedstr = "";
+		BillId = Guid.Empty;
+		TotalMoney = 0;
+		TotalTicket = 0;
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+	}
+
+	private async Task CancelCheckout(Guid id)
+	{
+		await seatSelectionModalref.Reset();
+		await comboFooterRef.Reset();
+		await seatFooterRef.Reset();
+		lstSeats.Clear();
+		SeatsSelectedstr = "";
+		BillId = Guid.Empty;
+		TotalMoney = 0;
+		TotalTicket = 0;
+		TotalCombo = 0;
+		Discount = 0;
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
+		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+	}
+
+	public async void ShowCloseConfirmation()
+	{
+		bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận hủy đặt vé?");
+
+		if (confirmed)
+		{
+			await CloseSeatSelectionModal();
+		}
+	}
+
+	private void HandleSelectedCombos(EventCallbackArgs args)
+	{
+		lstSelectedCombos = args._lstCombo;
+		TotalCombo = args.TotalCombo;
+		TotalMoney = TotalCombo + TotalTicket;
+		StateHasChanged();
+	}
+
+	private async Task OpenDiscountModal(EventCallbackArgs args)
+	{
+		Task.Delay(1000);
+		ComboCheckRequest = args.ComboCheckRequest;
+		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+		await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
+	}
+}
