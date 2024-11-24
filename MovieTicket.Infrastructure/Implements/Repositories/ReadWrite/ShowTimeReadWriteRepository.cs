@@ -59,6 +59,22 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Status = StatusCodes.Status400BadRequest
 				};
 			}
+			// Check thời gian bắt đầu phải lớn hơn thời gian hiện tại ít nhất 30 phút
+			if (showTime.StartTime.HasValue)
+			{
+				var currentTime = DateTime.Now;
+				var timeDifference = showTime.StartTime.Value - currentTime;
+
+				if (timeDifference.TotalMinutes <= 30)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Thời gian bắt đầu phải lớn hơn thời gian hiện tại 30 phút.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
+			}
 
 			// Tìm suất chiếu có thời gian trùng nhau trong cùng một ngày
 			var overlappingShowTime = await _db.ShowTimes
@@ -163,7 +179,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				EndTime = showTime.EndTime.Value,
 				ShowtimeDate = showTime.ShowtimeDate ?? DateTime.Today,
 				Desciption = showTime.Desciption,
-				Status = showTime.Status
+				Status = ShowtimeStatus.ComingSoon
 			};
 
 			_db.ShowTimes.Add(newShowTime);
@@ -180,6 +196,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 		public async Task<ResponseObject<ShowTime>> Delete(Guid id)
 		{
 			var showTime = await _db.ShowTimes.FindAsync(id);
+			var checkShowTime = await _db.Tickets.AnyAsync(x => x.ShowTimeId == id);
 			if (showTime == null)
 			{
 				return new ResponseObject<ShowTime>
@@ -189,7 +206,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Status = StatusCodes.Status404NotFound
 				};
 			}
-			var checkShowTime = await _db.Tickets.AnyAsync(x => x.ShowTimeId == id);
+			if (showTime.Status == ShowtimeStatus.Ended || showTime.Status == ShowtimeStatus.Showing)
+			{
+				return new ResponseObject<ShowTime>
+				{
+					Data = null,
+					Message = "Không thể xóa suất chiếu đã kết thúc hoặc đang chiếu.",
+					Status = StatusCodes.Status400BadRequest
+				};
+			}
 			if (checkShowTime)
 			{
 				return new ResponseObject<ShowTime>
@@ -222,7 +247,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     Status = StatusCodes.Status404NotFound
                 };
             }
-
+			if (existingShowTime.Status == ShowtimeStatus.Ended)
+			{
+				return new ResponseObject<ShowTime>
+				{
+					Data = null,
+					Message = "Không được update suất chiếu đã kết thúc.",
+					Status = StatusCodes.Status400BadRequest
+				};
+			}
             // Check null các trường bắt buộc
             if (!showTime.FilmId.HasValue || !showTime.ScheduleId.HasValue || !showTime.CinemaId.HasValue ||
                 !showTime.ScreenTypeId.HasValue || !showTime.TranslationTypeId.HasValue ||
@@ -235,8 +268,34 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     Status = StatusCodes.Status400BadRequest
                 };
             }
+			// Check thời gian bắt đầu phải lớn hơn thời gian hiện tại ít nhất 30 phút
+			if (showTime.StartTime.HasValue)
+			{
+				var currentTime = DateTime.Now;
+				var timeDifference = showTime.StartTime.Value - currentTime;
+				var timeDifference2 = existingShowTime.StartTime.Value - currentTime;
+				if (timeDifference2.TotalMinutes <= 30)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Không được update suất chiếu khi cách thời gian chiếu lớn hơn 30 phút.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
 
-            var eightAM = new TimeSpan(8, 0, 0);
+				if (timeDifference.TotalMinutes <= 30)
+				{
+					return new ResponseObject<ShowTime>
+					{
+						Data = null,
+						Message = "Thời gian bắt đầu phải lớn hơn thời gian hiện tại 30 phút.",
+						Status = StatusCodes.Status400BadRequest
+					};
+				}
+			}
+
+			var eightAM = new TimeSpan(8, 0, 0);
             var eightPM = new TimeSpan(23, 0, 0);
 
             // Tìm suất chiếu gần nhất trước thời gian bắt đầu của suất chiếu đang cập nhật
@@ -329,7 +388,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             existingShowTime.TranslationTypeId = showTime.TranslationTypeId.Value;
             existingShowTime.StartTime = showTime.StartTime.Value;
             existingShowTime.EndTime = showTime.EndTime.Value;
-            _db.ShowTimes.Update(existingShowTime);
+			existingShowTime.Status = showTime.Status;
+			_db.ShowTimes.Update(existingShowTime);
             await _db.SaveChangesAsync();
 
             return new ResponseObject<ShowTime>
@@ -340,5 +400,27 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             };
         }
 
-    }
+		public async Task<ResponseObject<ShowTime>> UpdateStatus(ShowTimeUpdateStatus updateStatus)
+		{
+			var existingShowTime = await _db.ShowTimes.FindAsync(updateStatus.Id);
+			if (existingShowTime == null)
+			{
+				return new ResponseObject<ShowTime>
+				{
+					Data = null,
+					Message = "Không tìm thấy suất chiếu",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			existingShowTime.Status = updateStatus.Status;
+			_db.ShowTimes.Update(existingShowTime);
+			await _db.SaveChangesAsync();
+			return new ResponseObject<ShowTime>
+			{
+				Data = existingShowTime,
+				Message = "Cập nhật trạng thái thành công",
+				Status = StatusCodes.Status200OK
+			};
+		}
+	}
 }

@@ -2,6 +2,7 @@
 @using MovieTicket.Application.DataTransferObjs.Film
 @using static MovieTicket.BlazorServer.Components.Pages.User.Home
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+
 <div class="container">
     <div class="theatre-list">
         <h1 class="header">VHD CINEMAS</h1>
@@ -14,21 +15,6 @@
                 </p>
             }
         </div>
-        <hr />
-        <h1 class="header">Phòng Chiếu</h1>
-        <div class="cinemas">
-            @foreach (var item in CinemaDtos)
-            {
-                <p @onclick="() => OnCinemaSelected(item.Id)"
-                   class="cinema-item @(showTimeSearch.CinemaId == item.Id ? "selected" : "")">
-                    @item.Name
-                </p>
-            }
-        </div>
-    </div>
-
-    <div class="theatre-cinema">
-        <h3 class="header2">@Cinema.Name</h3>
     </div>
 
     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
@@ -112,7 +98,6 @@
             {
                 <p>Không có suất chiếu nào cho ngày đã chọn.</p>
             }
-
         </div>
     </div>
 </div>
@@ -129,27 +114,11 @@
                 <SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
-               
             </div>
         </div>
     </div>
 </div>
-<!--Modal combo -->
-<div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header" data-bs-theme="dark">
-                <h4 class="modal-title">Chọn Combo</h4>
-            </div>
-            <div class="modal-body">
-                <ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" />
-            </div>
-            <div class="modal-footer" style="width:100%;height:150px">
-                
-            </div>
-        </div>
-    </div>
-</div>
+
 <script>
     function closeModal() {
         document.getElementById('myModalBuyTicket').style.display = 'none';
@@ -198,44 +167,39 @@
    
     protected override async Task OnInitializedAsync()
     {
-        CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(CinemaCenterSearch);
-        AllCinemas = await CinemaService.GetAll();
+        CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
         Dates = Enumerable.Range(0, 28).Select(offset => DateTime.Today.AddDays(offset)).ToList();
         showTimeSearch.ShowtimeDate = DateTime.Today;
         AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
-        await LoadShowTimes(); // Load mặc định showtimes cho ngày hôm nay
+
+        if (CinemaCenterDtos.Any())
+        {
+            var firstCinemaCenterId = CinemaCenterDtos.First().Id;
+            showTimeSearch.CinemaCenterId = firstCinemaCenterId; 
+            await OnCinemaCenterSelected(firstCinemaCenterId);   
+        }
     }
+
 
     private async Task OnCinemaCenterSelected(Guid cinemaCenterId)
     {
-        showTimeSearch.CinemaCenterId = cinemaCenterId; // Lưu trạng thái rạp
-        CinemaDtos = AllCinemas.Where(c => c.CinemaCenterId == cinemaCenterId).ToList();
-        showTimeSearch.CinemaId = null; // Reset phòng chiếu
-        Cinema = new CinemaDto(); // Xóa thông tin phòng chiếu
-        await LoadShowTimes();
-    }
-
-    private async Task OnCinemaSelected(Guid cinemaId)
-    {
-        showTimeSearch.CinemaId = cinemaId; // Lưu trạng thái phòng chiếu
-        Cinema = CinemaDtos.Find(c => c.Id == cinemaId);
+        showTimeSearch.CinemaCenterId = cinemaCenterId;
         await LoadShowTimes();
     }
 
     private async Task OnDateSelected(DateTime date)
     {
-        showTimeSearch.ShowtimeDate = date; // Lưu trạng thái ngày được chọn
+        showTimeSearch.ShowtimeDate = date;
         await LoadShowTimes();
     }
 
     private async Task LoadShowTimes()
     {
-        if (showTimeSearch.CinemaCenterId.HasValue && showTimeSearch.CinemaId.HasValue && showTimeSearch.ShowtimeDate.HasValue)
+        if (showTimeSearch.CinemaCenterId.HasValue && showTimeSearch.ShowtimeDate.HasValue)
         {
             var pagingResponse = await ShowTimeService.GetAll(showTimeSearch, new PagingParameters() { PageSize = 50 });
             showTimeDtos = pagingResponse.Item.ToList();
 
-            // Lấy danh sách phim từ showtimes
             var filmIds = showTimeDtos.Select(s => s.FilmId).Distinct();
             filmDto = (await FilmService.GetAllFilms()).Where(f => filmIds.Contains(f.Id)).ToList();
         }
@@ -245,7 +209,6 @@
             filmDto = new List<FilmDto>();
         }
     }
-
 
     private void PreviousPage()
     {
