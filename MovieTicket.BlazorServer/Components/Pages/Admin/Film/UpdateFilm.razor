@@ -117,14 +117,9 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="trangThai" class="form-label">Trạng thái</label>
-                <InputSelect class="form-select" id="trangThai" @bind-Value="filmUpdateRequest.Status">
-                    <option selected>Select a status</option>
-                    @foreach (var Item in Enum.GetValues(typeof(FilmStatus)))
-                    {
-                        <option value="@Item">@Item</option>
-                    }
-                </InputSelect>
+                <label for="language" class="form-label">Ngôn ngữ</label>
+                <InputText type="text" class="form-control" id="language" @bind-Value="filmUpdateRequest.Language" placeholder="Enter language"/>
+                <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
             </div>
             <div class="col-md-6">
                 <label for="quocGia" class="form-label">Quốc gia</label>
@@ -134,12 +129,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="language" class="form-label">Ngôn ngữ</label>
-                <InputText type="text" class="form-control" id="language" @bind-Value="filmUpdateRequest.Language" placeholder="Enter language"/>
-                <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 @if (filmUpdateRequest.Poster == null)
                 {
                     <label for="customFile" class="form-label">Upload Image</label>
@@ -198,7 +188,6 @@
                 StartDate = filmDto.StartDate,
                 ReleaseYear = filmDto.ReleaseYear,
                 RunningTime = filmDto.RunningTime,
-                Status = filmDto.Status,
                 Nation = filmDto.Nation,
                 Poster = filmDto.Poster,
                 Language = filmDto.Language
