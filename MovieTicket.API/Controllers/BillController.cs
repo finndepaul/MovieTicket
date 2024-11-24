@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Bill;
+using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
+using MovieTicket.Application.ValueObjs.Paginations;
+using ZXing;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
@@ -35,8 +38,18 @@ namespace MovieTicket.API.Controllers
             var billModel = await billReadOnly.GetByIdAsync(id);
             return Ok(billModel);
         }
+        [HttpGet]
+		public async Task<IActionResult> GetListBillWithPagination([FromQuery] BillWithPaginationRequest request, [FromQuery] PagingParameters pagingParameters,CancellationToken cancellationToken)
+		{
+			var result = await billReadOnly.GetListBillWithPaginationAsync(request, pagingParameters, cancellationToken);
+			var data = result.Item.ToList();
+			return Ok(new PageList<BillsDto>(data.ToList(),
+				result.MetaData.TotalCount,
+				result.MetaData.CurrentPage,
+				result.MetaData.PageSize));
+		}
 
-        [HttpPost]
+		[HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBillRequest createBillRequest)
         {
             var billModel = await billReadWrite.CreateAsync(createBillRequest);

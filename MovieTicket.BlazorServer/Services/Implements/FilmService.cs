@@ -2,6 +2,7 @@
 using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 using ZXing;
 
@@ -53,10 +54,16 @@ namespace MovieTicket.BlazorServer.Services.Implements
         }
 
 
-        public async Task<FilmDto> DeleteFilm(Guid id)
+        public async Task<ResponseObject<FilmDto>> DeleteFilm(Guid id)
         {
             var response = await _httpClient.DeleteAsync($"api/Film/Delete?id={id}");
-            return await response.Content.ReadFromJsonAsync<FilmDto>();
+            var readObj = await response.Content.ReadFromJsonAsync<ResponseObject<FilmDto>>();
+            return new ResponseObject<FilmDto>()
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
         }
 
         public Task<IEnumerable<FilmDto>> GetAllFilms()

@@ -13,6 +13,7 @@ namespace MovieTicket.Application.DataTransferObjs.Ticket
 		public Guid? BillId { get; set; }
 		public Guid? ShowTimeId { get; set; }
 		public Guid? SeatId { get; set; }
+		public decimal Price { get; set; }
 		public Guid? TicketPriceId { get; set; }
 		public string? Qrcode { get; set; }
 		public string? Description { get; set; }

@@ -1,4 +1,4 @@
-﻿@page "/create-user"
+﻿@page "/user/create"
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @inject IAccountService AccountService
 @attribute [Authorize(Roles = "Admin")]
@@ -51,7 +51,7 @@
         if(result.Status == 200)
         {
             await JSRuntime.ToastrSuccess(result.Message);
-            NavigationManager.NavigateTo("/list-user");
+            NavigationManager.NavigateTo("/user");
         }
         else
         {
@@ -61,6 +61,6 @@
 
     private void GoBack()
     {
-        NavigationManager.NavigateTo("/list-user");
+        NavigationManager.NavigateTo("/user");
     }
 }

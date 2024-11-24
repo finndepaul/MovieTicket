@@ -2,8 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.Combo;
+using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
+using System.Threading;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -26,6 +29,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				.Select(b => new BillDto
 				{
 					Id = b.Id,
+					MembershipId = b.MembershipId,
 					FilmName = (from ticket in _dbContext.Tickets
 								join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
 								join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
@@ -62,6 +66,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 					.Select(b => new BillDetailDto
 					{
 						Id = b.Id,
+						MembershipId = b.MembershipId,
 						BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
 						TotalMoney = b.TotalMoney,
 						AfterDiscount = b.AfterDiscount,
@@ -84,6 +89,70 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			}
 
 			return bill;
+		}
+
+		public async Task<PageList<BillsDto>> GetListBillWithPaginationAsync(BillWithPaginationRequest request, PagingParameters pagingParameters,CancellationToken cancellationToken)
+		{
+			var query = _dbContext.Bills
+				.Join(_dbContext.Tickets, b => b.Id, t => t.BillId, (b,t) => new {b, t})
+				.Join(_dbContext.ShowTimes, group => group.t.ShowTimeId, s => s.Id, (group, s) => new { group, s })
+				.Join(_dbContext.ScreenTypes, group => group.s.ScreenTypeId,sct => sct.Id, (group, sct)=> new { group, sct})
+				.Join(_dbContext.Cinemas, group => group.group.s.CinemaId, c=>c.Id,(group, c)=> new { group, c})
+				.Join(_dbContext.CinemaCenters, group => group.c.CinemaCenterId,cc => cc.Id,(group, cc)=> new { group, cc })
+				.Join(_dbContext.Schedules, group=>group.group.group.group.s.ScheduleId,sc =>sc.Id,(group,sc)=> new {group,sc})
+				.Join(_dbContext.Films,group=>group.sc.FilmId,f=>f.Id,(group,f)=>new { group,f});
+			if (!String.IsNullOrEmpty(request.FilmName))
+			{
+				query = query.Where(x => x.f.Name.Equals(request.FilmName));
+			}
+			if (!String.IsNullOrEmpty(request.BarCode))
+			{
+				query = query.Where(x => x.group.group.group.group.group.group.b.BarCode.Equals(request.BarCode));
+			}
+			if (request.Status.HasValue)
+			{
+				query = query.Where(x => x.group.group.group.group.group.group.b.Status == request.Status);
+			}
+			if (request.Type.HasValue)
+			{
+				query = query.Where(x => x.group.sc.Type == request.Type);
+			}
+			if (!String.IsNullOrEmpty(request.CinemaType_Name))
+			{
+				query = query.Where(x => x.group.group.group.group.sct.Type + " " + x.group.group.cc.Name == request.CinemaType_Name);
+			}
+			if (request.StartTime != null && request.EndTime != null)
+			{
+				query = query.Where(x => x.group.group.group.group.group.group.b.CreateTime >= request.StartTime && x.group.group.group.group.group.group.b.CreateTime <= request.EndTime);
+			}
+			var result = await query
+				.Select(x => new BillsDto
+				{
+					Id = x.group.group.group.group.group.group.b.Id,
+					Type = x.group.sc.Type,
+					CinemaType_Name = x.group.group.group.group.sct.Type + " " + x.group.group.cc.Name,
+					FilmName = x.f.Name,
+					TotalMoney = x.group.group.group.group.group.group.b.AfterDiscount,
+					CreateTime = x.group.group.group.group.group.group.b.CreateTime,
+					BarCode = x.group.group.group.group.group.group.b.BarCode,
+					Status = x.group.group.group.group.group.group.b.Status
+				}).OrderBy(x=>x.CreateTime).Distinct().AsNoTracking().ToListAsync();
+			var count = result.Count;
+			var data = await query
+				.Select(x => new BillsDto
+				{
+					Id = x.group.group.group.group.group.group.b.Id,
+					Type = x.group.sc.Type,
+                    CinemaType_Name = x.group.group.group.group.sct.Type + " " + x.group.group.cc.Name,
+                    FilmName = x.f.Name,
+					TotalMoney = x.group.group.group.group.group.group.b.AfterDiscount,
+					CreateTime = x.group.group.group.group.group.group.b.CreateTime,
+					BarCode = x.group.group.group.group.group.group.b.BarCode,
+					Status = x.group.group.group.group.group.group.b.Status
+				}).OrderBy(x => x.CreateTime).Distinct().Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+			.Take(pagingParameters.PageSize)
+				.AsNoTracking().ToListAsync(cancellationToken);
+			return new PageList<BillsDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
 		}
 	}
 }

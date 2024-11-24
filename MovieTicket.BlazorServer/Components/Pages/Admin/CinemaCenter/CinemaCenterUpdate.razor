@@ -1,4 +1,4 @@
-﻿@page "/update-cinema-center/{Id:guid}"
+﻿@page "/cinema-center/update/{Id:guid}"
 @attribute [Authorize(Roles = "Admin")]
 <EditForm Model="cinemaCenterUpdateRequest" OnValidSubmit="UpdateCinemaCenter">
 	<DataAnnotationsValidator />

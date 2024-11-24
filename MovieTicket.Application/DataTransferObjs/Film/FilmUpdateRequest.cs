@@ -35,15 +35,14 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public int? Rating { get; set; }
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Start date is required.")]
-        [CustomValidation(typeof(FilmCreateRequest), nameof(ValidateStartDate))]
+
+        [CustomValidation(typeof(FilmUpdateRequest), nameof(ValidateStartDate))]
         public DateTime? StartDate { get; set; }
 
         [Range(1800, 2100, ErrorMessage = "Release year must be between 1800 and 2100.")]
         public int? ReleaseYear { get; set; }
         [Range(1, 500, ErrorMessage = "Running time must be between 1 and 500 minutes.")]
         public int? RunningTime { get; set; }
-        [EnumDataType(typeof(FilmStatus), ErrorMessage = "Invalid status.")]
-        public FilmStatus? Status { get; set; }
 
         [StringLength(255, ErrorMessage = "Nation must not exceed 255 characters.")]
         public string? Nation { get; set; }
@@ -54,9 +53,9 @@ namespace MovieTicket.Application.DataTransferObjs.Film
         public string? Language { get; set; }
         public static ValidationResult? ValidateStartDate(DateTime? startDate, ValidationContext context)
         {
-            if (startDate.HasValue && startDate.Value < DateTime.Now)
+            if (startDate.HasValue && startDate.Value < DateTime.Now.Date)
             {
-                return new ValidationResult("Start date cannot be in the past.");
+                return new ValidationResult("Start date must be in the present or future.");
             }
 
             return ValidationResult.Success;

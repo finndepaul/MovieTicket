@@ -13,7 +13,7 @@
 <div class="container-fluid">
     <EditForm Model="filmCreateRequest" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
-        <a class="btn btn-outline-secondary mb-3" href="/list-film">Quay lại</a>
+        <a class="btn btn-outline-secondary mb-3" href="/film">Quay lại</a>
         <button type="submit" class="btn btn-primary mb-3">Submit</button>
         <div class="row mb-3">
             <div class="col-md-6">
@@ -118,14 +118,9 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="trangThai" class="form-label">Trạng thái</label>
-                <select class="form-select" id="trangThai" @bind="filmCreateRequest.Status">
-                    <option selected>Select a Status</option>
-                    @foreach (var Item in Enum.GetValues(typeof(FilmStatus)))
-                    {
-                        <option value="@Item">@Item</option>
-                    }
-                </select>
+                <label for="language" class="form-label">Ngôn ngữ</label>
+                <input type="text" class="form-control" id="language" @bind="filmCreateRequest.Language" placeholder="Enter language">
+                <ValidationMessage For="@(() => filmCreateRequest.Language)" />
             </div>
             <div class="col-md-6">
                 <label for="quocGia" class="form-label">Quốc gia</label>
@@ -135,12 +130,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="language" class="form-label">Ngôn ngữ</label>
-                <input type="text" class="form-control" id="language" @bind="filmCreateRequest.Language" placeholder="Enter language">
-                <ValidationMessage For="@(() => filmCreateRequest.Language)" />
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 @if (filmCreateRequest.Poster == null)
                 {
                     <label for="customFile" class="form-label">Upload Image</label>
