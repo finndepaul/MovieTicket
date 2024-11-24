@@ -1,5 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 
 namespace MovieTicket.BlazorServer.Services.Interfaces
 {
@@ -10,7 +11,7 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
         Task<FilmDto> GetById(Guid id);
         Task<FilmDto> CreateFilm(FilmCreateRequest filmCreateRequest);
         Task<FilmDto> UpdateFilm(Guid id, FilmUpdateRequest filmUpdateRequest);
-        Task<FilmDto> DeleteFilm(Guid id);
+        Task<ResponseObject<FilmDto>> DeleteFilm(Guid id);
         Task<PageList<FilmDto>> GetFiltering(string? name, int? releaseYear, DateTime? createDate, DateTime? startDate, PagingParameters pagingParameters);
 
     }

@@ -32,8 +32,6 @@ namespace MovieTicket.Application.DataTransferObjs.Film
 
         public int? RunningTime { get; set; }
 
-        public FilmStatus? Status { get; set; }
-
         public string? Nation { get; set; }
 
         public string? Poster { get; set; }
