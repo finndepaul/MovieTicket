@@ -1,5 +1,4 @@
-﻿
-<style>
+﻿<style>
     body {
         background-color: #f8f8f8;
     }
@@ -117,22 +116,37 @@
 <div class="d-flex container-payment p-3">
     <div class="payment-container">
         <!-- Bước 1: Giảm giá -->
-        <div class="section-title">Bước 1: GIẢM GIÁ</div>
-        <div class="p-3">
-            <button class="btn-option">Mã giảm giá</button>
-            <span class="d-none">
-                <input type="text" class="form-control" placeholder="Nhập mã giảm giá" />
-            </span>
-            <button class="btn-option">Điểm CGV</button>
-            <span class="d-none">
-                <input type="text" class="form-control" placeholder="Nhập điểm" />
-            </span>
+        <div class="section-title d-flex justify-content-between">
+            <div>Bước 1: GIẢM GIÁ</div>
+            <button class="btn btn-secondary" @onclick="Reload">Đặt lại</button>
         </div>
-
-        <!-- Bước 2: Thẻ quà tặng -->
-        <div class="section-title">Bước 2: THẺ QUÀ TẶNG</div>
         <div class="p-3">
-            <button class="btn-option">Thẻ quà tặng</button>
+            <!-- Phần mã giảm giá -->
+            <div class="mb-3 btn-option pe-5">
+                <label for="discountCode" class="form-label">Mã giảm giá:</label>
+                <input type="text"
+                       class="form-control mb-3"
+                       id="discountCode"
+                       placeholder="Nhập mã giảm giá:"
+                       @bind-value="DiscountCode"
+                       disabled="@IsVHDUsed">
+                <button class="ms-2 btn btn-success" @onclick="UseDiscountCode">Xác nhận</button>
+            </div>
+
+            <!-- Phần điểm VHD -->
+            <div class="mb-3 btn-option pe-5">
+                <label for="vhdPoints" class="form-label">Điểm VHD:</label>
+                <input type="number"
+                       class="form-control"
+                       id="vhdPoints"
+                       placeholder="Sử dụng điểm"
+                       @bind-value="VHDPoints"
+                       disabled="@IsDiscountCodeUsed">
+                <div id="passwordHelpBlock" class="form-text ms-3">
+                    <p class="m-0 p-0">Điểm hiện tại: @CurrentPoints</p>
+                </div>
+                <button class="ms-2 btn btn-success" @onclick="UseVHDPoints">Xác nhận</button>
+            </div>
         </div>
 
         <!-- Bước 3: Hình thức thanh toán -->
@@ -147,20 +161,8 @@
                 <label class="form-check-label" for="visa">Thẻ quốc tế (Visa, Master, Amex, JCB)</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="payment" id="momo">
-                <label class="form-check-label" for="momo">Mã MMCGV - 5K, -5K Quý nhóm</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="payment" id="zalopay">
-                <label class="form-check-label" for="zalopay">Zalopay - 84K/vé + gói quà ưu đãi 530K</label>
-            </div>
-            <div class="form-check">
                 <input class="form-check-input" type="radio" name="payment" id="vnpay">
                 <label class="form-check-label" for="vnpay">Nhập VNPAYCGV giảm đến 10K/bill</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="payment" id="shopeepay">
-                <label class="form-check-label" for="shopeepay">ShopeePay</label>
             </div>
         </div>
     </div>
@@ -173,7 +175,7 @@
             </div>
             <div class="summary-item">
                 <span>VIP:</span>
-                <span>104.909,00 ₫</span>
+                <span>100,00 ₫</span>
             </div>
             <div class="summary-item">
                 <span>Khuyến mãi:</span>
@@ -181,14 +183,14 @@
             </div>
             <div class="summary-item red">
                 <span>Tổng số tiền thanh toán:</span>
-                <span>104.909,00 ₫</span>
+                <span>100,00 ₫</span>
             </div>
         </div>
 
         <div class="countdown-container">
             <div class="countdown-title">Countdown Clock</div>
-            <div class="countdown-box" id="minutes">4</div>
-            <div class="countdown-box" id="seconds">17</div>
+            <div class="countdown-box" id="minutes">5</div>
+            <div class="countdown-box" id="seconds">00</div>
 
         </div>
     </div>
@@ -199,8 +201,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Đếm ngược thời gian
-    let minutes = 4;
-    let seconds = 17;
+    let minutes = 5;
+    let seconds = 00;
     const countdown = setInterval(() => {
         if (seconds === 0) {
             if (minutes === 0) {
@@ -217,6 +219,39 @@
         document.getElementById("seconds").textContent = seconds < 10 ? '0' + seconds : seconds;
     }, 1000);
 </script>
-@code {
 
+@code {
+    // Các biến dùng để quản lý trạng thái
+    private string DiscountCode { get; set; } = string.Empty;
+    private int VHDPoints { get; set; } = 0;
+    private int CurrentPoints { get; set; } = 100; // Ví dụ: điểm hiện tại là 100
+    private bool IsDiscountCodeUsed { get; set; } = false;
+    private bool IsVHDUsed { get; set; } = false;
+
+    // Xử lý khi nhấn nút xác nhận mã giảm giá
+    private void UseDiscountCode()
+    {
+        if (!string.IsNullOrEmpty(DiscountCode))
+        {
+            IsDiscountCodeUsed = true;
+            IsVHDUsed = false;
+        }
+    }
+
+    // Xử lý khi nhấn nút xác nhận điểm VHD
+    private void UseVHDPoints()
+    {
+        if (VHDPoints > 0 && VHDPoints <= CurrentPoints)
+        {
+            IsVHDUsed = true;
+            IsDiscountCodeUsed = false;
+        }
+    }
+    private void Reload()
+    {
+        IsDiscountCodeUsed = false;
+        IsVHDUsed = false;
+        DiscountCode = string.Empty;
+        VHDPoints = 0;
+    }
 }

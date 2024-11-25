@@ -31,6 +31,7 @@
     private string FilmName { get; set; }
     private string FilmReleaseDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
     private UpdateScheduleRequest request = new UpdateScheduleRequest();
+    CancellationToken cancellationToken;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -51,7 +52,7 @@
     private async Task HandleUpdateScheduel()
     {
         request.Id = Guid.Parse(ScheduleId);
-        var result = await _scheduleService.UpdateAsync(request);
+        var result = await _scheduleService.UpdateAsync(request, cancellationToken);
         if (result)
         {
             _navigationManager.NavigateTo("/scheduel", forceLoad: true);

@@ -1,0 +1,172 @@
+﻿@page "/coupon"
+@using MovieTicket.Application.DataTransferObjs.Coupon
+@attribute [Authorize(Roles = "Admin")]
+<div class="container-fluid">
+    <div class="ms-auto">
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addVoucherModal">+ Tạo khuyến mại</button>
+    </div>
+
+    <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center me-4">
+            <label for="input" class="me-2 mb-0">Mã Coupon:</label>
+            <input type="text" id="text" class="form-control form-control-sm" style="width: 250px;" placeholder="Nhập mã để tìm kiếm" @bind="couponCode">
+        </div>
+        <div class="d-flex align-items-center me-4">
+            <label for="date" class="me-2 mb-0">Ngày bắt đầu:</label>
+            <input type="date" id="date" class="form-control form-control-sm" style="width: 150px;" @bind="startDate">
+        </div>
+        <div class="d-flex align-items-center me-4">
+            <label for="date" class="me-2 mb-0">Ngày kết thúc:</label>
+            <input type="date" id="date" class="form-control form-control-sm" style="width: 150px;" @bind="endDate">
+        </div>
+        <div class="d-flex align-items-center">
+            <button class="btn btn-primary btn-sm" @onclick="Refresh">Tìm kiếm</button>
+        </div>
+    </div>
+    <!-- Movie Table -->
+    <div class="table-responsive mb-3">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Mã khuyến mại</th>
+                    <th scope="col">Giá trị</th>
+                    <th scope="col">Thời gian bắt đầu</th>
+                    <th scope="col">Thời gian kết thúc</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (lstCoupons == null)
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in lstCoupons)
+                    {
+                        <tr>
+                            <td>@item.CouponCode</td>
+                            <td>@item.AmountValue</td>
+                            <td>@item.StartDate</td>
+                            <td>@item.EndDate</td>
+                            @if (item.IsActive == "Đang hoạt đông")
+                            {
+                                <td>
+                                    <span class="badge text-bg-success">Kích hoạt</span>
+                                </td>
+                            }
+                            @if (item.IsActive == "Ngưng hoạt động")
+                            {
+                                <td>
+                                    <span class="badge text-bg-success">Chưa Kích hoạt</span>
+                                </td>
+                            }
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editVoucherModal">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- Modal thêm voucher -->
+<div class="modal fade" id="addVoucherModal" tabindex="-1" aria-labelledby="addVoucherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h5 class="modal-title" id="addVoucherModalLabel">Thêm Khuyến Mại Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <MovieTicket.BlazorServer.Components.Pages.Admin.Coupon.AddCoupon/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu Thay Đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal cập nhật voucher -->
+<div class="modal fade" id="editVoucherModal" tabindex="-1" aria-labelledby="editVoucherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h5 class="modal-title" id="editVoucherModalLabel">Chỉnh Sửa Khuyến Mại</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <MovieTicket.BlazorServer.Components.Pages.Admin.Coupon.UpdateCoupon/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Lưu Thay Đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<CouponDto> lstCoupons;
+    private string selectedCoupon { get; set; }
+    private string couponCode { get; set; }
+    private DateTime startDate { get; set; } = DateTime.Now;
+    private DateTime endDate { get; set; } = DateTime.Now;
+    private PagingParameters pagingParameters = new PagingParameters();
+    CancellationToken cancellationToken;
+    private MetaData metaData { get; set; } = new MetaData();
+    protected override async Task OnInitializedAsync()
+    {
+        var lst = await CouponService.GetAllAsync(
+            couponCode,
+            startDate,
+            endDate,
+            new PagingParameters
+            {
+                PageNumber = pagingParameters.PageNumber,
+                PageSize = 10
+            },
+            cancellationToken
+        );
+        lstCoupons = lst.Item.ToList();
+        metaData = lst.MetaData;
+        StateHasChanged();
+    }
+    private async Task SelectedPage(int page)
+    {
+        pagingParameters.PageNumber = page;
+        await Refresh();
+    }
+    private async Task Refresh()
+    {
+        var lst = await CouponService.GetAllAsync(
+            couponCode,
+            startDate,
+            endDate,
+            new PagingParameters
+                {
+                    PageNumber = pagingParameters.PageNumber,
+                    PageSize = 10
+                },
+            cancellationToken
+        );
+        lstCoupons = lst.Item.ToList();
+        metaData = lst.MetaData;
+    }
+}
