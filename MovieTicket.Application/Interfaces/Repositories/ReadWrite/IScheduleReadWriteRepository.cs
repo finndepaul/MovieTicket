@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
-    public interface IScheduleReadWriteRepository
-    {
-        Task<ResponseObject<ScheduleDto>> CreateAsync(CreateScheduleRequest createScheduleRequest);
-        Task<ResponseObject<ScheduleDto>> UpdateAsync(UpdateScheduleRequest updateScheduleRequest);
-        Task<ResponseObject<ScheduleDto>> DeleteAsync(Guid id);
-    }
+	public interface IScheduleReadWriteRepository
+	{
+		Task<ResponseObject<ScheduleDto>> CreateAsync(CreateScheduleRequest request, CancellationToken cancellationToken);
+
+		Task<ResponseObject<ScheduleDto>> UpdateAsync(UpdateScheduleRequest request, CancellationToken cancellationToken);
+
+		Task<ResponseObject<ScheduleDto>> DeleteAsync(Guid id, CancellationToken cancellationToken);
+	}
 }
