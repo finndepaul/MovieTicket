@@ -91,14 +91,14 @@
     private async Task HandleOnSubmit()
     {
         var result = await ComboService.Update(Id, updateComboRequest);
-        if (result != null)
+        if (result.Status == 200)
         {
-            await JSRuntime.ToastrSuccess("Cập nhật thành công");
+            await JSRuntime.ToastrSuccess(result.Message);
             NavigationManager.NavigateTo("/combo");
         }
         else
         {
-            await JSRuntime.ToastrError("Cập nhật thất bại");
+            await JSRuntime.ToastrError(result.Message);
         }
 
     }
