@@ -81,6 +81,7 @@
 	private BillDetailDto Bill = new();
 	private CancellationToken cancellationToken;
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
+	private List<SeatTypeDto> seatTypeDtos = new();
 
 	protected async override Task OnParametersSetAsync()
 	{
@@ -98,6 +99,7 @@
 			{
 				Bill = await UserHomeService.GetBillForCheckOut(BillId);
 			}
+			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
 		}
 	}
 
@@ -108,7 +110,9 @@
 			lstSeatUpdateRequests.Add(new SeatUpdateRequest
 				{
 					Id = s.Id,
-					Status = SeatStatus.Available
+					SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
+					Status = Domain.Enums.SeatStatus.Available,
+					Selection = Domain.Enums.SeatSelection.None
 				});
 		}
 		await SeatService.UpdateRange(lstSeatUpdateRequests);
@@ -138,7 +142,8 @@
 		CheckedSeats.Clear();
 		SeatsSelectedstr = "";
 		TotalMoney = 0;
-		TotalCombo = 0;
+        TotalTicket = 0;
+        TotalCombo = 0;
 		SelectedCombos.Clear();
 		StateHasChanged();
 		return Task.CompletedTask;

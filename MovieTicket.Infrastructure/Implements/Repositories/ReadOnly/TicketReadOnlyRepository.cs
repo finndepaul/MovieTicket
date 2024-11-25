@@ -25,6 +25,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				{
 					Id = x.Id,
 					BillId = x.BillId,
+					Price = x.Price,
 					ShowTimeId = x.ShowTimeId,
 					SeatId = x.SeatId,
 					TicketPriceId = x.TicketPriceId,

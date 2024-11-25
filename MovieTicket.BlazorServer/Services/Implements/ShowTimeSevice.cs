@@ -3,6 +3,8 @@ using MovieTicket.Application.DataTransferObjs.ShowTime;
 using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
+using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
@@ -85,5 +87,29 @@ namespace MovieTicket.BlazorServer.Services.Implements
             var response = await _httpClient.GetFromJsonAsync<ResponseObject<ShowTimeDto>>($"api/ShowTime/GetById?id={id}");
             return response;
         }
-    }
+
+        public async Task<ResponseObject<ShowTimeUpdateRequest>> Update(ShowTimeUpdateRequest showTime)
+        {
+            var result = await _httpClient.PutAsJsonAsync("api/ShowTime/Put", showTime);
+            var readObj = await result.Content.ReadFromJsonAsync<ResponseObject<ShowTimeUpdateRequest>>();
+            return new ResponseObject<ShowTimeUpdateRequest>
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
+        }
+
+		public async Task<ResponseObject<ShowTimeDto>> UpdateStatus(ShowTimeUpdateStatus updateStatus)
+		{
+			var result = await _httpClient.PutAsJsonAsync($"api/ShowTime/UpdateStatus/", updateStatus);
+			var readObj = await result.Content.ReadFromJsonAsync<ResponseObject<ShowTimeDto>>();
+			return new ResponseObject<ShowTimeDto>
+			{
+				Data = readObj.Data,
+				Message = readObj.Message,
+				Status = readObj.Status
+			};
+		}
+	}
 }

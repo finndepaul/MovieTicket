@@ -1,6 +1,7 @@
-﻿@page "/listcombo"
+@page "/combo"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
+
 <div class="modal fade" id="DeleteFilmModalToggle" aria-hidden="true" aria-labelledby="DeleteFilmModalToggle" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -9,20 +10,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
                 <p>Bạn có chắc chắn muốn xóa Combo này không?</p>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteCombo(SelectedDeleteComboId)">Xóa</button>
-
             </div>
         </div>
     </div>
 </div>
 
 <div class="container-fluid">
-    <a class="btn btn-primary mb-3" href="/createcombo">+ Tạo khuyến mại</a>
-    <button class="btn btn-outline-secondary mb-3">
-        <i class="bi bi-arrow-clockwise"></i> Refresh
-    </button>
+    <a class="btn btn-primary mb-3" href="/combo/create">+ Tạo khuyến mại</a>
     <div class="table-responsive mb-3">
         <table class="table">
             <thead class="table-light">
@@ -35,39 +31,30 @@
                 </tr>
             </thead>
             <tbody class="align-middle">
-                @if (Combos != null)
+                @if (Combos != null && Combos.Any())
                 {
-                    @if (Combos.Any())
-                    {
-                        @foreach (var combo in Combos)
-                        {
-                            <tr>
-                                <td><img src="@combo.Image" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
-                                <td>@combo.Name</td>
-                                <td>@combo.Price</td>
-                                <td><span class="badge @(GetBadgeClass(combo.comboStatus))">@combo.comboStatus</span></td>
-                                <td>
-                                    <a class="btn btn-outline-primary btn-sm" href="@($"/combo/update/{combo.Id}")">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => GetComboDeleteId(combo.Id)">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
+                    @foreach (var combo in Combos)
                     {
                         <tr>
-                            <td colspan="8" class="text-center">Không có dữ liệu</td>
+                            <td><img src="@combo.Image" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
+                            <td>@combo.Name</td>
+                            <td>@combo.Price</td>
+                            <td><span class="badge @(GetBadgeClass(combo.comboStatus))">@combo.comboStatus</span></td>
+                            <td>
+                                <a class="btn btn-outline-primary btn-sm" href="@($"/combo/update/{combo.Id}")">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="() => GetComboDeleteId(combo.Id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="8" class="text-center">Loading...</td>
+                        <td colspan="8" class="text-center">Không có dữ liệu</td>
                     </tr>
                 }
             </tbody>
@@ -75,18 +62,9 @@
     </div>
 
     <!-- Pagination -->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-    </nav>
+    <Pagination MetaData="MetaData" Spread="3" SelectedPage="OnPageSelected" />
 </div>
+
 <style>
     .badge-available {
         background-color: greenyellow;
@@ -97,40 +75,59 @@
         background-color: gray;
         color: white;
     }
-
 </style>
+
 <script>
     function openModalDelete(modalId) {
         var modal = new bootstrap.Modal(document.getElementById(modalId));
         modal.show();
     }
 </script>
+
 @code {
     private List<ComboDto> Combos = new List<ComboDto>();
     private Guid SelectedDeleteComboId { get; set; }
+    private MetaData MetaData { get; set; } = new MetaData();
+    private PagingParameters PagingParameters { get; set; } = new PagingParameters { PageNumber = 1, PageSize = 10 };
 
     protected override async Task OnInitializedAsync()
     {
-        Combos = await ComboService.GetAll();
+        await LoadCombos();
     }
+
+    private async Task LoadCombos()
+    {
+        var pagedCombos = await ComboService.GetAllPaging(PagingParameters);
+        Combos = pagedCombos.Item.ToList();
+        MetaData = pagedCombos.MetaData;
+    }
+
+    private async Task OnPageSelected(int page)
+    {
+        PagingParameters.PageNumber = page;
+        await LoadCombos();
+    }
+
     private async Task GetComboDeleteId(Guid id)
     {
         SelectedDeleteComboId = id;
         await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteFilmModalToggle");
     }
+
     private async Task HandleDeleteCombo(Guid id)
     {
         var result = await ComboService.Delete(id);
         if (result != null)
         {
-            await JSRuntime.ToastrSuccess("Delete combo successfully");
-            Combos = await ComboService.GetAll();
+            await JSRuntime.ToastrSuccess("Xóa thành công");
+            await LoadCombos();
         }
         else
         {
-            await JSRuntime.ToastrError("Delete combo failed");
+            await JSRuntime.ToastrError("Xóa thất bại");
         }
     }
+
     private string GetBadgeClass(ComboStatus? status)
     {
         return status switch

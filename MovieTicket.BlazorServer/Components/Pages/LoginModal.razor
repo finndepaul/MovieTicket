@@ -4,17 +4,17 @@
 @layout UserLayout
 
 <EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLogin">
-   <DataAnnotationsValidator />
-   <ValidationSummary />
-        <div class="mb-3">
-            <label class="form-label">Username</label>
-            <InputText id="loginUsername" class="form-control" @bind-Value="loginModel.Username" />
-        </div>
-        <div class="mb-3">
-            <label for="loginPPassword" class="form-label">Password</label>
-            <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
-        </div>
-        <button type="submit" class="btn btn-primary">Đăng nhập</button>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <InputText id="loginUsername" class="form-control" @bind-Value="loginModel.Username" />
+    </div>
+    <div class="mb-3">
+        <label for="loginPPassword" class="form-label">Password</label>
+        <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+    <button type="submit" class="btn btn-primary">Đăng nhập</button>
 </EditForm>
 @code {
     private LoginDTO loginModel = new ();
@@ -27,7 +27,7 @@
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
         }
         var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
-        customState.UpdateAuthenticationState(response.JWTToken);
+        await customState.UpdateAuthenticationState(response.JWTToken);
         CustomUserClaims claims = DecryptJWTService.DecryptToken(response.JWTToken);
         if(claims.Role == "Admin")
         {

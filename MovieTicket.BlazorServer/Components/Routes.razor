@@ -8,7 +8,7 @@
                 <NotAuthorized>
                 @if (context.User.Identity?.IsAuthenticated != true || context.User.IsInRole("Admin") != true)
                 {
-                    NavigationManager.NavigateTo("login", forceLoad: true);
+                    NavigationManager.NavigateTo("/", forceLoad: true);
                 }
                 else
                 {

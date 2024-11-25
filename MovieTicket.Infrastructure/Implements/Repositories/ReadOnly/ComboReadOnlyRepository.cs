@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
@@ -28,7 +29,19 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             var comboDtos = comboModel.ProjectTo<ComboDto>(mapper.ConfigurationProvider);
             return comboDtos;
         }
+        public async Task<PageList<ComboDto>> GetAllPaging(PagingParameters pagingParameters)
+        {
+            var comboModel = dbContext.Combos.AsQueryable();
+            var comboDtos = comboModel.ProjectTo<ComboDto>(mapper.ConfigurationProvider);
 
+            var count = await comboDtos.CountAsync();
+            var items = await comboDtos
+                .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+                .Take(pagingParameters.PageSize)
+                .ToListAsync();
+
+            return new PageList<ComboDto>(items, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+        }
         public async Task<ComboDto?> GetByIdAsync(Guid id)
         {
             if (id == Guid.Empty)

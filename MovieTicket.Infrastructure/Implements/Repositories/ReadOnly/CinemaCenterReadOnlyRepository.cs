@@ -45,6 +45,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				Name = x.Name,
 				Address = x.Address,
 				AddressMap = x.AddressMap,
+				AddresCity = x.AddresCity,
 				CreateDate = x.CreateDate,
 			}).AsQueryable();
 			if (!string.IsNullOrEmpty(search.Name))
@@ -54,6 +55,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			if (!string.IsNullOrEmpty(search.Address))
 			{
 				cinemaCenters = cinemaCenters.Where(x => x.Address.Contains(search.Address));
+			}
+            if (!string.IsNullOrEmpty(search.AddresCity))
+            {
+				cinemaCenters = cinemaCenters.Where(x => x.AddresCity.Contains(search.AddresCity));
 			}
 			int count = await cinemaCenters.CountAsync();
 			var data = await cinemaCenters.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
@@ -71,7 +76,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 return new ResponseObject<CinemaCenterDto>
                 {
                     Status = StatusCodes.Status404NotFound,
-                    Message = "Cinema Center not found",
+                    Message = "Không tìm thấy rạp chiếu",
                     Data = null
                 };
             }
@@ -79,7 +84,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             {
                 Data = cinemaCenterDto,
                 Status = StatusCodes.Status200OK,
-                Message = "Get Cinema Center success"
+                Message = "Tìm thấy rạp chiếu"
             };
         }
     }

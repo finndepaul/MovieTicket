@@ -15,7 +15,7 @@
                         <div class="col">
                             @if (seat.Status == SeatStatus.Available)
                             {
-                                <button type="button" id="seat" data-bs-toggle="button" data-seat-status="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" aria-pressed="false" @onclick="(() => SeatSelection(seat.Id))">
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-selection="@seat.Selection" data-seat-type="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" aria-pressed="false" @onclick="(() => SeatSelection(seat.Id))">
                                     @seat.Position
                                 </button>
                             }
@@ -84,6 +84,7 @@ else
                 });
             lstTicketPrices = responseTicket.Item.ToList();
             AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+            // seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
             var getUser = AuthenState.User.FindFirstValue(ClaimTypes.NameIdentifier);
             userId = Guid.Parse(getUser);
         }
@@ -124,7 +125,7 @@ else
                             SeatsSelectedstr = SeatsSelectedstr.Replace(item.Position, "");
                         }
                         lstSeatsSelected.RemoveAll(s => s.Id == item.Id);
-                        lstSeatUpdateRequests.RemoveAll(s => s.Id == item.Id);
+                        // lstSeatUpdateRequests.RemoveAll(s => s.Id == item.Id);
                     }
                     else
                     {
@@ -142,11 +143,13 @@ else
                             SeatsSelectedstr += item.Position + " ";
                         }
                         lstSeatsSelected.Add(item);
-                        lstSeatUpdateRequests.Add(new SeatUpdateRequest
-                            {
-                                Id = item.Id,
-                                Selection = Domain.Enums.SeatSelection.Checked
-                            });
+                        // lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                        //     {
+                        //         Id = item.Id,
+                        //         SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == item.SeatTypeName).Id.ToString(),
+                        //         Status = Domain.Enums.SeatStatus.Available,
+                        //         Selection = Domain.Enums.SeatSelection.Checked
+                        //     });
                     };
                 }
                 CalculateTotal();
@@ -156,7 +159,7 @@ else
                         lstSeats = lstSeatsSelected,
                         str = SeatsSelectedstr,
                         TotalTicket = TotalTicket,
-
+                        
                     };
                 await OnSeatSelection.InvokeAsync(args);
                 StateHasChanged();
@@ -171,7 +174,7 @@ else
                         SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
                     }
                     lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
-                    lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
+                    // lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
                 }
                 else
                 {
@@ -188,11 +191,11 @@ else
                         SeatsSelectedstr += seat.Position + " ";
                     }
                     lstSeatsSelected.Add(seat);
-                    lstSeatUpdateRequests.Add(new SeatUpdateRequest
-                        {
-                            Id = seat.Id,
-                            Selection = Domain.Enums.SeatSelection.Checked
-                        });
+                    // lstSeatUpdateRequests.Add(new SeatUpdateRequest
+                    //     {
+                    //         Id = seat.Id,
+                    //         Selection = Domain.Enums.SeatSelection.Checked
+                    //     });
                 };
                 CalculateTotal();
                 TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
@@ -245,5 +248,4 @@ else
         TotalTicket = 0;
         StateHasChanged();
     }
-
 }

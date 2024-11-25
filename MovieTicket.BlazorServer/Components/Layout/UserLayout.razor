@@ -1,4 +1,5 @@
-@inject NavigationManager NavigationManager
+@using MovieTicket.Application.DataTransferObjs.About
+@inject IAboutService aboutService
 @inherits LayoutComponentBase
 
 <div class="page">
@@ -14,16 +15,10 @@
 				<div class="footer-column">
 					<a href="#"><img src="img/logo.png" alt="Logo" class="footer-logo" style="height: 70px; width: 70px; margin-top: -10px;" /></a>
 					<ul>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Tuyển dụng</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Giới thiệu</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Liên hệ</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">F.A.Q</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Hoạt động xã hội</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Điều khoản sử dụng</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Chính sách thanh toán, đổi trả - hoàn vé</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Liên hệ quảng cáo</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Điều khoản bảo mật</a></li>
-						<li><i class="bi bi-chevron-right"></i><a href="#">Hướng dẫn đặt vé online</a></li>
+						@foreach (var about in aboutDtos)
+                        {
+							<li><i class="bi bi-chevron-right"></i><a href="@($"/UserAbout/{about.Id}")">@about.Title</a></li>
+                        }
 					</ul>
 				</div>
 
@@ -148,3 +143,12 @@
 		color: #000; /* Chữ đen */
 	}
 </style>
+
+@code {
+	private IEnumerable<AboutDto> aboutDtos = new List<AboutDto>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		aboutDtos = await aboutService.GetAllAsync();
+	}
+}

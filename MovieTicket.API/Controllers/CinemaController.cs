@@ -28,6 +28,12 @@ namespace MovieTicket.API.Controllers
         {
             var cinemaDto = await _cinemaReadOnlyRepository.GetAllAsync(cinemaCenterName);
             return Ok(cinemaDto);
+        } 
+        [HttpGet]
+        public async Task<ActionResult> GetAllCinema()
+        {
+            var cinemaDto = await _cinemaReadOnlyRepository.GetAll();
+            return Ok(cinemaDto);
         }
 
         [HttpGet]

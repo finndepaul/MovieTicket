@@ -305,21 +305,43 @@
 	// Phương thức chọn bộ lọc
 	private async Task ApplyFilter(string filterType, Guid value)
 	{
-		switch (filterType)
+		// Nếu chọn "Tất cả" (Guid.Empty), thì reset bộ lọc tương ứng
+		if (value == Guid.Empty)
 		{
-			case "SeatType":
-				request.SeatTypeId = value;
-				break;
-			case "ScreenType":
-				request.ScreenTypeId = value;
-				break;
-			case "ScreeningDay":
-				request.ScreeningDayId = value;
-				break;
-			case "CinemaType":
-				request.CinemaTypeId = value;
-				break;
-
+			switch (filterType)
+			{
+				case "SeatType":
+					request.SeatTypeId = null;
+					break;
+				case "ScreenType":
+					request.ScreenTypeId = null;
+					break;
+				case "ScreeningDay":
+					request.ScreeningDayId = null;
+					break;
+				case "CinemaType":
+					request.CinemaTypeId = null;
+					break;
+			}
+		}
+		else
+		{
+			// Gán giá trị lọc khi không phải "Tất cả"
+			switch (filterType)
+			{
+				case "SeatType":
+					request.SeatTypeId = value;
+					break;
+				case "ScreenType":
+					request.ScreenTypeId = value;
+					break;
+				case "ScreeningDay":
+					request.ScreeningDayId = value;
+					break;
+				case "CinemaType":
+					request.CinemaTypeId = value;
+					break;
+			}
 		}
 		await SelectedPage(1);
 		await Refresh();

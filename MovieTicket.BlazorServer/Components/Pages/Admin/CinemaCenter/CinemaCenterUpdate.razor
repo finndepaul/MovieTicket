@@ -1,4 +1,4 @@
-﻿@page "/update-cinema-center/{Id:guid}"
+﻿@page "/cinema-center/update/{Id:guid}"
 @attribute [Authorize(Roles = "Admin")]
 <EditForm Model="cinemaCenterUpdateRequest" OnValidSubmit="UpdateCinemaCenter">
 	<DataAnnotationsValidator />
@@ -16,6 +16,12 @@
 					<label for="diaChi">Địa chỉ:</label>
 					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.Address" rows="3" />
 					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Address)" />
+				</div>
+
+				<div class="form-group mt-3">
+					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
+					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.AddresCity" rows="3" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddresCity)" />
 				</div>
 
 				<div class="form-group mt-3">
@@ -66,6 +72,7 @@
 		CinemaCenter = data.Data;
 		cinemaCenterUpdateRequest.Name = CinemaCenter.Name;
 		cinemaCenterUpdateRequest.Address = CinemaCenter.Address;
+		cinemaCenterUpdateRequest.AddresCity = CinemaCenter.AddresCity;
 		cinemaCenterUpdateRequest.AddressMap = CinemaCenter.AddressMap;
 		ExtractedMapUrl = ExtractUrlFromIframe(cinemaCenterUpdateRequest.AddressMap);
 	}

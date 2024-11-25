@@ -12,7 +12,7 @@
 <div class="container-fluid">
     <EditForm Model="filmUpdateRequest" OnValidSubmit="HandleFilmUpdate">
         <DataAnnotationsValidator />
-        <a class="btn btn-outline-secondary mb-3" href="/list-film">Quay lại</a>
+        <a class="btn btn-outline-secondary mb-3" href="/film">Quay lại</a>
         <button type="submit" class="btn btn-primary mb-3">Submit</button>
         <div class="row mb-3">
             <div class="col-md-6">
@@ -117,14 +117,9 @@
 
         <div class="row mb-3">
             <div class="col-md-6">
-                <label for="trangThai" class="form-label">Trạng thái</label>
-                <InputSelect class="form-select" id="trangThai" @bind-Value="filmUpdateRequest.Status">
-                    <option selected>Select a status</option>
-                    @foreach (var Item in Enum.GetValues(typeof(FilmStatus)))
-                    {
-                        <option value="@Item">@Item</option>
-                    }
-                </InputSelect>
+                <label for="language" class="form-label">Ngôn ngữ</label>
+                <InputText type="text" class="form-control" id="language" @bind-Value="filmUpdateRequest.Language" placeholder="Enter language"/>
+                <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
             </div>
             <div class="col-md-6">
                 <label for="quocGia" class="form-label">Quốc gia</label>
@@ -134,12 +129,7 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="language" class="form-label">Ngôn ngữ</label>
-                <InputText type="text" class="form-control" id="language" @bind-Value="filmUpdateRequest.Language" placeholder="Enter language"/>
-                <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 @if (filmUpdateRequest.Poster == null)
                 {
                     <label for="customFile" class="form-label">Upload Image</label>
@@ -160,7 +150,11 @@
         </div>
     </EditForm>
 </div>
-
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
 @code {
     [Parameter]
     public Guid Id { get; set; }
@@ -194,7 +188,6 @@
                 StartDate = filmDto.StartDate,
                 ReleaseYear = filmDto.ReleaseYear,
                 RunningTime = filmDto.RunningTime,
-                Status = filmDto.Status,
                 Nation = filmDto.Nation,
                 Poster = filmDto.Poster,
                 Language = filmDto.Language
@@ -206,7 +199,7 @@
         }
         else
         {
-            await _JSRuntime.ToastrError("Update film failed");
+            await _JSRuntime.ToastrError("Có lỗi");
         }
         
     }
@@ -218,12 +211,12 @@
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
         if (response != null)
         {
-            await _JSRuntime.ToastrSuccess("Update film successfully");
-            NavigationManager.NavigateTo("/list-film");
+            await _JSRuntime.ToastrSuccess("Cập nhật thành công");
+            NavigationManager.NavigateTo("/film");
         }
         else
         {
-            await _JSRuntime.ToastrError("Update film failed");
+            await _JSRuntime.ToastrError("Cập nhật thất bại");
         }
 
     }
