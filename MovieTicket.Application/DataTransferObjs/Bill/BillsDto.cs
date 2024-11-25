@@ -15,11 +15,14 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 		public string CinemaType_Name { get; set; }
 		public string FilmName { get; set; }
 		public decimal? TotalMoney { get; set; }
-
 		public DateTime? CreateTime { get; set; }
-
-		public string? BarCode { get; set; }
-
+        public string? BarCode { get; set; }
 		public BillStatus? Status { get; set; }
-	}
+
+        public int? FilmRating { get; set; }
+        public DateTime? ShowStartTime { get; set; }
+        public DateTime? ShowEndTime { get; set; }
+        public string? CinemaName { get; set; }
+        public string? FilmPoster { get; set; }
+    }
 }

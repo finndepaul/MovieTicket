@@ -1,5 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 namespace MovieTicket.BlazorServer.Services.Interfaces
 {
     public interface IComboService
@@ -7,8 +8,8 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
         Task<List<ComboDto>> GetAll();
         Task<PageList<ComboDto>> GetAllPaging(PagingParameters pagingParameters);
         Task<ComboDto> GetById(Guid id);
-        Task<ComboDto> Create(CreateComboRequest combo);
-        Task<ComboDto> Update(Guid id, UpdateComboRequest combo);
+        Task<ResponseObject<ComboDto>> Create(CreateComboRequest combo);
+        Task<ResponseObject<ComboDto>> Update(Guid id, UpdateComboRequest combo);
         Task<ComboDto> Delete(Guid id);
     }
 }

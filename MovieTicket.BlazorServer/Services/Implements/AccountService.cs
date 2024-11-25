@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
+using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
@@ -56,6 +57,23 @@ namespace MovieTicket.BlazorServer.Services.Implements
             return response ?? new PageList<AccountDto>
             {
                 Item = new List<AccountDto>(),
+            };
+        }
+
+        public async Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters)
+        {
+            var queryParameters = new Dictionary<string, string>
+            {
+                ["userId"] = userId.ToString(),
+                ["pageNumber"] = pagingParameters.PageNumber.ToString(),
+                ["pageSize"] = pagingParameters.PageSize.ToString()
+            };
+
+            var url = QueryHelpers.AddQueryString("api/Bill/GetUserBookingHistory", queryParameters);
+            var response = await _httpClient.GetFromJsonAsync<PageList<BillsDto>>(url);
+            return response ?? new PageList<BillsDto>
+            {
+                Item = new List<BillsDto>(),
             };
         }
     }
