@@ -1,7 +1,302 @@
 ﻿@page "/userinformation"
-@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@inject IAccountService AccountService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
+@inject IAccountUtilitiesService AccountUtilitiesService
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
 
+<div class="container py-5">
+    <ul class="nav nav-underline" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="true">Thông tin người dùng</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Đổi mật khẩu</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="false">Lịch sử đặt vé</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
+            <EditForm Model="userInfo" OnValidSubmit="UpdateUserInfo" class="p-4 bg-white rounded-4 shadow-sm">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert alert-danger" />
+                <div class="mb-4 text-center">
+                    @if (userInfo.Avatar == null)
+                    {
+                        <label for="customFile" class="form-label text-secondary">Cập nhật ảnh đại diện</label>
+                        <InputFile OnChange="LoadFiles" class="form-control border-primary" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="@userInfo.Avatar" alt="User Avatar" class="rounded-circle mb-3 border border-3 border-primary" style="width: 120px; height: 120px; object-fit: cover;">
+                            <button type="button" class="btn btn-danger btn-sm" @onclick="DeleteImage">Xóa ảnh</button>
+                        </div>
+                    }
+                </div>
+                <!-- Row for Username and Email -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label text-secondary">Tên tài khoản</label>
+                        <InputText id="username" class="form-control border-primary" @bind-Value="userInfo.Username" disabled />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label text-secondary">Email</label>
+                        <InputText id="email" class="form-control border-primary" @bind-Value="userInfo.Email" disabled />
+                    </div>
+                </div>
+
+                <!-- Row for Name and Phone -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label text-secondary">Họ và tên</label>
+                        <InputText id="name" class="form-control border-primary" @bind-Value="userInfo.Name" />
+                        <ValidationMessage For="@(() => userInfo.Name)" class="text-danger small" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label text-secondary">Số điện thoại</label>
+                        <InputText id="phone" class="form-control border-primary" @bind-Value="userInfo.Phone" />
+                        <ValidationMessage For="@(() => userInfo.Phone)" class="text-danger small" />
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold">Cập nhật</button>
+                </div>
+            </EditForm>
+        </div>
+
+        <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+            <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword" class="p-4 bg-white rounded-4 shadow-sm">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert alert-danger" />
+                <div class="mb-3">
+                    <label for="oldPassword" class="form-label">Nhập mật khẩu cũ</label>
+                    <InputText type="password" class="form-control" id="oldPassword" @bind-Value="changePasswordRequest.OldPassword" />
+                    <ValidationMessage For="@(() => changePasswordRequest.OldPassword)" />
+                </div>
+                <div class="mb-3">
+                    <label for="newPassword" class="form-label">Nhập mật khẩu mới</label>
+                    <InputText type="password" class="form-control" id="newPassword" @bind-Value="changePasswordRequest.NewPassword" />
+                    <ValidationMessage For="@(() => changePasswordRequest.NewPassword)" />
+                </div>
+                <div class="mb-3">
+                    <label for="newPasswordConfirm" class="form-label">Nhập lại mật khẩu</label>
+                    <InputText type="password" class="form-control" id="newPasswordConfirm" @bind-Value="changePasswordRequest.NewPasswordConFirm" />
+                    <ValidationMessage For="@(() => changePasswordRequest.NewPasswordConFirm)" />
+                </div>
+                <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+            </EditForm>
+        </div>
+        <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
+            @if (bookingHistory?.Item != null)
+            {
+                <div class="row g-3">
+                    @foreach (var bill in bookingHistory.Item)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="@bill.FilmPoster" alt="Film Poster" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title fw-bold">@bill.FilmName</h5>
+                                            <p class="mb-1">
+                                                <span class="badge bg-warning text-dark fs-6">@bill.FilmRating</span>
+                                            </p>
+
+                                            <p class="mb-1">Ngày đặt: <span>@bill.CreateTime</span></p>
+                                            <p class="mb-1">
+                                                Từ: <span>@bill.ShowStartTime?.ToString("HH:mm")</span> ~ Đến: <span>@bill.ShowEndTime?.ToString("HH:mm")</span>
+                                            </p>
+
+                                            <p class="mb-1">Địa điểm: <span>@bill.CinemaName</span></p>
+
+                                            <p class="fw-bold text-success">
+                                                @string.Format("{0:N0}", bill.TotalMoney)<span style="text-decoration: underline;">đ</span>
+                                            </p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="badge text-bg-success">
+                                                    @bill.Status
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-center text-muted fs-5">Không có lịch sử giao dịch</p>
+            }
+        </div>
+    </div>
+</div>
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
+
 @code {
+    private AccountUpdateRequest userInfo = new AccountUpdateRequest();
+    private string? _directoryPath { get; set; }
+    private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+    private PageList<BillsDto>? bookingHistory;
+    private MetaData metaData = new MetaData();
+    private PagingParameters pagingParameters = new PagingParameters { PageNumber = 1, PageSize = 10 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(userId, out var guidUserId))
+            {
+                var accountDto = await AccountService.GetByIdAsync(guidUserId);
+                userInfo = new AccountUpdateRequest
+                    {
+                        Id = accountDto.Id,
+                        Username = accountDto.Username,
+                        Email = accountDto.Email,
+                        Name = accountDto.Name,
+                        Phone = accountDto.Phone,
+                        Role = accountDto.Role,
+                        Status = accountDto.Status,
+                        Avatar = accountDto.Avatar
+                    };
+                _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Avatar");
+                changePasswordRequest.Id = guidUserId;
+
+                await LoadBookingHistory(guidUserId);
+
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private async Task UpdateUserInfo()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(userId, out var guidUserId))
+            {
+                userInfo.Id = guidUserId;
+                var result = await AccountService.UpdateAsync(userInfo);
+                if (result != null)
+                {
+                    await JSRuntime.ToastrSuccess("Cập nhật thông tin thành công!");
+                    await OnInitializedAsync();
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Cập nhật thông tin thất bại!");
+                }
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+
+    }
     
+    private async Task ChangePassword()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(userId, out var guidUserId))
+            {
+                changePasswordRequest.Id = guidUserId;
+                var result = await AccountUtilitiesService.ChangePasswordAsync(changePasswordRequest, CancellationToken.None);
+                if (result)
+                {
+                    await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công"); 
+                    await OnInitializedAsync();
+
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Đổi mật khẩu thất bại");
+                }
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+
+    }
+
+    private async Task LoadBookingHistory(Guid userId)
+    {
+        bookingHistory = await AccountService.GetUserBookingHistoryAsync(userId, pagingParameters);
+        metaData = bookingHistory.MetaData;
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        pagingParameters.PageNumber = page;
+        var userId = userInfo.Id;
+        await LoadBookingHistory(userId);
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        FileInfo fileInfo = new(file.Name);
+        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
+        if (!Directory.Exists(_directoryPath))
+        {
+            Directory.CreateDirectory(_directoryPath);
+        }
+        var path = Path.Combine(_directoryPath, newFileName);
+        await using FileStream fs = new(path, FileMode.Create);
+        await file.OpenReadStream(file.Size).CopyToAsync(fs);
+        userInfo.Avatar = $"/img/Avatar/{newFileName}";
+    }
+
+    void DeleteImage()
+    {
+        if (userInfo.Avatar == null)
+        {
+            return;
+        }
+        var fileToDelete = userInfo.Avatar.Split('/').Reverse().First();
+        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
+        if (!File.Exists(filePathToDeleteImage))
+        {
+            userInfo.Avatar = null;
+            return;
+        }
+        File.Delete(filePathToDeleteImage);
+
+        userInfo.Avatar = null;
+        return;
+    }
 }

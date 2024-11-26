@@ -1,0 +1,31 @@
+﻿@page "/add-coupon"
+
+<form>
+    <div class="mb-3">
+        <label for="voucherCode" class="form-label">Mã Khuyến Mại</label>
+        <input type="text" class="form-control" id="voucherCode" required>
+    </div>
+    <div class="mb-3">
+        <label for="discountPercentage" class="form-label">Phần Trăm Giảm Giá</label>
+        <input type="number" class="form-control" id="discountPercentage" required>
+    </div>
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Số Lượng</label>
+        <input type="number" class="form-control" id="quantity" required>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Trạng Thái</label>
+        <select class="form-select" id="status" required>
+            <option value="active">Kích hoạt</option>
+            <option value="inactive">Ẩn</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="validityPeriod" class="form-label">Thời Gian Áp Dụng</label>
+        <input type="text" class="form-control" id="validityPeriod" placeholder="dd/mm/yyyy - dd/mm/yyyy" required>
+    </div>
+</form> 
+
+@code {
+
+}

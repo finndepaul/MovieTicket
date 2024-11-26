@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using MovieTicket.Application.DataTransferObjs.Bill;
-using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.DataTransferObjs.Schedule;
 using MovieTicket.Application.DataTransferObjs.Schedule.Request;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
@@ -20,53 +18,52 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 {
     public class ScheduleReadWriteRepository : IScheduleReadWriteRepository
     {
-        private readonly MovieTicketReadWriteDbContext dbContext;
+        private readonly MovieTicketReadWriteDbContext _db;
         private readonly IMapper mapper;
 
         public ScheduleReadWriteRepository(MovieTicketReadWriteDbContext dbContext, IMapper mapper)
         {
-            this.dbContext = dbContext;
+            this._db = dbContext;
             this.mapper = mapper;
         }
 
-        // Phương thức tạo mới một lịch chiếu
-        public async Task<ResponseObject<ScheduleDto>> CreateAsync(CreateScheduleRequest createScheduleRequest)
+        public async Task<ResponseObject<ScheduleDto>> CreateAsync(CreateScheduleRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                // Kiểm tra trùng lặp lịch chiếu
-                bool isDuplicate = await dbContext.Schedules.AnyAsync(s =>
-                    s.FilmId == createScheduleRequest.FilmId &&
-                    ((createScheduleRequest.StartDate >= s.StartDate && createScheduleRequest.StartDate <= s.EndDate) ||
-                    (createScheduleRequest.EndDate >= s.StartDate && createScheduleRequest.EndDate <= s.EndDate) ||
-                    (createScheduleRequest.StartDate <= s.StartDate && createScheduleRequest.EndDate >= s.EndDate)));
-
-                if (isDuplicate)
+                var film = await _db.Films.FindAsync(request.FilmId, cancellationToken);
+                if (request.StartDate > request.EndDate)
                 {
                     return new ResponseObject<ScheduleDto>
                     {
                         Data = null,
                         Status = StatusCodes.Status400BadRequest,
-                        Message = "Schedule for the given film and date range already exists."
+                        Message = "Ngày kết thúc phải lớn hơn ngày bắt đầu"
                     };
                 }
-
-                // Ánh xạ CreateScheduleRequest sang Schedule entity
-                var scheduleEntity = mapper.Map<Schedule>(createScheduleRequest);
-                // Thiết lập trạng thái và loại lịch chiếu ban đầu
-                scheduleEntity.Status = ScheduleStatus.ComingSoon;
-                scheduleEntity.Type = ScheduleType.Early;
-                // Thêm lịch chiếu vào cơ sở dữ liệu
-                await dbContext.Schedules.AddAsync(scheduleEntity);
-                await dbContext.SaveChangesAsync();
-
-                // Ánh xạ Schedule entity sang ScheduleDto
-                var scheduleDto = mapper.Map<ScheduleDto>(scheduleEntity);
+                var schedule = new Schedule
+                {
+                    FilmId = request.FilmId,
+                    StartDate = request.StartDate,
+                    EndDate = request.EndDate,
+                };
+                if (request.StartDate < film.StartDate && request.EndDate <= film.StartDate)
+                {
+                    schedule.Type = ScheduleType.Early;
+                    schedule.Status = ScheduleStatus.ComingSoon;
+                }
+                if (request.StartDate >= film.StartDate)
+                {
+                    schedule.Type = ScheduleType.Regular;
+                    schedule.Status = ScheduleStatus.Showing;
+                }
+                await _db.Schedules.AddAsync(schedule, cancellationToken);
+                await _db.SaveChangesAsync(cancellationToken);
                 return new ResponseObject<ScheduleDto>
                 {
-                    Data = scheduleDto,
+                    Data = mapper.Map<ScheduleDto>(schedule),
                     Status = StatusCodes.Status201Created,
-                    Message = "Schedule created successfully"
+                    Message = "Tạo lịch chiếu thành công"
                 };
             }
             catch (Exception ex)
@@ -75,49 +72,50 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 {
                     Data = null,
                     Status = StatusCodes.Status500InternalServerError,
-                    Message = $"An error occurred while creating the schedule: {ex.Message}"
+                    Message = "Error: " + ex.Message
                 };
             }
         }
 
-        // Phương thức cập nhật một lịch chiếu
-        public async Task<ResponseObject<ScheduleDto?>> UpdateAsync(UpdateScheduleRequest updateScheduleRequest)
+        public async Task<ResponseObject<ScheduleDto>> UpdateAsync(UpdateScheduleRequest request, CancellationToken cancellationToken)
         {
             try
             {
-                // Tìm lịch chiếu theo id
-                var scheduleEntity = await dbContext.Schedules.FindAsync(updateScheduleRequest.Id);
-                if (scheduleEntity == null)
+                var schedule = await _db.Schedules.FindAsync(request.Id, cancellationToken);
+                var film = await _db.Films.FindAsync(schedule.FilmId, cancellationToken);
+                if (request.StartDate > request.EndDate)
                 {
-                    return new ResponseObject<ScheduleDto?>
+                    return new ResponseObject<ScheduleDto>
                     {
                         Data = null,
-                        Status = StatusCodes.Status404NotFound,
-                        Message = "Schedule not found"
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Ngày kết thúc phải lớn hơn ngày bắt đầu"
                     };
                 }
-
-                // Ánh xạ UpdateScheduleRequest sang Schedule entity
-                mapper.Map(updateScheduleRequest, scheduleEntity);
-                // Thiết lập lại trạng thái và loại lịch chiếu
-                scheduleEntity.Status = ScheduleStatus.ComingSoon;
-                scheduleEntity.Type = ScheduleType.Early;
-                // Cập nhật lịch chiếu trong cơ sở dữ liệu
-                dbContext.Schedules.Update(scheduleEntity);
-                await dbContext.SaveChangesAsync();
-
-                // Ánh xạ Schedule entity sang ScheduleDto
-                var scheduleDto = mapper.Map<ScheduleDto>(scheduleEntity);
-                return new ResponseObject<ScheduleDto?>
+                schedule.StartDate = request.StartDate;
+                schedule.EndDate = request.EndDate;
+                if (request.StartDate < film.StartDate && request.EndDate <= film.StartDate)
                 {
-                    Data = scheduleDto,
+                    schedule.Type = ScheduleType.Early;
+                    schedule.Status = ScheduleStatus.ComingSoon;
+                }
+                if (request.StartDate >= film.StartDate)
+                {
+                    schedule.Type = ScheduleType.Regular;
+                    schedule.Status = ScheduleStatus.Showing;
+                }
+                _db.Schedules.Update(schedule);
+                await _db.SaveChangesAsync(cancellationToken);
+                return new ResponseObject<ScheduleDto>
+                {
+                    Data = mapper.Map<ScheduleDto>(schedule),
                     Status = StatusCodes.Status200OK,
-                    Message = "Schedule updated successfully"
+                    Message = "Cập nhật lịch chiếu thành công"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseObject<ScheduleDto?>
+                return new ResponseObject<ScheduleDto>
                 {
                     Data = null,
                     Status = StatusCodes.Status500InternalServerError,
@@ -126,43 +124,47 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
         }
 
-        // Phương thức xóa một lịch chiếu
-        public async Task<ResponseObject<ScheduleDto?>> DeleteAsync(Guid id)
+        public async Task<ResponseObject<ScheduleDto>> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             try
             {
-                // Tìm lịch chiếu theo id
-                var scheduleEntity = await dbContext.Schedules.FindAsync(id);
+                var scheduleEntity = await _db.Schedules.FindAsync(id);
                 if (scheduleEntity == null)
                 {
-                    return new ResponseObject<ScheduleDto?>
+                    return new ResponseObject<ScheduleDto>
                     {
                         Data = null,
                         Status = StatusCodes.Status404NotFound,
-                        Message = "Schedule not found"
+                        Message = "Không tìm thấy lịch chiếu"
                     };
                 }
-
-                // Xóa lịch chiếu khỏi cơ sở dữ liệu
-                dbContext.Schedules.Remove(scheduleEntity);
-                await dbContext.SaveChangesAsync();
-
-                // Ánh xạ Schedule entity sang ScheduleDto
+                var showtimes = await _db.ShowTimes.FirstOrDefaultAsync(x => x.ScheduleId == id);
+                if (showtimes != null)
+                {
+                    return new ResponseObject<ScheduleDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Không thể xóa lịch chiếu đã có suất chiếu"
+                    };
+                }
+                _db.Schedules.Remove(scheduleEntity);
+                await _db.SaveChangesAsync(cancellationToken);
                 var scheduleDto = mapper.Map<ScheduleDto>(scheduleEntity);
-                return new ResponseObject<ScheduleDto?>
+                return new ResponseObject<ScheduleDto>
                 {
                     Data = scheduleDto,
                     Status = StatusCodes.Status200OK,
-                    Message = "Schedule deleted successfully"
+                    Message = "Xóa lịch chiếu thành công"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseObject<ScheduleDto?>
+                return new ResponseObject<ScheduleDto>
                 {
                     Data = null,
                     Status = StatusCodes.Status500InternalServerError,
-                    Message = $"An error occurred while deleting the schedule: {ex.Message}"
+                    Message = "Error:" + ex.Message
                 };
             }
         }

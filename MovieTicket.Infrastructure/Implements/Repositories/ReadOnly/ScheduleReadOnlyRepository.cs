@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Bogus;
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Schedule;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
+using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
@@ -15,6 +17,33 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         {
             this._dbContext = dbContext;
             this._mapper = mapper;
+        }
+
+        public async Task<PageList<ScheduleDto>> GetAllPagingAsync(string? filmName, DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters, CancellationToken cancellationToken)
+        {
+            startDate ??= DateTime.Now;
+            endDate ??= DateTime.Now;
+            var scheduleDtos = from schedule in _dbContext.Schedules
+                               join film in _dbContext.Films on schedule.FilmId equals film.Id
+                               where (string.IsNullOrEmpty(filmName) || film.Name.Contains(filmName)) &&
+                                      schedule.StartDate >= startDate &&
+                                      schedule.EndDate <= endDate
+                               select new ScheduleDto
+                               {
+                                   Id = schedule.Id,
+                                   FilmId = schedule.FilmId,
+                                   StartDate = schedule.StartDate,
+                                   EndDate = schedule.EndDate,
+                                   Type = schedule.Type,
+                                   Status = schedule.Status,
+                                   FilmName = film.Name
+                               };
+            int count = await scheduleDtos.CountAsync(cancellationToken);
+            var data = await scheduleDtos.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+                .Take(pagingParameters.PageSize)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+            return new PageList<ScheduleDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
         }
 
         public async Task<IQueryable<ScheduleDto>> GetAllAsync()
@@ -112,6 +141,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             // Trả về lịch chiếu
             return scheduleDto;
         }
+
         public async Task<IQueryable<FilmForCreateDto>> GetFilmForCreateAsync()
         {
             var filmsWithoutSchedule = await _dbContext.Films

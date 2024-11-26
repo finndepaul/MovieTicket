@@ -177,7 +177,7 @@
         filmCreateRequest.TranslationTypeIds = selectedTranslationTypeId;
         await FilmService.CreateFilm(filmCreateRequest);
         await _JSRuntime.ToastrSuccess("Tạo thành công");
-        NavigationManager.NavigateTo("/list-film");
+        NavigationManager.NavigateTo("/film");
 
     }
 

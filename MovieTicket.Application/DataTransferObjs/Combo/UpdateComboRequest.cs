@@ -10,7 +10,7 @@ namespace MovieTicket.Application.DataTransferObjs.Combo
         public string? Name { get; set; }
 
         [Required(ErrorMessage = "Giá là bắt buộc.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Giá phải lớn hơn 0.")]
+        [Range(1000, 10000000, ErrorMessage = "Giá phải lớn hơn 1000 và không vượt quá 10 triệu.")]
         public decimal? Price { get; set; }
 
         [StringLength(500, ErrorMessage = "Độ dài mô tả không được quá 500.")]
