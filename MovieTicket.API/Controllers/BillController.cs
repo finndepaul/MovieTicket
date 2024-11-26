@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Bill;
+using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
@@ -25,6 +26,16 @@ namespace MovieTicket.API.Controllers
             this.mapper = mapper;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUserBookingHistory(Guid userId, [FromQuery] PagingParameters pagingParameters, CancellationToken cancellationToken)
+        {
+            var result = await billReadOnly.GetUserBookingHistoryAsync(userId, pagingParameters, cancellationToken);
+            var data = result.Item.ToList();
+            return Ok(new PageList<BillsDto>(data.ToList(),
+                result.MetaData.TotalCount,
+                result.MetaData.CurrentPage,
+                result.MetaData.PageSize));
+        }
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

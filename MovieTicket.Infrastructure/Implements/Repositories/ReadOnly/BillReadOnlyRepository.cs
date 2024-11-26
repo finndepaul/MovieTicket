@@ -5,6 +5,7 @@ using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 using System.Threading;
 
@@ -13,16 +14,51 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 	public class BillReadOnlyRepository : IBillReadOnlyRepository
 	{
 		private readonly MovieTicketReadOnlyDbContext _dbContext;
-		private readonly IMapper mapper;
+		private readonly IMapper _mapper;
 
 		public BillReadOnlyRepository(MovieTicketReadOnlyDbContext dbContext, IMapper mapper)
 		{
-			this._dbContext = dbContext;
-			this.mapper = mapper;
+			_dbContext = dbContext;
+			_mapper = mapper;
 		}
+        public async Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters, CancellationToken cancellationToken)
+        {
+            var query = _dbContext.Bills
+                .Where(b => b.MembershipId == userId && b.Status == BillStatus.Paid)
+                .Join(_dbContext.Tickets, b => b.Id, t => t.BillId, (b, t) => new { b, t })
+                .Join(_dbContext.ShowTimes, bt => bt.t.ShowTimeId, s => s.Id, (bt, s) => new { bt.b, bt.t, s })
+                .Join(_dbContext.Schedules, bts => bts.s.ScheduleId, sc => sc.Id, (bts, sc) => new { bts.b, bts.t, bts.s, sc })
+                .Join(_dbContext.Films, btsc => btsc.sc.FilmId, f => f.Id, (btsc, f) => new { btsc.b, btsc.t, btsc.s, btsc.sc, f })
+                .Join(_dbContext.ScreenTypes, btscf => btscf.s.ScreenTypeId, st => st.Id, (btscf, st) => new { btscf.b, btscf.t, btscf.s, btscf.sc, btscf.f, st })
+                .Join(_dbContext.Cinemas, btscfs => btscfs.s.CinemaId, c => c.Id, (btscfs, c) => new { btscfs.b, btscfs.t, btscfs.s, btscfs.sc, btscfs.f, btscfs.st, c })
+                .Join(_dbContext.CinemaCenters, btscfsc => btscfsc.c.CinemaCenterId, cc => cc.Id, (btscfsc, cc) => new { btscfsc.b, btscfsc.t, btscfsc.s, btscfsc.sc, btscfsc.f, btscfsc.st, btscfsc.c, cc })
+                .Select(btscfsc => new BillsDto
+                {
+                    Id = btscfsc.b.Id,
+                    CinemaName =btscfsc.cc.Name,
+                    FilmName = btscfsc.f.Name,
+                    FilmPoster = btscfsc.f.Poster,
+                    FilmRating = btscfsc.f.Rating,
+                    ShowStartTime = btscfsc.s.StartTime,
+                    ShowEndTime = btscfsc.s.EndTime,
+                    TotalMoney = btscfsc.b.AfterDiscount,
+                    CreateTime = btscfsc.b.CreateTime,
+                    BarCode = btscfsc.b.BarCode,
+                    Status = btscfsc.b.Status
+                }).Distinct();
 
-		// Phương thức bất đồng bộ để lấy tất cả các Bill dưới dạng IQueryable<BillDto>
-		public async Task<IQueryable<BillDto>> GetAllAsync()
+            var count = await query.CountAsync(cancellationToken);
+            var data = await query
+                .OrderBy(b => b.CreateTime)
+                .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+                .Take(pagingParameters.PageSize)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+
+            return new PageList<BillsDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+        }
+        // Phương thức bất đồng bộ để lấy tất cả các Bill dưới dạng IQueryable<BillDto>
+        public async Task<IQueryable<BillDto>> GetAllAsync()
 		{
 			// Lấy danh sách các Bill từ dbContext và chuyển đổi sang BillDto
 			var bills = _dbContext.Bills
@@ -79,7 +115,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 						CreateTime = b.CreateTime,
 						BarCode = b.BarCode,
 						Status = b.Status.ToString(),
-						Combos = b.BillCombos.Select(bc => mapper.Map<ComboDto>(bc.Combo)!).ToList()
+						Combos = b.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList()
 					})
 					.FirstOrDefaultAsync();
 			// Nếu không tìm thấy Bill, ném ra ngoại lệ
