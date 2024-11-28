@@ -20,6 +20,7 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddBlazoredLocalStorage();
+
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
@@ -47,25 +48,7 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddAuthentication()
                .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
             builder.Services.AddSingleton<AppState>();
-            //builder.Services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(options =>
-            //{
-            //    var jwtSettings = builder.Configuration.GetSection("JWTSettings");
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidateLifetime = true,
-            //        ValidateIssuerSigningKey = true,
-            //        ValidIssuer = jwtSettings["ValidIssuer"],
-            //        ValidAudience = jwtSettings["ValidAudience"],
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"])),
-            //        ClockSkew = TimeSpan.Zero
-            //    };
-            //});
+
 
             var cultureInfo = new CultureInfo("en-UK");
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
@@ -83,7 +66,7 @@ namespace MovieTicket.BlazorServer
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseAntiforgery();
             app.UseStaticFiles();

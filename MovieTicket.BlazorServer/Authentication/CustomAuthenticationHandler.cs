@@ -31,6 +31,7 @@ namespace MovieTicket.BlazorServer.Authentication
             {
                 Logger.LogInformation("User is authenticated.");
                 return AuthenticateResult.Success(new AuthenticationTicket(authState.User, Scheme.Name));
+
             }
             else
             {
@@ -38,6 +39,7 @@ namespace MovieTicket.BlazorServer.Authentication
                 Logger.LogWarning(_failReason);
                 return AuthenticateResult.Fail(_failReason);
             }
+
         }
 
         protected override Task HandleChallengeAsync(AuthenticationProperties properties)

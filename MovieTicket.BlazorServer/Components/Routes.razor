@@ -18,5 +18,12 @@
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
+        <NotFound>
+            <CascadingAuthenticationState>
+                <LayoutView Layout="@typeof(Layout.UserLayout)">
+                
+                </LayoutView>
+            </CascadingAuthenticationState>
+        </NotFound>
     </Router>
 
