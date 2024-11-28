@@ -5,21 +5,27 @@ using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
 namespace MovieTicket.API.Controllers
 {
-	[Route(API_Route.DEFAULT_CONTROLLER_ROUTE)]
-	[ApiController]
-	public class TicketController : ControllerBase
-	{
-		private readonly ITicketReadOnlyRepository _repo;
+    [Route(API_Route.DEFAULT_CONTROLLER_ROUTE)]
+    [ApiController]
+    public class TicketController : ControllerBase
+    {
+        private readonly ITicketReadOnlyRepository _repo;
 
-		public TicketController(ITicketReadOnlyRepository repo)
-		{
-			_repo = repo;
-		}
-		[HttpGet]
-		public async Task<IActionResult> GetListTicketByBillId(Guid billId, CancellationToken cancellationToken)
-		{
-			var result = await _repo.GetListTicketByBillId(billId,cancellationToken);
-			return Ok(result);
-		}
-	}
+        public TicketController(ITicketReadOnlyRepository repo)
+        {
+            _repo = repo;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetListTicketByBillId(Guid billId, CancellationToken cancellationToken)
+        {
+            var result = await _repo.GetListTicketByBillId(billId, cancellationToken);
+            return Ok(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetListTicketByShowTimeId(Guid showTimeId, CancellationToken cancellationToken)
+        {
+            var result = await _repo.GetListTicketByShowTimeId(showTimeId, cancellationToken);
+            return Ok(result);
+        }
+    }
 }

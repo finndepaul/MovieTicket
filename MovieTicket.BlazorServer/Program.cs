@@ -65,12 +65,12 @@ namespace MovieTicket.BlazorServer
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
-			app.UseRouting();
-
-			app.UseAuthorization();
-			app.UseAntiforgery();
-			app.UseStaticFiles();
+      app.UseHttpsRedirection();
+      app.UseRouting();
+      app.UseAuthentication();
+      app.UseAuthorization();
+      app.UseAntiforgery();
+      app.UseStaticFiles();
 
 			app.MapRazorComponents<App>()
 				.AddInteractiveServerRenderMode();

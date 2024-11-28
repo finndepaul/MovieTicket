@@ -229,9 +229,7 @@ else
         if (response.Status == StatusCodes.Status200OK)
         {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
-            // await Task.Delay(100);
-            // _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null);
-            // StateHasChanged();
+
             NavigationManager.NavigateTo("/cinema", forceLoad: true);
         }
         else
