@@ -53,34 +53,59 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             {
                 Data = filmDto,
                 Status = StatusCodes.Status201Created,
-                Message = "Film created successfully"
+                Message = "Tạo phim thành công"
             };
         }
 
         public async Task<ResponseObject<FilmDto>> DeleteFilm(Guid id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var film = await (from f in _context.Films
+                              .Include(f => f.FilmScreenTypes)
+                              .Include(f => f.FilmTranslationTypes)
+                              where f.Id == id
+                              select f).FirstOrDefaultAsync();
+
             if (film == null)
             {
                 return new ResponseObject<FilmDto>
                 {
                     Data = null,
                     Status = StatusCodes.Status404NotFound,
-                    Message = "Film not found"
+                    Message = "Không tìm thấy phim"
                 };
             }
 
-            film.Status = FilmStatus.Ended;
+            // Check if there are any schedules associated with the film
+            var hasSchedules = await _context.Schedules.AnyAsync(s => s.FilmId == id);
+            if (hasSchedules)
+            {
+                return new ResponseObject<FilmDto>
+                {
+                    Data = null,
+                    Status = StatusCodes.Status400BadRequest,
+                    Message = "Không thể xóa phim vì phim có lịch chiếu liên quan. Vui lòng xóa lịch chiếu trước."
+                };
+            }
+
+            // Remove related FilmScreenTypes
+            _context.FilmScreenTypes.RemoveRange(film.FilmScreenTypes);
+
+            // Remove related FilmTranslationTypes
+            _context.FilmTranslationTypes.RemoveRange(film.FilmTranslationTypes);
+
+            // Remove the film itself
+            _context.Films.Remove(film);
+
             await _context.SaveChangesAsync();
 
-            var filmDto = _mapper.Map<FilmDto>(film);
             return new ResponseObject<FilmDto>
             {
-                Data = filmDto,
+                Data = null,
                 Status = StatusCodes.Status200OK,
-                Message = "Film status changed to Deleted"
+                Message = "Xóa phim thành công"
             };
         }
+
 
         public async Task<ResponseObject<FilmDto>> UpdateFilm(Guid id, FilmUpdateRequest filmUpdateRequest)
         {
@@ -94,7 +119,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 {
                     Data = null,
                     Status = StatusCodes.Status404NotFound,
-                    Message = "Film not found"
+                    Message = "Không tìm thấy phim"
                 };
             }
 
@@ -146,7 +171,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 }
             }
 
-            // Save changes to the database
             await _context.SaveChangesAsync();
 
             var filmDto = _mapper.Map<FilmDto>(film);
@@ -155,7 +179,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             {
                 Data = filmDto,
                 Status = StatusCodes.Status200OK,
-                Message = "Film updated successfully"
+                Message = "Cập nhật phim thành công"
             };
         }
     }

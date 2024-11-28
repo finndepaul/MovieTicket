@@ -1,0 +1,31 @@
+﻿@page "/update-coupon"
+
+<form>
+    <div class="mb-3">
+        <label for="editVoucherCode" class="form-label">Mã Khuyến Mại</label>
+        <input type="text" class="form-control" id="editVoucherCode" readonly>
+    </div>
+    <div class="mb-3">
+        <label for="editDiscountPercentage" class="form-label">Phần Trăm Giảm Giá</label>
+        <input type="number" class="form-control" id="editDiscountPercentage" required>
+    </div>
+    <div class="mb-3">
+        <label for="editQuantity" class="form-label">Số Lượng</label>
+        <input type="number" class="form-control" id="editQuantity" required>
+    </div>
+    <div class="mb-3">
+        <label for="editStatus" class="form-label">Trạng Thái</label>
+        <select class="form-select" id="editStatus" required>
+            <option value="active">Kích hoạt</option>
+            <option value="inactive">Ẩn</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="editValidityPeriod" class="form-label">Thời Gian Áp Dụng</label>
+        <input type="text" class="form-control" id="editValidityPeriod" placeholder="dd/mm/yyyy - dd/mm/yyyy" required>
+    </div>
+</form>
+
+@code {
+
+}

@@ -1,5 +1,6 @@
-﻿@page "/list-film"
+﻿@page "/film"
 @using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.DataTransferObjs.Schedule
 @using MovieTicket.Application.ValueObjs.Paginations
 @using MovieTicket.Domain.Enums
 @attribute [Authorize(Roles = "Admin")]
@@ -22,6 +23,11 @@
         background-color: red;
         color: white;
     }
+
+    .badge-NoScheduleYet{
+        background-color: gray;
+        color: white;
+    }
 </style>
 
 <div class="modal fade" id="DeleteFilmModalToggle" aria-hidden="true" aria-labelledby="DeleteFilmModalToggle" tabindex="-1">
@@ -41,7 +47,7 @@
 
 <div class="container-fluid">
 
-    <div class="row align-items-center">
+    <div class="row align-items-center mb-3">
         <!-- Nút Tạo Phim -->
         <div class="col-auto">
             <button class="btn btn-primary" @onclick="CreateFilm">+ Tạo phim</button>
@@ -96,10 +102,10 @@
                     <th scope="col">Tên phim</th>
                     <th scope="col">Năm phát hành</th>
                     <th scope="col">Thể loại</th>
-                    <th scope="col">Lịch chiếu</th>
+                    <th scope="col">Lịch khởi chiếu</th>
                     <th scope="col">Trạng thái</th>
                     <th scope="col">Ngày tạo</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,11 +119,26 @@
                                 <td>@film.Name</td>
                                 <td>@film.ReleaseYear</td>
                                 <td>
-                                    <span class="badge text-bg-primary" style="white-space: normal; width: 200px;">@film.Gerne</span>
+                                    <span class="badge text-bg-primary"
+                                          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;">
+                                        @film.Gerne
+                                    </span>
                                 </td>
                                 <td class="text-danger">@film.StartDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
-                                    <span class="badge @(GetBadgeClass(film.Status))">@film.Status</span>
+                                    
+                                        
+                                        @if (scheduleDtos.Any(s => s.FilmId == film.Id))
+                                        {
+                                            var sche = scheduleDtos.FirstOrDefault(s => s.FilmId == film.Id);
+                                            <span class="badge @(GetBadgeClass(sche.Status))">@sche.Status</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge text-bg-secondary">No Schedule Yet</span>
+                                        }
+                                        
+                                    
                                 </td>
                                 <td>@film.CreatDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
@@ -155,8 +176,8 @@
 
 <script>
     function openModalDelete(modalId) {
-        var modal = new bootstrap.Modal(document.getElementById(modalId));
-        modal.show();
+    var modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
     }
 </script>
 
@@ -169,10 +190,14 @@
     private DateTime? searchCreateDate;
     private DateTime? searchStartDate;
     private Guid SelectedDeleteFilmId { get; set; }
+    private List<ScheduleDto> scheduleDtos = new List<ScheduleDto>();
+    private string scheStatus;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadFilms();
+        var lstSche = await ScheduelService.GetAllAsync();
+        scheduleDtos = lstSche.ToList();
     }
 
     private async Task LoadFilms()
@@ -191,14 +216,14 @@
     private async Task HandleDeleteFilm(Guid id)
     {
         var result = await FilmService.DeleteFilm(id);
-        if (result != null)
+        if (result.Status == 200)
         {
-            await _JSRuntime.ToastrSuccess("Xóa thành công");
+            await _JSRuntime.ToastrSuccess(result.Message);
             await ApplyFilters();
         }
         else
         {
-            await _JSRuntime.ToastrError("Xóa thất bại");
+            await _JSRuntime.ToastrError(result.Message);
         }
     }
 
@@ -207,16 +232,17 @@
         NavigationManager.NavigateTo("/create-film");
     }
 
-    private string GetBadgeClass(FilmStatus? status)
+    private string GetBadgeClass(ScheduleStatus? scheduleStatus)
     {
-        return status switch
+        return scheduleStatus switch
         {
-            FilmStatus.ComingSoon => "badge-coming-soon",
-            FilmStatus.NowShowing => "badge-now-showing",
-            FilmStatus.Ended => "badge-ended",
+            ScheduleStatus.ComingSoon => "badge-coming-soon",
+            ScheduleStatus.Showing  => "badge-now-showing",
+            ScheduleStatus.Ended  => "badge-ended",
             _ => "badge-secondary"
         };
     }
+
 
     private async Task SelectedPage(int page)
     {

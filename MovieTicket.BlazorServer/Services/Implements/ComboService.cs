@@ -2,6 +2,7 @@
 using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.DataTransferObjs.Film;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
 
 namespace MovieTicket.BlazorServer.Services.Implements
@@ -15,10 +16,16 @@ namespace MovieTicket.BlazorServer.Services.Implements
             _httpClient = httpClient;
         }
 
-        public async Task<ComboDto> Create(CreateComboRequest combo)
+        public async Task<ResponseObject<ComboDto>> Create(CreateComboRequest combo)
         {
             var response = await _httpClient.PostAsJsonAsync("api/Combo/Create", combo);
-            return await response.Content.ReadFromJsonAsync<ComboDto>();
+            var readObj = await response.Content.ReadFromJsonAsync<ResponseObject<ComboDto>>();
+            return new ResponseObject<ComboDto>
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
         }
 
         public async Task<ComboDto> Delete(Guid id)
@@ -53,10 +60,16 @@ namespace MovieTicket.BlazorServer.Services.Implements
             return await _httpClient.GetFromJsonAsync<ComboDto>($"api/Combo/GetById?id={id}");
         }
 
-        public async Task<ComboDto> Update(Guid id, UpdateComboRequest combo)
+        public async Task<ResponseObject<ComboDto>> Update(Guid id, UpdateComboRequest combo)
         {
             var response = await _httpClient.PutAsJsonAsync($"api/Combo/Update?id={id}", combo);
-            return await response.Content.ReadFromJsonAsync<ComboDto>();
+            var readObj = await response.Content.ReadFromJsonAsync<ResponseObject<ComboDto>>();
+            return new ResponseObject<ComboDto>
+            {
+                Data = readObj.Data,
+                Message = readObj.Message,
+                Status = readObj.Status
+            };
         }
     }
 }

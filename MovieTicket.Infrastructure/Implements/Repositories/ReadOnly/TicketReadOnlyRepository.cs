@@ -29,6 +29,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 }).AsNoTracking().ToListAsync();
             return query.AsQueryable();
         }
+        
         public async Task<IQueryable<TicketDto>> GetListTicketByShowTimeId(Guid showTimeId, CancellationToken cancellationToken)
         {
             var query = await _db.Tickets.Where(x => x.ShowTimeId == showTimeId)

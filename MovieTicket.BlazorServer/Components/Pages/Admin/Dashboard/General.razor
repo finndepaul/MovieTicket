@@ -30,21 +30,17 @@
 		</div>
 	</div>
 
-	<div class="row" style="width: 100%;">
-		<div class="w-50 col">
-			<h2 class="fw-semibold fs-5" style="text-align:center">Top bài viết được xem nhiều nhất</h2>
-			<canvas id="topArticle"></canvas>
-		</div>
-		<div class="w-50 col">
-			<h2 class="fw-semibold fs-5" style="text-align:center">Doanh thu theo tháng</h2>
-			<canvas id="topRevenue"></canvas>
+	<div class="" style="width: 100%; height: 400px;">
+		<div class="">
+			<h2 class="fw-semibold fs-5 text-center" style="">Doanh thu theo tháng</h2>
+			<canvas id="topRevenue" style="width: 100%; height: 400px;"></canvas>
 		</div>
 	</div>
 
 	<hr class="m-5" />
 
 	<div class="row">
-		<div class="w-50 col">
+		<div class="col">
 			<div class="d-flex justify-content-between">
 				<h2 class="fw-bold">Doanh thu theo Phim</h2>
 				<NavLink href="revenue-by-movie" class="icon-link icon-link-hover fs-4">Xem tất cả</NavLink>
@@ -72,7 +68,7 @@
 			</div>
 		</div>
 
-		<div class="w-50 col">
+		<div class="col">
 			<div class="d-flex justify-content-between">
 				<h2 class="fw-bold">Doanh thu theo Rạp</h2>
 				<NavLink class="icon-link fs-4 icon-link-hover" href="revenue-by-cinema">Xem tất cả</NavLink>
@@ -131,9 +127,29 @@
 			// Thêm thời gian chờ ngắn
 			await Task.Delay(100);
 
-			if (revenueByMonthDtos != null && revenueByMonthDtos.Any())
+			if (revenueByMonthDtos != null)
 			{
-				var revenueData = revenueByMonthDtos.Select(r => new { r.Month, r.Year, r.TotalRevenue }).ToList();
+				// Thêm dữ liệu từ tháng 1 đến tháng 10 với giá trị doanh thu bằng 0 nếu thiếu
+				var completeData = new List<RevenueByMonthDto>();
+				for (int i = 1; i <= 12; i++)
+				{
+					if (!revenueByMonthDtos.Any(r => r.Month == i && r.Year == date.Year))
+					{
+						completeData.Add(new RevenueByMonthDto
+							{
+								Month = i,
+								Year = date.Year,
+								TotalRevenue = 0
+							});
+					}
+				}
+
+				// Kết hợp dữ liệu cũ và dữ liệu mặc định
+				completeData.AddRange(revenueByMonthDtos);
+				completeData = completeData.OrderBy(r => r.Year).ThenBy(r => r.Month).ToList();
+
+				// Chuẩn bị dữ liệu cho biểu đồ
+				var revenueData = completeData.Select(r => new { r.Month, r.Year, r.TotalRevenue }).ToList();
 				await JSRuntime.InvokeVoidAsync("updateCharts", revenueData);
 			}
 			else
@@ -144,25 +160,13 @@
 			isRendered = true;
 		}
 	}
+
 }
 
 <script>
 	function updateCharts(revenueData) {
-		var articleTop = document.getElementById('topArticle');
+		
 		var revenueTop = document.getElementById('topRevenue');
-
-		// Biểu đồ lượt xem bài viết
-		new Chart(articleTop, {
-			type: 'bar',
-			data: {
-				labels: ['DeadPool', 'Conan Movie 27', '15 phim...', 'Top 10 phim bộ', 'Top 10 phim lẻ'],
-				datasets: [{
-					label: 'Lượt xem',
-					data: [25, 19, 17, 17, 15],
-					borderWidth: 1
-				}]
-			}
-		});
 
 		// Kiểm tra dữ liệu doanh thu trước khi vẽ biểu đồ
 		if (!revenueData || revenueData.length === 0) {
@@ -187,7 +191,7 @@
 				}]
 			},
 			options: {
-				responsive: true,
+				responsive: true, // Biểu đồ tự động thay đổi kích thước
 				scales: {
 					y: {
 						beginAtZero: true,

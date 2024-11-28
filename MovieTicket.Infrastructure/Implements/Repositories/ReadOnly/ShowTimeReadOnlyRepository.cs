@@ -64,7 +64,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			{
 				showTimes = showTimes.Where(x => x.ShowtimeDate == showTimeSearch.ShowtimeDate);
 			}
-
+			showTimes = showTimes.OrderBy(x => x.StartTime < DateTime.Now).ThenBy(x => x.StartTime);
 			int count = await showTimes.CountAsync();
 			var data = await showTimes.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
 					.Take(pagingParameters.PageSize)

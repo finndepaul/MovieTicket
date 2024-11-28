@@ -1,4 +1,4 @@
-﻿@page "/update-about/{Id:guid}"
+﻿@page "/about/update/{Id:guid}"
 @using MovieTicket.Application.DataTransferObjs.About
 @using MovieTicket.BlazorServer.Components.Pages.Admin.FroalaEditor
 @inject IAboutService aboutService
@@ -8,7 +8,7 @@
 <EditForm Model="updateAboutDto" OnValidSubmit="HandleOnSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <a class="btn btn-light me-2" href="/list-about">Quay lại</a>
+        <a class="btn btn-light me-2" href="/about">Quay lại</a>
         <button type="submit" class="btn btn-primary">Update</button>
     </div>
 
@@ -48,7 +48,7 @@
         if (result != null)
         {
             await JSRuntime.ToastrSuccess("Cập nhật thành công");
-            NavigationManager.NavigateTo("/list-about");
+            NavigationManager.NavigateTo("/about");
         }
         else
         {

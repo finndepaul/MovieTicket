@@ -48,6 +48,7 @@
 @using Net.payOS.Types
 
 @inject IAuthenService AuthenService
+@inject IAccountService AccountService
 @inject IBannerService BannerService
 @inject ICinemaService CinemaService
 @inject ICinemaCenterService CinemaCenterService
@@ -64,6 +65,9 @@
 @inject IFilmService FilmService;
 @inject ITicketService TicketService;
 @inject IBillService BillService;
+@inject ICouponService CouponService;
+@inject IBillComboService BillComboService;
+
 
 @inject IJSRuntime JSRuntime
 @inject AppState AppState

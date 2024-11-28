@@ -1,11 +1,11 @@
-﻿@page "/createcombo"
+@page "/combo/create"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 <EditForm Model="createComboRequest" OnValidSubmit="HandleOnSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <a type="button" class="btn btn-light me-2" href="/listcombo">Quay lại</a>
-        <button type="submit" class="btn btn-primary me-2">Tạo combo</button>
+        <a type="button" class="btn btn-light me-2" href="/combo">Quay lại</a>
+        <button type="submit" class="btn btn-primary me-2">Create</button>
     </div>
     
     <div class="mb-3">
@@ -74,14 +74,14 @@
     private async Task HandleOnSubmit()
     {
         var result = await ComboService.Create(createComboRequest);
-        if (result != null)
+        if (result.Status == 200)
         {
-            await JSRuntime.ToastrSuccess("Tạo thành công");
-            NavigationManager.NavigateTo("/listcombo");
+            await JSRuntime.ToastrSuccess(result.Message);
+            NavigationManager.NavigateTo("/combo");
         }
         else
         {
-            await JSRuntime.ToastrError("Tạo thất bại");
+            await JSRuntime.ToastrError(result.Message);
         }
 
     }

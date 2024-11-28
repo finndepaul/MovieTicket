@@ -1,5 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
+using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Application.ValueObjs.ViewModels;
 
@@ -12,5 +13,8 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
         Task<AccountDto> GetByIdAsync(Guid id);
         Task<ResponseObject<AccountDto>> CreateAsync(AccountCreateRequest accountCreateRequest);
         Task<AccountDto> UpdateAsync(AccountUpdateRequest accountUpdateRequest);
+
+        Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters);
+
     }
 }

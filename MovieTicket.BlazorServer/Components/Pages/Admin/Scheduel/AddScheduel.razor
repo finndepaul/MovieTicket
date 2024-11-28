@@ -47,11 +47,12 @@
     private IQueryable<FilmForCreateDto> Films { get; set; }
     private string SelectedFilmReleaseDate { get; set; } = DateTime.Now.ToString("yyyy-MM-dd");
     string selectedFilmId;
+    CancellationToken cancellationToken;
 
     private async Task HandleAddScheduel()
     {
         request.FilmId = Guid.Parse(selectedFilmId);
-        var result = await _scheduleService.CreateAsync(request);
+        var result = await _scheduleService.CreateAsync(request, cancellationToken);
         if (result)
         {
             _navigationManager.NavigateTo("/scheduel", forceLoad: true);

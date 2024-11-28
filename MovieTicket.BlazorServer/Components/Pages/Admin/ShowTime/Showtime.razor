@@ -26,7 +26,9 @@
 
 		<div class="d-flex align-items-center me-4">
 			<label for="auditorium" class="me-2 mb-0">Phòng chiếu:</label>
-			<select class="form-control form-control-sm" id="cinema" style="width: 150px;" @onchange="(e) => SelectedCinema(e)" disabled="@(isCinemaSelected ? false : true)">
+			<select class="form-control form-control-sm" id="cinema" style="width: 150px;"
+					@onchange="(e) => SelectedCinema(e)"
+					value="@ShowTimeSearchs.CinemaId" disabled="@(isCinemaSelected ? false : true)">
 				<option value="">Select a cinema</option>
 				@if (cinemaSearch != null)
 				{
@@ -34,10 +36,6 @@
 					{
 						<option value="@item.Id">@item.Name</option>
 					}
-				}
-				else
-				{
-					<option value="">Select a cinema</option>
 				}
 			</select>
 		</div>
@@ -160,7 +158,7 @@
 
 	<div class="mt-3">
 		<!-- Button to Open Modal -->
-		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CreateShowTime">
+		<button type="button" class="btn btn-primary" @onclick="OpenCreateShowTimeModal">
 			+ Thêm suất chiếu
 		</button>
 	</div>
@@ -267,6 +265,11 @@
 			modal.hide();
 		}
 	}
+	function showModal(modalId) {
+		const modal = new bootstrap.Modal(document.querySelector(modalId));
+		modal.show();
+	}
+
 </script>
 @code {
 	private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
@@ -284,6 +287,8 @@
 	private CreateShowTime CreateShowTime;
 	private string ShowTimeId = string.Empty;
 	private bool isCinemaSelected = false;
+	private ShowTimeUpdateRequest showTimeUpdateRequest = new ShowTimeUpdateRequest();
+	private ShowTimeUpdateStatus updateStatus = new ShowTimeUpdateStatus();
 	protected override async Task OnInitializedAsync()
 	{
 		_lstCinema = "Select a cinema";
@@ -291,19 +296,18 @@
 		ShowTimeSearchs.ShowtimeDate = Date;
 		await SearchShowTimes();
 	}
-
 	private async Task SelectedCinemaCenter(ChangeEventArgs e)
 	{
 		var selectedCinemaCenterId = e.Value.ToString();
 		var selectedCinemaCenter = cinemaCenters.FirstOrDefault(c => c.Id.ToString() == selectedCinemaCenterId);
-
 		if (selectedCinemaCenter != null)
 		{
 			CinemaCenterName = selectedCinemaCenter.Name;
 			cinemaSearch = await CinemaService.GetCinemasAsync(CinemaCenterName, null);
-
 			ShowTimeSearchs.CinemaCenterId = selectedCinemaCenter.Id;
-
+			// Reset Cinema
+			ShowTimeSearchs.CinemaId = null; 
+			CinemaName = string.Empty;     
 			// Cho phép chọn phòng chiếu
 			isCinemaSelected = true;
 		}
@@ -311,12 +315,13 @@
 		{
 			// Không cho phép chọn phòng chiếu
 			isCinemaSelected = false;
+			cinemaSearch = null;
+			ShowTimeSearchs.CinemaId = null;
+			CinemaName = string.Empty;
 		}
 
 		await SearchShowTimes();
 	}
-
-
 	private async Task SelectedCinema(ChangeEventArgs e)
 	{
 		var selectedCinemaId = e.Value.ToString();
@@ -333,7 +338,6 @@
 
 		await SearchShowTimes();
 	}
-
 	private async Task UpdateShowDate(ChangeEventArgs e)
 	{
 		if (DateTime.TryParse(e.Value.ToString(), out var date))
@@ -350,7 +354,6 @@
 		}
 		await SearchShowTimes();
 	}
-
 	private async Task SearchShowTimes()
 	{
 		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
@@ -360,6 +363,28 @@
 					PageSize = 20
 				});
 			ShowTimes = pagingResponse.Item.ToList();
+			foreach (var showTime in ShowTimes)
+			{
+				if (showTime.StartTime.HasValue && showTime.EndTime.HasValue)
+				{
+					var now = DateTime.Now;
+
+					if (now >= showTime.StartTime.Value && now < showTime.EndTime.Value)
+					{
+						showTime.Status = Domain.Enums.ShowtimeStatus.Showing;
+						updateStatus.Id = showTime.Id;
+						updateStatus.Status = Domain.Enums.ShowtimeStatus.Showing;
+						await ShowTimeService.UpdateStatus(updateStatus);
+					}
+					if (now >= showTime.EndTime.Value)
+					{
+						showTime.Status = Domain.Enums.ShowtimeStatus.Ended;
+						updateStatus.Id = showTime.Id;
+						updateStatus.Status = Domain.Enums.ShowtimeStatus.Ended;
+						await ShowTimeService.UpdateStatus(updateStatus);
+					}
+				}
+			}
 			MetaData = pagingResponse.MetaData;
 			StateHasChanged();
 		}
@@ -418,4 +443,23 @@
 		Navigation.NavigateTo($"/showtime-update/{id}");
 		await JSRuntime.InvokeVoidAsync("closeActionRow");
 	}
+	private async Task OpenCreateShowTimeModal()
+	{
+		if (!ShowTimeSearchs.CinemaCenterId.HasValue || !ShowTimeSearchs.CinemaId.HasValue)
+		{
+			await JSRuntime.ToastrError("Vui lòng chọn rạp chiếu và phòng chiếu trước khi thêm suất chiếu.");
+			return;
+		}
+
+		try
+		{
+			await JSRuntime.InvokeVoidAsync("bootstrap.Modal.getOrCreateInstance", "#CreateShowTime");
+			await JSRuntime.InvokeVoidAsync("showModal", "#CreateShowTime");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Lỗi khi mở modal: {ex.Message}");
+		}
+	}
+
 }

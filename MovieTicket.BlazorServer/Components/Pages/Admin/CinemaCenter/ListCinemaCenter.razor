@@ -21,7 +21,7 @@
 
 <div class="container-fluid">
     <div class="d-flex justify-content-start align-items-center mb-3">
-        <a class="btn btn-success me-2" href="/create-cinema-center">Tạo Rạp Chiếu</a>
+        <a class="btn btn-success me-2" href="/cinema-center/create">Tạo Rạp Chiếu</a>
     </div>
 
     <div class="d-flex mt-4" style="max-width: 900px;">
@@ -162,6 +162,6 @@
     }
     private async Task NavigateToUpdate(Guid id)
     {
-        Navigation.NavigateTo($"/update-cinema-center/{id}");
+        Navigation.NavigateTo($"/cinema-center/update/{id}");
     }
 }
