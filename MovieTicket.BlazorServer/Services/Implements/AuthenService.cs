@@ -14,34 +14,44 @@ namespace MovieTicket.BlazorServer.Services.Implements
 {
     public class AuthenService : IAuthenService
     {
-        private const string JWTToken = nameof(JWTToken);
-
         private readonly HttpClient httpClient;
         private readonly ILocalStorageService localStorageService;
         private readonly IConfiguration configuration;
         private readonly ProtectedLocalStorage protectedLocalStorage;
+        private readonly ProtectedSessionStorage protectedSessionStorage;
         private readonly NavigationManager navigationManager;
 
-        public AuthenService(ProtectedLocalStorage protectedLocalStorage, NavigationManager navigationManager, IConfiguration configuration, HttpClient httpClient, ILocalStorageService localStorageService)
+        public AuthenService(ProtectedLocalStorage protectedLocalStorage,
+            NavigationManager navigationManager,
+            IConfiguration configuration,
+            HttpClient httpClient,
+            ILocalStorageService localStorageService,
+            ProtectedSessionStorage protectedSessionStorage
+            )
         {
             this.configuration = configuration;
             this.protectedLocalStorage = protectedLocalStorage;
             this.navigationManager = navigationManager;
             this.httpClient = httpClient;
             this.localStorageService = localStorageService;
+            this.protectedSessionStorage = protectedSessionStorage;
         }
 
         public async Task<LoginRespone> LoginAsync(LoginDTO loginModel)
         {
             var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/Login", loginModel);
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
-            await localStorageService.SetItemAsync(JWTToken, result.JWTToken);
-            Constants.JWTToken = result.JWTToken;
+            //await localStorageService.SetItemAsync(JWTToken, result.JWTToken);
+            Constants.Token = result.JWTToken;
+            //await protectedSessionStorage.SetAsync(JWTToken, result.JWTToken);
             return result;
         }
 
         public async Task<RegisterResponse> RegisterAsync(AccountRegisterRequest registerModel)
         {
+            if (Constants.Token != "") return null!;
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", Constants.Token);
             var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Account/Register", registerModel);
             var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
             return result;
@@ -56,9 +66,9 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
         private void GetProtectedClient()
         {
-            if (Constants.JWTToken == "") return;
+            if (Constants.Token == "") return;
             httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", Constants.JWTToken);
+                new AuthenticationHeaderValue("Bearer", Constants.Token);
         }
 
         private static bool CheckIfUnauthorized(HttpResponseMessage message)
@@ -75,16 +85,16 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
         private async Task GetRefreshToken()
         {
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", new UserSession() { JWTToken = Constants.JWTToken });
+            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", new UserSession() { JWTToken = Constants.Token });
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
-            Constants.JWTToken = result!.JWTToken;
+            Constants.Token = result!.JWTToken;
         }
 
         public async Task Logout()
         {
-            await localStorageService.RemoveItemAsync(JWTToken);
-            Constants.JWTToken = "";
-            CustomAuthenticationStateProvider customAuthStateProvider = new CustomAuthenticationStateProvider(localStorageService);
+            //await protectedSessionStorage.DeleteAsync(JWTToken);
+            Constants.Token = "";
+            CustomAuthenticationStateProvider customAuthStateProvider = new CustomAuthenticationStateProvider();
             await customAuthStateProvider.GetAuthenticationStateAsync();
             await customAuthStateProvider.UpdateAuthenticationState("");
             httpClient.DefaultRequestHeaders.Authorization = null;

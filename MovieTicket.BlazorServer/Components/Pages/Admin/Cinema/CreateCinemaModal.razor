@@ -93,11 +93,6 @@
         {
             request.CinemaCenterId = CinemaCenterDtos.First().Id;
         }
-        // if(request.CinemaTypeId == Guid.Empty)
-        // {
-        //     await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn loại phòng chiếu");
-        //     return;
-        // }
         ResponseObject<CinemaDto> response = await CinemaService.Create(request);
         if (response.Status == StatusCodes.Status200OK)
         {

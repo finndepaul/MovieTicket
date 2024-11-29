@@ -1,5 +1,6 @@
 @page "/"
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Home</PageTitle>
 
@@ -73,9 +74,6 @@
 						}
 					}
 				}
-
-
-
 			</div>
 		</div>
 
@@ -460,4 +458,5 @@
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
 	}
+
 }
