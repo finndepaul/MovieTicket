@@ -113,9 +113,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			{
 				query = query.Where(x => x.group.group.group.group.group.group.b.Status == request.Status);
 			}
-			if (request.Type.HasValue)
+			if (request.ShowtimeStatus.HasValue)
 			{
-				query = query.Where(x => x.group.sc.Type == request.Type);
+				query = query.Where(x => x.group.group.group.group.group.s.Status == request.ShowtimeStatus);
 			}
 			if (!String.IsNullOrEmpty(request.CinemaType_Name))
 			{
@@ -129,7 +129,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				.Select(x => new BillsDto
 				{
 					Id = x.group.group.group.group.group.group.b.Id,
-					Type = x.group.sc.Type,
+					ShowtimeStatus = x.group.group.group.group.group.s.Status,
 					CinemaType_Name = x.group.group.group.group.sct.Type + " " + x.group.group.cc.Name,
 					FilmName = x.f.Name,
 					TotalMoney = x.group.group.group.group.group.group.b.AfterDiscount,
@@ -142,8 +142,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				.Select(x => new BillsDto
 				{
 					Id = x.group.group.group.group.group.group.b.Id,
-					Type = x.group.sc.Type,
-                    CinemaType_Name = x.group.group.group.group.sct.Type + " " + x.group.group.cc.Name,
+					ShowtimeStatus = x.group.group.group.group.group.s.Status,
+					CinemaType_Name = x.group.group.group.group.sct.Type + " " + x.group.group.cc.Name,
                     FilmName = x.f.Name,
 					TotalMoney = x.group.group.group.group.group.group.b.AfterDiscount,
 					CreateTime = x.group.group.group.group.group.group.b.CreateTime,

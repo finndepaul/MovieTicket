@@ -58,5 +58,11 @@ namespace MovieTicket.BlazorServer.Services.Implements
                 Item = new List<AccountDto>(),
             };
         }
-    }
+
+		public async Task<bool> UpdateStatusAccount(Guid id)
+		{
+			var response = await _httpClient.PutAsJsonAsync($"api/Account/UpdateStatusAccount?Id={id}", new { id });
+			return response.IsSuccessStatusCode;
+		}
+	}
 }

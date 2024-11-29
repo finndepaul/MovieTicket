@@ -11,12 +11,13 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
         //Task<ResponseObject<Account>> Register(Account account);
         Task<RegisterResponse> RegisterAsync(Account account);
 
-        Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken);
+        Task<ResponseObject<bool>> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken);
 
         Task<bool> ChangePasswordAsync(ChangePasswordRequest request, CancellationToken cancellationToken);
 
         Task<ResponseObject<AccountDto>> CreateNewAccount(AccountCreateRequest request, CancellationToken cancellationToken);
 
         Task<ResponseObject<AccountDto>> UpdateAccount(AccountUpdateRequest request, CancellationToken cancellationToken);
+        Task<bool> UpdateStatusAccount(Guid id, CancellationToken cancellationToken);
     }
 }

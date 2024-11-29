@@ -4,6 +4,7 @@ using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Entitis;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 
@@ -22,21 +23,57 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
         public async Task<ResponseObject<TicketPriceCreateRequest>> Create(TicketPriceCreateRequest request, CancellationToken cancellationToken)
         {
-            if (!request.Validate())
-            {
-                return new ResponseObject<TicketPriceCreateRequest>
-                {
-                    Data = null,
-                    Message = "All fields are required.",
-                    Status = StatusCodes.Status404NotFound
-                };
-            }
-            if (!(request.Price >= 30000 && request.Price <= 1000000))
+			if (String.IsNullOrEmpty(request.SeatTypeId.ToString()))
+			{
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn loại ghế.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (String.IsNullOrEmpty(request.ScreenTypeId.ToString()))
+			{
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn hình thức chiếu.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (String.IsNullOrEmpty(request.ScreeningDayId.ToString()))
+			{
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn ngày chiếu.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (String.IsNullOrEmpty(request.CinemaTypeId.ToString()))
+			{
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn loại rạp.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (String.IsNullOrEmpty(request.Price.ToString()))
+			{
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Chưa nhập số tiền.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (!(request.Price >= 30000 && request.Price <= 1000000))
             {
 				return new ResponseObject<TicketPriceCreateRequest>
 				{
 					Data = null,
-					Message = "Price range from 30,000 to 1,000,000",
+					Message = "Giá vé chỉ được nhập từ khoảng 30.000 - 1.000.000 VND",
 					Status = StatusCodes.Status404NotFound
 				};
 			}
@@ -47,7 +84,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return new ResponseObject<TicketPriceCreateRequest>
                 {
                     Data = null,
-                    Message = "Ticket price already exists",
+                    Message = "Giá vé này đã tồn tại",
                     Status = StatusCodes.Status400BadRequest
                 };
             }
@@ -58,7 +95,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             return new ResponseObject<TicketPriceCreateRequest>
             {
                 Data = request,
-                Message = "Create ticket price success",
+                Message = "Tạo giá vé thành công",
                 Status = StatusCodes.Status200OK
             };
         }
@@ -71,7 +108,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return new ResponseObject<bool>
                 {
                     Data = false,
-                    Message = "Ticket price not found",
+                    Message = "Không tìm thấy giá vé",
                     Status = StatusCodes.Status404NotFound
                 };
             }
@@ -81,7 +118,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             return new ResponseObject<bool>
             {
                 Data = true,
-                Message = "Delete ticket price success",
+                Message = "Xóa giá vé thành công",
                 Status = StatusCodes.Status200OK
             };
         }
@@ -94,7 +131,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				return new ResponseObject<TicketPriceUpdateRequest>
 				{
 					Data = null,
-					Message = "All fields are required.",
+					Message = "Giá vé này đã tồn tại",
 					Status = StatusCodes.Status404NotFound
 				};
 			}
@@ -103,7 +140,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				return new ResponseObject<TicketPriceUpdateRequest>
 				{
 					Data = null,
-					Message = "Price range from 30,000 to 1,000,000",
+					Message = "Giá vé chỉ được nhập từ khoảng 30.000 - 1.000.000 VND",
 					Status = StatusCodes.Status404NotFound
 				};
 			}
@@ -116,7 +153,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return new ResponseObject<TicketPriceUpdateRequest>
                 {
                     Data = null,
-                    Message = "Ticket price not found",
+                    Message = "Không tìm thấy giá vé",
                     Status = StatusCodes.Status404NotFound
                 };
             }
@@ -125,7 +162,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return new ResponseObject<TicketPriceUpdateRequest>
                 {
                     Data = null,
-                    Message = "Ticket price already exists",
+                    Message = "Giá vé đã tồn tại",
                     Status = StatusCodes.Status400BadRequest
                 };
             }
@@ -140,7 +177,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             return new ResponseObject<TicketPriceUpdateRequest>
             {
                 Data = request,
-                Message = "Update ticket price success",
+                Message = "Sửa giá vé thành công",
                 Status = StatusCodes.Status200OK
             };
         }

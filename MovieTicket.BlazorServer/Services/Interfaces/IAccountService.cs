@@ -12,5 +12,6 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
         Task<AccountDto> GetByIdAsync(Guid id);
         Task<ResponseObject<AccountDto>> CreateAsync(AccountCreateRequest accountCreateRequest);
         Task<AccountDto> UpdateAsync(AccountUpdateRequest accountUpdateRequest);
-    }
+        Task<bool> UpdateStatusAccount(Guid id);
+	}
 }

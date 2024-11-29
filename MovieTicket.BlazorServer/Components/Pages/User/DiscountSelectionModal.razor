@@ -199,34 +199,14 @@
 
         <div class="countdown-container">
             <div class="countdown-title">Countdown Clock</div>
-            <div class="countdown-box" id="minutes">5</div>
-            <div class="countdown-box" id="seconds">00</div>
+            <div class="countdown-box">@_timeLeft.ToString(@"mm")</div>
+            <div class="countdown-box">@_timeLeft.ToString(@"ss")</div>
         </div>
     </div>
 
 
 </div>
 
-<script>
-    // Đếm ngược thời gian
-    let minutes = 5;
-    let seconds = 00;
-    const countdown = setInterval(() => {
-        if (seconds === 0) {
-            if (minutes === 0) {
-                clearInterval(countdown);
-                alert("Hết thời gian thanh toán!");
-                return;
-            }
-            minutes--;
-            seconds = 59;
-        } else {
-            seconds--;
-        }
-        document.getElementById("minutes").textContent = minutes;
-        document.getElementById("seconds").textContent = seconds < 10 ? '0' + seconds : seconds;
-    }, 1000);
-</script>
 
 @code {
     // Các biến dùng để quản lý trạng thái
@@ -235,6 +215,10 @@
     private int CurrentPoints { get; set; } = 100; // Ví dụ: điểm hiện tại là 100
     private bool IsDiscountCodeUsed { get; set; } = false;
     private bool IsVHDUsed { get; set; } = false;
+    private TimeSpan _timeLeft;
+    private Timer? _timer;
+    private bool _isCountdownFinished = false;
+    private DateTime EndTime = DateTime.Now.AddMinutes(1);
 
     // Xử lý khi nhấn nút xác nhận mã giảm giá
     private void UseDiscountCode()
@@ -261,5 +245,45 @@
         IsVHDUsed = false;
         DiscountCode = string.Empty;
         VHDPoints = 0;
+    }
+    private void StartCountdown()
+    {
+        _isCountdownFinished = false; // Reset trạng thái
+        _timeLeft = EndTime - DateTime.Now;
+
+        if (_timeLeft > TimeSpan.Zero)
+        {
+            _timer = new System.Threading.Timer(UpdateCountdown, null, 0, 1000);
+        }
+    }
+    private void UpdateCountdown(object? state)
+    {
+        // Không làm gì nếu countdown đã hoàn thành
+        if (_isCountdownFinished) return;
+
+        _timeLeft = EndTime - DateTime.Now;
+
+        if (_timeLeft <= TimeSpan.Zero)
+        {
+            _timeLeft = TimeSpan.Zero; // Đảm bảo không âm
+            _isCountdownFinished = true; // Đánh dấu đã hoàn thành
+            _timer?.Dispose(); // Dừng timer hoàn toàn
+
+            // Gọi hàm xử lý sau countdown
+            ExecuteFunctionAfterCountdown();
+        }
+
+        // Cập nhật giao diện
+        InvokeAsync(StateHasChanged);
+    }
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+    private async Task ExecuteFunctionAfterCountdown()
+    {
+        Console.WriteLine("Đếm ngược đã hoàn thành!");
+        return;
+        // Thực hiện các thao tác khác tại đây
     }
 }

@@ -70,5 +70,11 @@ namespace MovieTicket.API.Controllers
             var create = await _accountReadWrite.UpdateAccount(request, cancellationToken);
             return Ok(create);
         }
-    }
+        [HttpPut]
+		public async Task<ActionResult> UpdateStatusAccount(Guid id, CancellationToken cancellationToken)
+		{
+			var create = await _accountReadWrite.UpdateStatusAccount(id, cancellationToken);
+			return Ok(create);
+		}
+	}
 }

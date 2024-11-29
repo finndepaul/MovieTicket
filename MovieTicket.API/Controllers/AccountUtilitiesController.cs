@@ -29,8 +29,8 @@ namespace MovieTicket.API.Controllers
         [HttpPut]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request, CancellationToken cancellationToken)
         {
-            await _accountService.ForgotPasswordAsync(request, cancellationToken);
-            return Ok();
+           var result = await _accountService.ForgotPasswordAsync(request, cancellationToken);
+            return Ok(result);
         }
 
         [HttpPost]
