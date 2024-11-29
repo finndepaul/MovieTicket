@@ -10,8 +10,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
     public class BillsDto
     {
         public Guid Id { get; set; }
-
-		public ScheduleType? Type { get; set; }
+		public ShowtimeStatus? ShowtimeStatus { get; set; }
 		public string CinemaType_Name { get; set; }
 		public string FilmName { get; set; }
 		public decimal? TotalMoney { get; set; }

@@ -61,6 +61,12 @@ namespace MovieTicket.BlazorServer.Services.Implements
             };
         }
 
+		    public async Task<bool> UpdateStatusAccount(Guid id)
+		    {
+			      var response = await _httpClient.PutAsJsonAsync($"api/Account/UpdateStatusAccount?Id={id}", new { id });
+			      return response.IsSuccessStatusCode;
+		    }
+	
         public async Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters)
         {
             var queryParameters = new Dictionary<string, string>
@@ -101,4 +107,5 @@ namespace MovieTicket.BlazorServer.Services.Implements
             return await response.Content.ReadFromJsonAsync<int>();
         }
     }
+
 }
