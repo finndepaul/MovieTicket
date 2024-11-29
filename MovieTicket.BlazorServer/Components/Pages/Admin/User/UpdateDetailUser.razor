@@ -1,10 +1,12 @@
-@page "/user/detail/{Id:guid}"
+@page "/userdetail/{Id:guid}"
 @using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.Account.Request
+@using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Domain.Enums
 @inject IAccountService AccountService
 @inject IAccountUtilitiesService AccountUtilitiesService
 @attribute [Authorize(Roles = "Admin")]
+
 <div class="container-fluid">
     <ul class="nav nav-underline" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -93,7 +95,51 @@
             </EditForm>
         </div>
         <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
-            <p>Hiện tại chưa có thông tin đặt vé.</p>
+            @if (bookingHistory?.Item != null)
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên phim</th>
+                            <th>Tuổi</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>Thời gian kết thúc</th>
+                            <th>Rạp</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày đặt</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bill in bookingHistory.Item)
+                        {
+                            <tr class="align-middle">
+                                <td><img src="@bill.FilmPoster" alt="Film Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                                <td>@bill.FilmName</td>
+                                <td>@bill.FilmRating</td>
+                                <td>@bill.ShowStartTime</td>
+                                <td>@bill.ShowEndTime</td>
+                                <td>@bill.CinemaName</td>
+                                <td>@bill.TotalMoney</td>
+                                <td>@bill.CreateTime</td>
+                                <td>
+                                    <span class="badge text-bg-success">@bill.Status</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success" href="@($"billuserdetail/{bill.Id}")">Chi tiết</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Hiện tại chưa có thông tin đặt vé.</p>
+            }
+            <Pagination MetaData="metaData" SelectedPage="SelectedPage" Spread="2" />
         </div>
         <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
             <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword">
@@ -118,11 +164,13 @@
         </div>
     </div>
 </div>
+
 <style>
     .validation-message {
         color: red;
     }
 </style>
+
 @code {
     [Parameter]
     public Guid Id { get; set; }
@@ -130,6 +178,8 @@
     private AccountDto accountDtos = new AccountDto();
     private AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest();
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+    private PageList<BillsDto> bookingHistory = new PageList<BillsDto>();
+    private MetaData metaData = new MetaData();
 
     protected override async Task OnInitializedAsync()
     {
@@ -147,7 +197,11 @@
             };
         changePasswordRequest.Id = accountDtos.Id;
         _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Avatar");
+
+        bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = 1, PageSize = 10 });
+        metaData = bookingHistory.MetaData;
     }
+
     private async Task ChangePassword()
     {
         changePasswordRequest.Id = Id;
@@ -156,13 +210,13 @@
         {
             await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công");
             NavigationManager.NavigateTo("/list-user");
-
         }
         else
         {
             await JSRuntime.ToastrError("Đổi mật khẩu thất bại");
         }
     }
+
     private async Task UpdateAccount()
     {
         if (accountUpdateRequest != null)
@@ -171,7 +225,6 @@
             await AccountService.UpdateAsync(accountUpdateRequest);
             await JSRuntime.ToastrSuccess("Cập nhật thành công");
             NavigationManager.NavigateTo("/user");
-
         }
         else
         {
@@ -211,5 +264,11 @@
 
         accountUpdateRequest.Avatar = null;
         return;
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = page, PageSize = 10 });
+        metaData = bookingHistory.MetaData;
     }
 }
