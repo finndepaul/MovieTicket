@@ -1,5 +1,6 @@
 ﻿@page "/userinformation"
 @using MovieTicket.Application.DataTransferObjs.Account.Request
+@using MovieTicket.Application.DataTransferObjs.Coupon
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -13,10 +14,16 @@
             <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="true">Thông tin người dùng</button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="membership-points-tab" data-bs-toggle="tab" data-bs-target="#membership-points" type="button" role="tab" aria-controls="membership-points" aria-selected="false">Điểm VHD</button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Đổi mật khẩu</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="false">Lịch sử đặt vé</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="coupon-usage-history-tab" data-bs-toggle="tab" data-bs-target="#coupon-usage-history" type="button" role="tab" aria-controls="coupon-usage-history" aria-selected="false">Lịch sử sử dụng mã giảm giá</button>
         </li>
     </ul>
 
@@ -94,42 +101,50 @@
                 <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
             </EditForm>
         </div>
+
         <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
-            @if (bookingHistory?.Item != null)
+            @if (bookingHistory?.Item != null && bookingHistory.Item.Any())
             {
-                <div class="row g-3">
+                <div class="row g-4">
                     @foreach (var bill in bookingHistory.Item)
                     {
                         <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card shadow-sm border-0">
-                                <div class="row g-0">
-                                    <div class="col-4">
-                                        <img src="@bill.FilmPoster" alt="Film Poster" class="img-fluid rounded-start" style="object-fit: cover; height: 100%;">
-                                    </div>
-                                    <div class="col-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title fw-bold">@bill.FilmName</h5>
-                                            <p class="mb-1">
-                                                <span class="badge bg-warning text-dark fs-6">@bill.FilmRating</span>
-                                            </p>
+                            <div class="card shadow-sm h-100">
+                                <!-- Hình ảnh phim -->
+                                <div class="position-relative">
+                                    <img src="@bill.FilmPoster" alt="Film Poster" class="card-img-top img-fluid" style="object-fit: cover; height: 200px;">
+                                    <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 px-3 py-2 fs-6">
+                                        @bill.FilmRating
+                                    </span>
+                                </div>
 
-                                            <p class="mb-1">Ngày đặt: <span>@bill.CreateTime</span></p>
-                                            <p class="mb-1">
-                                                Từ: <span>@bill.ShowStartTime?.ToString("HH:mm")</span> ~ Đến: <span>@bill.ShowEndTime?.ToString("HH:mm")</span>
-                                            </p>
+                                <!-- Thông tin chi tiết -->
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-truncate fw-bold">@bill.FilmName</h5>
+                                    <p class="mb-2 text-muted">
+                                        <i class="bi bi-calendar3"></i> Ngày đặt: <span>@bill.CreateTime</span>
+                                    </p>
+                                    <p class="mb-2 text-muted">
+                                        <i class="bi bi-clock"></i>
+                                        Từ: <span>@bill.ShowStartTime?.ToString("HH:mm")</span> ~
+                                        Đến: <span>@bill.ShowEndTime?.ToString("HH:mm")</span>
+                                    </p>
+                                    <p class="mb-2 text-muted">
+                                        <i class="bi bi-geo-alt"></i> Địa điểm: <span>@bill.CinemaName</span>
+                                    </p>
+                                    <p class="fw-bold text-success fs-5 mt-auto">
+                                        @string.Format("{0:N0}", bill.TotalMoney)<span style="text-decoration: underline;">đ</span>
+                                    </p>
+                                </div>
 
-                                            <p class="mb-1">Địa điểm: <span>@bill.CinemaName</span></p>
-
-                                            <p class="fw-bold text-success">
-                                                @string.Format("{0:N0}", bill.TotalMoney)<span style="text-decoration: underline;">đ</span>
-                                            </p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="badge text-bg-success">
-                                                    @bill.Status
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <!-- Trạng thái và nút -->
+                                <div class="card-footer bg-light d-flex justify-content-between align-items-center">
+                                    <span class="badge text-bg-success">
+                                        @(bill.Status == BillStatus.Paid ? "Đã thanh toán" : bill.Status.ToString())
+                                    </span>
+                                    <a href="@($"BookinghistoryDetail/{bill.Id}")" class="btn btn-outline-success btn-sm">
+                                        Chi tiết
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -138,8 +153,44 @@
             }
             else
             {
-                <p class="text-center text-muted fs-5">Không có lịch sử giao dịch</p>
+                <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+                    <p class="text-center text-muted fs-5">Không có lịch sử giao dịch</p>
+                </div>
             }
+        </div>
+
+
+        <div class="tab-pane fade" id="coupon-usage-history" role="tabpanel" aria-labelledby="coupon-usage-history-tab">
+            @if (couponUsageHistory?.Item != null && couponUsageHistory.Item.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var coupon in couponUsageHistory.Item)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">@coupon.CouponCode</h5>
+                                    <p class="mb-1">Giá trị: @string.Format("{0:N0}", coupon.AmountValue)đ</p>
+                                    <p class="mb-1">Ngày bắt đầu: @coupon.StartDate.ToString("dd/MM/yyyy")</p>
+                                    <p class="mb-1">Ngày kết thúc: @coupon.EndDate.ToString("dd/MM/yyyy")</p>
+                                    <p class="mb-1">Trạng thái: @coupon.IsActive</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-center text-muted fs-5">Không có lịch sử sử dụng mã giảm giá</p>
+            }
+        </div>
+
+        <div class="tab-pane fade" id="membership-points" role="tabpanel" aria-labelledby="membership-points-tab">
+            <div class="p-4 bg-white rounded-4 shadow-sm">
+                <h3 class="text-primary">Điểm VHD</h3>
+                <p>Bạn hiện có <strong>@membershipPoints</strong> điểm VHD.</p>
+            </div>
         </div>
     </div>
 </div>
@@ -154,6 +205,9 @@
     private string? _directoryPath { get; set; }
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
     private PageList<BillsDto>? bookingHistory;
+    private PageList<CouponDto>? couponUsageHistory;
+    private int membershipPoints;
+
     private MetaData metaData = new MetaData();
     private PagingParameters pagingParameters = new PagingParameters { PageNumber = 1, PageSize = 10 };
 
@@ -183,6 +237,8 @@
                 changePasswordRequest.Id = guidUserId;
 
                 await LoadBookingHistory(guidUserId);
+                await LoadCouponUsageHistory(guidUserId);
+                membershipPoints = await AccountService.GetMembershipPointsAsync(guidUserId, CancellationToken.None);
 
             }
         }
@@ -265,7 +321,11 @@
         var userId = userInfo.Id;
         await LoadBookingHistory(userId);
     }
-
+    private async Task LoadCouponUsageHistory(Guid userId)
+    {
+        couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(userId, pagingParameters, CancellationToken.None);
+        metaData = couponUsageHistory.MetaData;
+    }
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         var file = e.File;

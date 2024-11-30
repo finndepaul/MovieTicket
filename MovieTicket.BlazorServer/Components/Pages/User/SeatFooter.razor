@@ -1,4 +1,5 @@
-﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+﻿
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
 
 <div class="container-fluid">
 	<div class="row">
@@ -79,7 +80,8 @@
 	private List<TicketRequest> lstTicketRequests = new();
 	private List<TicketPriceDto> lstTicketPrices { get; set; }
 	private CancellationToken cancellationToken;
-    private List<SeatTypeDto> seatTypeDtos = new();
+	private List<SeatTypeDto> seatTypeDtos = new();
+	private List<TicketDto>? ticketsByShowtime = new();
 
 	protected async override Task OnParametersSetAsync()
 	{
@@ -104,6 +106,11 @@
 			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
 			lstTicketPrices = responseTicket.Item.ToList();
 			ClaimsPrincipal currentUser = AuthenState.User;
+			var lstTicketByShowtime = await TicketService.GetListTicketByShowTimeIdAsync(ShowtimeId);
+			if (lstTicketByShowtime != null)
+			{
+				ticketsByShowtime = lstTicketByShowtime;
+			}
 		}
 	}
 
@@ -124,19 +131,15 @@
 		{
 			foreach (var s in SeatDTOs)
 			{
-				if (s.Selection == Domain.Enums.SeatSelection.Checked)
+				if (ticketsByShowtime != null) 
 				{
-					await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn, vui lòng chọn lại ghế");
-					await Reset();
-					return;
-				}
-				lstSeatUpdateRequests.Add(new SeatUpdateRequest
+					if (ticketsByShowtime.Any(t => t.SeatId == s.Id))
 					{
-						Id = s.Id,
-                        SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
-						Status = Domain.Enums.SeatStatus.Available,
-						Selection = Domain.Enums.SeatSelection.Checked
-					});
+						await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn, vui lòng chọn lại ghế");
+						await Reset();
+						return;
+					}
+				}
 				var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == s.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
 							== cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
 				lstTicketRequests.Add(new TicketRequest
@@ -145,7 +148,6 @@
 						TicketPriceId = ticketPrice.Id
 					});
 			}
-			await SeatService.UpdateRange(lstSeatUpdateRequests);
 			checkrequest.AccountId = userId;
 			checkrequest.ShowTimeId = ShowtimeId;
 			checkrequest.LstSeatAndTicketPrice = lstTicketRequests;

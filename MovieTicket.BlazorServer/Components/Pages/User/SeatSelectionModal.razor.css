@@ -127,4 +127,6 @@
     margin: 0px;
     padding: 10px;
     cursor: not-allowed !important;
+    pointer-events: none !important;
+    outline: none;
 }

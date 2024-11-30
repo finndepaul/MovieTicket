@@ -99,7 +99,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 };
                 await _db.Accounts.AddAsync(account);
                 await _db.SaveChangesAsync(cancellationToken);
-                return new ResponseObject<AccountDto>
+				var membership = new Membership
+				{
+					Id = account.Id,
+					Point = 0,
+					Status = MembershipStatus.Active
+				};
+				await _db.Memberships.AddAsync(membership);
+				await _db.SaveChangesAsync(cancellationToken);
+				return new ResponseObject<AccountDto>
                 {
                     Data = new AccountDto
                     {
@@ -178,7 +186,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
         }
 
-        public async Task<bool> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken)
+        public async Task<ResponseObject<bool>> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken)
         {
             var confirmEmail = await _db.ConfirmedEmails.FirstOrDefaultAsync(x => x.AccountId == request.AccountId && !x.IsConfirmed);
             var account = await _db.Accounts.FirstOrDefaultAsync(x => x.Id == request.AccountId);
@@ -186,17 +194,44 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             {
                 if (request.ConfirmPW.Trim() == confirmEmail.ConfirmCode)
                 {
+                    if (confirmEmail.ExpiryTime <= DateTime.Now)
+                    {
+                        _db.ConfirmedEmails.Remove(confirmEmail);
+                        await _db.SaveChangesAsync();
+                        return new ResponseObject<bool>()
+                        {
+                            Message = "Mã xác nhận này đã quá hạn",
+                            Status = StatusCodes.Status400BadRequest,
+                            Data = false
+                        };
+                    }
                     account.Password = Hash.EncryptPassword(request.NewPassword);
                     confirmEmail.IsConfirmed = true;
                     _db.ConfirmedEmails.Update(confirmEmail);
+                    await _db.SaveChangesAsync();
                     _db.Accounts.Update(account);
                     await _db.SaveChangesAsync();
-                    return true;
+                    return new ResponseObject<bool>()
+                    {
+                        Message = "Đổi mật khẩu thành công",
+                        Status = StatusCodes.Status200OK,
+                        Data = true
+                    };
                 }
-                return false;
+				return new ResponseObject<bool>()
+				{
+					Message = "Mã xác nhận không đúng",
+					Status = StatusCodes.Status400BadRequest,
+					Data = false
+				};
             }
-            return false;
-        }
+			return new ResponseObject<bool>()
+			{
+				Message = "Không tìm thấy yêu cầu xác nhận",
+				Status = StatusCodes.Status400BadRequest,
+				Data = false
+			};
+		}
 
         public async Task<RegisterResponse> RegisterAsync(Account account)
         {
@@ -211,26 +246,45 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
             account.CreateDate = DateTime.Now;
             account.Role = AccountRole.User;
-            account.Status = AccountStatus.Active;
+            account.Status = AccountStatus.Inactive;
             account.Password = Hash.EncryptPassword(account.Password);
             await _db.Accounts.AddAsync(account);
             await _db.SaveChangesAsync();
-            //return new ResponseObject<Account>
-            //{
-            //    Status = StatusCodes.Status200OK,
-            //    Message = "Register success",
-            //    Data = account
-            //};
-            return new RegisterResponse
+            var membership = new Membership
+			{
+				Id = account.Id,
+				Point = 0,
+				Status = MembershipStatus.Active
+			};
+			await _db.Memberships.AddAsync(membership);
+			await _db.SaveChangesAsync();
+			//return new ResponseObject<Account>
+			//{
+			//    Status = StatusCodes.Status200OK,
+			//    Message = "Register success",
+			//    Data = account
+			//};
+			return new RegisterResponse
             {
                 Flag = true,
                 Message = "Đăng ký thành công"
             };
         }
+		public async Task<bool> UpdateStatusAccount(Guid id, CancellationToken cancellationToken)
+		{
+			var account = _db.Accounts.FirstOrDefault(x => x.Id == id);
+			if (account != null)
+			{
+				account.Status = AccountStatus.Active;
+			    _db.Accounts.Update(account);
+				await _db.SaveChangesAsync(cancellationToken);
+                return true;
+			}
+			return false;
+		}
+		#region Validate Method
 
-        #region Validate Method
-
-        private bool CheckUsernameExist(string username)
+		private bool CheckUsernameExist(string username)
         {
             return _db.Accounts.Any(x => x.Username == username);
         }
@@ -256,7 +310,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             string phonePattern = @"^0\d{9}$";
             return Regex.IsMatch(phone, phonePattern);
         }
-
-        #endregion Validate Method
-    }
+		#endregion Validate Method
+	}
 }

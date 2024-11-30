@@ -1,6 +1,8 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Application.DataTransferObjs.Auth
 @using MovieTicket.BlazorServer.Components.Pages
+@inject IJSRuntime _IJSRuntime;
 @inject NavigationManager Navigation
 
 <div class="navbar-brand">
@@ -64,9 +66,40 @@
 					<form>
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label>
-							<input type="email" class="form-control" id="email" placeholder="Nhập email">
+							<input type="email" class="form-control" @bind-value="@InputEmail" id="email" placeholder="Nhập email">
 						</div>
-						<div class="text-center"><button type="submit" class="btn btn-primary">Gửi yêu cầu</button></div>
+						<div class="text-center"><p class="btn btn-primary" @onclick="HandleSendEmailAsync">Gửi yêu cầu</p></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="forgotPasswordModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" data-bs-theme="dark">
+					<h4 class="modal-title">Quên mật khẩu</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label for="" class="form-label">Mã xác nhận</label>
+							<input type="text" class="form-control" @bind-value="request.ConfirmPW" id="email" placeholder="Nhập mã xác nhận">
+							<div class="text-center"><p class="btn btn-primary" @onclick="HandleReplaySendEmailAsync">Gửi lại</p></div>
+						</div>
+						<div class="mb-3">
+							<label for="" class="form-label">Mật khẩu mới</label>
+							<input type="text" class="form-control" @bind-value="request.NewPassword" id="email" placeholder="Vui lòng nhập mật khẩu">
+						</div>
+						<div class="mb-3">
+							<label for="" class="form-label">Xác nhận mật khẩu</label>
+							<input type="text" class="form-control" @bind-value="InputConfirmPW" id="email" placeholder="Vui lòng nhập lại mật">
+						</div>
+						<div class="text-center"><button type="submit" class="btn btn-primary" @onclick="HandlForgotPasswordAsync">Gửi yêu cầu</button></div>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -118,7 +151,7 @@
 					</NotAuthorized>
 					<Authorized>
 						<div class="d-flex align-items-center">
-							<a class="mb-0 me-3" style="font-size: 18px;" href="/userinformation">Xin chào, @context.User.Identity.Name</a>
+							<a class="mb-0 me-3" style="font-size: 18px; text-decoration: none" href="/userinformation">Xin chào, @context.User.Identity.Name</a>
 							<a href="logout" class="btn btn-outline-danger btn-sm">Đăng xuất</a>
 						</div>
 					</Authorized>
@@ -193,5 +226,79 @@
 	}
 
 </style>
+
+<script>
+	function openModal(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = new bootstrap.Modal(modalElement);
+		modal.show();
+	}
+	function closeModall(modalId) {
+		var modalElement = document.getElementById(modalId);
+		var modal = bootstrap.Modal.getInstance(modalElement);
+		if (modal) {
+			modal.hide();
+		}
+	}
+</script>
+
+@code{
+	private ForgotPasswordRequest request = new ForgotPasswordRequest();
+	private string InputEmail;
+	private Guid AccountId;
+	private string InputConfirmPW;
+	private async Task HandleSendEmailAsync()
+	{
+		await _IJSRuntime.ToastrSuccess("Đang gửi...");
+		var send = await AccountUtilitiesService.SendEmail(InputEmail, EmailType.ForgotPassword);
+		if (send.Status == 200)
+		{
+			AccountId = send.Data;
+			await _IJSRuntime.ToastrSuccess(send.Message);
+			await JSRuntime.InvokeVoidAsync("closeModall", "forgotPasswordModal");
+			await Task.Delay(100);
+			await JSRuntime.InvokeVoidAsync("openModal", "forgotPasswordModal2");
+		}
+		else
+		{
+			await _IJSRuntime.ToastrError(send.Message);
+		}
+	}
+	private async Task HandleReplaySendEmailAsync()
+	{
+		var send = await AccountUtilitiesService.SendEmail(InputEmail, EmailType.ForgotPassword);
+		if (send.Status == 200)
+		{
+			await _IJSRuntime.ToastrSuccess(send.Message);
+		}
+		else
+		{
+			await _IJSRuntime.ToastrError(send.Message);
+		}
+	}
+	private async Task HandlForgotPasswordAsync()
+	{
+		request.AccountId = AccountId;
+		if (request.NewPassword.Trim() == InputConfirmPW.Trim())
+		{
+			var result = await AccountUtilitiesService.ForgotPasswordAsync(request);
+			if (result.Status == 200)
+			{
+				await _IJSRuntime.ToastrSuccess(result.Message);
+				await Task.Delay(100);
+				Navigation.NavigateTo("/");
+			}
+			else
+			{
+				await _IJSRuntime.ToastrError(result.Message);
+			}
+		}
+		else
+		{
+			await _IJSRuntime.ToastrError("Mật khẩu không khớp");
+		}
+		
+	}
+}
 
 

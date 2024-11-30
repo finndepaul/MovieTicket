@@ -1,4 +1,4 @@
-@page "/user/detail/{Id:guid}"
+@page "/userdetail/{Id:guid}"
 @using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Application.DataTransferObjs.Bill
@@ -109,6 +109,7 @@
                             <th>Tổng tiền</th>
                             <th>Ngày đặt</th>
                             <th>Trạng thái</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,6 +126,9 @@
                                 <td>@bill.CreateTime</td>
                                 <td>
                                     <span class="badge text-bg-success">@bill.Status</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success" href="@($"billuserdetail/{bill.Id}")">Chi tiết</a>
                                 </td>
                             </tr>
                         }

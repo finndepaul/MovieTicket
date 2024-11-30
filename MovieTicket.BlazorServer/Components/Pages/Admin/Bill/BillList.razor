@@ -46,13 +46,13 @@
 					<div class="d-flex justify-content-between border-end">
 						<p class="">Suất chiếu</p>
 						<div class="d-flex">
-							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Type"))"></i>
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("ShowtimeStatus"))"></i>
 							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
 							   data-bs-toggle="dropdown"
 							   aria-expanded="false"></i>
-							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("Type", e.Value.ToString()))">
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("ShowtimeStatus", e.Value.ToString()))">
 								<option value="">Tất cả</option>
-								@foreach (var item in Enum.GetValues(typeof(ScheduleType)))
+								@foreach (var item in Enum.GetValues(typeof(ShowtimeStatus)))
 								{
 									<option value="@item">@item</option>
 								}
@@ -140,7 +140,7 @@
 				<tr>
 					<td>@item.BarCode</td>
 					<td>@item.FilmName</td>
-					<td><span class="p-2 m-2 badge text-@(FormatScheduleType(@item.Type.Value,"css")) bg-@(FormatScheduleType(@item.Type.Value,"css")) bg-opacity-10 border border-@(FormatScheduleType(@item.Type.Value,"css"))">@(FormatScheduleType(@item.Type.Value, "ui"))</span></td>
+					<td><span class="p-2 m-2 badge text-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-opacity-10 border border-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css"))">@(FormatShowtimeStatus(@item.ShowtimeStatus.Value, "ui"))</span></td>
 					<td>@item.CinemaType_Name</td>
 					<td><span class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))">@(FormatBillStatus(@item.Status.Value, "ui"))</span></td>
 					<td>@item.TotalMoney</td>
@@ -229,7 +229,7 @@
 		{
 			"BarCode" => ascending ? lstBills.OrderBy(x => x.BarCode).ToList() : lstBills.OrderByDescending(x => x.BarCode).ToList(),
 			"FilmName" => ascending ? lstBills.OrderBy(x => x.FilmName).ToList() : lstBills.OrderByDescending(x => x.FilmName).ToList(),
-			"Type" => ascending ? lstBills.OrderBy(x => x.Type).ToList() : lstBills.OrderByDescending(x => x.Type).ToList(),
+			"ShowtimeStatus" => ascending ? lstBills.OrderBy(x => x.ShowtimeStatus).ToList() : lstBills.OrderByDescending(x => x.ShowtimeStatus).ToList(),
 			"CinemaTypeName" => ascending ? lstBills.OrderBy(x => x.CinemaType_Name).ToList() : lstBills.OrderByDescending(x => x.CinemaType_Name).ToList(),
 			"Status" => ascending ? lstBills.OrderBy(x => x.Status).ToList() : lstBills.OrderByDescending(x => x.Status.Value).ToList(),
 			"TotalMoney" => ascending ? lstBills.OrderBy(x => x.TotalMoney).ToList() : lstBills.OrderByDescending(x => x.TotalMoney).ToList(),
@@ -245,14 +245,14 @@
 			case "FilmName":
 				request.FilmName = value;
 				break;
-			case "Type":
+			case "ShowtimeStatus":
 				if (String.IsNullOrEmpty(value))
 				{
-					request.Type = null;
+					request.ShowtimeStatus = null;
 				}
 				else
 				{
-					request.Type = (ScheduleType)Enum.Parse(typeof(ScheduleType), value);
+					request.ShowtimeStatus = (ShowtimeStatus)Enum.Parse(typeof(ShowtimeStatus), value);
 				}
 				break;
 			case "CinemaTypeName":
@@ -278,23 +278,23 @@
 		await SelectedPage(1);
 		await Refresh();
 	}
-	private string FormatScheduleType(ScheduleType type, string formatType)
+	private string FormatShowtimeStatus(ShowtimeStatus type, string formatType)
 	{
 		if (formatType == "css")
 		{
 			return type switch
 			{
-				ScheduleType.Special => "warning",
-				ScheduleType.Early => "primary",
-				ScheduleType.Regular => "success",
+				ShowtimeStatus.Ended => "danger",
+				ShowtimeStatus.Showing => "primary",
+				ShowtimeStatus.ComingSoon => "warning",
 				_ => "Không xác định"
 			};
 		}
 		return type switch
 		{
-			ScheduleType.Special => "Suất chiếu đặc biệt",
-			ScheduleType.Early => "Suất chiếu sớm",
-			ScheduleType.Regular => "Đang chiếu",
+			ShowtimeStatus.Ended => "Đã chiếu",
+			ShowtimeStatus.Showing => "Đang chiếu",
+			ShowtimeStatus.ComingSoon => "Sắp chiếu",
 			_ => "Không xác định"
 		};
 	}

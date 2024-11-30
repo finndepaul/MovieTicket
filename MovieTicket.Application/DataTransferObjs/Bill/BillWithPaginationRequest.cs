@@ -16,7 +16,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 
 		public BillStatus? Status { get; set; }
 
-		public ScheduleType? Type { get; set; }
+		public ShowtimeStatus? ShowtimeStatus { get; set; }
 		public DateTime? StartTime { get; set; }
 		public DateTime? EndTime { get; set; }
 

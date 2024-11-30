@@ -101,18 +101,17 @@
 	}
 	private async Task PreSelection()
 	{
-		foreach (var s in CheckedSeats)
-		{
-			lstSeatUpdateRequests.Add(new SeatUpdateRequest
-				{
-					Id = s.Id,
-					SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
-					Status = Domain.Enums.SeatStatus.Available,
-					Selection = Domain.Enums.SeatSelection.None
-				});
-		}
-		
-		await SeatService.UpdateRange(lstSeatUpdateRequests);
+		// foreach (var s in CheckedSeats)
+		// {
+		// 	lstSeatUpdateRequests.Add(new SeatUpdateRequest
+		// 		{
+		// 			Id = s.Id,
+		// 			SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
+		// 			Status = Domain.Enums.SeatStatus.Available,
+		// 			Selection = Domain.Enums.SeatSelection.None
+		// 		});
+		// }
+		// await SeatService.UpdateRange(lstSeatUpdateRequests);
 		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
 		await BackToSeat.InvokeAsync(ShowtimeId);
 	}
