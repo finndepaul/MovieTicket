@@ -91,7 +91,7 @@
                                 <button class="btn edit-btn" data-id="@banner.Id" @onclick="() => OpenEditModal(banner.Id)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
-  
+
                                 <button class="btn btn-danger" data-id="@banner.Id" @onclick="() => ShowDeleteConfirmation(banner.Id)">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -106,14 +106,14 @@
 
 <style>
     .form-select{
-        width: 75%;
+    width: 75%;
     }
 </style>
 
 <script>
     function openModal(modalId) {
-        var modal = new bootstrap.Modal(document.getElementById(modalId));
-        modal.show();
+    var modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
     }
 </script>
 
@@ -122,10 +122,13 @@
     private Guid guid;
     private List<BannerDTO> banners = new();
     private BannerUpdateRequest request = new();
+    private string _uploadedImgUrl;
+    private string? _directoryPath;
 
     protected async override Task OnInitializedAsync()
     {
         banners = await BannerService.GetBannersAsync();
+        _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "banner");
     }
 
     private async Task OpenEditModal(Guid id)
@@ -138,7 +141,7 @@
     private async void ShowDeleteConfirmation(Guid id)
     {
         deleteId = id;
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Mày chắc chưa?");
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xóa Banner?");
         if (confirmed)
         {
             await DeleteBanner();
@@ -147,6 +150,11 @@
 
     private async Task DeleteBanner()
     {   
+        var banner = await BannerService.GetById(deleteId);
+
+        var fileToDelete = banner.Data.Image.Split('/').Reverse().First();
+        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
+        File.Delete(filePathToDeleteImage);
         var response = await BannerService.Delete(deleteId);
         if (response.Status == StatusCodes.Status200OK)
         {
