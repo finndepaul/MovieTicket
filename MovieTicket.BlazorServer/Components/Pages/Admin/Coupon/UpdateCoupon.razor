@@ -56,7 +56,7 @@
             request = new UpdateCouponRequest
             {
                 CouponCode = coupon.CouponCode,
-                AmountValue = coupon.AmountValue,
+                AmountValue = (int)coupon.AmountValue,
                 StartDate = coupon.StartDate,
                 EndDate = coupon.EndDate,
                 IsActive = coupon.IsActive
