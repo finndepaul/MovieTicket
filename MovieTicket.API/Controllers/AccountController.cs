@@ -83,6 +83,12 @@ namespace MovieTicket.API.Controllers
             return Ok(create);
         }
 
+        [HttpPut]
+	      public async Task<ActionResult> UpdateStatusAccount(Guid id, CancellationToken cancellationToken)
+		    {
+			      var create = await _accountReadWrite.UpdateStatusAccount(id, cancellationToken);
+			      return Ok(create);
+		    }
         [HttpGet]
         public async Task<ActionResult> GetMembershipPoints(Guid userId, CancellationToken cancellationToken)
         {

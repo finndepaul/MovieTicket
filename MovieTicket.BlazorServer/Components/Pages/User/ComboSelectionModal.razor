@@ -1,4 +1,5 @@
-﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+
 @if (lstCombo == null)
 {
 	<div class="spinner-border text-primary" role="status">
@@ -8,6 +9,12 @@
 else
 {
 	<div class="container">
+		<div class="d-flex justify-content-end mx-5">
+			<div class="d-flex">
+				<p class="border border-warning bg-warning text-light fw-bold fs-24 me-2 p-3">@_timeLeft.ToString(@"mm")</p>
+				<p class="border border-warning bg-warning text-light fw-bold fs-24 p-3">@_timeLeft.ToString(@"ss")</p>
+			</div>
+		</div>
 		<div class="row row-cols-1 row-cols-md-3 g-4">
 			@foreach (var item in lstCombo)
 			{
@@ -51,15 +58,62 @@ else
 	private Dictionary<Guid, int> comboQuantities = new();
 	private List<ComboRequest> lstComboSelected = new List<ComboRequest>();
 	CancellationToken cancellationToken;
-
+	private TimeSpan _timeLeft;
+	private Timer? _timer;
+	private bool _isCountdownFinished = false;
+	private DateTime EndTime = DateTime.Now.AddMinutes(5);
 	protected async override Task OnParametersSetAsync()
 	{
 		if (BillId != Guid.Empty)
 		{
 			lstCombo = await ComboService.GetAll();
 		}
-	}
+		if (OnComboSelection.HasDelegate)
+		{
+			StartCountdown();
+		}
 
+	}
+	private void StartCountdown()
+	{
+		_isCountdownFinished = false; // Reset trạng thái
+		_timeLeft = EndTime - DateTime.Now;
+
+		if (_timeLeft > TimeSpan.Zero)
+		{
+			_timer = new System.Threading.Timer(UpdateCountdown, null, 0, 1000);
+		}
+	}
+	private void UpdateCountdown(object? state)
+	{
+		// Không làm gì nếu countdown đã hoàn thành
+		if (_isCountdownFinished) return;
+
+		_timeLeft = EndTime - DateTime.Now;
+
+		if (_timeLeft <= TimeSpan.Zero)
+		{
+			_timeLeft = TimeSpan.Zero; // Đảm bảo không âm
+			_isCountdownFinished = true; // Đánh dấu đã hoàn thành
+			_timer?.Dispose(); // Dừng timer hoàn toàn
+
+			// Gọi hàm xử lý sau countdown
+			ExecuteFunctionAfterCountdown();
+		}
+
+		// Cập nhật giao diện
+		InvokeAsync(StateHasChanged);
+	}
+	public void Dispose()
+	{
+		_timer?.Dispose();
+	}
+	private async Task ExecuteFunctionAfterCountdown()
+	{
+		Console.WriteLine("Đếm ngược đã hoàn thành!");
+		return;
+		// Thực hiện các thao tác khác tại đây
+	}
 	private async Task Plus(Guid comboId)
 	{
 		if (!comboQuantities.ContainsKey(comboId))

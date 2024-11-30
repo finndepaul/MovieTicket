@@ -46,9 +46,9 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			{
 				queryParameters.Add("CinemaType_Name", request.CinemaType_Name.ToString());
 			}
-			if (request.Type.HasValue)
+			if (request.ShowtimeStatus.HasValue)
 			{
-				queryParameters.Add("Type", request.Type.ToString());
+				queryParameters.Add("ShowtimeStatus", request.ShowtimeStatus.ToString());
 			}
 			if (request.Status.HasValue)
 			{

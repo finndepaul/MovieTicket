@@ -16,32 +16,32 @@
 			<div class="row">
 				@if (objBill != null && objShowTime != null)
 				{
-                    <div class="col-md-6 mb-3">
-                        <div class="py-2 mb-4 border-bottom">
-                            <h5>Thông tin đơn hàng</h5>
-                        </div>
-                        <p><strong>Mã đơn hàng:</strong> @(objBill?.Id)</p>
-                        <div><strong class="me-2">Phim:</strong><span class="text-primary">@objShowTime?.FilmName</span></div>
-                        <p><strong class="me-2">Giờ chiếu:</strong><span class="badge bg-danger"> @(objShowTime?.StartTime?.ToString("HH:mm")) - @(objShowTime?.EndTime?.ToString("HH:mm"))</span></p>
-                        <p><strong>Ngày chiếu:</strong> @(objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"))</p>
-                        <p><strong>Phòng chiếu:</strong> @objShowTime?.CinemaName</p>
-                        <p><strong class="me-2">Rạp chiếu:</strong><span class="text-primary"> @objShowTime?.CinemaCenterName</span></p>
-                        <p><strong>Ngày đặt:</strong> @(objBill?.CreateTime?.ToString("dd/MM/yyyy"))</p>
-                    </div>
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin đơn hàng</h5>
+						</div>
+						<p><strong>Mã đơn hàng:</strong> @(objBill?.Id)</p>
+						<div><strong class="me-2">Phim:</strong><span class="text-primary">@objShowTime?.FilmName</span></div>
+						<p><strong class="me-2">Giờ chiếu:</strong><span class="badge bg-danger"> @(objShowTime?.StartTime?.ToString("HH:mm")) - @(objShowTime?.EndTime?.ToString("HH:mm"))</span></p>
+						<p><strong>Ngày chiếu:</strong> @(objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"))</p>
+						<p><strong>Phòng chiếu:</strong> @objShowTime?.CinemaName</p>
+						<p><strong class="me-2">Rạp chiếu:</strong><span class="text-primary"> @objShowTime?.CinemaCenterName</span></p>
+						<p><strong>Ngày đặt:</strong> @(objBill?.CreateTime?.ToString("dd/MM/yyyy"))</p>
+					</div>
 
-                    <!-- Thông tin khách hàng -->
-                    <div class="col-md-6 mb-3">
-                        <div class="py-2 mb-4 border-bottom">
-                            <h5>Thông tin khách hàng</h5>
-                        </div>
-                        <p><strong>Khách hàng:</strong> @(objAccount?.Name)</p>
-                        <p><strong>Điện thoại:</strong> @(objAccount?.Phone)</p>
-                        <p><strong>Email:</strong> @(objAccount?.Email)</p>
-                        <p><strong class="me-2">Trạng thái:</strong><span class="badge bg-success"> @objBill?.Status</span></p>
-                        <p><strong>Thành tiền:</strong> @(objBill?.TotalMoney?.ToString("#,##0"))</p>
-                        <p><strong>Giảm giá:</strong> @((objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"))</p>
-                        <p><strong>Tổng tiền:</strong> @(objBill?.AfterDiscount?.ToString("#,##0"))</p>
-                    </div>
+					<!-- Thông tin khách hàng -->
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin khách hàng</h5>
+						</div>
+						<p><strong>Khách hàng:</strong> @(objAccount?.Name)</p>
+						<p><strong>Điện thoại:</strong> @(objAccount?.Phone)</p>
+						<p><strong>Email:</strong> @(objAccount?.Email)</p>
+						<p><strong class="me-2">Trạng thái:</strong><span class="badge bg-success"> @objBill?.Status</span></p>
+						<p><strong>Thành tiền:</strong> @(objBill?.TotalMoney?.ToString("#,##0"))</p>
+						<p><strong>Giảm giá:</strong> @((objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"))</p>
+						<p><strong>Tổng tiền:</strong> @(objBill?.AfterDiscount?.ToString("#,##0"))</p>
+					</div>
 				}
 				else
 				{
@@ -75,7 +75,7 @@
 						{
 							<tr>
 								<td>@item.SeatName</td>
-								<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">@item.SeatType</span></td>
+								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
 								<td>@item.Price.ToString("#,##0")</td>
 							</tr>
 						}
@@ -132,59 +132,69 @@
 	private List<TicketDto> lstTicket = new List<TicketDto>();
 	private TicketDto objTicket = new TicketDto();
 	private ShowTimeDto objShowTime = new ShowTimeDto();
-    private class BillSeat
-    {
-        public string SeatName { get; set; }
-        public string SeatType { get; set; }
-        public decimal Price { get; set; }
-    }
-    private class SeatPrice
-    {
-        public Guid SeatId { get; set; }
-        public decimal Price { get; set; }
-    }
-    private List<BillComboDto> lstBillCombo = new List<BillComboDto>();
-    private List<BillSeat> lstSeat = new List<BillSeat>();
-    private List<SeatPrice> lstSeatId = new List<SeatPrice>();
-    private BillDetailDto objBill = new BillDetailDto();
-    private AccountDto objAccount = new AccountDto();
+	private class BillSeat
+	{
+		public string SeatName { get; set; }
+		public string SeatType { get; set; }
+		public decimal Price { get; set; }
+	}
+	private class SeatPrice
+	{
+		public Guid SeatId { get; set; }
+		public decimal Price { get; set; }
+	}
+	private List<BillComboDto> lstBillCombo = new List<BillComboDto>();
+	private List<BillSeat> lstSeat = new List<BillSeat>();
+	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
+	private BillDetailDto objBill = new BillDetailDto();
+	private AccountDto objAccount = new AccountDto();
 
-    protected async override Task OnInitializedAsync()
-    {
-        //lay bill theo id
-        objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
-        //lay account theo bill id
-        objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
-        //lay list ticket theo bill id
-        lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
-        //lay 1 ticket dau tien cua bill id do
-        objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
-        //lay showtimeid cua ticket
-        var showtimeId = objTicket.ShowTimeId.Value;
-        //tim showtime theo id
-        var findShowtime = await ShowTimeService.GetById(showtimeId);
-        //lay showtime
-        objShowTime = findShowtime.Data;
-        lstSeatId = lstTicket.Select(x => new SeatPrice
+	protected async override Task OnInitializedAsync()
+	{
+		//lay bill theo id
+		objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
+		//lay account theo bill id
+		objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+		//lay list ticket theo bill id
+		lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
+		//lay 1 ticket dau tien cua bill id do
+		objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
+		//lay showtimeid cua ticket
+		var showtimeId = objTicket.ShowTimeId.Value;
+		//tim showtime theo id
+		var findShowtime = await ShowTimeService.GetById(showtimeId);
+		//lay showtime
+		objShowTime = findShowtime.Data;
+		lstSeatId = lstTicket.Select(x => new SeatPrice
 			{
 				SeatId = x.SeatId.Value,
 				Price = x.Price
 			}).ToList();
-        foreach (var item in lstSeatId)
-        {
-            var obj = await SeatService.GetById(item.SeatId);
-            var seat = obj.Data;
-            lstSeat.Add(new BillSeat
+		foreach (var item in lstSeatId)
+		{
+			var obj = await SeatService.GetById(item.SeatId);
+			var seat = obj.Data;
+			lstSeat.Add(new BillSeat
 				{
 					SeatType = seat.SeatTypeName,
 					SeatName = seat.Position,
 					Price = item.Price
 				});
-        }
-        lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
-        
+		}
+		lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
 
 
-    }
-	
+
+	}
+	private string FormatSeatTypeName(string type)
+	{
+		return type switch
+		{
+			"Normal" => "secondary",
+			"VIP" => "warning",
+			"Couple" => "danger",
+			_ => "Không xác định"
+		};
+	}
+
 }

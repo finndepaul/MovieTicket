@@ -1,0 +1,18 @@
+﻿@page "/thank-you/{Id}"
+<h3>Cảm ơn bạn đã xác nhận tài khoản</h3>
+<p>Vui lòng đợi trong giây lát</p>
+<button class="btn btn-primary"><a href="/">Trang chủ</a></button>
+@code {
+	[Parameter]
+	public string Id { get; set; }
+	protected async override Task OnInitializedAsync()
+	{
+		var result = await AccountService.UpdateStatusAccount(Guid.Parse(Id));
+		if (result)
+		{
+			NavigationManager.NavigateTo("/");
+		}
+	}
+	
+
+}

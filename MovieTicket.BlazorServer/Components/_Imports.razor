@@ -42,6 +42,7 @@
 @using MovieTicket.Application.DataTransferObjs.Film
 @using MovieTicket.Application.DataTransferObjs.UserHome.Requests
 @using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Application.DataTransferObjs.Coupon.Requests
 @using MovieTicket.Application.DataTransferObjs.Ticket
 
 @using Net.payOS
@@ -67,6 +68,7 @@
 @inject IBillService BillService;
 @inject ICouponService CouponService;
 @inject IBillComboService BillComboService;
+@inject IAccountUtilitiesService AccountUtilitiesService;
 
 
 @inject IJSRuntime JSRuntime

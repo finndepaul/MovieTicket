@@ -8,7 +8,13 @@
 
 <div class="container-fluid">
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <div class="d-flex align-items-center">
+        <div class="d-flex justify-content-between">
+            <div class="me-5">
+                <button class="btn add-btn" id="btnAdd" data-bs-toggle="modal" data-bs-target="#addModal">
+                    <i class="bi bi-plus-square"></i>
+                    Tạo lịch chiếu
+                </button>
+            </div>
             <div class="d-flex align-items-center me-4">
                 <label for="input" class="me-2 mb-0">Tên Phim:</label>
                 <input type="text" id="text" class="form-control form-control-sm" style="width: 250px;" placeholder="Nhập tên phim để tìm kiếm" @bind="filmName">
@@ -24,12 +30,6 @@
             <div class="d-flex align-items-center">
                 <button class="btn btn-primary btn-sm" @onclick="Refresh">Tìm kiếm</button>
             </div>
-        </div>
-        <div class="ms-auto">
-            <button class="btn add-btn" id="btnAdd" data-bs-toggle="modal" data-bs-target="#addModal">
-                <i class="bi bi-plus-square"></i>
-                Tạo lịch chiếu
-            </button>
         </div>
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -124,7 +124,7 @@
                                     Sửa
                                 </button>
 
-                                <button class="btn btn-sm btn-outline-danger" @onclick = "() => HandleRemoveSchedule(item.Id.ToString())">
+                                <button class="btn btn-sm btn-outline-danger">
                                     <i class="bi bi-trash"></i>
                                     Xóa
                                 </button>

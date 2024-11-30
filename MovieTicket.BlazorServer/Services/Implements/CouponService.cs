@@ -58,6 +58,12 @@ namespace MovieTicket.BlazorServer.Services.Implements
             return result;
         }
 
+        public async Task<UpdateCouponRequest> GetCouponForUpdate(Guid id, CancellationToken cancellationToken)
+        {
+            var model = await _http.GetFromJsonAsync<UpdateCouponRequest>($"api/Coupon/GetCouponForUpdate?id={id}");
+            return model;
+        }
+
         public async Task<ResponseObject<CouponDto>> UpdateAsync(UpdateCouponRequest request, CancellationToken cancellationToken)
         {
             var result = await _http.PutAsJsonAsync("api/Coupon/Update", request, cancellationToken);
