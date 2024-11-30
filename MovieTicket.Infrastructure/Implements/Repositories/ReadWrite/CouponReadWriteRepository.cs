@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Coupon;
 using MovieTicket.Application.DataTransferObjs.Coupon.Requests;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
@@ -34,6 +35,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Data = null,
                         Status = StatusCodes.Status400BadRequest,
                         Message = "Không được để trống trường dữ liệu."
+                    };
+                }
+                if (await _db.Coupons.AnyAsync(x => x.CouponCode == request.CouponCode.Trim()))
+                {
+                    return new ResponseObject<CouponDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Mã giảm giá đã tồn tại."
                     };
                 }
                 var coupon = new Coupon

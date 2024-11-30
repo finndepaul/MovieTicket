@@ -54,13 +54,15 @@
     {
         request.FilmId = Guid.Parse(selectedFilmId);
         var result = await _scheduleService.CreateAsync(request, cancellationToken);
-        if (result)
+        if (result.Status == 201)
         {
+            await JSRuntime.ToastrSuccess(result.Message);
+            await Task.Delay(2000);
             _navigationManager.NavigateTo("/scheduel", forceLoad: true);
         }
         else
         {
-            throw new Exception("Failed to add scheduel");
+            await JSRuntime.ToastrError(result.Message);
         }
     }
 

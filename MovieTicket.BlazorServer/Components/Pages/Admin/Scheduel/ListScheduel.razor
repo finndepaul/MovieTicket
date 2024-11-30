@@ -124,7 +124,7 @@
                                     Sửa
                                 </button>
 
-                                <button class="btn btn-sm btn-outline-danger">
+                                <button class="btn btn-sm btn-outline-danger" data-id="@item.Id" @onclick="() => HandleRemoveSchedule(item.Id.ToString())">
                                     <i class="bi bi-trash"></i>
                                     Xóa
                                 </button>
@@ -253,9 +253,14 @@
     private async Task HandleRemoveSchedule(string id)
     {
         var result = await _scheduleService.DeleteAsync(Guid.Parse(id), cancellationToken);
-        if (result)
+        if (result.Status == 200)
         {
-            _navigationManager.NavigateTo("/scheduel", forceLoad: true);
+            await Refresh();
+            await JSRuntime.ToastrSuccess(result.Message);
+        }
+        else
+        {
+            await JSRuntime.ToastrError(result.Message);
         }
     }
 }
