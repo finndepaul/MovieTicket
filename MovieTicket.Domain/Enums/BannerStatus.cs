@@ -2,7 +2,7 @@
 {
     public enum BannerStatus
     {
-        Hiển_Thị = 1,
-        Ẩn = 0
+        Active = 1,
+        Inactive = 0
     }
 }

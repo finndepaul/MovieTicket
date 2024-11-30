@@ -82,14 +82,10 @@
                                 }
                             </td>
                             <td>
-                                @if (banner.Status.Equals("1"))
-                                {
-                                    <span class="badge bg-success">Đang hiển thị</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">Ẩn</span>
-                                }
+                                <select class="form-select" @onchange="async (e) => await UpdateBannerStatus(banner.Id, e.Value.ToString())">
+                                    <option value="1" selected="@banner.Status.Equals(BannerStatus.Active)">Active</option>
+                                    <option value="0" selected="@banner.Status.Equals(BannerStatus.Inactive)">Inactive</option>
+                                </select>
                             </td>
                             <td>
                                 <button class="btn edit-btn" data-id="@banner.Id" @onclick="() => OpenEditModal(banner.Id)">
@@ -108,6 +104,12 @@
     </div>
 </div>
 
+<style>
+    .form-select{
+        width: 75%;
+    }
+</style>
+
 <script>
     function openModal(modalId) {
         var modal = new bootstrap.Modal(document.getElementById(modalId));
@@ -119,6 +121,7 @@
     private Guid deleteId;
     private Guid guid;
     private List<BannerDTO> banners = new();
+    private BannerUpdateRequest request = new();
 
     protected async override Task OnInitializedAsync()
     {
@@ -153,6 +156,26 @@
         else
         {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+
+    private async Task UpdateBannerStatus(Guid bannerId, string status)
+    {
+        var newStatus = (BannerStatus)Enum.Parse(typeof(BannerStatus), status);
+        var banner = banners.FirstOrDefault(b => b.Id == bannerId);
+        request.Id = bannerId;
+        request.Name = banner.Name;
+        request.Image = banner.Image;
+        request.Status = newStatus;
+        var response = await BannerService.Update(request);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Đổi trạng thái thành công");
+            banners = await BannerService.GetBannersAsync();
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Đổi trạng thái không thành công");
         }
     }
 }
