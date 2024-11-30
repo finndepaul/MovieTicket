@@ -1,31 +1,77 @@
-﻿@page "/update-coupon"
+﻿@page "/update-coupon/{id:guid}"
+@attribute [Authorize(Roles = "Admin")]
 
-<form>
+<EditForm Model="request" OnValidSubmit="HandleUpdateCoupon">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
     <div class="mb-3">
-        <label for="editVoucherCode" class="form-label">Mã Khuyến Mại</label>
-        <input type="text" class="form-control" id="editVoucherCode" readonly>
+        <label for="couponCode" class="form-label">Mã khuyến mại</label>
+        <input type="text" class="form-control" id="couponCode" required @bind-value="request.CouponCode">
     </div>
     <div class="mb-3">
-        <label for="editDiscountPercentage" class="form-label">Phần Trăm Giảm Giá</label>
-        <input type="number" class="form-control" id="editDiscountPercentage" required>
+        <label for="amountValue" class="form-label">Giá trị</label>
+        <input type="number" class="form-control" id="amountValue" required @bind-value="request.AmountValue">
     </div>
     <div class="mb-3">
-        <label for="editQuantity" class="form-label">Số Lượng</label>
-        <input type="number" class="form-control" id="editQuantity" required>
+        <label for="startDate" class="form-label">Thời gian bắt đầu:</label>
+        <input type="datetime-local" class="form-control" id="startDate" required @bind-value="request.StartDate" />
     </div>
     <div class="mb-3">
-        <label for="editStatus" class="form-label">Trạng Thái</label>
-        <select class="form-select" id="editStatus" required>
-            <option value="active">Kích hoạt</option>
-            <option value="inactive">Ẩn</option>
-        </select>
+        <label for="endDate" class="form-label">Thời gian kết thúc:</label>
+        <input type="datetime-local" class="form-control" id="endDate" required @bind-value="request.EndDate" />
     </div>
+
     <div class="mb-3">
-        <label for="editValidityPeriod" class="form-label">Thời Gian Áp Dụng</label>
-        <input type="text" class="form-control" id="editValidityPeriod" placeholder="dd/mm/yyyy - dd/mm/yyyy" required>
+        <label for="isActive" class="form-label">Trạng thái:</label>
+        <div>
+            <input type="radio" id="active" name="isActive" @bind-value="request.IsActive" />
+            <label for="active" class="form-label">Hoạt động</label>
+        </div>
+        <div>
+            <input type="radio" id="inactive" name="isActive" @bind-value="request.IsActive" checked />
+            <label for="inactive" class="form-label">Không hoạt động</label>
+        </div>
     </div>
-</form>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+    </div>
+</EditForm>
 
 @code {
+    [Parameter]
+    public string couponId { get; set; }
+    private UpdateCouponRequest request = new UpdateCouponRequest
+        {
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(1),
+            IsActive = false
+        };
+    CancellationToken cancellationToken;
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(couponId))
+        {
+            var coupon = await CouponService.GetCouponForUpdate(Guid.Parse(couponId), cancellationToken);
+            request = new UpdateCouponRequest
+            {
+                CouponCode = coupon.CouponCode,
+                AmountValue = coupon.AmountValue,
+                StartDate = coupon.StartDate,
+                EndDate = coupon.EndDate,
+                IsActive = coupon.IsActive
+            };
+        }
+    }
+
+    private async Task HandleUpdateCoupon()
+    {
+        request.Id = Guid.Parse(couponId);
+
+        var result = await CouponService.UpdateAsync(request, cancellationToken);
+        if (result.Status == 200)
+        {
+            NavigationManager.NavigateTo("/coupon", forceLoad: true);
+        }
+    }
 }

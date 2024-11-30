@@ -17,7 +17,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        
+
         public async Task<IQueryable<AboutDto>> GetAllAsync()
         {
             var aboutModel = _dbContext.Abouts.AsQueryable();
@@ -43,6 +43,5 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             }
             return null;
         }
-
     }
 }
