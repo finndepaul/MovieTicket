@@ -32,6 +32,13 @@ namespace MovieTicket.API.Controllers
                 result.MetaData.PageSize));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCouponForUpdate(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _couponReadOnlyRepository.GetCouponForUpdate(id, cancellationToken);
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateCouponRequest createCouponRequest, CancellationToken cancellationToken)
         {
