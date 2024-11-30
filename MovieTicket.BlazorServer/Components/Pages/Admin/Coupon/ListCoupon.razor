@@ -117,7 +117,13 @@
         var modal = new bootstrap.Modal(document.getElementById(modalId));
         modal.show();
     }
-
+    function closeModal(modalId) {
+        var modalElement = document.getElementById(modalId);
+        var modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+        }
+    }
 </script>
 
 @code {
@@ -178,6 +184,11 @@
         if (result.Status == 200)
         {
             await Refresh();
+            await JSRuntime.ToastrSuccess(result.Message);
+        }
+        else
+        {
+            await JSRuntime.ToastrError(result.Message);
         }
     }
 }

@@ -54,9 +54,15 @@
     {
         request.Id = Guid.Parse(ScheduleId);
         var result = await _scheduleService.UpdateAsync(request, cancellationToken);
-        if (result)
+        if (result.Status == 200)
         {
+            await JSRuntime.ToastrSuccess(result.Message);
+            await Task.Delay(2000);
             _navigationManager.NavigateTo("/scheduel", forceLoad: true);
+        }
+        else
+        {
+            await JSRuntime.ToastrError(result.Message);
         }
     }
 }

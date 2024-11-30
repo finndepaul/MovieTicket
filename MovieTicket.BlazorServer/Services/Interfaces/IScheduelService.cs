@@ -1,6 +1,7 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Schedule.Request;
 using MovieTicket.Application.DataTransferObjs.Schedule;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 
 namespace MovieTicket.BlazorServer.Services.Interfaces
 {
@@ -14,10 +15,10 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
 
         Task<IQueryable<FilmForCreateDto>> GetFilmAsync();
 
-        Task<bool> CreateAsync(CreateScheduleRequest createScheduleRequest, CancellationToken cancellationToken);
+        Task<ResponseObject<ScheduleDto>> CreateAsync(CreateScheduleRequest createScheduleRequest, CancellationToken cancellationToken);
 
-        Task<bool> UpdateAsync(UpdateScheduleRequest updateScheduleRequest, CancellationToken cancellationToken);
+        Task<ResponseObject<ScheduleDto>> UpdateAsync(UpdateScheduleRequest updateScheduleRequest, CancellationToken cancellationToken);
 
-        Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken);
+        Task<ResponseObject<ScheduleDto>> DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }
