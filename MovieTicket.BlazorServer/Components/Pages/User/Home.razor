@@ -3,35 +3,39 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Home</PageTitle>
-
-<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-	<div class="carousel-indicators">
-        @for (int i = 0; i < lstBanner.Count; i++)
-        {
-            <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="@i" class="@((i == 0) ? "active" : "")" aria-current="@((i == 0) ? "true" : "")" aria-label="Slide @(i + 1)"></button>
-        })
-	</div>
-	<div class="carousel-inner">
-        @if (lstBanner.Count>0)
-        {
-            foreach (var item in lstBanner)
+@if (lstBanner.Count > 0)
+{
+	<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+		<div class="carousel-indicators">
+			@for (int i = 0; i < lstBanner.Count; i++)
 			{
-                <div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
-                    <img src="@item.Image" class="d-block w-100" alt="...">
-                </div>
+				<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="@i" class="@((i == 0) ? "active" : "")" aria-current="@((i == 0) ? "true" : "")" aria-label="Slide @(i + 1)"></button>
 			}
-        }
-	</div>
-	<button class="left carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-		<span class="visually-hidden">Previous</span>
-	</button>
-	<button class="right carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-		<span class="carousel-control-next-icon" aria-hidden="true"></span>
-		<span class="visually-hidden">Next</span>
-	</button>
-</div>
+			)
+		</div>
+		<div class="carousel-inner">
+			@foreach (var item in lstBanner)
+			{
+			<div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
+				<img src="@item.Image" class="d-block w-100" alt="...">
+			</div>
+			}
 
+		</div>
+		<button class="left carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="right carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	</div>
+}
+else
+{
+	<h4>Không có banner</h4>
+}
 <div class="container">
 	<div class="tab my-5 d-flex justify-content-center border-bottom">
 		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
