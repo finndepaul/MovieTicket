@@ -10,7 +10,6 @@
             <InputText @bind-Value="EditModel.Name" class="form-control">@EditModel.Name</InputText>
         </div>
         <div class="mb-3">
-            <label class="form-label">Ảnh</label>
             <img src="@_uploadedImgUrl" alt="Banner" style="width: 300px; height: auto;"/>
         </div>
         <div class="mb-3">
@@ -45,10 +44,20 @@
 
     private async Task HandleSubmit()
     {   
-        System.IO.File.Delete("C:\\Users\\MSII\\source\\repos\\MovieTicket\\MovieTicket.BlazorServer\\wwwroot" + _uploadedImgUrl);
         var file = EditModel.ImageFile;
         var folderPath = Path.Combine(WebHostEnv.WebRootPath, "./img/banner");
         var filePath = Path.Combine(folderPath, file.Name);
+        
+        // Delete existing image if it exists
+        if (!string.IsNullOrEmpty(_uploadedImgUrl))
+        {
+            var existingFilePath = Path.Combine(WebHostEnv.WebRootPath, _uploadedImgUrl.TrimStart('.'));
+            if (System.IO.File.Exists(existingFilePath))
+            {
+                System.IO.File.Delete(existingFilePath);
+            }
+        }
+
         try
         {
             using (var fileStream = new FileStream(filePath, FileMode.Create))

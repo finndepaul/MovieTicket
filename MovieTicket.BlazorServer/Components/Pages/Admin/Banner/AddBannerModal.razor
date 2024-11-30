@@ -24,10 +24,16 @@
     private FileModel UploadModel { get; set; } = new();
     private string? _uploadedImgUrl;
     private BannerCreateRequest request = new();
+    private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
 
     private async Task CreateBanner()
     {   
         var file = UploadModel.ImageFile;
+        if (file.Size > MaxFileSize)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "File size exceeds the maximum limit of 10 MB.");
+            return;
+        }
         var folderPath = Path.Combine(WebHostEnv.WebRootPath, "./img/banner");
         Directory.CreateDirectory(folderPath);
         var filePath = Path.Combine(folderPath, file.Name);
@@ -35,7 +41,7 @@
         {
             using (var fileStream=new FileStream(filePath, FileMode.Create))
             {
-                using var uploadFile = file.OpenReadStream();
+                using var uploadFile = file.OpenReadStream(MaxFileSize);
                 await uploadFile.CopyToAsync(fileStream);
                 _uploadedImgUrl = $"./img/banner/{file.Name}";
             }
@@ -66,7 +72,8 @@
     }
 
     private class FileModel
-    {   [Required(ErrorMessage="Chưa nhập tên")]
+    {   
+        [Required(ErrorMessage="Chưa nhập tên")]
         public string Name { get; set; }
         [Required(ErrorMessage = "Chưa chọn ảnh")]
         public IBrowserFile ImageFile { get; set; }
