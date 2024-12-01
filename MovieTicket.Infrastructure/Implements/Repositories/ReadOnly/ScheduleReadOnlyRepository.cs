@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Schedule;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Domain.Entities;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
+using System.Threading;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
@@ -23,6 +25,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         {
             startDate ??= DateTime.Now;
             endDate ??= DateTime.Now;
+            var checkSchedule = _dbContext.Schedules.Where(x => x.EndDate < DateTime.Now).ToList();
+            List<Schedule> schedules = new List<Schedule>();
+            foreach (var item in checkSchedule)
+            {
+                item.Status = Domain.Enums.ScheduleStatus.Ended;
+                schedules.Add(item);
+            }
+            _dbContext.Schedules.UpdateRange(schedules);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             var scheduleDtos = from schedule in _dbContext.Schedules
                                join film in _dbContext.Films on schedule.FilmId equals film.Id
                                where (string.IsNullOrEmpty(filmName) || film.Name.Contains(filmName)) &&
@@ -48,6 +59,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
         public async Task<IQueryable<ScheduleDto>> GetAllAsync()
         {
+            var checkSchedule = _dbContext.Schedules.Where(x => x.EndDate < DateTime.Now).ToList();
+            List<Schedule> schedules = new List<Schedule>();
+            foreach (var item in checkSchedule)
+            {
+                item.Status = Domain.Enums.ScheduleStatus.Ended;
+                schedules.Add(item);
+            }
+            _dbContext.Schedules.UpdateRange(schedules);
+            _dbContext.SaveChanges();
             // Truy vấn để lấy dữ liệu từ bảng Schedules và Films, sau đó ánh xạ vào ScheduleDto
             var scheduleDtos = from schedule in _dbContext.Schedules
                                join film in _dbContext.Films on schedule.FilmId equals film.Id
@@ -61,13 +81,11 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                    Status = schedule.Status,
                                    FilmName = film.Name // Lấy tên phim
                                };
-
             // Kiểm tra nếu không có lịch chiếu nào thì ném ra ngoại lệ
             if (!scheduleDtos.Any())
             {
                 throw new InvalidOperationException("No schedules found.");
             }
-
             // Trả về danh sách lịch chiếu
             return scheduleDtos;
         }
@@ -80,7 +98,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             {
                 throw new ArgumentException("Invalid Film ID.", nameof(filmId));
             }
-
             // Truy vấn để lấy dữ liệu từ bảng Schedules và Films theo FilmId, sau đó ánh xạ vào ScheduleDto
             var scheduleDtos = from schedule in _dbContext.Schedules
                                join film in _dbContext.Films on schedule.FilmId equals film.Id
@@ -96,13 +113,11 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                    FilmName = film.Name, // Lấy tên phim
                                    FilmReleaseDate = film.StartDate // Lấy ngày ra mắt phim
                                };
-
             // Kiểm tra nếu không có lịch chiếu nào cho FilmId thì ném ra ngoại lệ
             if (!scheduleDtos.Any())
             {
                 throw new InvalidOperationException($"No schedules found for Film ID {filmId}.");
             }
-
             // Trả về danh sách lịch chiếu
             return scheduleDtos;
         }
@@ -115,7 +130,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             {
                 throw new ArgumentException("Invalid ID.", nameof(id));
             }
-
             // Truy vấn để lấy dữ liệu từ bảng Schedules và Films theo Id, sau đó ánh xạ vào ScheduleDto
             var scheduleDto = await (from schedule in _dbContext.Schedules
                                      join film in _dbContext.Films on schedule.FilmId equals film.Id
@@ -131,13 +145,11 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                          FilmName = film.Name, // Lấy tên phim
                                          FilmReleaseDate = film.StartDate // Lấy ngày ra mắt phim
                                      }).FirstOrDefaultAsync();
-
             // Kiểm tra nếu không có lịch chiếu nào cho Id thì ném ra ngoại lệ
             if (scheduleDto == null)
             {
                 throw new InvalidOperationException($"No schedule found for ID {id}.");
             }
-
             // Trả về lịch chiếu
             return scheduleDto;
         }
@@ -153,7 +165,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     StartDate = film.StartDate
                 })
                 .ToListAsync();
-
             return filmsWithoutSchedule.AsQueryable();
         }
     }

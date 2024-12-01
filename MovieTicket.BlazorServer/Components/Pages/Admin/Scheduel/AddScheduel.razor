@@ -52,6 +52,7 @@
 
     private async Task HandleAddScheduel()
     {
+        selectedFilmId ??= Guid.Empty.ToString();
         request.FilmId = Guid.Parse(selectedFilmId);
         var result = await _scheduleService.CreateAsync(request, cancellationToken);
         if (result.Status == 201)
