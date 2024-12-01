@@ -9,25 +9,25 @@
 				<div class="form-group">
 					<label for="tenRap">Tên rạp chiếu:</label>
 					<InputText class="form-control" id="tenRap" @bind-Value="cinemaCenterUpdateRequest.Name" />
-					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Name)" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Name)" class="text-danger" />
 				</div>
 
 				<div class="form-group mt-3">
 					<label for="diaChi">Địa chỉ:</label>
 					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.Address" rows="3" />
-					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Address)" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Address)" class="text-danger" />
 				</div>
 
 				<div class="form-group mt-3">
 					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
 					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.AddresCity" rows="3" />
-					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddresCity)" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddresCity)" class="text-danger" />
 				</div>
 
 				<div class="form-group mt-3">
 					<label for="diaChiMap">Địa chỉ map:</label>
 					<InputText class="form-control" id="diaChiMap" @bind-Value="cinemaCenterUpdateRequest.AddressMap" />
-					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddressMap)" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddressMap)" class="text-danger" />
 				</div>
 
 				<div class="d-flex justify-content-start mt-4">
