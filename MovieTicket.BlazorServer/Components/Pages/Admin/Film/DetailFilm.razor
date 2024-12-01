@@ -1,0 +1,144 @@
+﻿@page "/filmdetail/{Id:guid}"
+@using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.DataTransferObjs.ScreenType
+@using MovieTicket.Application.DataTransferObjs.TranslationType
+@inject IFilmService FilmService
+@inject NavigationManager NavigationManager
+@inject ITranslationTypeService TranslationTypeService
+@inject IScreenTypeServices ScreenTypeService
+<div class="container-fluid">
+    <a class="btn btn-outline-secondary mb-3" href="/film">Quay lại</a>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Tên phim</label>
+            <input type="text" class="form-control" value="@filmDto?.Name" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Hình thức chiếu</label>
+            <div class="d-flex flex-wrap">
+                @foreach (var screenType in screenTypes)
+                {
+                    <div class="form-check me-3">
+                        <!-- Checkbox chỉ hiển thị -->
+                        <input type="checkbox" class="form-check-input" checked="@selectedScreenTypeIds.Contains(screenType.Id)" disabled />
+                        <label class="form-check-label">@screenType.Type</label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Tên phim (tiếng Anh)</label>
+            <input type="text" class="form-control" value="@filmDto?.EnglishName" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Hình thức dịch</label>
+            <div class="d-flex flex-wrap">
+                @foreach (var translationType in translationTypes)
+                {
+                    <div class="form-check me-3">
+                        <!-- Checkbox chỉ hiển thị -->
+                        <input type="checkbox" class="form-check-input" checked="@selectedTranslationTypeIds.Contains(translationType.Id)" disabled />
+                        <label class="form-check-label">@translationType.Type</label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Trailer</label>
+            <input type="text" class="form-control" value="@filmDto?.Trailer" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Độ tuổi xem phim</label>
+            <input type="text" class="form-control" value="@filmDto?.Rating" readonly />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <textarea class="form-control" rows="3" readonly>@filmDto?.Description</textarea>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Thể loại</label>
+            <input type="text" class="form-control" value="@filmDto?.Gerne" readonly />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Đạo diễn</label>
+            <input type="text" class="form-control" value="@filmDto?.Director" readonly />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Diễn viên</label>
+            <input type="text" class="form-control" value="@filmDto?.Cast" readonly />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Lịch chiếu</label>
+            <input type="text" class="form-control" value="@filmDto?.StartDate?.ToString("dd/MM/yyyy")" readonly />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Năm phát hành</label>
+            <input type="text" class="form-control" value="@filmDto?.ReleaseYear" readonly />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Thời lượng phim (phút)</label>
+            <input type="text" class="form-control" value="@filmDto?.RunningTime" readonly />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Ngôn ngữ</label>
+            <input type="text" class="form-control" value="@filmDto?.Language" readonly />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Quốc gia</label>
+            <input type="text" class="form-control" value="@filmDto?.Nation" readonly />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            @if (!string.IsNullOrEmpty(filmDto?.Poster))
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <img src="@filmDto.Poster" alt="Film Poster" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private FilmDto? filmDto;
+    private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
+    private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
+    private List<Guid> selectedScreenTypeIds = new List<Guid>();
+    private List<Guid> selectedTranslationTypeIds = new List<Guid>();
+    protected override async Task OnInitializedAsync()
+    {
+        screenTypes = await ScreenTypeService.GetAllScreenTypes();
+        translationTypes = await TranslationTypeService.GetAllTranslationTypes();
+        filmDto = await FilmService.GetById(Id);
+        if (filmDto == null)
+        {
+            NavigationManager.NavigateTo("/film");
+        }
+
+        selectedScreenTypeIds = filmDto.ScreenTypeDtos.Select(st => st.Id).ToList();
+        selectedTranslationTypeIds = filmDto.TranslationTypeDtos.Select(tt => tt.Id).ToList();
+    }
+
+}
