@@ -3,37 +3,39 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <PageTitle>Home</PageTitle>
+@if (lstBanner.Count > 0)
+{
+	<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+		<div class="carousel-indicators">
+			@for (int i = 0; i < lstBanner.Count; i++)
+			{
+				<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="@i" class="@((i == 0) ? "active" : "")" aria-current="@((i == 0) ? "true" : "")" aria-label="Slide @(i + 1)"></button>
+			}
+			)
+		</div>
+		<div class="carousel-inner">
+			@foreach (var item in lstBanner)
+			{
+			<div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
+				<img src="@item.Image" class="d-block w-100" alt="...">
+			</div>
+			}
 
-<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-	<div class="carousel-indicators">
-		<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-		<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" aria-label="Slide 2"></button>
-		<button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" aria-label="Slide 3"></button>
+		</div>
+		<button class="left carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="right carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
 	</div>
-	<div class="carousel-inner">
-		<div class="carousel-item active">
-			<img src="https://files.betacorp.vn/media/images/2024/09/27/1702x621-19-161327-270924-72.jpg" class="d-block w-100" alt="Slide 1">
-
-		</div>
-		<div class="carousel-item">
-			<img src="https://iguov8nhvyobj.vcdn.cloud/media/banner/cache/1/b58515f018eb873dafa430b6f9ae0c1e/9/8/980x448_14__4.jpg" class="d-block w-100" alt="Slide 2">
-
-		</div>
-		<div class="carousel-item">
-			<img src="https://iguov8nhvyobj.vcdn.cloud/media/banner/cache/1/b58515f018eb873dafa430b6f9ae0c1e/9/8/980x448_15__2.jpg" class="d-block w-100" alt="Slide 3">
-
-		</div>
-	</div>
-	<button class="left carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-		<span class="visually-hidden">Previous</span>
-	</button>
-	<button class="right carousel-control" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-		<span class="carousel-control-next-icon" aria-hidden="true"></span>
-		<span class="visually-hidden">Next</span>
-	</button>
-</div>
-
+}
+else
+{
+	<h4>Không có banner</h4>
+}
 <div class="container">
 	<div class="tab my-5 d-flex justify-content-center border-bottom">
 		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
@@ -161,9 +163,9 @@
 		</div>
 		<div class="modal-body">
 			<ViewShowTimeModal
-				OnShowtimeSelected="OpenSeatSelectionModal" 
-				Id="@IdFilm" 
-				LoginCallback="RedirectToLogin" />
+			OnShowtimeSelected="OpenSeatSelectionModal" 
+			Id="@IdFilm" 
+			LoginCallback="RedirectToLogin" />
 		</div>
 	</div>
 </div>
@@ -306,6 +308,7 @@
 	private decimal Discount;
 	private ComboCheckRequest ComboCheckRequest;
 	private bool isFirstRender = true;
+	private List<BannerDTO> lstBanner = new();
 
 
 	public class EventCallbackArgs
@@ -323,11 +326,16 @@
 		public ComboCheckRequest ComboCheckRequest { get; set; }
 	}
 
-	protected async override Task OnInitializedAsync()
-	{	
-		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
+    protected async override Task OnInitializedAsync()
+    {	
+        listObjFilm = await UserHomeService.GetAllFilmForUserHome();
+        var banners = await BannerService.GetBannersAsync();
+        if (banners != null)
+		{
+			lstBanner = banners.Where(b => b.Status == BannerStatus.Active).ToList();
+		}
         base.OnInitialized();
-	}
+    }
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{

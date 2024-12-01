@@ -56,7 +56,13 @@
         var result = await CouponService.CreateAsync(request, cancellationToken);
         if (result.Status == 201)
         {
+            await JSRuntime.ToastrSuccess(result.Message);
+            await Task.Delay(2000);
             NavigationManager.NavigateTo("/coupon", forceLoad: true);
+        }
+        else
+        {
+            await JSRuntime.ToastrError(result.Message);
         }
     }
 
