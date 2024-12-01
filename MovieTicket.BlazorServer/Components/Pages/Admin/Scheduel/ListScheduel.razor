@@ -111,7 +111,7 @@
                                 }
                                 else if (item.Type.ToString() == "Regular")
                                 {
-                                    <span class="badge bg-now">Theo Lịch chiếu</span>
+                                    <span class="badge bg-now">Đang chiếu</span>
                                 }
                                 else if (item.Type.ToString() == "Special")
                                 {
@@ -255,7 +255,7 @@
         var result = await _scheduleService.DeleteAsync(Guid.Parse(id), cancellationToken);
         if (result.Status == 200)
         {
-            NavigationManager.NavigateTo("/scheduel", forceLoad: true);
+            await Refresh();
             await JSRuntime.ToastrSuccess(result.Message);
         }
         else
