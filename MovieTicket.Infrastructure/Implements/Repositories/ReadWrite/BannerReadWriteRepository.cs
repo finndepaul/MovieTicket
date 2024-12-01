@@ -35,7 +35,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 {
                     Name = request.Name,
                     Image = request.Image,
-                    Status = BannerStatus.Ẩn,
+                    Status = BannerStatus.Inactive,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = null
                 };

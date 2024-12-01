@@ -1,6 +1,6 @@
 @page "/revenue-by-cinema"
 @attribute [Authorize(Roles ="Admin")]
-@using MovieTicket.Application.DataTransferObjs.AdminHome
+@inject AppState AppState
 @using MovieTicket.Application.DataTransferObjs.AdminHome
 @inject IAdminHomeService _ser;
 

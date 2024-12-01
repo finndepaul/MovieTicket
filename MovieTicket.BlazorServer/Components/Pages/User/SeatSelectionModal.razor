@@ -13,9 +13,15 @@
                     {
                         var seat = lstSeats.FirstOrDefault(s => s.Row == x && s.Column == y);
                         <div class="col">
-                            @if (seat.Status == SeatStatus.Available)
+                            @if (ticketsByShowtime != null && ticketsByShowtime.Any(t => t.SeatId == seat.Id))
                             {
-                                <button type="button" id="seat" data-bs-toggle="button" data-seat-selection="@seat.Selection" data-seat-type="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" aria-pressed="false" @onclick="(() => SeatSelection(seat.Id))">
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-selection="Checked" class="btn seat-btn" data-id="@seat.Id">
+                                    @seat.Position
+                                </button>
+                            }
+                            else if (seat.Status == SeatStatus.Available)
+                            {
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-type="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" aria-pressed="false" @onclick="(() => SeatSelection(seat.Id))">
                                     @seat.Position
                                 </button>
                             }
@@ -67,6 +73,7 @@ else
     private CreateCheckRequest request = new();
     private List<TicketRequest> lstTicketRequests = new();
     private CancellationToken cancellationToken;
+    private List<TicketDto>? ticketsByShowtime = new();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -87,6 +94,11 @@ else
             // seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
             var getUser = AuthenState.User.FindFirstValue(ClaimTypes.NameIdentifier);
             userId = Guid.Parse(getUser);
+            var lstTicketByShowtime = await TicketService.GetListTicketByShowTimeIdAsync(ShowtimeId);
+            if (lstTicketByShowtime != null)
+            {
+                ticketsByShowtime = lstTicketByShowtime;
+            }
         }
     }
 

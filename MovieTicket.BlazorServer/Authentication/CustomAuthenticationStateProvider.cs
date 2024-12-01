@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using MovieTicket.Application.DataTransferObjs.Auth;
 using System.Security.Claims;
 
@@ -8,10 +9,12 @@ namespace MovieTicket.BlazorServer.Authentication
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService _localStorageService;
+        private readonly ProtectedSessionStorage _protectedSessionStorage;
 
-        public CustomAuthenticationStateProvider(ILocalStorageService localStorageService)
+        public CustomAuthenticationStateProvider()
         {
-            _localStorageService = localStorageService;
+            //_protectedSessionStorage = protectedSessionStorage;
+
         }
         private ClaimsPrincipal anon = new ClaimsPrincipal(new ClaimsIdentity());
 
@@ -20,8 +23,11 @@ namespace MovieTicket.BlazorServer.Authentication
         {
             try
             {
-                var jwtToken = Constants.JWTToken;
-                //Constants.JWTToken = "";
+                //string jwtToken = await _localStorageService.GetItemAsStringAsync("JWTToken");
+                string jwtToken = Constants.Token;
+                //var result = await _protectedSessionStorage.GetAsync<string>("JWTToken");
+                //var jwtToken = result.Success ? result.Value : null;
+                //var jwtToken = _httpContextAccessor.HttpContext?.Request.Cookies["JWTToken"];
                 if (string.IsNullOrEmpty(jwtToken))
                     return await Task.FromResult(new AuthenticationState(anon));
 
@@ -55,25 +61,16 @@ namespace MovieTicket.BlazorServer.Authentication
         public async Task UpdateAuthenticationState(string jwtToken)
         {
             var claimsPrincipal = new ClaimsPrincipal();
-            //if (!string.IsNullOrEmpty(jwtToken))
-            //{
-            //    Constants.JWTToken = jwtToken;
-            //    var getUserClaims = DecryptJWTService.DecryptToken(jwtToken);
-            //    claimsPrincipal = SetClaimPrincipal(getUserClaims);
-            //}
-            //else
-            //{
-            //    Constants.JWTToken = null;
-            //}
             if (!string.IsNullOrEmpty(jwtToken))
             {
-                await _localStorageService.SetItemAsync("JWTToken", jwtToken);
+
                 var getUserClaims = DecryptJWTService.DecryptToken(jwtToken);
                 claimsPrincipal = SetClaimPrincipal(getUserClaims);
+
             }
             else
             {
-                await _localStorageService.RemoveItemAsync("JWTToken");
+                Constants.Token = "";
             }
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }

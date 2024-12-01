@@ -3,6 +3,8 @@ using MovieTicket.Application.DataTransferObjs.Schedule;
 using MovieTicket.BlazorServer.Services.Interfaces;
 using MovieTicket.Application.ValueObjs.Paginations;
 using Microsoft.AspNetCore.WebUtilities;
+using MovieTicket.Application.ValueObjs.ViewModels;
+using OfficeOpenXml.ConditionalFormatting.Contracts;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
@@ -15,24 +17,28 @@ namespace MovieTicket.BlazorServer.Services.Implements
             _http = http;
         }
 
-        public async Task<bool> CreateAsync(CreateScheduleRequest createScheduleRequest, CancellationToken cancellationToken)
+        public async Task<ResponseObject<ScheduleDto>> CreateAsync(CreateScheduleRequest createScheduleRequest, CancellationToken cancellationToken)
         {
             var result = await _http.PostAsJsonAsync("api/Schedule/Create", createScheduleRequest, cancellationToken);
-            if (result == null)
+            var response = await result.Content.ReadFromJsonAsync<ResponseObject<ScheduleDto>>();
+            return new ResponseObject<ScheduleDto>
             {
-                return false;
-            }
-            return true;
+                Message = response.Message,
+                Status = response.Status,
+                Data = response.Data
+            };
         }
 
-        public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<ResponseObject<ScheduleDto>> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var result = await _http.DeleteAsync($"api/Schedule/Delete?id={id}", cancellationToken);
-            if (result == null)
+            var response = await result.Content.ReadFromJsonAsync<ResponseObject<ScheduleDto>>();
+            return new ResponseObject<ScheduleDto>
             {
-                return false;
-            }
-            return true;
+                Message = response.Message,
+                Status = response.Status,
+                Data = response.Data
+            };
         }
 
         public async Task<PageList<ScheduleDto>> GetAllAsync(string? filmName, DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters, CancellationToken cancellationToken)
@@ -70,14 +76,16 @@ namespace MovieTicket.BlazorServer.Services.Implements
             return result;
         }
 
-        public async Task<bool> UpdateAsync(UpdateScheduleRequest updateScheduleRequest, CancellationToken cancellationToken)
+        public async Task<ResponseObject<ScheduleDto>> UpdateAsync(UpdateScheduleRequest updateScheduleRequest, CancellationToken cancellationToken)
         {
             var result = await _http.PutAsJsonAsync($"api/Schedule/Update", updateScheduleRequest, cancellationToken);
-            if (result == null)
+            var response = await result.Content.ReadFromJsonAsync<ResponseObject<ScheduleDto>>();
+            return new ResponseObject<ScheduleDto>
             {
-                return false;
-            }
-            return true;
+                Message = response.Message,
+                Status = response.Status,
+                Data = response.Data
+            };
         }
 
         public async Task<IQueryable<ScheduleDto>> GetAllAsync()

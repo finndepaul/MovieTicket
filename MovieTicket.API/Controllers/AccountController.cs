@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieTicket.Application.DataTransferObjs.Account;
 using MovieTicket.Application.DataTransferObjs.Account.Request;
+using MovieTicket.Application.DataTransferObjs.Coupon;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.Paginations;
@@ -44,6 +45,17 @@ namespace MovieTicket.API.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetUserCouponUsageHistoryAsync(Guid userId, [FromQuery] PagingParameters pagingParameters)
+        {
+            var coupons = await _accountReadOnly.GetUserCouponUsageHistoryAsync(userId, pagingParameters, new CancellationToken());
+            var data = coupons.Item.ToList();
+            return Ok(new PageList<CouponDto>(data.ToList(),
+                coupons.MetaData.TotalCount,
+                coupons.MetaData.CurrentPage,
+                coupons.MetaData.PageSize));
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetAll()
         {
             var accounts = await _accountReadOnly.GetAllAccount();
@@ -69,6 +81,19 @@ namespace MovieTicket.API.Controllers
         {
             var create = await _accountReadWrite.UpdateAccount(request, cancellationToken);
             return Ok(create);
+        }
+
+        [HttpPut]
+	      public async Task<ActionResult> UpdateStatusAccount(Guid id, CancellationToken cancellationToken)
+		    {
+			      var create = await _accountReadWrite.UpdateStatusAccount(id, cancellationToken);
+			      return Ok(create);
+		    }
+        [HttpGet]
+        public async Task<ActionResult> GetMembershipPoints(Guid userId, CancellationToken cancellationToken)
+        {
+            var points = await _accountReadOnly.GetMembershipPointsAsync(userId, cancellationToken);
+            return Ok(points);
         }
     }
 }

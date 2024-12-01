@@ -1,4 +1,4 @@
-﻿@page "/bill/detail/{Id}"
+﻿@page "/billuserdetail/{Id:guid}"
 @using BarcodeStandard
 @using System.Drawing
 @using MovieTicket.Application.DataTransferObjs.Account
@@ -7,9 +7,10 @@
 @using MovieTicket.Application.DataTransferObjs.Ticket
 @attribute [Authorize(Roles = "Admin")]
 <div class="container-fluid">
-	<div class="mb-2">
-		<NavLink href="bill" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
-	</div>
+    <div class="mb-2">
+		<button @onclick="GoToUserDetail" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</button>
+    </div>
+
 	<div class="row">
 		<!-- Thông tin đơn hàng -->
 		<div class="col-md-6 mb-3">
@@ -75,7 +76,7 @@
 						{
 							<tr>
 								<td>@item.SeatName</td>
-								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
+								<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">@item.SeatType</span></td>
 								<td>@item.Price.ToString("#,##0")</td>
 							</tr>
 						}
@@ -128,7 +129,7 @@
 </div>
 
 @code {
-	[Parameter] public string Id { get; set; }
+	[Parameter] public Guid Id { get; set; }
 	private List<TicketDto> lstTicket = new List<TicketDto>();
 	private TicketDto objTicket = new TicketDto();
 	private ShowTimeDto objShowTime = new ShowTimeDto();
@@ -152,13 +153,13 @@
 	protected async override Task OnInitializedAsync()
 	{
 		//lay bill theo id
-		objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
+		objBill = await BillService.GetBillByIdAsync(Id);
 		//lay account theo bill id
 		objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
 		//lay list ticket theo bill id
-		lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
+		lstTicket = await TicketService.GetListTicketByBillIdAsync(Id);
 		//lay 1 ticket dau tien cua bill id do
-		objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
+		objTicket = lstTicket.FirstOrDefault(x => x.BillId == Id);
 		//lay showtimeid cua ticket
 		var showtimeId = objTicket.ShowTimeId.Value;
 		//tim showtime theo id
@@ -181,20 +182,11 @@
 					Price = item.Price
 				});
 		}
-		lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
-
-
-
+		lstBillCombo = await BillComboService.GetListBillComboByBillId(Id);
 	}
-	private string FormatSeatTypeName(string type)
+
+	private void GoToUserDetail()
 	{
-		return type switch
-		{
-			"Normal" => "secondary",
-			"VIP" => "warning",
-			"Couple" => "danger",
-			_ => "Không xác định"
-		};
+		NavigationManager.NavigateTo($"/userdetail/{objBill.MembershipId}");
 	}
-
 }

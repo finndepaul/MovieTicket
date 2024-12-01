@@ -81,6 +81,15 @@
             CinemaTypeId = cinemaTypes.Where(x => x.Name == cinema.Data.CinemaTypeName).FirstOrDefault().Id;
             request.CinemaTypeId = CinemaTypeId;
             request.Id = CinemaId;
+            var CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch()
+                {
+                    Name = CinemaCenterName,
+                    Address = null
+                });
+            if (CinemaCenterDtos.Any())
+            {
+                request.CinemaCenterId = CinemaCenterDtos.First().Id;
+            }
         }
     }
 
