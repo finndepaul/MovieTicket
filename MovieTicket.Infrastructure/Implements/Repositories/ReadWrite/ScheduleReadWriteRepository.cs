@@ -41,7 +41,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Message = "Phim không được để trống!"
                     };
                 }
-                if (request.StartDate > request.EndDate)
+                if (request.StartDate.Date > request.EndDate.Date)
                 {
                     return new ResponseObject<ScheduleDto>
                     {
@@ -50,7 +50,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Message = "Ngày kết thúc phải lớn hơn ngày bắt đầu"
                     };
                 }
-                if ((film.StartDate.Date - request.StartDate.Date).TotalDays > 7)
+                if ((film.StartDate - request.StartDate.Date).TotalDays > 7)
                 {
                     return new ResponseObject<ScheduleDto>
                     {
@@ -65,12 +65,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     StartDate = request.StartDate.Date,
                     EndDate = request.EndDate.Date,
                 };
-                if (request.StartDate < film.StartDate && request.EndDate <= film.StartDate)
+                if (request.StartDate.Date < film.StartDate && request.EndDate.Date <= film.StartDate)
                 {
                     schedule.Type = ScheduleType.Early;
                     schedule.Status = ScheduleStatus.ComingSoon;
                 }
-                if (request.StartDate >= film.StartDate)
+                if (request.StartDate.Date >= film.StartDate)
                 {
                     schedule.Type = ScheduleType.Regular;
                     schedule.Status = ScheduleStatus.Showing;

@@ -326,7 +326,7 @@
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
 
-	private void HandleSelectedSeats(EventCallbackArgs args)
+	private void HandleSelectedSeats(EventCallbackHomeArgs args)
 	{
 		lstSeats = args.lstSeats;
 		SeatsSelectedstr = args.str;
@@ -335,7 +335,7 @@
 		StateHasChanged();
 	}
 
-	private async Task OpenComboSelectionModal(EventCallbackArgs args)
+	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
 	{
 		Task.Delay(300);
 		BillId = args.BillId;
@@ -398,7 +398,7 @@
 		}
 	}
 
-	private void HandleSelectedCombos(EventCallbackArgs args)
+	private void HandleSelectedCombos(EventCallbackHomeArgs args)
 	{
 		lstSelectedCombos = args._lstCombo;
 		TotalCombo = args.TotalCombo;
@@ -406,7 +406,7 @@
 		StateHasChanged();
 	}
 
-	private async Task OpenDiscountModal(EventCallbackArgs args)
+	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
 		Task.Delay(1000);
 		ComboCheckRequest = args.ComboCheckRequest;

@@ -14,5 +14,6 @@ namespace MovieTicket.Application.DataTransferObjs.Account
         public string? Address { get; set; }
         public AccountStatus? Status { get; set; }
         public DateTime? CreateDate { get; set; }
+        public Guid? CinemaCenterId { get; set; }
     }
 }
