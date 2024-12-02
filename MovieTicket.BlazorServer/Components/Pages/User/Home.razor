@@ -173,14 +173,14 @@ else
 <div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
 	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
-			<div class="modal-header" data-bs-theme="dark">
+			<div class="modal-header" style="height:10%" data-bs-theme="dark">
 				<h4 class="modal-title text-center">Chọn ghế</h4>
 				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
 			</div>
-			<div class="modal-body" style="background-color: #fdfcf0">
+			<div class="modal-body" style="background-color: #fdfcf0;height:70%">
 				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
 			</div>
-			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+			<div class="modal-footer" style="width:100%;height:20%; background-color:#031529;color:#fff">
 				<SeatFooter ShowtimeId="@ShowTimeId"
 				SeatDTOs="lstSeats"
 				@ref="seatFooterRef"
@@ -196,13 +196,13 @@ else
 <div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
 	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
-			<div class="modal-header" data-bs-theme="dark">
+			<div class="modal-header" style="height:10%" data-bs-theme="dark">
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="height:70%">
 				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelection="HandleSelectedCombos" />
 			</div>
-			<div class="modal-footer" style="width:100%;height:150px">
+			<div class="modal-footer" style="width:100%;height:20%;background-color:#031529;color:#fff">
 				<ComboFooter ShowtimeId="@ShowTimeId"
 				CheckedSeats="lstCheckedSeats"
 				SelectedCombos="lstSelectedCombos"
@@ -221,13 +221,13 @@ else
 <div class="modal fade" id="DiscountSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
 	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
-			<div class="modal-header" data-bs-theme="dark">
+			<div class="modal-header" style="height:10%" data-bs-theme="dark">
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="height:67%">
 				<DiscountSelectionModal />
 			</div>
-			<div class="modal-footer" style="width:100%;height:150px">
+			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
 				CheckedSeats="lstCheckedSeats"
 				SeatsSelectedstr="@SeatsSelectedstr"

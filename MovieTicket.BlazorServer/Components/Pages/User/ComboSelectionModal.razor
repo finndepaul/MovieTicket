@@ -32,13 +32,13 @@ else
 									<p class="card-text">@item.Description</p>
 									<p class="card-text">Giá: <span class="fw-bold">@item.Price.Value.ToString("#,##0")đ</span></p>
 									<div class="input-group mb-3" style="width:50%">
-										<span class="btn btn-danger input-group-text">
-											<i class="bi bi-dash-lg" @onclick="() => Minus(item.Id)"></i>
+										<span class="btn btn-danger input-group-text" @onclick="() => Minus(item.Id)">
+											<i class="bi bi-dash-lg"></i>
 										</span>
 										<input type="text" class="form-control text-center" style="font-size: 18px"
-										value="@comboQuantities.GetValueOrDefault(item.Id, 0)" disabled />
-										<span class="btn btn-danger input-group-text">
-											<i class="bi bi-plus-lg" @onclick="() => Plus(item.Id)"></i>
+											   value="@comboQuantities.GetValueOrDefault(item.Id, 0)" disabled />
+										<span class="btn btn-danger input-group-text" @onclick="() => Plus(item.Id)">
+											<i class="bi bi-plus-lg"></i>
 										</span>
 									</div>
 								</div>
@@ -136,6 +136,10 @@ else
 		if (!comboQuantities.ContainsKey(comboId))
 		{
 			comboQuantities[comboId] = 0;
+		}
+		if (comboQuantities[comboId] >= 4)
+		{
+			return; // Dừng tăng số lượng
 		}
 		comboQuantities[comboId]++;
 

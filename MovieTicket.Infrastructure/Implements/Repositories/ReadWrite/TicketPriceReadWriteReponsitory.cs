@@ -23,7 +23,18 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 
         public async Task<ResponseObject<TicketPriceCreateRequest>> Create(TicketPriceCreateRequest request, CancellationToken cancellationToken)
         {
-			if (String.IsNullOrEmpty(request.SeatTypeId.ToString()))
+			//check tất cả các trường đều null
+			if (request.CinemaTypeId == Guid.Empty && request.SeatTypeId == Guid.Empty && request.ScreenTypeId == Guid.Empty && request.ScreeningDayId == Guid.Empty)
+			{
+				return new ResponseObject<TicketPriceCreateRequest>
+				{
+					Data = null,
+					Message = "Chưa nhập thông tin.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+
+			if (request.SeatTypeId == Guid.Empty)
 			{
 				return new ResponseObject<TicketPriceCreateRequest>
 				{
@@ -32,7 +43,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Status = StatusCodes.Status404NotFound
 				};
 			}
-			if (String.IsNullOrEmpty(request.ScreenTypeId.ToString()))
+			if (request.ScreenTypeId == Guid.Empty)
 			{
 				return new ResponseObject<TicketPriceCreateRequest>
 				{
@@ -41,7 +52,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Status = StatusCodes.Status404NotFound
 				};
 			}
-			if (String.IsNullOrEmpty(request.ScreeningDayId.ToString()))
+			if (request.ScreeningDayId == Guid.Empty)
 			{
 				return new ResponseObject<TicketPriceCreateRequest>
 				{
@@ -50,7 +61,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Status = StatusCodes.Status404NotFound
 				};
 			}
-			if (String.IsNullOrEmpty(request.CinemaTypeId.ToString()))
+			if (request.CinemaTypeId == Guid.Empty)
 			{
 				return new ResponseObject<TicketPriceCreateRequest>
 				{
@@ -126,12 +137,58 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         public async Task<ResponseObject<TicketPriceUpdateRequest>> Update(TicketPriceUpdateRequest request, CancellationToken cancellationToken)
         {
 			//check trung
-			if (!request.Validate())
+			if (request.CinemaTypeId == Guid.Empty && request.SeatTypeId == Guid.Empty && request.ScreenTypeId == Guid.Empty && request.ScreeningDayId == Guid.Empty)
 			{
 				return new ResponseObject<TicketPriceUpdateRequest>
 				{
 					Data = null,
-					Message = "Giá vé này đã tồn tại",
+					Message = "Chưa nhập thông tin.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+
+			if (request.SeatTypeId == Guid.Empty)
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn loại ghế.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (request.ScreenTypeId == Guid.Empty)
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn hình thức chiếu.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (request.ScreeningDayId == Guid.Empty)
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn ngày chiếu.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (request.CinemaTypeId == Guid.Empty)
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "Chưa chọn loại rạp.",
+					Status = StatusCodes.Status404NotFound
+				};
+			}
+			if (String.IsNullOrEmpty(request.Price.ToString()))
+			{
+				return new ResponseObject<TicketPriceUpdateRequest>
+				{
+					Data = null,
+					Message = "Chưa nhập số tiền.",
 					Status = StatusCodes.Status404NotFound
 				};
 			}

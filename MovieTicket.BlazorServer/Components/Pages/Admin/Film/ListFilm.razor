@@ -145,6 +145,9 @@
                                     <a class="btn btn-outline-primary" href="@($"film/update/{film.Id}")">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    <a class="btn btn-outline-primary" href="@($"filmdetail/{film.Id}")">
+                                        <i class="bi bi-ticket-detailed"></i>
+                                    </a>
                                     <button class="btn btn-outline-danger" @onclick="() => GetFilmDeleteId(film.Id)">
                                         <i class="bi bi-trash"></i>
                                     </button>

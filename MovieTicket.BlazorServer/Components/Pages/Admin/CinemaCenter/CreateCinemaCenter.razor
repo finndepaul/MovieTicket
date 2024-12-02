@@ -10,7 +10,7 @@
 				<div class="form-group">
 					<label for="tenRap">Tên rạp chiếu:</label>
 					<input type="text" class="form-control" id="tenRap" @bind="cinemaCenterCreateRequest.Name" />
-					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Name)" />
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Name)" class="text-danger" />
 				</div>
 			</div>
 		</div>
@@ -21,7 +21,7 @@
 				<div class="form-group">
 					<label for="diaChi">Địa chỉ:</label>
 					<textarea class="form-control" id="diaChi" rows="3" @bind="cinemaCenterCreateRequest.Address"></textarea>
-					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Address)" />
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Address)" class="text-danger" />
 				</div>
 			</div>
 		</div>
@@ -32,7 +32,7 @@
 				<div class="form-group">
 					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
 					<textarea class="form-control" id="diaChiCity" rows="3" @bind="cinemaCenterCreateRequest.AddresCity"></textarea>
-					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddresCity)" />
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddresCity)" class="text-danger" />
 				</div>
 			</div>
 		</div>
@@ -43,7 +43,7 @@
 				<div class="form-group">
 					<label for="diaChiMap">Địa chỉ map:</label>
 					<textarea class="form-control" id="diaChiMap" rows="3" @bind="cinemaCenterCreateRequest.AddressMap"></textarea>
-					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddressMap)" />
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddressMap)" class="text-danger" />
 				</div>
 			</div>
 		</div>

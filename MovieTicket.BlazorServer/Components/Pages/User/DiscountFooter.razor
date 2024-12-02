@@ -40,7 +40,7 @@
 				<br />
 				<span class="fw-bold">@SeatsSelectedstr</span>
 			</div>
-			<div class="ticketPrices col" style="width:10%">
+			<div class="ticketPrices col" style="width:5%">
 				<label>Giá vé: </label>
 				<br />
 				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
@@ -48,7 +48,8 @@
 				<label class="me-2">Combo:</label>
 				<br />
 				<span class="fw-bold">@TotalCombo.ToString("#,##0") VND</span>
-				<br />
+			</div>
+			<div class="ticketPrices col" style="width:5%">
 				<label class="me-2">Giảm giá:</label>
 				<br />
 				<span class="fw-bold">@Discount.ToString("#,##0") VND</span>
@@ -59,7 +60,7 @@
 			</div>
 		}
 		<div class="col align-self-center text-end" style="width:10%;">
-			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:130px;height:50px" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right"></i></button>
+			<button class="btn btn-success text-light fs-5" style="padding:10px;width:150px;" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right"></i></button>
 		</div>
 	</div>
 </div>
