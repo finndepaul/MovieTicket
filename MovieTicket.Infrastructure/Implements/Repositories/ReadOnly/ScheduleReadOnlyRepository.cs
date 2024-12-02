@@ -25,14 +25,19 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         {
             startDate ??= DateTime.Now;
             endDate ??= DateTime.Now;
-            var checkSchedule = _dbContext.Schedules.Where(x => x.EndDate < DateTime.Now).ToList();
-            List<Schedule> schedules = new List<Schedule>();
-            foreach (var item in checkSchedule)
+            var checkSchedules = _dbContext.Schedules.ToList();
+            foreach (var item in checkSchedules)
             {
-                item.Status = Domain.Enums.ScheduleStatus.Ended;
-                schedules.Add(item);
+                if (item.EndDate.Date < DateTime.Now.Date)
+                {
+                    item.Status = Domain.Enums.ScheduleStatus.Ended;
+                }
+                else if (item.StartDate.Date >= DateTime.Now.Date || DateTime.Now.Date <= item.EndDate)
+                {
+                    item.Status = Domain.Enums.ScheduleStatus.Showing;
+                }
             }
-            _dbContext.Schedules.UpdateRange(schedules);
+            _dbContext.Schedules.UpdateRange(checkSchedules);
             await _dbContext.SaveChangesAsync(cancellationToken);
             var scheduleDtos = from schedule in _dbContext.Schedules
                                join film in _dbContext.Films on schedule.FilmId equals film.Id
@@ -59,15 +64,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
         public async Task<IQueryable<ScheduleDto>> GetAllAsync()
         {
-            var checkSchedule = _dbContext.Schedules.Where(x => x.EndDate < DateTime.Now).ToList();
-            List<Schedule> schedules = new List<Schedule>();
-            foreach (var item in checkSchedule)
-            {
-                item.Status = Domain.Enums.ScheduleStatus.Ended;
-                schedules.Add(item);
-            }
-            _dbContext.Schedules.UpdateRange(schedules);
-            _dbContext.SaveChanges();
             // Truy vấn để lấy dữ liệu từ bảng Schedules và Films, sau đó ánh xạ vào ScheduleDto
             var scheduleDtos = from schedule in _dbContext.Schedules
                                join film in _dbContext.Films on schedule.FilmId equals film.Id

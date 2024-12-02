@@ -14,6 +14,5 @@ namespace MovieTicket.Application.DataTransferObjs.Schedule.Request
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
-
     }
 }

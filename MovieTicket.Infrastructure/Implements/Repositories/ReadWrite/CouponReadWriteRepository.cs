@@ -46,6 +46,24 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                         Message = "Mã giảm giá đã tồn tại."
                     };
                 }
+                if (request.EndDate.Date < DateTime.Now.Date && request.StartDate.Date < DateTime.Now.Date)
+                {
+                    return new ResponseObject<CouponDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Thời gian áp dụng phải bắt đầu từ ngày hôm nay."
+                    };
+                }
+                if (request.StartDate.Date > request.EndDate.Date)
+                {
+                    return new ResponseObject<CouponDto>
+                    {
+                        Data = null,
+                        Status = StatusCodes.Status400BadRequest,
+                        Message = "Thời gian kết thúc không được nhỏ hơn thời gian bắt đầu."
+                    };
+                }
                 var coupon = new Coupon
                 {
                     Id = Guid.NewGuid(),

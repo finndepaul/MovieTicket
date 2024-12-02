@@ -35,6 +35,10 @@
         {
             NavigationManager.NavigateTo("/admin", forceLoad: true);
         }
+        else if (claims.Role == "Staff")
+        {
+            NavigationManager.NavigateTo("/offline-counter", forceLoad: true);
+        }
         else
         {
             NavigationManager.NavigateTo("/", forceLoad: true);
