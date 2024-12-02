@@ -16,11 +16,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             _context = context;
         }
 
-        public async Task<AccountDetail> GetAccountById(Guid Id, CancellationToken cancellationToken)
+        public async Task<AccountDto> GetAccountById(Guid Id, CancellationToken cancellationToken)
         {
             var model = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == Id, cancellationToken);
-            return new AccountDetail
+            return new AccountDto
             {
+                Id = model.Id,
                 Avatar = model.Avatar,
                 Name = model.Name,
                 Username = model.Username,
@@ -28,6 +29,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 Phone = model.Phone,
                 Role = model.Role,
                 Status = model.Status,
+                CreateDate = model.CreateDate,
+                CinemaCenterId = model.CinemaCenterId
             };
         }
 
@@ -44,7 +47,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Phone = x.Phone,
                     Role = x.Role,
                     Status = x.Status,
-                    CreateDate = x.CreateDate
+                    CreateDate = x.CreateDate,
+                    CinemaCenterId = x.CinemaCenterId
                 })
                 .AsNoTracking();
         }
@@ -107,7 +111,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                           select membership.Point)
                                            .FirstOrDefaultAsync(cancellationToken);
 
-            return membershipPoints ?? 0; 
+            return membershipPoints ?? 0;
         }
 
     }

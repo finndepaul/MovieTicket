@@ -1,4 +1,8 @@
+@using static MovieTicket.BlazorServer.Components.Pages.Staff.OfflineCounter
+@using static MovieTicket.BlazorServer.Components.Pages.User.CinemaSystem
 @using static MovieTicket.BlazorServer.Components.Pages.User.Home
+
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @if (cinemaDto != null)
 {
@@ -46,17 +50,21 @@ else
 
 <script>
     function toggleButtonById(buttonId) {
-    var button = document.querySelector(`button[data-id='${buttonId}']`);
-    if (button) {
-    button.classList.toggle('active');
-    }
+        var button = document.querySelector(`button[data-id='${buttonId}']`);
+        if (button) {
+        button.classList.toggle('active');
+        }
     }
 </script>
 
 @code {
     [Parameter] public Guid ShowtimeId { get; set; }
-    [Parameter] public EventCallback<EventCallbackArgs> OnSeatSelection { get; set; }
-    public EventCallbackArgs args = new();
+    [Parameter] public EventCallback<EventCallbackHomeArgs> OnSeatSelection { get; set; }
+    [Parameter] public EventCallback<EventCallbackCinemaSystemArgs> OnSeatSelectionCinemaSystem { get; set; }
+    [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnSeatSelectionOfflineCounter { get; set; }
+    public EventCallbackHomeArgs args = new();
+    public EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+    public EventCallbackOfflineCounterArgs argsOfflineCounter = new();
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
     private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
@@ -74,6 +82,7 @@ else
     private List<TicketRequest> lstTicketRequests = new();
     private CancellationToken cancellationToken;
     private List<TicketDto>? ticketsByShowtime = new();
+    private string? location;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -99,6 +108,15 @@ else
             {
                 ticketsByShowtime = lstTicketByShowtime;
             }
+        }
+        base.OnParametersSet();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
         }
     }
 
@@ -155,26 +173,40 @@ else
                             SeatsSelectedstr += item.Position + " ";
                         }
                         lstSeatsSelected.Add(item);
-                        // lstSeatUpdateRequests.Add(new SeatUpdateRequest
-                        //     {
-                        //         Id = item.Id,
-                        //         SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == item.SeatTypeName).Id.ToString(),
-                        //         Status = Domain.Enums.SeatStatus.Available,
-                        //         Selection = Domain.Enums.SeatSelection.Checked
-                        //     });
                     };
                 }
                 CalculateTotal();
                 TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
-                args = new EventCallbackArgs
-                    {
-                        lstSeats = lstSeatsSelected,
-                        str = SeatsSelectedstr,
-                        TotalTicket = TotalTicket,
-                        
-                    };
-                await OnSeatSelection.InvokeAsync(args);
-                StateHasChanged();
+                if (location != null && location == "CinemaSystem")
+                {
+                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
+                        {
+                            lstSeats = lstSeatsSelected,
+                            str = SeatsSelectedstr,
+                            TotalTicket = TotalTicket,
+                        };
+                    await OnSeatSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
+                }
+                else if (location != null && location == "Home")
+                {
+                    args = new EventCallbackHomeArgs
+                        {
+                            lstSeats = lstSeatsSelected,
+                            str = SeatsSelectedstr,
+                            TotalTicket = TotalTicket,
+                        };
+                    await OnSeatSelection.InvokeAsync(args);
+                }
+                else if (location != null && location == "OfflineCounter")
+                {
+                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                        {
+                            lstSeats = lstSeatsSelected,
+                            str = SeatsSelectedstr,
+                            TotalTicket = TotalTicket,
+                        };
+                    await OnSeatSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
+                }
             }
             else
             {
@@ -186,7 +218,6 @@ else
                         SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
                     }
                     lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
-                    // lstSeatUpdateRequests.RemoveAll(s => s.Id == seat.Id);
                 }
                 else
                 {
@@ -203,22 +234,40 @@ else
                         SeatsSelectedstr += seat.Position + " ";
                     }
                     lstSeatsSelected.Add(seat);
-                    // lstSeatUpdateRequests.Add(new SeatUpdateRequest
-                    //     {
-                    //         Id = seat.Id,
-                    //         Selection = Domain.Enums.SeatSelection.Checked
-                    //     });
                 };
                 CalculateTotal();
                 TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
-                args = new EventCallbackArgs
-                    {
-                        lstSeats = lstSeatsSelected,
-                        str = SeatsSelectedstr,
-                        TotalTicket = TotalTicket,
-                    };
-                await OnSeatSelection.InvokeAsync(args);
-                StateHasChanged();
+                if (location != null && location == "CinemaSystem")
+                {
+                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
+                        {
+                            lstSeats = lstSeatsSelected,
+                            str = SeatsSelectedstr,
+                            TotalTicket = TotalTicket,
+                        };
+                    await OnSeatSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
+                }
+                else if (location != null && location == "Home")
+                {
+                    args = new EventCallbackHomeArgs
+                        {
+                            lstSeats = lstSeatsSelected,
+                            str = SeatsSelectedstr,
+                            TotalTicket = TotalTicket,
+                        };
+                    await OnSeatSelection.InvokeAsync(args);
+                }
+                else if (location != null && location == "OfflineCounter")
+                {
+                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                        {
+                            lstSeats = lstSeatsSelected,
+                            str = SeatsSelectedstr,
+                            TotalTicket = TotalTicket,
+                        };
+                    await OnSeatSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
+                }
+            StateHasChanged();
             }
         }
     }
