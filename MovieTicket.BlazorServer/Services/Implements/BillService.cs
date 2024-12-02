@@ -2,7 +2,9 @@
 using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.BlazorServer.Services.Interfaces;
+using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.BlazorServer.Services.Implements
 {
@@ -64,6 +66,18 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			return result ?? new PageList<BillsDto>
 			{
 				Item = new List<BillsDto>(),
+			};
+		}
+
+		public async Task<ResponseObject<bool>?> UpdateStatusAsync(Guid id, BillStatus status)
+		{
+			var response = await _http.PutAsJsonAsync($"api/Bill/UpdateStatus?id={id}&status={status}", new {id,status });
+			var result = await response.Content.ReadFromJsonAsync<ResponseObject<bool>>();
+			return new ResponseObject<bool>()
+			{
+				Data = result.Data,
+				Message = result.Message,
+				Status = result.Status
 			};
 		}
 	}
