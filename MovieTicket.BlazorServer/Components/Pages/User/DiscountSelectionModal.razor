@@ -182,18 +182,19 @@
 	private Timer? _timer;
 	private bool _isCountdownFinished = false;
 	private DateTime EndTime = DateTime.Now.AddMinutes(1);
+    private string? location;
 
-  protected override void OnInitialized()
-      {
-          base.OnInitialized();
-      }
-      protected override async Task OnAfterRenderAsync(bool firstRender)
-      {
-          if (firstRender)
-          {
-              location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
-          }
-      }
+	protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+        }
+    }
 
 	// Xử lý khi nhấn nút xác nhận mã giảm giá
 	private void UseDiscountCode()
