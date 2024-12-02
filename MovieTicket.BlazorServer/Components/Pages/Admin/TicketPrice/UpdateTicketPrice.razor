@@ -17,7 +17,7 @@
     <div class="mb-3">
         <label for="seatType" class="form-label">Loại ghế <span class="text-danger">*</span></label>
         <select class="form-select @ChangeSelectedClass()" id="seatType" @bind="request.SeatTypeId" required>
-            <option disabled selected>--Chọn loại ghế--</option>
+            <option value="@Guid.Empty" disabled selected>--Chọn loại ghế--</option>
             @foreach (var item in seatType)
             {
                 <option value="@item.Id">@item.Name</option>
@@ -28,7 +28,7 @@
     <div class="mb-3">
         <label for="graphicsType" class="form-label">Hình thức chiếu <span class="text-danger">*</span></label>
         <select class="form-select @ChangeSelectedClass()" id="screenType" @bind="request.ScreenTypeId" required>
-            <option disabled selected>--Chọn hình thức chiếu--</option>
+            <option value="@Guid.Empty" disabled selected>--Chọn hình thức chiếu--</option>
             @foreach (var item in screenType)
             {
                 <option value="@item.Id">@item.Type</option>
@@ -39,7 +39,7 @@
     <div class="mb-3">
         <label for="dayType" class="form-label">Loại ngày <span class="text-danger">*</span></label>
         <select class="form-select @ChangeSelectedClass()" id="dayType" @bind="request.ScreeningDayId" required>
-            <option disabled selected>--Chọn ngày chiếu--</option>
+            <option value="@Guid.Empty" disabled selected>--Chọn ngày chiếu--</option>
             @foreach (var item in screeningDay)
             {
                 <option value="@item.Id">@item.Day</option>
@@ -50,7 +50,7 @@
     <div class="mb-3">
         <label for="auditoriumType" class="form-label">Loại phòng chiếu <span class="text-danger">*</span></label>
         <select class="form-select @ChangeSelectedClass()" id="cinemaType" @bind="request.CinemaTypeId" required>
-            <option disabled selected>--Chọn loại phòng chiếu--</option>
+            <option value="@Guid.Empty" disabled selected>--Chọn loại phòng chiếu--</option>
             @foreach (var item in cinemaType)
             {
                 <option value="@item.Id">@item.Name</option>

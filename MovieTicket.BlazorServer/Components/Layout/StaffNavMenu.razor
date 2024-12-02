@@ -1,0 +1,43 @@
+﻿<div class="top-row ps-3 navbar navbar" style="background-color: #3c8dbc;">
+	<div class="container">
+		<a class="navbar-brand text-white" href="">Staff</a>
+	</div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()" style="background-color: #031529;">
+	<nav class="flex-column">
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="cinema-center">
+				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Bán hàng
+			</NavLink>
+			<NavLink class="nav-link" href="cinema-center">
+				<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> In hóa đơn
+			</NavLink>
+		</div>
+		
+	</nav>
+</div>
+<script>
+	$(function () {
+		$('.nav-link').on('click', function () {
+			$('.nav-link').removeClass('active');
+			$(this).toggleClass("active");
+		});
+
+	});</script>
+
+<style>
+	.collapse {
+		background-color: rgb(1, 13, 23);
+	}
+
+	ul {
+		list-style: none;
+	}
+
+		ul li .nav-link {
+			padding-left: 32px;
+		}
+</style>

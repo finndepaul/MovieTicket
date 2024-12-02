@@ -37,7 +37,7 @@ else
 	<h4>Không có banner</h4>
 }
 <div class="container">
-	<div class="tab my-5 d-flex justify-content-center border-bottom">
+	<div class="tab mt-0 mb-5 d-flex justify-content-center border-bottom">
 		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
 		<button class="tablinks" onclick="openCity(event, 'DangChieu')" id="defaultOpen">PHIM ĐANG CHIẾU</button>
 		<button class="tablinks" onclick="openCity(event, 'Dacbiet')">SUẤT CHIẾU ĐẶC BIỆT</button>
@@ -173,14 +173,14 @@ else
 <div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
 	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
-			<div class="modal-header" data-bs-theme="dark">
+			<div class="modal-header" style="height:10%" data-bs-theme="dark">
 				<h4 class="modal-title text-center">Chọn ghế</h4>
 				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
 			</div>
-			<div class="modal-body" style="background-color: #fdfcf0">
+			<div class="modal-body" style="background-color: #fdfcf0;height:70%">
 				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
 			</div>
-			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+			<div class="modal-footer" style="width:100%;height:20%; background-color:#031529;color:#fff">
 				<SeatFooter ShowtimeId="@ShowTimeId"
 				SeatDTOs="lstSeats"
 				@ref="seatFooterRef"
@@ -196,13 +196,13 @@ else
 <div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
 	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
-			<div class="modal-header" data-bs-theme="dark">
+			<div class="modal-header" style="height:10%" data-bs-theme="dark">
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="height:70%">
 				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelection="HandleSelectedCombos" />
 			</div>
-			<div class="modal-footer" style="width:100%;height:150px">
+			<div class="modal-footer" style="width:100%;height:20%;background-color:#031529;color:#fff">
 				<ComboFooter ShowtimeId="@ShowTimeId"
 				CheckedSeats="lstCheckedSeats"
 				SelectedCombos="lstSelectedCombos"
@@ -221,19 +221,20 @@ else
 <div class="modal fade" id="DiscountSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
 	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
 		<div class="modal-content">
-			<div class="modal-header" data-bs-theme="dark">
+			<div class="modal-header" style="height:10%" data-bs-theme="dark">
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body" style="height:67%">
 				<DiscountSelectionModal />
 			</div>
-			<div class="modal-footer" style="width:100%;height:150px">
+			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
 				CheckedSeats="lstCheckedSeats"
 				SeatsSelectedstr="@SeatsSelectedstr"
 				TotalCombo="@TotalCombo"
 				TotalMoney="@TotalMoney"
 				TotalTicket="@TotalTicket"
+				BillId="@BillId"
 				BillCombo="ComboCheckRequest"
 				BackToSeat="CancelCheckout" />
 			</div>
@@ -310,8 +311,7 @@ else
 	private bool isFirstRender = true;
 	private List<BannerDTO> lstBanner = new();
 
-
-	public class EventCallbackArgs
+	public class EventCallbackHomeArgs
 	{
 		public List<SeatDTO> lstSeats { get; set; }
 		public string str { get; set; }
@@ -329,6 +329,7 @@ else
     protected async override Task OnInitializedAsync()
     {	
         listObjFilm = await UserHomeService.GetAllFilmForUserHome();
+		
         var banners = await BannerService.GetBannersAsync();
         if (banners != null)
 		{
@@ -343,7 +344,7 @@ else
 		{
 			var showtimeModalOpen = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalOpen");
 			var showtimeModalFilmId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalFilmId");
-
+			await JSRuntime.InvokeVoidAsync("localStorage.setItem", "page", "Home");
 			if (showtimeModalOpen == "true" && !String.IsNullOrEmpty(showtimeModalFilmId))
 			{
 				await OpenModalShowTime(showtimeModalFilmId);
@@ -379,7 +380,7 @@ else
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
 	}
 
-	private void HandleSelectedSeats(EventCallbackArgs args)
+	private void HandleSelectedSeats(EventCallbackHomeArgs args)
 	{
 		lstSeats = args.lstSeats;
 		SeatsSelectedstr = args.str;
@@ -388,7 +389,7 @@ else
 		StateHasChanged();
 	}
 
-	private async Task OpenComboSelectionModal(EventCallbackArgs args)
+	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
 	{
 		Task.Delay(300);
 		BillId = args.BillId;
@@ -451,7 +452,7 @@ else
 		}
 	}
 
-	private void HandleSelectedCombos(EventCallbackArgs args)
+	private void HandleSelectedCombos(EventCallbackHomeArgs args)
 	{
 		lstSelectedCombos = args._lstCombo;
 		TotalCombo = args.TotalCombo;
@@ -459,7 +460,7 @@ else
 		StateHasChanged();
 	}
 
-	private async Task OpenDiscountModal(EventCallbackArgs args)
+	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
 		Task.Delay(1000);
 		ComboCheckRequest = args.ComboCheckRequest;

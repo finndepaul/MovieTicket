@@ -1,5 +1,6 @@
 ﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
-
+@using static MovieTicket.BlazorServer.Components.Pages.Staff.OfflineCounter
+@using static MovieTicket.BlazorServer.Components.Pages.User.CinemaSystem
 
 <div class="container-fluid">
 	<div class="row">
@@ -39,7 +40,7 @@
 				<br />
 				<span class="fw-bold">@SeatsSelectedstr</span>
 			</div>
-			<div class="ticketPrices col" style="width:10%">
+			<div class="ticketPrices col" style="width:5%">
 				<label>Giá vé: </label>
 				<br />
 				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
@@ -47,7 +48,8 @@
 				<label class="me-2">Combo:</label>
 				<br />
 				<span class="fw-bold">@TotalCombo.ToString("#,##0") VND</span>
-				<br />
+			</div>
+			<div class="ticketPrices col" style="width:5%">
 				<label class="me-2">Giảm giá:</label>
 				<br />
 				<span class="fw-bold">@Discount.ToString("#,##0") VND</span>
@@ -58,7 +60,7 @@
 			</div>
 		}
 		<div class="col align-self-center text-end" style="width:10%;">
-			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:130px;height:50px" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right"></i></button>
+			<button class="btn btn-success text-light fs-5" style="padding:10px;width:150px;" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right"></i></button>
 		</div>
 	</div>
 </div>
@@ -74,7 +76,11 @@
 	[Parameter] public decimal Discount { get; set; }
 	[Parameter] public ComboCheckRequest BillCombo { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
-	private EventCallbackArgs args = new();
+	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
+	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
+	private EventCallbackHomeArgs args = new();
+    private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+    private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -83,6 +89,7 @@
 	private string formatRating = "";
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
 	private CancellationToken cancellationToken;
+	private string? location;
 
 	protected async override Task OnParametersSetAsync()
 	{
@@ -99,21 +106,29 @@
 			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
 		}
 	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+		}
+	}
 	private async Task PreSelection()
 	{
-		// foreach (var s in CheckedSeats)
-		// {
-		// 	lstSeatUpdateRequests.Add(new SeatUpdateRequest
-		// 		{
-		// 			Id = s.Id,
-		// 			SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
-		// 			Status = Domain.Enums.SeatStatus.Available,
-		// 			Selection = Domain.Enums.SeatSelection.None
-		// 		});
-		// }
-		// await SeatService.UpdateRange(lstSeatUpdateRequests);
 		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-		await BackToSeat.InvokeAsync(ShowtimeId);
+		if(location != null && location == "Home")
+		{
+			await BackToSeat.InvokeAsync(ShowtimeId);
+		}
+		else if (location != null && location == "CinemaSystem")
+		{
+			await BackToSeatCinemaSystem.InvokeAsync(ShowtimeId);
+		}
+        else if (location != null && location == "OfflineCounter")
+        {
+			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
+        }
+		
 	}
 	private async Task Checkout()
 	{
