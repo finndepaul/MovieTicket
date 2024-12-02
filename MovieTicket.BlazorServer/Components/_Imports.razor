@@ -47,7 +47,10 @@
 
 @using Net.payOS
 @using Net.payOS.Types
+@using Blazored.LocalStorage;
 
+
+@inject ILocalStorageService LocalStorage
 @inject IAuthenService AuthenService
 @inject IAccountService AccountService
 @inject IBannerService BannerService

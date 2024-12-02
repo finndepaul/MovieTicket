@@ -1,5 +1,7 @@
-﻿
+﻿@using static MovieTicket.BlazorServer.Components.Pages.Staff.OfflineCounter
+@using static MovieTicket.BlazorServer.Components.Pages.User.CinemaSystem
 @using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <div class="container-fluid">
 	<div class="row">
@@ -65,8 +67,14 @@
 	[Parameter] public string SeatsSelectedstr { get; set; }
 	[Parameter] public decimal TotalTicket { get; set; }
 	[Parameter] public EventCallback<Guid> BackToShowtimeModal { get; set; }
-	[Parameter] public EventCallback<EventCallbackArgs> NextToComboModal { get; set; }
-	private EventCallbackArgs args = new();
+	[Parameter] public EventCallback<Guid> BackToShowtimeCinemaSystem { get; set; }
+    [Parameter] public EventCallback BackToShowtimeOfflineCounter { get; set; }
+	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToComboModal { get; set; }
+	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToComboModalCinemaSystem { get; set; }
+    [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToComboOfflineCounter{ get; set; }
+	private EventCallbackHomeArgs args = new();
+	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+    private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -82,11 +90,12 @@
 	private CancellationToken cancellationToken;
 	private List<SeatTypeDto> seatTypeDtos = new();
 	private List<TicketDto>? ticketsByShowtime = new();
+	private string? location;
 
 	protected async override Task OnParametersSetAsync()
 	{
 		if (ShowtimeId != Guid.Empty)
-		{
+		{	
 			var response = await ShowTimeService.GetById(ShowtimeId);
 			showtimeDto = response.Data;
 			var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
@@ -114,9 +123,28 @@
 		}
 	}
 
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+		}
+	}
+
 	private async Task BackToShowtime()
 	{
-		await BackToShowtimeModal.InvokeAsync(ShowtimeId);
+		if(location != null && location == "Home")
+		{
+			await BackToShowtimeModal.InvokeAsync(ShowtimeId);
+        }
+        else if (location != null && location == "CinemaSystem")
+        {
+			await BackToShowtimeCinemaSystem.InvokeAsync(ShowtimeId);
+        }
+        else if (location != null && location == "OfflineCounter")
+        {
+			await BackToShowtimeOfflineCounter.InvokeAsync(argsOfflineCounter);
+        }
 	}
 
 	private async Task NextToCombo()
@@ -152,15 +180,42 @@
 			checkrequest.ShowTimeId = ShowtimeId;
 			checkrequest.LstSeatAndTicketPrice = lstTicketRequests;
 			string billId = await UserHomeService.CreateCheckAsync(checkrequest, cancellationToken);
-			if (!string.IsNullOrEmpty(billId))
+			if(location != null && location == "Home")
 			{
-				args = new EventCallbackArgs
-					{
-						BillId = Guid.Parse(billId)
-					};
+				if (!string.IsNullOrEmpty(billId))
+				{
+					args = new EventCallbackHomeArgs
+						{
+							BillId = Guid.Parse(billId)
+						};
+				}
+				Console.WriteLine("check");
+				await NextToComboModal.InvokeAsync(args);
 			}
-			Console.WriteLine("check");
-			await NextToComboModal.InvokeAsync(args);
+			else if (location != null && location == "CinemaSystem")
+			{
+				if(!string.IsNullOrEmpty(billId))
+				{
+                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
+                        {
+                            BillId = Guid.Parse(billId)
+                        };
+				}
+				Console.WriteLine("check");
+				await NextToComboModalCinemaSystem.InvokeAsync(argsCinemaSystem);
+			}
+            else if (location != null && location == "OfflineCounter")
+            {
+                if (!string.IsNullOrEmpty(billId))
+                {
+                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                        {
+                            BillId = Guid.Parse(billId)
+                        };
+                }
+                Console.WriteLine("check");
+                await NextToComboOfflineCounter.InvokeAsync(argsOfflineCounter);
+            }
 		}
 	}
 	private string DayOfTheWeek(string day) //check ngày

@@ -1,0 +1,75 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Routing
+@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div style="overflow: hidden;  height: 100vh;">
+	<div class="page">
+		<main>
+			<div class="pe-3" style="position: relative">
+				<AuthorizeView>
+					<Authorized>
+						<div class="d-flex justify-content-between align-items-center" style="min-height: 56px; font-size: 25px">
+							<!-- Add align-items-center class -->
+							@if (CinemaCenterName != null)
+							{
+								<div class="align-self-center" style="margin-left: 10px">Rạp @CinemaCenterName</div>
+							}
+							<div class="d-flex">
+								<div class="align-self-center">Xin chào, @context.User.Identity.Name</div>
+								<div class="align-self-center"><a class="btn btn-danger btn-sm ms-3" href="logout">Đăng xuất</a></div>
+							</div>
+						</div>
+					</Authorized>
+				</AuthorizeView>
+			</div>
+			<article class="content py-2" style="background-color: rgb(245, 245, 245);height: 100vh">
+				<div class="bg-white px-4 pt-4 rounded-3 scrollable" style="">
+					@Body
+				</div>
+			</article>
+		</main>
+	</div>
+
+	<div id="blazor-error-ui">
+		An unhandled error has occurred.
+		<a href="" class="reload">Reload</a>
+		<a class="dismiss">🗙</a>
+	</div>
+</div>
+<style>
+	.scrollable {
+	min-height: 90%;
+	max-height: 300px;/* 56px là chiều cao của navbar */
+
+	overflow-y: auto;
+	}
+
+	.container-fluid {
+	padding-bottom: 4rem;
+	}
+</style>
+
+@code {
+	private string CinemaCenterName;
+	private AccountDto accountDto = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		var AuthenState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var user = AuthenState.User;
+		var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		if (Guid.TryParse(userId, out var guidUserId)){
+			{
+				accountDto = await AccountService.GetByIdAsync(guidUserId);
+			};
+		}
+		
+	}
+	private void NavigationLogout()
+	{
+		Navigation.NavigateTo("/logout");
+	}
+}

@@ -1,6 +1,6 @@
 @using MovieTicket.Application.DataTransferObjs.ShowTime
 
-<div class="container-fluid ">
+<div class="container-fluid" style="max-height: 40%">
     <ul class="nav" style="flex-wrap: wrap">
         @if (dateRange != null)
         {
@@ -32,7 +32,7 @@
     </ul>
 </div>
 
-<div class="container-fluid px-3 scrollable" style="height: 580px">
+<div class="container-fluid px-3 scrollable" style="max-height: 60%">
     @if (ShowTimes.Any())
     {
         string previousCinemaCenter = null;

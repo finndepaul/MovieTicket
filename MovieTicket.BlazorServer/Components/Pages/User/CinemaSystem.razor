@@ -1,7 +1,7 @@
 ﻿@page "/cinema-system"
 @using MovieTicket.Application.DataTransferObjs.Film
-@using static MovieTicket.BlazorServer.Components.Pages.User.Home
 @layout MovieTicket.BlazorServer.Components.Layout.UserLayout
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <div class="container">
     <div class="theatre-list">
@@ -104,26 +104,79 @@
 
 <!--Modal chọn ghế -->
 <div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header" data-bs-theme="dark">
                 <h4 class="modal-title">Chọn ghế</h4>
                 <button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
+                <SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelectionCinemaSystem="HandleSelectedSeats" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
+                <SeatFooter ShowtimeId="@ShowTimeId"
+                            SeatDTOs="lstSeats"
+                            @ref="seatFooterRef"
+                            SeatsSelectedstr="@SeatsSelectedstr"
+                            TotalTicket="@TotalTicket"
+                            NextToComboModalCinemaSystem="OpenComboSelectionModal"
+                            BackToShowtimeCinemaSystem="ShowCloseConfirmation" />
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal combo -->
+<div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h4 class="modal-title">Chọn Combo</h4>
+            </div>
+            <div class="modal-body">
+                <ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelectionCinemaSystem="HandleSelectedCombos" />
+            </div>
+            <div class="modal-footer" style="width:100%;height:150px">
+                <ComboFooter ShowtimeId="@ShowTimeId"
+                             CheckedSeats="lstCheckedSeats"
+                             SelectedCombos="lstSelectedCombos"
+                             BillId="@BillId" @ref="comboFooterRef"
+                             SeatsSelectedstr="@SeatsSelectedstr"
+                             TotalCombo="@TotalCombo"
+                             TotalMoney="@TotalMoney"
+                             TotalTicket="@TotalTicket"
+                             BackToSeatModalCinemaSystem="PreComboSelectionModal" />
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Discount-->
+<div class="modal fade" id="DiscountSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h4 class="modal-title">Thanh toán</h4>
+            </div>
+            <div class="modal-body">
+                <DiscountSelectionModal />
+            </div>
+            <div class="modal-footer" style="width:100%;height:150px">
+                <DiscountFooter ShowtimeId="@ShowTimeId"
+                                CheckedSeats="lstCheckedSeats"
+                                SeatsSelectedstr="@SeatsSelectedstr"
+                                TotalCombo="@TotalCombo"
+                                TotalMoney="@TotalMoney"
+                                TotalTicket="@TotalTicket"
+                                BillCombo="ComboCheckRequest"
+                                BackToSeatCinemaSystem="CancelCheckout" />
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function closeModal() {
-        document.getElementById('myModalBuyTicket').style.display = 'none';
+    function openModalShowTime() {
+    document.getElementById('myModalBuyTicket').style.display = 'flex';
     }
-
     function openModal(modalId) {
         var modalElement = document.getElementById(modalId);
         var modal = new bootstrap.Modal(modalElement);
@@ -158,12 +211,36 @@
     private int TotalPages => (int)Math.Ceiling((double)Dates.Count / ItemsPerPage);
     private SeatSelectionModal seatSelectionModalref;
     private ComboSelectionModal comboSelectionModalref;
+    private SeatFooter seatFooterRef;
+    private ComboFooter comboFooterRef;
     private string SeatsSelectedstr;
-    private string TotalMoney;
     private Guid BillId;
     private string IdFilm;
     private string filmName { get; set; }
-    // private FooterModal footerModalref;
+    private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
+    private List<ComboRequest> lstSelectedCombos = new();
+    private decimal TotalTicket;
+    private decimal TotalCombo = 0;
+    private decimal TotalMoney = 0;
+    private decimal Discount;
+    private ComboCheckRequest ComboCheckRequest;
+    private bool isFirstRender = true;
+
+    public class EventCallbackCinemaSystemArgs
+    {
+        public List<SeatDTO> lstSeats { get; set; }
+        public string str { get; set; }
+        public decimal TotalMoney { get; set; }
+        public decimal TotalTicket { get; set; }
+        public decimal TotalCombo { get; set; }
+        public decimal Discount { get; set; }
+        public List<ComboDto>? lstCombo { get; set; }
+        public Guid BillId { get; set; }
+        public List<SeatDTO> lstCheckedSeat { get; set; }
+        public List<ComboRequest> _lstCombo = new();
+        public ComboCheckRequest ComboCheckRequest { get; set; }
+    }
+
    
     protected override async Task OnInitializedAsync()
     {
@@ -171,12 +248,24 @@
         Dates = Enumerable.Range(0, 28).Select(offset => DateTime.Today.AddDays(offset)).ToList();
         showTimeSearch.ShowtimeDate = DateTime.Today;
         AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
-
+        
         if (CinemaCenterDtos.Any())
         {
             var firstCinemaCenterId = CinemaCenterDtos.First().Id;
             showTimeSearch.CinemaCenterId = firstCinemaCenterId; 
             await OnCinemaCenterSelected(firstCinemaCenterId);   
+        }
+
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "page", "CinemaSystem");
+            var showtimeModalOpen = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalOpen");
+            var showtimeModalFilmId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "showtimeModalFilmId");
         }
     }
 
@@ -237,7 +326,6 @@
             {
                 await OpenSeatSelectionModal(id);
             }
-
         }
         else
         {
@@ -247,34 +335,32 @@
     }
     private async Task OpenSeatSelectionModal(Guid id)
     {
-        Task.Delay(300);
+        await seatSelectionModalref.Reset();
         ShowTimeId = id;
-    
-        seatSelectionModalref.Reset();
         await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
     }
 
-    private void HandleSelectedSeats(EventCallbackArgs args)
+    private void HandleSelectedSeats(EventCallbackCinemaSystemArgs args)
     {
-        // Task.Delay(300);
         lstSeats = args.lstSeats;
         SeatsSelectedstr = args.str;
-        // TotalMoney = args.totalMoney;
+        TotalTicket = args.TotalTicket;
+        TotalMoney = TotalTicket;
         StateHasChanged();
+    }
 
-    }
-    private async Task OpenComboSelectionModal(Guid id)
-    {
-        Task.Delay(300);
-        BillId = id;
-        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
-        await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
-    }
     private async Task CloseSeatSelectionModal()
     {
+        await seatSelectionModalref.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
         await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
-        seatSelectionModalref.Reset();
+        //filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
     }
+
     private async Task PreComboSelectionModal()
     {
         await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal"); //đóng seat selection modal
@@ -289,4 +375,44 @@
         }
     }
 
+    private async Task OpenComboSelectionModal(EventCallbackCinemaSystemArgs args)
+    {
+        Task.Delay(300);
+        BillId = args.BillId;
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
+    }
+
+    private async Task OpenDiscountModal(EventCallbackCinemaSystemArgs args)
+    {
+        Task.Delay(1000);
+        ComboCheckRequest = args.ComboCheckRequest;
+        await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
+    }
+
+    private void HandleSelectedCombos(EventCallbackCinemaSystemArgs args)
+    {
+        lstSelectedCombos = args._lstCombo;
+        TotalCombo = args.TotalCombo;
+        TotalMoney = TotalCombo + TotalTicket;
+        StateHasChanged();
+    }
+
+    private async Task CancelCheckout(Guid id)
+    {
+        await seatSelectionModalref.Reset();
+        await comboFooterRef.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        TotalTicket = 0;
+        TotalCombo = 0;
+        Discount = 0;
+        ShowTimeId = id;
+        await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+    }
 }

@@ -1,115 +1,118 @@
+@using static MovieTicket.BlazorServer.Components.Pages.Staff.OfflineCounter
+@using static MovieTicket.BlazorServer.Components.Pages.User.Home
+@using static MovieTicket.BlazorServer.Components.Pages.User.CinemaSystem
 <style>
     body {
-        background-color: #f8f8f8;
+    background-color: #f8f8f8;
     }
 
     .payment-container {
-        width: 80%;
-        border: 1px solid #ddd;
-        background-color: #fff;
+    width: 80%;
+    border: 1px solid #ddd;
+    background-color: #fff;
     }
 
     .container-payment {
-        max-width: 1200px;
-        margin: auto;
-        background-color: #fff;
+    max-width: 1200px;
+    margin: auto;
+    background-color: #fff;
     }
 
     .payment-header {
-        background-color: #333;
-        color: #fff;
-        padding: 15px;
-        text-align: center;
-        font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
     }
 
     .section-title {
-        background-color: #e6e6e6;
-        padding: 10px;
-        font-weight: bold;
+    background-color: #e6e6e6;
+    padding: 10px;
+    font-weight: bold;
     }
 
     .btn-option {
-        display: block;
-        width: 100%;
-        margin-bottom: 10px;
-        text-align: left;
-        padding: 10px;
-        background-color: rgb(255, 241, 206);
-        border: none;
-        font-weight: 500;
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+    padding: 10px;
+    background-color: rgb(255, 241, 206);
+    border: none;
+    font-weight: 500;
     }
 
     .summary-box {
-        background-color: #fffae5;
-        padding: 15px;
-        border: 1px solid #ddd;
+    background-color: #fffae5;
+    padding: 15px;
+    border: 1px solid #ddd;
     }
 
     .countdown-box {
-        padding: 15px;
-        border: 1px solid #ddd;
-        text-align: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: center;
     }
 
     .total-amount {
-        color: #d9534f;
-        font-weight: bold;
-        font-size: 1.2rem;
+    color: #d9534f;
+    font-weight: bold;
+    font-size: 1.2rem;
     }
 
     .form-check-input {
-        margin-right: 10px;
+    margin-right: 10px;
     }
 
     .summary-container {
-        max-width: 400px;
-        margin: auto;
-        background-color: #fdfbe8;
-        border: 1px solid #ddd;
-        padding: 15px;
-        border-radius: 5px;
+    max-width: 400px;
+    margin: auto;
+    background-color: #fdfbe8;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
     }
 
     .summary-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px;
-        background-color: #fff6e0;
-        border: 1px solid #ddd;
-        margin-bottom: 10px;
-        font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fff6e0;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    font-size: 1rem;
     }
 
-        .summary-item.red {
-            background-color: #d9534f;
-            color: #fff;
-            font-weight: bold;
-            text-align: center;
-        }
+    .summary-item.red {
+    background-color: #d9534f;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    }
 
     .countdown-container {
-        text-align: center;
-        background-color: #fdfbe8;
-        padding: 15px;
-        border-radius: 5px;
+    text-align: center;
+    background-color: #fdfbe8;
+    padding: 15px;
+    border-radius: 5px;
     }
 
     .countdown-box {
-        display: inline-block;
-        background-color: #d9d9d9;
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin: 5px;
-        font-weight: bold;
-        color: #d9534f;
-        font-size: 1.5rem;
+    display: inline-block;
+    background-color: #d9d9d9;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 5px;
+    font-weight: bold;
+    color: #d9534f;
+    font-size: 1.5rem;
     }
 
     .countdown-title {
-        font-size: 1rem;
-        margin-bottom: 10px;
-        font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: bold;
     }
 </style>
 
@@ -125,11 +128,11 @@
             <div class="mb-3 btn-option pe-5">
                 <label for="discountCode" class="form-label">Mã giảm giá:</label>
                 <input type="text"
-                       class="form-control mb-3"
-                       id="discountCode"
-                       placeholder="Nhập mã giảm giá:"
-                       @bind-value="DiscountCode"
-                       disabled="@IsVHDUsed">
+                class="form-control mb-3"
+                id="discountCode"
+                placeholder="Nhập mã giảm giá:"
+                @bind-value="DiscountCode"
+                disabled="@IsVHDUsed">
                 <button class="ms-2 btn btn-success" @onclick="UseDiscountCode">Xác nhận</button>
             </div>
 
@@ -137,11 +140,11 @@
             <div class="mb-3 btn-option pe-5">
                 <label for="vhdPoints" class="form-label">Điểm VHD:</label>
                 <input type="number"
-                       class="form-control"
-                       id="vhdPoints"
-                       placeholder="Sử dụng điểm"
-                       @bind-value="VHDPoints"
-                       disabled="@IsDiscountCodeUsed">
+                class="form-control"
+                id="vhdPoints"
+                placeholder="Sử dụng điểm"
+                @bind-value="VHDPoints"
+                disabled="@IsDiscountCodeUsed">
                 <div id="passwordHelpBlock" class="form-text ms-3">
                     <p class="m-0 p-0">Điểm hiện tại: @CurrentPoints</p>
                 </div>
@@ -206,6 +209,19 @@
     private Timer? _timer;
     private bool _isCountdownFinished = false;
     private DateTime EndTime = DateTime.Now.AddMinutes(1);
+    private string? location;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+        }
+    }
 
     // Xử lý khi nhấn nút xác nhận mã giảm giá
     private void UseDiscountCode()

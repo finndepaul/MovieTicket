@@ -1,5 +1,6 @@
 ﻿@using static MovieTicket.BlazorServer.Components.Pages.User.Home
-
+@using static MovieTicket.BlazorServer.Components.Pages.Staff.OfflineCounter
+@using static MovieTicket.BlazorServer.Components.Pages.User.CinemaSystem
 
 <div class="container-fluid">
 	<div class="row">
@@ -74,7 +75,11 @@
 	[Parameter] public decimal Discount { get; set; }
 	[Parameter] public ComboCheckRequest BillCombo { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
-	private EventCallbackArgs args = new();
+	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
+	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
+	private EventCallbackHomeArgs args = new();
+    private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+    private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -83,6 +88,7 @@
 	private string formatRating = "";
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
 	private CancellationToken cancellationToken;
+	private string? location;
 
 	protected async override Task OnParametersSetAsync()
 	{
@@ -99,21 +105,29 @@
 			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
 		}
 	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+		}
+	}
 	private async Task PreSelection()
 	{
-		// foreach (var s in CheckedSeats)
-		// {
-		// 	lstSeatUpdateRequests.Add(new SeatUpdateRequest
-		// 		{
-		// 			Id = s.Id,
-		// 			SeatTypeId = seatTypeDtos.FirstOrDefault(x => x.Name == s.SeatTypeName).Id.ToString(),
-		// 			Status = Domain.Enums.SeatStatus.Available,
-		// 			Selection = Domain.Enums.SeatSelection.None
-		// 		});
-		// }
-		// await SeatService.UpdateRange(lstSeatUpdateRequests);
 		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-		await BackToSeat.InvokeAsync(ShowtimeId);
+		if(location != null && location == "Home")
+		{
+			await BackToSeat.InvokeAsync(ShowtimeId);
+		}
+		else if (location != null && location == "CinemaSystem")
+		{
+			await BackToSeatCinemaSystem.InvokeAsync(ShowtimeId);
+		}
+        else if (location != null && location == "OfflineCounter")
+        {
+			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
+        }
+		
 	}
 	private async Task Checkout()
 	{
