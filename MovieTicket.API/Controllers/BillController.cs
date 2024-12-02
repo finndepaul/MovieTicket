@@ -6,6 +6,7 @@ using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.Paginations;
+using MovieTicket.Domain.Enums;
 using ZXing;
 using static MovieTicket.Infrastructure.Extensions.DefaultValue;
 
@@ -80,5 +81,12 @@ namespace MovieTicket.API.Controllers
             var billModel = await billReadWrite.DeleteAsync(id);
             return Ok(billModel);
         }
-    }
+        [HttpPut]
+		public async Task<IActionResult> UpdateStatus(Guid id, BillStatus status)
+		{
+			var result = await billReadWrite.UpdateStatusAsync(id, status);
+			return Ok(result);
+		}
+
+	}
 }

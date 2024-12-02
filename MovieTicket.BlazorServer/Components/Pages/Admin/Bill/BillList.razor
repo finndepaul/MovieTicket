@@ -2,6 +2,23 @@
 @attribute [Authorize(Roles = "Admin")]
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Application.DataTransferObjs.Ticket
+<div class="modal fade" id="DeleteBillModalToggle" aria-hidden="true" aria-labelledby="DeleteBillModalToggleLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h1 class="modal-title fs-5" id="DeleteTicketPriceToggleLabel">Xác nhận xóa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<p>Bạn có chắc chắn muốn xóa giá vé này không?</p>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => OnDeleteSubmit(SelectedBillId)">Xóa</button>
+
+			</div>
+
+		</div>
+	</div>
+</div>
 <div class="container-fluid mt-4">
 	<div class="row mb-3">
 		<div class="col">
@@ -142,11 +159,27 @@
 					<td>@item.FilmName</td>
 					<td><span class="p-2 m-2 badge text-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-opacity-10 border border-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css"))">@(FormatShowtimeStatus(@item.ShowtimeStatus.Value, "ui"))</span></td>
 					<td>@item.CinemaType_Name</td>
-					<td><span class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))">@(FormatBillStatus(@item.Status.Value, "ui"))</span></td>
+					<td >
+						<span data-bs-toggle="dropdown"
+							  aria-expanded="false" class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))" style="cursor: pointer">@(FormatBillStatus(@item.Status.Value, "ui"))</span>
+						<div class="dropdown-menu p-3">
+							<select class="form-select mb-3" @bind="billStatus">
+								<option selected>Tất cả</option>
+								@foreach (var status in Enum.GetValues(typeof(BillStatus)))
+								{
+									<option value="@status">@(FormatBillStatus((Enum.Parse<BillStatus>(status.ToString())), "ui"))</option>
+								}
+							</select>
+							<button class="btn btn-primary w-100" @onclick="@(() => UpdateStatusBill(item.Id,billStatus))">
+								Xác nhận thay đổi
+							</button>
+						</div>
+					</td>
 					<td>@item.TotalMoney</td>
 					<td>@item.CreateTime</td>
 					<td>
-						<a class="btn btn-info btn-sm" href="bill/detail/@item.Id.ToString()">View</a>
+						<a class="btn btn-info btn-sm text-light" href="bill/detail/@item.Id.ToString()"><i class="bi bi-pencil-square fs-6"></i></a>
+						<button class="btn btn-danger btn-sm" @onclick="() => OnSeletedBill(item.Id)"><i class="bi bi-trash3 fs-6"></i></button>
 					</td>
 				</tr>
 			}
@@ -156,7 +189,15 @@
 			<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
 		</tfoot>
 	</table>
+	
 </div>
+
+<script>
+	function openModalDelete(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}
+</script>
 
 @code {
 	private List<BillsDto> lstBills = new List<BillsDto>();
@@ -170,8 +211,10 @@
 	private string currentSortColumn;
 	private DateTime? StartTime { get; set; }
 	private DateTime? EndTime { get; set; }
-
+	private BillStatus billStatus { get; set; }
+	private Guid SelectedBillId { get; set; }
 	private bool ascending = true;
+	private CancellationToken cancellationToken;
 
 	protected async override Task OnInitializedAsync()
 	{
@@ -317,5 +360,38 @@
 			BillStatus.Paid => "Đã thanh toán",
 			_ => "Không xác định"
 		};
+	}
+	private async Task UpdateStatusBill(Guid id, BillStatus status)
+	{
+		var result = await BillService.UpdateStatusAsync(id, status);
+		if (result.Status == 200)
+		{
+			await JSRuntime.ToastrSuccess(result.Message);
+			await Refresh();
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result.Message);
+		}
+	}
+	private async Task OnDeleteSubmit(Guid id)
+	{
+		var result = await UserHomeService.DeleteCheckAsync(id,CancellationToken.None);
+		if (result == "Success")
+		{
+			await JSRuntime.ToastrSuccess(result);
+			await Refresh();
+
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result);
+		}	
+	}
+	private async Task OnSeletedBill(Guid id)
+	{
+		SelectedBillId = id;
+		await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteBillModalToggle");
+		
 	}
 }
