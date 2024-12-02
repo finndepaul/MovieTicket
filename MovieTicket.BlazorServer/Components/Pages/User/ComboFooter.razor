@@ -158,7 +158,7 @@
                     {
                         ComboCheckRequest = billCombo
                     };
-                await NextToDiscountModalCinemaSystem.InvokeAsync(argsCinemaSystem);
+                
             }
             else if (location == "OfflineCounter")
             {
@@ -166,7 +166,7 @@
                     {
                         ComboCheckRequest = billCombo
                     };
-                await NextToDiscountOfflineCounter.InvokeAsync(argsOfflineCounter);
+                
             }
             else if (location == "Home")
             {
@@ -174,9 +174,21 @@
                     {
                         ComboCheckRequest = billCombo
                     };
-                await NextToDiscount.InvokeAsync(args);
+                
             }
 		}
+        if (location == "Home")
+        {
+            await NextToDiscount.InvokeAsync(args);
+        }
+        else if (location == "CinemaSystem")
+        {
+            await NextToDiscountModalCinemaSystem.InvokeAsync(argsCinemaSystem);
+        }
+        else if (location == "OfflineCounter")
+        {
+            await NextToDiscountOfflineCounter.InvokeAsync(argsOfflineCounter);
+        }
 	}
 
 	public Task Reset()
