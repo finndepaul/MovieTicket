@@ -332,4 +332,13 @@
 		var bill = await UserHomeService.GetBillForCheckOut(BillId);
 		return (decimal)(bill.AfterDiscount - bill.TotalMoney);
 	}
+    public Task Reset()
+    {
+        IsDiscountCodeUsed = false;
+        IsVHDUsed = false;
+        CouponCode = string.Empty;
+        VHDPoints = 0;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 }

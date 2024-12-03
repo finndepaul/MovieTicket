@@ -106,6 +106,7 @@
 			formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
 			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
 		}
+        base.OnParametersSet();
 	}
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -116,17 +117,19 @@
 	}
 	private async Task PreSelection()
 	{
-		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
 		if(location != null && location == "Home")
 		{
+			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
 			await BackToSeat.InvokeAsync(ShowtimeId);
 		}
 		else if (location != null && location == "CinemaSystem")
 		{
+			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
 			await BackToSeatCinemaSystem.InvokeAsync(ShowtimeId);
 		}
         else if (location != null && location == "OfflineCounter")
         {
+			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
 			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
         }
 		
@@ -151,7 +154,7 @@
 		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
 	}
-	private Task Reset()
+	public Task Reset()
 	{
 		CheckedSeats.Clear();
         lstSeatUpdateRequests.Clear();
