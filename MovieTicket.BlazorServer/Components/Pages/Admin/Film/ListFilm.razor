@@ -126,19 +126,14 @@
                                 </td>
                                 <td class="text-danger">@film.StartDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
-                                    
-                                        
-                                        @if (scheduleDtos.Any(s => s.FilmId == film.Id))
-                                        {
-                                            var sche = scheduleDtos.FirstOrDefault(s => s.FilmId == film.Id);
-                                            <span class="badge @(GetBadgeClass(sche.Status))">@sche.Status</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge text-bg-secondary">No Schedule Yet</span>
-                                        }
-                                        
-                                    
+                                    @if (scheduleDtos.FirstOrDefault(s => s.FilmId == film.Id) is ScheduleDto sche)
+                                    {
+                                        <span class="badge @(GetBadgeClass(sche.Status))">@sche.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge text-bg-secondary">No Schedule Yet</span>
+                                    }
                                 </td>
                                 <td>@film.CreatDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
@@ -193,19 +188,19 @@
     private DateTime? searchCreateDate;
     private DateTime? searchStartDate;
     private Guid SelectedDeleteFilmId { get; set; }
-    private List<ScheduleDto> scheduleDtos = new List<ScheduleDto>();
+    private List<ScheduleDto>? scheduleDtos = new List<ScheduleDto>();
     private string scheStatus;
 
     protected override async Task OnInitializedAsync()
     {
         await LoadFilms();
-        var lstSche = await ScheduelService.GetAllAsync();
-        scheduleDtos = lstSche.ToList();
     }
 
     private async Task LoadFilms()
     {
         var pagedFilms = await FilmService.GetAllPaging(pagingParameters);
+        var lstSche = await ScheduelService.GetAllAsync();
+        scheduleDtos = lstSche.ToList();
         filmDto = pagedFilms.Item;
         metaData = pagedFilms.MetaData;
     }
