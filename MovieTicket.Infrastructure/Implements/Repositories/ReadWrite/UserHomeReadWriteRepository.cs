@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.UserHome.Requests;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
@@ -93,28 +93,33 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             }
         }
 
-        public async Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken)
-        {
-            try
-            {
-                var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == billId, cancellationToken);
-                if (bill == null)
-                {
-                    return "Bill not found";
-                }
-                var lstTickets = await _context.Tickets.Where(x => x.BillId == billId).ToListAsync(cancellationToken);
-                var lstBillCombos = await _context.BillCombos.Where(x => x.BillId == billId).ToListAsync(cancellationToken);
-                _context.Bills.Remove(bill);
-                _context.Tickets.RemoveRange(lstTickets);
-                _context.BillCombos.RemoveRange(lstBillCombos);
-                await _context.SaveChangesAsync(cancellationToken);
-                return "Success";
-            }
-            catch (Exception ex)
-            {
-                return "Error: " + ex.Message;
-            }
-        }
+		public async Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken)
+		{
+			try
+			{
+				var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == billId, cancellationToken);
+				if (bill == null)
+				{
+					return "Bill not found";
+				}
+				if (bill.Status == BillStatus.Paid)
+				{
+					return "Hóa đơn này đã thanh toán không xóa được";
+				}
+				var lstTickets = await _context.Tickets.Where(x => x.BillId == billId).ToListAsync(cancellationToken);
+				var lstBillCombos = await _context.BillCombos.Where(x => x.BillId == billId).ToListAsync(cancellationToken);
+				_context.Bills.Remove(bill);
+				_context.Tickets.RemoveRange(lstTickets);
+				_context.BillCombos.RemoveRange(lstBillCombos);
+				await _context.SaveChangesAsync(cancellationToken);
+				return "Success";
+			}
+			catch (Exception ex)
+			{
+				return "Error: " + ex.Message;
+			}
+		}
+
 
         public async Task<string> AddComboToCheckAsync(ComboCheckRequest request, CancellationToken cancellationToken)
         {

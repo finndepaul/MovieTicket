@@ -363,15 +363,20 @@
 	}
 	private async Task UpdateStatusBill(Guid id, BillStatus status)
 	{
-		var result = await BillService.UpdateStatusAsync(id, status);
-		if (result.Status == 200)
+		var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận sửa trạng thái");
+		if (confirm)
 		{
-			await JSRuntime.ToastrSuccess(result.Message);
-			await Refresh();
-		}
-		else
-		{
-			await JSRuntime.ToastrError(result.Message);
+			// Người dùng nhấn OK
+			var result = await BillService.UpdateStatusAsync(id, status);
+			if (result.Status == 200)
+			{
+				await JSRuntime.ToastrSuccess(result.Message);
+				await Refresh();
+			}
+			else
+			{
+				await JSRuntime.ToastrError(result.Message);
+			}
 		}
 	}
 	private async Task OnDeleteSubmit(Guid id)
