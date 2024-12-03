@@ -13,12 +13,13 @@ namespace MovieTicket.Application.DataTransferObjs.Account.Request
         [Required]
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Địa chỉ email sai định dạng !!!")]
         public string? Email { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
         [RegularExpression(@"^0\d{9}$", ErrorMessage = "Địa chỉ phone sai định dạng !!!")]
         public string? Phone { get; set; }
         [Required]
         public AccountRole? Role { get; set; }
         [Required]
         public AccountStatus? Status { get; set; }
+        public Guid? CinemaCenterId { get; set; }
     }
 }
