@@ -155,6 +155,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 model.Phone = request.Phone;
                 model.Role = request.Role;
                 model.Status = request.Status;
+                model.CinemaCenterId = request.CinemaCenterId;
                 _db.Accounts.Update(model);
                 await _db.SaveChangesAsync(cancellationToken);
                 return new ResponseObject<AccountDto>
