@@ -255,7 +255,7 @@
         var result = await _scheduleService.DeleteAsync(Guid.Parse(id), cancellationToken);
         if (result.Status == 200)
         {
-            await Refresh();
+            NavigationManager.NavigateTo("/scheduel", forceLoad: true);
             await JSRuntime.ToastrSuccess(result.Message);
         }
         else
