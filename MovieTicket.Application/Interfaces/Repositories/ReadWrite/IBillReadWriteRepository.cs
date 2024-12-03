@@ -1,5 +1,6 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.ValueObjs.ViewModels;
+using MovieTicket.Domain.Enums;
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
@@ -10,5 +11,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
         Task<ResponseObject<BillDto>?> UpdateAsync(Guid id, UpdateBillRequest updateBillRequest);
 
         Task<ResponseObject<BillDto>?> DeleteAsync(Guid id);
-    }
+
+		Task<ResponseObject<bool>?> UpdateStatusAsync(Guid id, BillStatus status);
+	}
 }

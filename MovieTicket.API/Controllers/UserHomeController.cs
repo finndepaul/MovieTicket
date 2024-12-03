@@ -54,10 +54,10 @@ namespace MovieTicket.API.Controllers
 			return Ok(model);
 		}
 
-		[HttpGet]
-		public async Task<ActionResult> CheckOutSuccess(Guid billId, CancellationToken cancellationToken)
+		[HttpPut]
+		public async Task<ActionResult> CheckOutSuccess(CheckOutSuccessRequest request, CancellationToken cancellationToken)
 		{
-			var model = await _userHomeReadWrite.CheckOutSuccessAsync(billId, cancellationToken);
+			var model = await _userHomeReadWrite.CheckOutSuccessAsync(request, cancellationToken);
 			return Ok(model);
 		}
 

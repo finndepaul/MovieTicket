@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.Execution;
+using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.UserHome.Requests;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Domain.Entities;
@@ -22,9 +23,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			_context = context;
 		}
 
-		public async Task<string> CheckOutSuccessAsync(Guid billId, CancellationToken cancellationToken)
+		public async Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken)
 		{
-			var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == billId, cancellationToken);
+			var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == request.BillId, cancellationToken);
 			if (bill == null)
 			{
 				return "Bill not found";
@@ -34,7 +35,14 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 			if (bill.TotalMoney == bill.AfterDiscount) // Nếu không sử dụng mã giảm giá thì mới đc công điểm
 			{
 				var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId);
-				member.Point = Convert.ToInt32(bill.TotalMoney.Value * (decimal)0.03); // 3% giá trị hóa đơn
+				var point = bill.TotalMoney.Value * (decimal)0.03;
+				member.Point = (int)(point + 0.5m); // 3% giá trị hóa đơn
+				_context.Memberships.Update(member);
+			}
+			if (request.MembershipPoint > 0)
+			{
+				var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId);
+				member.Point = member.Point - request.MembershipPoint;
 				_context.Memberships.Update(member);
 			}
 			_context.Bills.Update(bill);
@@ -168,9 +176,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				if (request.CouponCode != null)
 				{
 					var coupon = await _context.Coupons.FirstOrDefaultAsync(x => x.CouponCode.Trim().Equals(request.CouponCode.Trim()));
-					if (coupon == null || !coupon.IsActive) return "Coupon không hợp lệ";
-					if (coupon.StartDate > DateTime.Now) return "Chương trình khuyến mãi chưa được áp dụng";
-					if (coupon.EndDate < DateTime.Now) return "Chương trình khuyến mãi đã hết hạn";
+					if (coupon == null) return "Không tìm thấy mã giảm giá";
+					else if (!coupon.IsActive) return "Chương trình giảm giá chưa được kích hoạt";
+					else if (coupon.StartDate > DateTime.Now) return "Chương trình khuyến mãi chưa được áp dụng";
+					else if (coupon.EndDate < DateTime.Now) return "Chương trình khuyến mãi đã hết hạn";
 
 					bill.CouponId = coupon.Id;
 					bill.AfterDiscount = bill.TotalMoney - coupon.AmountValue;
@@ -180,9 +189,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				{
 					var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId, cancellationToken);
 					if (request.Point > member.Point) return "Điểm tích lũy không đủ";
-					bill.AfterDiscount = bill.AfterDiscount - (decimal)request.Point;
-					member.Point = member.Point - (int)request.Point;
-					_context.Memberships.Update(member);
+					if (request.Point < 10) return "Phải sử dụng tối thiêu 10 VHD Point";
+					bill.AfterDiscount = bill.AfterDiscount - ((decimal)request.Point * 1000);
+					if ((double)(bill.AfterDiscount / bill.TotalMoney) <= 0.1)
+					{
+						return "Điểm thưởng không được vượt quá 90% giá trị hóa đơn";
+					}
 					_context.Bills.Update(bill);
 				}
 				await _context.SaveChangesAsync(cancellationToken);

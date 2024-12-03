@@ -20,6 +20,6 @@ namespace MovieTicket.BlazorServer.Services.Interfaces
 
 		Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken);
 
-		Task CheckOutSuccessAsync(Guid billId, CancellationToken cancellationToken);
+		Task CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken);
 	}
 }
