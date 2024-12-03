@@ -8,7 +8,7 @@ namespace MovieTicket.Application.DataTransferObjs.Account.Request
         public Guid Id { get; set; }
         public string? Avatar { get; set; }
         public string? Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Họ và tên là bắt buộc.")]
         public string? Name { get; set; }
         [Required]
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Địa chỉ email sai định dạng !!!")]

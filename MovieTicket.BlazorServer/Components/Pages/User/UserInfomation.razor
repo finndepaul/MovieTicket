@@ -31,7 +31,6 @@
         <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
             <EditForm Model="userInfo" OnValidSubmit="UpdateUserInfo" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
-                <ValidationSummary class="alert alert-danger" />
                 <div class="mb-4 text-center">
                     @if (userInfo.Avatar == null)
                     {
@@ -82,7 +81,6 @@
         <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
             <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
-                <ValidationSummary class="alert alert-danger" />
                 <div class="mb-3">
                     <label for="oldPassword" class="form-label">Nhập mật khẩu cũ</label>
                     <InputText type="password" class="form-control" id="oldPassword" @bind-Value="changePasswordRequest.OldPassword" />

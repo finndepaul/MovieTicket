@@ -28,9 +28,9 @@ namespace MovieTicket.BlazorServer.Services.Implements
 			return message;
 		}
 
-		public async Task CheckOutSuccessAsync(Guid id, CancellationToken cancellationToken)
+		public async Task CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken)
 		{
-			var result = await _http.GetAsync($"api/UserHome/CheckOutSuccess?billId={id}", cancellationToken);
+			var result = await _http.PutAsJsonAsync("api/UserHome/CheckOutSuccess", request, cancellationToken);
 			return;
 		}
 
@@ -62,16 +62,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
 		public async Task<int> GetPointOfMembershipAsync(Guid accountId, CancellationToken cancellationToken)
 		{
-			// Construct the request URL
-			var url = $"api/Bill/GetPointOfMembership?accountId={accountId}";
-
-			// Make the HTTP GET request
-			var response = await _http.GetAsync(url, cancellationToken);
-
-			// Ensure the request was successful
-			response.EnsureSuccessStatusCode();
-
-			// Deserialize the response into an int
+			var response = await _http.GetAsync($"api/UserHome/GetPointOfMembership?accountId={accountId}", cancellationToken);
 			var resultString = await response.Content.ReadAsStringAsync();
 			var result = int.Parse(resultString);
 

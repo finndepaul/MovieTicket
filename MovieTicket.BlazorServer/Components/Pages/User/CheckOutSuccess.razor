@@ -1,11 +1,13 @@
-﻿@page "/check-out-success/{id:guid}"
+﻿@page "/check-out-success/{id:guid}&{mempoint:int}"
 
 @code {
     [Parameter] public Guid id { get; set; }
+    [Parameter] public int Mempoint { get; set; }
     CancellationToken cancellationToken;
     protected override async Task OnInitializedAsync()
     {
-        await UserHomeService.CheckOutSuccessAsync(id, cancellationToken);
+        await UserHomeService.CheckOutSuccessAsync(new CheckOutSuccessRequest {BillId = id, MembershipPoint = Mempoint},
+            cancellationToken);
         NavigationManager.NavigateTo("/");
     }
 }
