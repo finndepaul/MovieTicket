@@ -248,7 +248,7 @@ else
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
 			<div class="modal-body" style="height:67%">
-				<DiscountSelectionModal BillId="@BillId" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint"/>
+				<DiscountSelectionModal BillId="@BillId" OnAppliedDiscount="HandleAppliedDisCount" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint"/>
 			</div>
 			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
@@ -257,6 +257,7 @@ else
 				TotalCombo="@TotalCombo"
 				TotalMoney="@TotalMoney"
 				TotalTicket="@TotalTicket"
+				Discount="@Discount"
 				BillId="@BillId"
 				BillCombo="ComboCheckRequest"
 				Mempoint="@mempoint"
@@ -430,6 +431,7 @@ else
 		await seatSelectionModalref.Reset();
 		await seatFooterRef.Reset();
 		lstSeats.Clear();
+        lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
 		// BillId = Guid.Empty;
 		TotalMoney = 0;
@@ -500,6 +502,13 @@ else
 	private async Task HandleMembershipPoint(int point)
     {
         mempoint = point;
+        StateHasChanged();
+    }
+
+    private void HandleAppliedDisCount(EventCallbackHomeArgs args)
+    {
+        Discount = args.Discount;
+        TotalMoney = TotalTicket + TotalCombo + Discount;
         StateHasChanged();
     }
 }
