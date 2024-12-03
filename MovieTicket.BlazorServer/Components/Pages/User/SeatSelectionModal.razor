@@ -48,6 +48,41 @@ else
     <p>Không có dữ liệu</p>
 }
 
+<div class="seatInfo">
+    <div class="mx-2">
+        <button type="button" class="btn seat-Normal">
+        </button>
+        <label>Ghế thường</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-VIP">
+        </button>
+        <label>Ghế VIP</label>
+    </div>
+
+    <div class="mx-2">
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Couple">
+        </button>
+        <label>Ghế Couple</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Checked">
+        </button>
+        <label>Ghế đã chọn</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Unavailable">
+        </button>
+        <label>Không chọn được</label>
+    </div>
+</div>
+
 <script>
     function toggleButtonById(buttonId) {
         var button = document.querySelector(`button[data-id='${buttonId}']`);

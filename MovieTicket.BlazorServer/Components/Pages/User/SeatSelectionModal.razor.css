@@ -65,7 +65,7 @@
     height: 45px;
     margin: 0px;
     padding: 10px;
-    outline: solid 3px #FF8A80 !important;
+    outline: solid 3px #fe019a !important;
     outline-offset: -4px;
 }
 
@@ -129,4 +129,71 @@
     cursor: not-allowed !important;
     pointer-events: none !important;
     outline: none;
+}
+
+.seat-Normal {
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #005a32 !important;
+    outline-offset: -4px;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.seat-VIP {
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #DD2C00 !important;
+    outline-offset: -4px;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.seat-Couple {
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #fe019a !important;
+    outline-offset: -4px;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.seat-Checked {
+    background-color: orangered !important;
+    color: orangered;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    outline: none;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.seat-Unavailable {
+    background-color: #808080 !important;
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    outline: none;
+    cursor: not-allowed;
+    pointer-events: none;
 }
