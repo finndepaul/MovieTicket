@@ -207,6 +207,7 @@ else
 				CheckedSeats="lstCheckedSeats"
 				SelectedCombos="lstSelectedCombos"
 				BillId="@BillId" @ref="comboFooterRef"
+				MembershipId="@MembershipId"
 				SeatsSelectedstr="@SeatsSelectedstr"
 				TotalCombo="@TotalCombo"
 				TotalMoney="@TotalMoney"
@@ -225,7 +226,7 @@ else
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
 			<div class="modal-body" style="height:67%">
-				<DiscountSelectionModal />
+				<DiscountSelectionModal BillId="@BillId" OnAppliedDiscount="HandleAppliedDisCount" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint"/>
 			</div>
 			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
@@ -234,8 +235,10 @@ else
 				TotalCombo="@TotalCombo"
 				TotalMoney="@TotalMoney"
 				TotalTicket="@TotalTicket"
+				Discount="@Discount"
 				BillId="@BillId"
 				BillCombo="ComboCheckRequest"
+				Mempoint="@mempoint"
 				BackToSeat="CancelCheckout" />
 			</div>
 		</div>
@@ -300,6 +303,7 @@ else
 	public SeatSelectionModal seatSelectionModalref;
 	public ComboSelectionModal comboSelectionModalref;
 	private Guid BillId = Guid.Empty;
+	private Guid MembershipId = Guid.Empty;
 	private SeatFooter seatFooterRef;
 	private ComboFooter comboFooterRef;
 	private string SeatsSelectedstr;
@@ -310,9 +314,11 @@ else
 	private ComboCheckRequest ComboCheckRequest;
 	private bool isFirstRender = true;
 	private List<BannerDTO> lstBanner = new();
+	private int mempoint;
 
 	public class EventCallbackHomeArgs
 	{
+		public Guid MembershipId { get; set; }
 		public List<SeatDTO> lstSeats { get; set; }
 		public string str { get; set; }
 		public decimal TotalMoney { get; set; }
@@ -326,17 +332,17 @@ else
 		public ComboCheckRequest ComboCheckRequest { get; set; }
 	}
 
-    protected async override Task OnInitializedAsync()
-    {	
-        listObjFilm = await UserHomeService.GetAllFilmForUserHome();
-		
-        var banners = await BannerService.GetBannersAsync();
-        if (banners != null)
+	protected async override Task OnInitializedAsync()
+	{	
+		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
+
+		var banners = await BannerService.GetBannersAsync();
+		if (banners != null)
 		{
 			lstBanner = banners.Where(b => b.Status == BannerStatus.Active).ToList();
 		}
-        base.OnInitialized();
-    }
+		base.OnInitialized();
+	}
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -392,8 +398,9 @@ else
 	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
 	{
 		Task.Delay(300);
-		BillId = args.BillId;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+		BillId = args.BillId;
+		MembershipId = args.MembershipId;
 		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
 	}
 
@@ -402,8 +409,9 @@ else
 		await seatSelectionModalref.Reset();
 		await seatFooterRef.Reset();
 		lstSeats.Clear();
+        lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
-		BillId = Guid.Empty;
+		// BillId = Guid.Empty;
 		TotalMoney = 0;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
         filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
@@ -463,9 +471,22 @@ else
 	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
 		Task.Delay(1000);
-		ComboCheckRequest = args.ComboCheckRequest;
+		BillId = args.BillId;
+		MembershipId = args.MembershipId;
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
 	}
 
+	private async Task HandleMembershipPoint(int point)
+    {
+        mempoint = point;
+        StateHasChanged();
+    }
+
+    private void HandleAppliedDisCount(EventCallbackHomeArgs args)
+    {
+        Discount = args.Discount;
+        TotalMoney = TotalTicket + TotalCombo + Discount;
+        StateHasChanged();
+    }
 }

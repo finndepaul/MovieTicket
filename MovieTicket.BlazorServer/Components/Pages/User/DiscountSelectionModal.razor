@@ -3,116 +3,116 @@
 @using static MovieTicket.BlazorServer.Components.Pages.User.CinemaSystem
 <style>
 	body {
-		background-color: #f8f8f8;
+	background-color: #f8f8f8;
 	}
 
 	.payment-container {
-		width: 80%;
-		border: 1px solid #ddd;
-		background-color: #fff;
+	width: 80%;
+	border: 1px solid #ddd;
+	background-color: #fff;
 	}
 
 	.container-payment {
-		max-width: 1200px;
-		margin: auto;
-		background-color: #fff;
+	max-width: 1200px;
+	margin: auto;
+	background-color: #fff;
 	}
 
 	.payment-header {
-		background-color: #333;
-		color: #fff;
-		padding: 15px;
-		text-align: center;
-		font-weight: bold;
+	background-color: #333;
+	color: #fff;
+	padding: 15px;
+	text-align: center;
+	font-weight: bold;
 	}
 
 	.section-title {
-		background-color: #e6e6e6;
-		padding: 10px;
-		font-weight: bold;
+	background-color: #e6e6e6;
+	padding: 10px;
+	font-weight: bold;
 	}
 
 	.btn-option {
-		display: block;
-		width: 100%;
-		margin-bottom: 10px;
-		text-align: left;
-		padding: 10px;
-		background-color: rgb(255, 241, 206);
-		border: none;
-		font-weight: 500;
+	display: block;
+	width: 100%;
+	margin-bottom: 10px;
+	text-align: left;
+	padding: 10px;
+	background-color: rgb(255, 241, 206);
+	border: none;
+	font-weight: 500;
 	}
 
 	.summary-box {
-		background-color: #fffae5;
-		padding: 15px;
-		border: 1px solid #ddd;
+	background-color: #fffae5;
+	padding: 15px;
+	border: 1px solid #ddd;
 	}
 
 	.countdown-box {
-		padding: 15px;
-		border: 1px solid #ddd;
-		text-align: center;
+	padding: 15px;
+	border: 1px solid #ddd;
+	text-align: center;
 	}
 
 	.total-amount {
-		color: #d9534f;
-		font-weight: bold;
-		font-size: 1.2rem;
+	color: #d9534f;
+	font-weight: bold;
+	font-size: 1.2rem;
 	}
 
 	.form-check-input {
-		margin-right: 10px;
+	margin-right: 10px;
 	}
 
 	.summary-container {
-		max-width: 400px;
-		margin: auto;
-		background-color: #fdfbe8;
-		border: 1px solid #ddd;
-		padding: 15px;
-		border-radius: 5px;
+	max-width: 400px;
+	margin: auto;
+	background-color: #fdfbe8;
+	border: 1px solid #ddd;
+	padding: 15px;
+	border-radius: 5px;
 	}
 
 	.summary-item {
-		display: flex;
-		justify-content: space-between;
-		padding: 10px;
-		background-color: #fff6e0;
-		border: 1px solid #ddd;
-		margin-bottom: 10px;
-		font-size: 1rem;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	background-color: #fff6e0;
+	border: 1px solid #ddd;
+	margin-bottom: 10px;
+	font-size: 1rem;
 	}
 
-		.summary-item.red {
-			background-color: #d9534f;
-			color: #fff;
-			font-weight: bold;
-			text-align: center;
-		}
+	.summary-item.red {
+	background-color: #d9534f;
+	color: #fff;
+	font-weight: bold;
+	text-align: center;
+	}
 
 	.countdown-container {
-		text-align: center;
-		background-color: #fdfbe8;
-		padding: 15px;
-		border-radius: 5px;
+	text-align: center;
+	background-color: #fdfbe8;
+	padding: 15px;
+	border-radius: 5px;
 	}
 
 	.countdown-box {
-		display: inline-block;
-		background-color: #d9d9d9;
-		padding: 10px 15px;
-		border-radius: 5px;
-		margin: 5px;
-		font-weight: bold;
-		color: #d9534f;
-		font-size: 1.5rem;
+	display: inline-block;
+	background-color: #d9d9d9;
+	padding: 10px 15px;
+	border-radius: 5px;
+	margin: 5px;
+	font-weight: bold;
+	color: #d9534f;
+	font-size: 1.5rem;
 	}
 
 	.countdown-title {
-		font-size: 1rem;
-		margin-bottom: 10px;
-		font-weight: bold;
+	font-size: 1rem;
+	margin-bottom: 10px;
+	font-weight: bold;
 	}
 </style>
 
@@ -128,11 +128,11 @@
 			<div class="mb-3 btn-option pe-5">
 				<label for="discountCode" class="form-label">Mã giảm giá:</label>
 				<input type="text"
-					   class="form-control mb-3"
-					   id="discountCode"
-					   placeholder="Nhập mã giảm giá:"
-					   @bind-value="DiscountCode"
-					   disabled="@IsVHDUsed">
+				class="form-control mb-3"
+				id="discountCode"
+				placeholder="Nhập mã giảm giá:"
+				@bind-value="CouponCode"
+				disabled="@IsVHDUsed">
 				<button class="ms-2 btn btn-success" disabled="@IsVHDUsed" @onclick="UseDiscountCode">Xác nhận</button>
 			</div>
 
@@ -140,11 +140,11 @@
 			<div class="mb-3 btn-option pe-5">
 				<label for="vhdPoints" class="form-label">Điểm VHD:</label>
 				<input type="number"
-					   class="form-control"
-					   id="vhdPoints"
-					   placeholder="Sử dụng điểm"
-					   @bind-value="VHDPoints"
-					   disabled="@IsDiscountCodeUsed">
+				class="form-control"
+				id="vhdPoints"
+				placeholder="Sử dụng điểm"
+				@bind-value="VHDPoints"
+				disabled="@IsDiscountCodeUsed">
 				<div id="passwordHelpBlock" class="form-text ms-3">
 					<p class="m-0 p-0">Điểm hiện tại: @CurrentPoints</p>
 				</div>
@@ -156,7 +156,7 @@
 		<div class="section-title">Bước 3: HÌNH THỨC THANH TOÁN</div>
 		<div class="p-3">
 			<div class="form-check">
-				<input class="form-check-input" type="radio" name="payment" id="vnpay">
+				<input class="form-check-input" type="radio" name="payment" id="vnpay" checked>
 				<label class="form-check-label" for="vnpay">PayOS VHD</label>
 			</div>
 		</div>
@@ -172,52 +172,119 @@
 </div>
 
 @code {
+	[Parameter] public Guid BillId { get; set; }
+	[Parameter] public Guid MembershipId { get; set; }
+	[Parameter] public EventCallback<int> Mempoint { get; set; }
+	[Parameter]
+	public EventCallback<EventCallbackHomeArgs> OnAppliedDiscount { get; set; }
+	private EventCallbackHomeArgs args = new();
 	// Các biến dùng để quản lý trạng thái
-	private string DiscountCode { get; set; } = string.Empty;
+	private string CouponCode { get; set; } = string.Empty;
 	private int VHDPoints { get; set; } = 0;
-	private int CurrentPoints { get; set; } = 100; // Ví dụ: điểm hiện tại là 100
+	private int CurrentPoints { get; set; } // Ví dụ: điểm hiện tại là 100
 	private bool IsDiscountCodeUsed { get; set; } = false;
 	private bool IsVHDUsed { get; set; } = false;
 	private TimeSpan _timeLeft;
 	private Timer? _timer;
 	private bool _isCountdownFinished = false;
 	private DateTime EndTime = DateTime.Now.AddMinutes(1);
-    private string? location;
+	private string? location;
+	CancellationToken cancellationToken;
 
-	protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
-        }
-    }
+	protected override async Task OnParametersSetAsync()
+	{
+		if (BillId != Guid.Empty)
+		{
+			CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(MembershipId, cancellationToken);
+		}
+		base.OnParametersSet();
+	}
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+		}
+	}
 
 	// Xử lý khi nhấn nút xác nhận mã giảm giá
-	private void UseDiscountCode()
+	private async void UseDiscountCode()
 	{
-		if (!string.IsNullOrEmpty(DiscountCode))
+		if (!string.IsNullOrEmpty(CouponCode))
 		{
-			IsDiscountCodeUsed = true;
-			IsVHDUsed = false;
+			var modal = await UserHomeService.AddDiscountToCheckAsync(new DiscountCheckRequest
+			{
+				BillId = BillId,
+				CouponCode = CouponCode,
+				Point = null
+			}, cancellationToken);
+			if (modal != "Success")
+			{
+				await JSRuntime.ToastrError(modal);
+			}
+			else
+			{
+				IsDiscountCodeUsed = true;
+				IsVHDUsed = false;
+				args = new EventCallbackHomeArgs
+					{
+						Discount = await CalculateDiscount()
+					};
+				await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
+				await OnAppliedDiscount.InvokeAsync(args);
+			}
+			StateHasChanged();
 		}
 	}
 
 	// Xử lý khi nhấn nút xác nhận điểm VHD
-	private void UseVHDPoints()
+	private async void UseVHDPoints()
 	{
-		IsVHDUsed = true;
-		IsDiscountCodeUsed = false;
+		var modal = await UserHomeService.AddDiscountToCheckAsync(new DiscountCheckRequest
+			{
+				BillId = BillId,
+				Point = VHDPoints,
+				CouponCode = null,
+			}, cancellationToken);
+		if (modal != "Success")
+		{
+			await JSRuntime.ToastrError(modal);
+		}
+		else
+		{
+			IsVHDUsed = true;
+			IsDiscountCodeUsed = false;
+			args = new EventCallbackHomeArgs
+			{
+				Discount = await CalculateDiscount()
+			};
+			await JSRuntime.ToastrSuccess("Áp dụng điểm thành công!");
+			await Mempoint.InvokeAsync(VHDPoints);
+            await OnAppliedDiscount.InvokeAsync(args);
+		}
+		StateHasChanged();
 	}
-	private void Reload()
+	private async void Reload()
 	{
-		IsDiscountCodeUsed = false;
-		IsVHDUsed = false;
-		DiscountCode = string.Empty;
-		VHDPoints = 0;
+        var res = await UserHomeService.ResetDiscountAsync(BillId, cancellationToken);
+		if(res) {
+			IsDiscountCodeUsed = false;
+			IsVHDUsed = false;
+			CouponCode = string.Empty;
+			VHDPoints = 0;
+            await JSRuntime.ToastrSuccess("Đặt lại thành công!");
+			args = new EventCallbackHomeArgs
+				{
+					Discount = await CalculateDiscount()
+				};
+			await OnAppliedDiscount.InvokeAsync(args);
+		}
+		else
+		{
+            await JSRuntime.ToastrError("Có lỗi xảy ra, vui lòng thử lại sau!");
+		}
+
+        StateHasChanged();
 	}
 	private void StartCountdown()
 	{
@@ -258,5 +325,11 @@
 		Console.WriteLine("Đếm ngược đã hoàn thành!");
 		return;
 		// Thực hiện các thao tác khác tại đây
+	}
+
+	private async Task<decimal> CalculateDiscount()
+	{
+		var bill = await UserHomeService.GetBillForCheckOut(BillId);
+		return (decimal)(bill.AfterDiscount - bill.TotalMoney);
 	}
 }

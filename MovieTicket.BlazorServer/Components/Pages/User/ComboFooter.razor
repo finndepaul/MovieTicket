@@ -69,6 +69,7 @@
 @code {
 	[Parameter] public Guid ShowtimeId { get; set; }
 	[Parameter] public Guid BillId { get; set; }
+	[Parameter] public Guid MembershipId { get; set; }
 	[Parameter] public List<SeatDTO> CheckedSeats { get; set; }
 	[Parameter] public List<ComboRequest> SelectedCombos { get; set; }
 	[Parameter] public string SeatsSelectedstr { get; set; }
@@ -152,6 +153,7 @@
 					BillId = BillId,
 					LstCombos = SelectedCombos,
 				};
+			var result = await UserHomeService.AddComboToCheckAsync(billCombo, cancellationToken);
             if (location == "CinemaSystem")
             {
                 argsCinemaSystem = new EventCallbackCinemaSystemArgs
@@ -172,14 +174,20 @@
             {
                 args = new EventCallbackHomeArgs
                     {
-                        ComboCheckRequest = billCombo
+						BillId = BillId,
+						MembershipId = MembershipId
                     };
                 
             }
 		}
         if (location == "Home")
         {
-            await NextToDiscount.InvokeAsync(args);
+			args = new EventCallbackHomeArgs
+				{
+					BillId = BillId,
+					MembershipId = MembershipId
+				};
+			await NextToDiscount.InvokeAsync(args);
         }
         else if (location == "CinemaSystem")
         {

@@ -1,0 +1,11 @@
+﻿@page "/check-out-failed/{id:guid}"
+
+@code {
+    [Parameter] public Guid id { get; set; }
+    CancellationToken cancellationToken;
+    protected override async Task OnInitializedAsync()
+    {
+        await UserHomeService.DeleteCheckAsync(id, cancellationToken);
+        NavigationManager.NavigateTo("/");
+    }
+}

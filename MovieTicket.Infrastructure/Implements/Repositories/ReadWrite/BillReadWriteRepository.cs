@@ -170,5 +170,28 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 }
             }
         }
-    }
+
+		public async Task<ResponseObject<bool>?> UpdateStatusAsync(Guid id, BillStatus status)
+		{
+			var billEntity = dbContext.Bills.Find(id);
+			if (billEntity == null)
+			{
+				return new ResponseObject<bool>
+				{
+					Data = false,
+					Status = StatusCodes.Status404NotFound,
+					Message = "Không tìm thấy hóa đơn"
+				};
+			}
+            billEntity.Status = status;
+			dbContext.Bills.Update(billEntity);
+			await dbContext.SaveChangesAsync();
+			return new ResponseObject<bool>
+			{
+				Data = true,
+				Status = StatusCodes.Status200OK,
+				Message = "Sửa trạng thái hóa đơn thành công"
+			};
+		}
+	}
 }

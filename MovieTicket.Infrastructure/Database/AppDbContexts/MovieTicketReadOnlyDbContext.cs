@@ -102,6 +102,19 @@ public class MovieTicketReadOnlyDbContext : DbContext
             Status = Domain.Enums.AccountStatus.Active, // 0 or 1
             CreateDate = new DateTime(2024, 10, 1).AddDays(10)
         });
+        accounts.Add(new Account()
+        {
+            Id = Guid.Parse("91b9fa1f-a898-4359-8c35-0cc0df5a22f1"),
+            Username = "Staff",
+            Password = Hash.EncryptPassword("123"),
+            Role = Domain.Enums.AccountRole.Staff, // 1, 2, or 3
+            Avatar = "img/Avatar/avatar.jpg",
+            Name = "StaffTest",
+            Phone = "000-000-000",
+            Email = "dangnguyen300708@gmail.com",
+            Status = Domain.Enums.AccountStatus.Active, // 0 or 1
+            CreateDate = new DateTime(2024, 10, 1).AddDays(10)
+        });
         modelBuilder.Entity<Account>().HasData(accounts);
 
         var filmFaker = new Faker<Film>("vi")
