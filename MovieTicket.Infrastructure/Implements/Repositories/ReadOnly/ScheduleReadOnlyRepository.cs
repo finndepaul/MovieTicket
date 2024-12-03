@@ -64,7 +64,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
         public async Task<IQueryable<ScheduleDto>> GetAllAsync()
         {
-            // Truy vấn để lấy dữ liệu từ bảng Schedules và Films, sau đó ánh xạ vào ScheduleDto
             var scheduleDtos = from schedule in _dbContext.Schedules
                                join film in _dbContext.Films on schedule.FilmId equals film.Id
                                select new ScheduleDto
@@ -75,16 +74,19 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                                    EndDate = schedule.EndDate,
                                    Type = schedule.Type,
                                    Status = schedule.Status,
-                                   FilmName = film.Name // Lấy tên phim
+                                   FilmName = film.Name
                                };
-            // Kiểm tra nếu không có lịch chiếu nào thì ném ra ngoại lệ
-            if (!scheduleDtos.Any())
+
+            var scheduleList = await scheduleDtos.ToListAsync();
+
+            if (scheduleList == null || scheduleList.Count == 0)
             {
-                throw new InvalidOperationException("No schedules found.");
+                return Enumerable.Empty<ScheduleDto>().AsQueryable();
             }
-            // Trả về danh sách lịch chiếu
-            return scheduleDtos;
+
+            return scheduleList.AsQueryable();
         }
+
 
         // Phương thức lấy lịch chiếu theo FilmId
         public async Task<IQueryable<ScheduleDto>> GetByFilmIdAsync(Guid filmId)
