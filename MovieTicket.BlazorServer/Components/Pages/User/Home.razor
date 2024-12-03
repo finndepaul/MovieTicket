@@ -70,7 +70,29 @@ else
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
 									</div>
+									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+										<span><i class="bi bi-ticket-perforated"></i></span>
+										MUA VÉ
+									</a>
+								</div>
+							</div>
+						}
+						if (item.SType == null)
+						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
+									<span class="sticker sticker-new"></span>
 
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
+									</div>
+								
 								</div>
 							</div>
 						}

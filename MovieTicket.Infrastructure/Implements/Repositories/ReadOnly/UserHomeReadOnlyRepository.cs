@@ -17,9 +17,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
 		public async Task<IQueryable<UserHomeDto>> GetAllFilmForUserHome()
 		{
-			return (from s in _context.Schedules
-					join f in _context.Films on s.FilmId equals f.Id
-					where s.Status != ScheduleStatus.Ended
+			return (from f in _context.Films
+					join s in _context.Schedules on f.Id equals s.FilmId into scheduleGroup
+					from sg in scheduleGroup.DefaultIfEmpty() // Left Join
+					where sg == null || sg.Status != ScheduleStatus.Ended
 					select new UserHomeDto
 					{
 						Id = f.Id,
@@ -27,20 +28,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 						Name = f.Name,
 						Gerne = f.Gerne,
 						RunningTime = f.RunningTime,
-						SType = s.Type,
+						SType = sg != null ? sg.Type : null, // Nếu không có lịch chiếu, giá trị sẽ là null
 						Rating = f.Rating,
-						StartDate = s.StartDate
+						StartDate = f.StartDate// Nếu không có lịch chiếu, giá trị sẽ là null
 					}).AsNoTracking();
-
-			//.Select(x => new UserHomeDto
-			//{
-			//    Id = x.Id,
-			//    Poster = x.Poster,
-			//    Name = x.Name,
-			//    Gerne = x.Gerne,
-			//    RunningTime = x.RunningTime
-			//})
-			//.AsNoTracking();
 		}
 
 		public async Task<int> GetPointOfMembershipAsync(Guid accountId, CancellationToken cancellationToken)

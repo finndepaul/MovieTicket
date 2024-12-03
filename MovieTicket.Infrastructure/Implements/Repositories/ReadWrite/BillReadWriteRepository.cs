@@ -183,6 +183,15 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					Message = "Không tìm thấy hóa đơn"
 				};
 			}
+            if (billEntity.Status == BillStatus.Paid)
+			{
+				return new ResponseObject<bool>
+				{
+					Data = false,
+					Status = StatusCodes.Status404NotFound,
+					Message = "Hóa đơn đã thanh toán không được sửa"
+				};
+			}
             billEntity.Status = status;
 			dbContext.Bills.Update(billEntity);
 			await dbContext.SaveChangesAsync();

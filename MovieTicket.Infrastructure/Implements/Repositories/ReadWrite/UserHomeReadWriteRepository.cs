@@ -109,6 +109,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 				{
 					return "Bill not found";
 				}
+				if (bill.Status == BillStatus.Paid)
+				{
+					return "Hóa đơn này đã thanh toán không xóa được";
+				}
 				var lstTickets = await _context.Tickets.Where(x => x.BillId == billId).ToListAsync(cancellationToken);
 				var lstBillCombos = await _context.BillCombos.Where(x => x.BillId == billId).ToListAsync(cancellationToken);
 				_context.Bills.Remove(bill);
