@@ -78,6 +78,7 @@
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
+	[Parameter] public int Mempoint { get; set; }
 	private EventCallbackHomeArgs args = new();
     private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
     private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
@@ -132,7 +133,6 @@
 	}
 	private async Task Checkout()
 	{
-		var result = await UserHomeService.AddComboToCheckAsync(BillCombo, cancellationToken);
 		var bill = await UserHomeService.GetBillForCheckOut(BillId);
 		PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
 		"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
@@ -142,11 +142,11 @@
 		PaymentData paymentData = new PaymentData
 		(
 			bill.BillCode,
-			Convert.ToInt32(bill.TotalMoney),
+			Convert.ToInt32(bill.AfterDiscount),
 			"VHD Cinema",
 			lstItemDatas,
-			"https://localhost:7239/",
-			$"https://localhost:7239/check-out-success/{BillId}"
+			$"https://localhost:7239/check-out-failed/{BillId}",
+			$"https://localhost:7239/check-out-success/{BillId}&{Mempoint}"
 		);
 		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
