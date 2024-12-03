@@ -16,9 +16,9 @@
 		<div class="carousel-inner">
 			@foreach (var item in lstBanner)
 			{
-			<div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
-				<img src="@item.Image" class="d-block w-100" alt="...">
-			</div>
+				<div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
+					<img src="@item.Image" class="d-block w-100" alt="...">
+				</div>
 			}
 
 		</div>
@@ -337,6 +337,8 @@ else
 	private bool isFirstRender = true;
 	private List<BannerDTO> lstBanner = new();
 	private int mempoint;
+	private CancellationToken cancellationToken;
+    private List<BillDto> billDtos = new();
 
 	public class EventCallbackHomeArgs
 	{
@@ -389,6 +391,28 @@ else
 		await JSRuntime.InvokeVoidAsync("openLoginModal");
 	}
 
+	private async Task DeletePendingBill()
+	{
+		var AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+		var getUserId = AuthenState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+		if(getUserId!=null)
+		{
+			var userId = Guid.Parse(getUserId);
+			if (userId != Guid.Empty)
+			{
+				billDtos = await BillService.GetListBillAsync();
+				if (billDtos != null)
+				{
+					var bill = billDtos.FirstOrDefault(x => x.MembershipId == userId && x.Status == BillStatus.Pending.ToString());
+					if (bill != null)
+					{
+						await UserHomeService.DeleteCheckAsync(bill.Id, cancellationToken);
+					}
+				}
+			}
+		}
+	}
+
 	private async Task OpenModalShowTime(string id)
 	{
 		IdFilm = id;
@@ -402,6 +426,7 @@ else
 
 	private async Task OpenSeatSelectionModal(Guid id)
 	{
+        //await DeletePendingBill();
 		await seatSelectionModalref.Reset();
 		ShowTimeId = id;
 		await JSRuntime.InvokeVoidAsync("closeModal");
@@ -461,6 +486,7 @@ else
 		await comboFooterRef.Reset();
 		await seatFooterRef.Reset();
 		lstSeats.Clear();
+        lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
 		BillId = Guid.Empty;
 		TotalMoney = 0;
