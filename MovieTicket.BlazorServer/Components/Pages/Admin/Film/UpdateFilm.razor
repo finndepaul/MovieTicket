@@ -211,12 +211,12 @@
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
         if (response != null)
         {
-            await _JSRuntime.ToastrSuccess("Cập nhật thành công");
+            await _JSRuntime.ToastrSuccess("Cập nhật phim thành công");
             NavigationManager.NavigateTo("/film");
         }
         else
         {
-            await _JSRuntime.ToastrError("Cập nhật thất bại");
+            await _JSRuntime.ToastrError("Cập nhật phim thất bại");
         }
 
     }
