@@ -13,5 +13,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 		Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken);
 
 		Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken);
-	}
+		Task<bool> ResetDiscountAsync(Guid billId, CancellationToken cancellationToken);
+    }
 }
