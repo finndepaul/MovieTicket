@@ -3,6 +3,7 @@
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Domain.Enums
+@inject ICinemaCenterService CinemaCenterService
 @inject IAccountService AccountService
 @inject IAccountUtilitiesService AccountUtilitiesService
 @attribute [Authorize(Roles = "Admin")]
@@ -54,7 +55,7 @@
                 <div class="mb-3">
                     <label for="role" class="form-label">Quyền</label>
                     <InputSelect @bind-Value="accountUpdateRequest.Role" class="form-select" id="role">
-                        <option selected>Select a Status</option>
+                        <option selected disabled>Select a Status</option>
                         @foreach (var Item in Enum.GetValues(typeof(AccountRole)))
                         {
                             <option value="@Item">@Item</option>
@@ -62,11 +63,24 @@
                     </InputSelect>
                     <ValidationMessage For="@(() => accountUpdateRequest.Role)" />
                 </div>
-
+                @if (accountUpdateRequest.Role == AccountRole.Staff)
+                {
+                    <div class="mb-3">
+                        <label for="cinemaCenter" class="form-label">Cinema Center</label>
+                        <InputSelect @bind-Value="accountUpdateRequest.CinemaCenterId" class="form-select" id="cinemaCenter">
+                            <option selected disabled>Select a Cinema Center</option>
+                            @foreach (var cinemaCenter in cinemaCenters)
+                            {
+                                <option value="@cinemaCenter.Id">@cinemaCenter.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => accountUpdateRequest.CinemaCenterId)" />
+                    </div>
+                }
                 <div class="mb-3">
                     <label for="status" class="form-label">Trạng thái</label>
                     <InputSelect @bind-Value="accountUpdateRequest.Status" class="form-select" id="status">
-                        <option selected>Select a Status</option>
+                        <option selected disabled>Select a Status</option>
                         @foreach (var Item in Enum.GetValues(typeof(AccountStatus)))
                         {
                             <option value="@Item">@Item</option>
@@ -180,6 +194,7 @@
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
     private PageList<BillsDto> bookingHistory = new PageList<BillsDto>();
     private MetaData metaData = new MetaData();
+    private List<CinemaCenterDto> cinemaCenters = new List<CinemaCenterDto>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -193,13 +208,18 @@
                 Phone = accountDtos.Phone,
                 Role = accountDtos.Role,
                 Status = accountDtos.Status,
-                Avatar = accountDtos.Avatar
+                Avatar = accountDtos.Avatar,
+                CinemaCenterId = accountDtos.CinemaCenterId
             };
         changePasswordRequest.Id = accountDtos.Id;
         _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Avatar");
 
         bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = 1, PageSize = 10 });
         metaData = bookingHistory.MetaData;
+
+        var cinemaCenterPageList = await CinemaCenterService.GetAllCinemaCenter(new CinemaCenterSearch(), new PagingParameters { PageNumber = 1, PageSize = 10 });
+        cinemaCenters = cinemaCenterPageList.Item.ToList();
+
     }
 
     private async Task ChangePassword()

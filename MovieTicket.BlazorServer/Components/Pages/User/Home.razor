@@ -16,9 +16,9 @@
 		<div class="carousel-inner">
 			@foreach (var item in lstBanner)
 			{
-			<div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
-				<img src="@item.Image" class="d-block w-100" alt="...">
-			</div>
+				<div class="carousel-item @((item == lstBanner[0]) ? "active" : "")">
+					<img src="@item.Image" class="d-block w-100" alt="...">
+				</div>
 			}
 
 		</div>
@@ -70,7 +70,29 @@ else
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
 									</div>
+									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
+										<span><i class="bi bi-ticket-perforated"></i></span>
+										MUA VÉ
+									</a>
+								</div>
+							</div>
+						}
+						if (item.SType == null)
+						{
+							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
+							<div class="col-lg-3 mb-5">
+								<div class="movie-card">
+									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
+									<span class="sticker sticker-new"></span>
 
+									<div class="movie-info">
+										<h5 class="text-primary">@item.Name</h5>
+										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
+									</div>
+								
 								</div>
 							</div>
 						}
@@ -226,7 +248,7 @@ else
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
 			<div class="modal-body" style="height:67%">
-				<DiscountSelectionModal BillId="@BillId" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint"/>
+				<DiscountSelectionModal BillId="@BillId" OnAppliedDiscount="HandleAppliedDisCount" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint"/>
 			</div>
 			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
@@ -235,6 +257,7 @@ else
 				TotalCombo="@TotalCombo"
 				TotalMoney="@TotalMoney"
 				TotalTicket="@TotalTicket"
+				Discount="@Discount"
 				BillId="@BillId"
 				BillCombo="ComboCheckRequest"
 				Mempoint="@mempoint"
@@ -314,6 +337,8 @@ else
 	private bool isFirstRender = true;
 	private List<BannerDTO> lstBanner = new();
 	private int mempoint;
+	private CancellationToken cancellationToken;
+    private List<BillDto> billDtos = new();
 
 	public class EventCallbackHomeArgs
 	{
@@ -366,6 +391,28 @@ else
 		await JSRuntime.InvokeVoidAsync("openLoginModal");
 	}
 
+	private async Task DeletePendingBill()
+	{
+		var AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+		var getUserId = AuthenState.User.FindFirstValue(ClaimTypes.NameIdentifier);
+		if(getUserId!=null)
+		{
+			var userId = Guid.Parse(getUserId);
+			if (userId != Guid.Empty)
+			{
+				billDtos = await BillService.GetListBillAsync();
+				if (billDtos != null)
+				{
+					var bill = billDtos.FirstOrDefault(x => x.MembershipId == userId && x.Status == BillStatus.Pending.ToString());
+					if (bill != null)
+					{
+						await UserHomeService.DeleteCheckAsync(bill.Id, cancellationToken);
+					}
+				}
+			}
+		}
+	}
+
 	private async Task OpenModalShowTime(string id)
 	{
 		IdFilm = id;
@@ -379,6 +426,7 @@ else
 
 	private async Task OpenSeatSelectionModal(Guid id)
 	{
+        //await DeletePendingBill();
 		await seatSelectionModalref.Reset();
 		ShowTimeId = id;
 		await JSRuntime.InvokeVoidAsync("closeModal");
@@ -408,6 +456,7 @@ else
 		await seatSelectionModalref.Reset();
 		await seatFooterRef.Reset();
 		lstSeats.Clear();
+        lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
 		// BillId = Guid.Empty;
 		TotalMoney = 0;
@@ -437,6 +486,7 @@ else
 		await comboFooterRef.Reset();
 		await seatFooterRef.Reset();
 		lstSeats.Clear();
+        lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
 		BillId = Guid.Empty;
 		TotalMoney = 0;
@@ -478,6 +528,13 @@ else
 	private async Task HandleMembershipPoint(int point)
     {
         mempoint = point;
+        StateHasChanged();
+    }
+
+    private void HandleAppliedDisCount(EventCallbackHomeArgs args)
+    {
+        Discount = args.Discount;
+        TotalMoney = TotalTicket + TotalCombo + Discount;
         StateHasChanged();
     }
 }

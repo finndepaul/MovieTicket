@@ -16,7 +16,7 @@ namespace MovieTicket.Application.DataTransferObjs.Account.Request
         [Required]
         public string? Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc.")]
         [RegularExpression(@"^0\d{9}$", ErrorMessage = "Địa chỉ phone sai định dạng !!!")]
         public string? Phone { get; set; }
 
