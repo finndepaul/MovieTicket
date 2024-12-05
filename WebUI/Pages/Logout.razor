@@ -1,0 +1,8 @@
+﻿@page "/logout"
+@layout WebUI.Layout.UserLayout
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        await AuthenService.Logout();
+    }
+}

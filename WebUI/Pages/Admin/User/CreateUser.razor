@@ -1,0 +1,66 @@
+﻿@page "/user/create"
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@inject IAccountService AccountService
+@attribute [Authorize(Roles = "Admin")]
+<div class="container-fluid">
+    <EditForm Model="account" OnValidSubmit="CreateAccount">
+        <DataAnnotationsValidator />
+        <div class="mb-3">
+            <a type="button" class="btn btn-light me-2" @onclick="GoBack">Quay lại</a>
+            <button type="submit" class="btn btn-primary me-2">+ Tạo mới</button>
+        </div>
+        <div class="mb-3">
+            <label for="fullname" class="form-label">Họ tên</label>
+            <InputText class="form-control" id="fullname" @bind-Value="account.Name" />
+            <ValidationMessage For="@(() => account.Name)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="UserName" class="form-label">Tên tài khoản</label>
+            <InputText class="form-control" id="UserName" @bind-Value="account.Username" />
+            <ValidationMessage For="@(() => account.Username)" />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mật khẩu</label>
+            <InputText class="form-control" id="password" @bind-Value="account.Password" />
+            <ValidationMessage For="@(() => account.Password)" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <InputText class="form-control" id="email" @bind-Value="account.Email" />
+            <ValidationMessage For="@(() => account.Email)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <InputText class="form-control" id="phone" @bind-Value="account.Phone" />
+            <ValidationMessage For="@(() => account.Phone)" />
+        </div>
+    </EditForm>
+</div>
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
+@code {
+    private AccountCreateRequest account = new AccountCreateRequest();
+    private async Task CreateAccount()
+    {
+        var result = await AccountService.CreateAsync(account);
+        if(result.Status == 200)
+        {
+            await JSRuntime.ToastrSuccess(result.Message);
+            NavigationManager.NavigateTo("/user");
+        }
+        else
+        {
+            await JSRuntime.ToastrError(result.Message);
+        }
+    }
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/user");
+    }
+}

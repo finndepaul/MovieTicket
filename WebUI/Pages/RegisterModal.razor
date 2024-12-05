@@ -1,0 +1,49 @@
+﻿@page "/register"
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@using MovieTicket.Application.DataTransferObjs.Auth
+
+<EditForm Model="@RegisterRequest" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-3">
+        <label class="form-label">Tên người dùng</label>
+        <InputText id="regUsername" class="form-control" @bind-Value="RegisterRequest.Username" />
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Mật khẩu</label>
+        <InputText id="regPassword" type="password" class="form-control" @bind-Value="RegisterRequest.Password" />
+    </div>
+    <div class="mb-3">
+        <label for="confirmpassword" class="form-label">Xác nhận mật khẩu</label>
+        <InputText id="confirmpassword" type="password" class="form-control" @bind-Value="RegisterRequest.ConfirmPassword" />
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">Họ và tên</label>
+        <InputText id="name" type="name" class="form-control" @bind-Value="RegisterRequest.Name" />
+    </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">Số điện thoại</label>
+        <InputText id="phone" type="number" class="form-control" @bind-Value="RegisterRequest.Phone" />
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <InputText id="email" type="email" class="form-control" @bind-Value="RegisterRequest.Email" />
+    </div>
+    <button type="submit" class="btn btn-primary">Đăng ký</button>
+</EditForm>
+@code {
+    private AccountRegisterRequest RegisterRequest = new();
+
+    private async Task HandleRegister()
+    {
+        RegisterResponse response = await AuthenService.RegisterAsync(RegisterRequest);
+        if (!response.Flag)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}
