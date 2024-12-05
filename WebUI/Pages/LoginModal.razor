@@ -1,0 +1,49 @@
+﻿@using Blazored.LocalStorage
+@using MovieTicket.Application.DataTransferObjs.Auth
+@using WebUI.Layout
+@using WebUI.Authentication
+@inject ILocalStorageService LocalStorage
+@layout UserLayout
+
+<EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="mb-3">
+        <label class="form-label">Username</label>
+        <InputText id="loginUsername" class="form-control" @bind-Value="loginModel.Username" />
+    </div>
+    <div class="mb-3">
+        <label for="loginPPassword" class="form-label">Password</label>
+        <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+</EditForm>
+@code {
+    private LoginDTO loginModel = new ();
+
+    private async Task HandleLogin()
+    {
+        LoginRespone response = await AuthenService.LoginAsync(loginModel);
+        if(!response.Flag)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+        // await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", response.JWTToken);
+        var jwt = await LocalStorage.GetItemAsync<string>("authToken");
+        var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
+        await customState.UpdateAuthenticationState(jwt);
+        CustomUserClaims claims = DecryptJWTService.DecryptToken(jwt);
+        if(claims.Role == "Admin")
+        {
+            NavigationManager.NavigateTo("/admin", forceLoad: true);
+        }
+        else if (claims.Role == "Staff")
+        {
+            NavigationManager.NavigateTo("/offline-counter", forceLoad: true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

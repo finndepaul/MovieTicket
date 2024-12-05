@@ -1,0 +1,465 @@
+﻿@page "/showtime"
+@using MovieTicket.Application.DataTransferObjs.Cinema
+@using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@using MovieTicket.Application.DataTransferObjs.ShowTime
+@using MovieTicket.Application.ValueObjs.Paginations
+@attribute [Authorize(Roles = "Admin")]
+@inject IShowTimeService ShowTimeService
+@inject ICinemaService CinemaService
+@inject ICinemaCenterService CinemaCenterService
+@inject NavigationManager Navigation
+<div class="container-fluid">
+	<div class="d-flex align-items-center mb-3">
+		<div class="d-flex align-items-center me-4">
+			<label for="cinema" class="me-2 mb-0">Rạp chiếu:</label>
+			<select class="form-control form-control-sm" id="cinemaCenter" style="width: 150px;" @onchange="(e) => SelectedCinemaCenter(e)">
+				<option value="">Select a cinema center</option>
+				@if (cinemaCenters != null)
+                {
+                    @foreach (var item in cinemaCenters)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="d-flex align-items-center me-4">
+            <label for="auditorium" class="me-2 mb-0">Phòng chiếu:</label>
+            <select class="form-control form-control-sm" id="cinema" style="width: 150px;"
+            @onchange="(e) => SelectedCinema(e)"
+            value="@ShowTimeSearchs.CinemaId" disabled="@(isCinemaSelected ? false : true)">
+                <option value="">Select a cinema</option>
+                @if (cinemaSearch != null)
+                {
+                    @foreach (var item in cinemaSearch)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="d-flex align-items-center me-4">
+            <label for="date" class="me-2 mb-0">Ngày chiếu:</label>
+            <input type="date" id="date" class="form-control form-control-sm" style="width: 150px;" @onchange="UpdateShowDate">
+        </div>
+
+        <div class="d-flex align-items-center">
+            <button class="btn btn-primary btn-sm" @onclick="SearchShowTimes">Tìm kiếm</button>
+        </div>
+    </div>
+
+
+    <h6 class="text-center mt-5">Lịch chiếu ngày: @Date.ToString("dd-MM-yyyy")</h6>
+    <h6 class="text-center mt-3 text-white bg-primary" style="padding: 9px; border-radius: 6px">Rạp: @CinemaCenterName</h6>
+    <h6 class="mb-3" style="color: red">@CinemaName</h6>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th></th>
+                    <th scope="col">Phim chiếu</th>
+                    <th scope="col">Hình thức chiếu</th>
+                    <th scope="col">Hình thức dịch</th>
+                    <th scope="col">Thời gian chiếu</th>
+                    <th scope="col">Loại suất chiếu</th>
+                    <th scope="col">Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ShowTimes.Any())
+                {
+                    @foreach (var item in ShowTimes)
+                    {
+                        <tr>
+                            <td>
+                                <i class="bi bi-justify" onclick="toggleActions(this)"></i>
+                            </td>
+                            <td class="text-primary">@item.FilmName</td>
+                            <td>
+                                @if (item.ScreenTypeName == "2D")
+                                {
+                                    <span class="p-2 m-2 badge text-primary bg-primary bg-opacity-10 border border-primary">@item.ScreenTypeName</span>
+                                }
+                                @if (item.ScreenTypeName == "3D")
+                                {
+                                    <span class="p-2 m-2 badge text-warning bg-warning bg-opacity-10 border border-warning">@item.ScreenTypeName</span>
+                                }
+                                @if (item.ScreenTypeName == "IMAX")
+                                {
+                                    <span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.ScreenTypeName</span>
+                                }
+                                @if (item.ScreenTypeName == "4DX")
+                                {
+                                    <span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">@item.ScreenTypeName</span>
+                                }
+                            </td>
+                            <td><span class="p-2 m-2 badge text-dark bg-warning bg-opacity-10 border border-warning">@item.TranslationTypeName</span></td>
+                            <td><span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">@item.StartTime.Value.ToString("HH:mm") - @item.EndTime.Value.ToString("HH:mm")</span></td>
+                            <td>
+                                @if (item.ShowtimeDate.HasValue && item.StartDate.HasValue && item.EndDate.HasValue)
+                                {
+                                    if (item.ShowtimeDate.Value < item.StartDate.Value)
+                                    {
+                                        <span class="p-2 m-2 badge text-dark bg-warning bg-opacity-10 border border-warning">Suất chiếu sớm</span>
+                                    }
+                                    else if (item.ShowtimeDate.Value >= item.StartDate.Value && item.ShowtimeDate.Value <= item.EndDate.Value)
+                                    {
+                                        <span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Chiếu theo lịch</span>
+                                    }
+                                    else if (item.ShowtimeDate.Value > item.EndDate.Value)
+                                    {
+                                        <span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Suất chiếu muộn</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">Không có dữ liệu</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == MovieTicket.Domain.Enums.ShowtimeStatus.ComingSoon)
+                                {
+                                    <span class="p-2 m-2 badge text-dark bg-warning bg-opacity-10 border border-warning">Sắp chiếu</span>
+                                }
+                                @if (item.Status == MovieTicket.Domain.Enums.ShowtimeStatus.Showing)
+                                {
+                                    <span class="p-2 m-2 badge text-success bg-success bg-opacity-10 border border-success">Đang chiếu</span>
+                                }
+                                @if (item.Status == MovieTicket.Domain.Enums.ShowtimeStatus.Ended)
+                                {
+                                    <span class="p-2 m-2 badge text-danger bg-danger bg-opacity-10 border border-danger">Đã chiếu</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr class="action-row" style="display: none;">
+                            <td colspan="7" class="text-center">
+                                <span class="p-2 m-2 badge text-light bg-primary" role="button" data-bs-toggle="modal" data-bs-target="#UpdateShowTime" @onclick="() => ShowTimeId = item.Id.ToString()">
+                                    <i class="bi bi-pencil-square fs-6"></i>
+                                </span>
+                                <span class="p-2 m-2 badge text-light bg-danger" role="button" @onclick="() => DeleteId(item.Id.ToString())">
+                                    <i class="bi bi-trash3 fs-6"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3">
+        <!-- Button to Open Modal -->
+        <button type="button" class="btn btn-primary" @onclick="OpenCreateShowTimeModal">
+            + Thêm suất chiếu
+        </button>
+    </div>
+</div>
+@* Modal Create *@
+<div class="modal fade" id="CreateShowTime" tabindex="-1" aria-labelledby="CreateShowTimeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CreateShowTimeLabel">Thêm suất chiếu (@CinemaCenterName - @CinemaName)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <CreateShowTime CinemaCenterId="@ShowTimeSearchs.CinemaCenterId" CinemaId="@ShowTimeSearchs.CinemaId" Date="@Date" OnCreateSuccess="HandleCreateCinemaSuccess"></CreateShowTime>
+            </div>
+        </div>
+    </div>
+</div>
+@* Modal update *@
+<div class="modal fade" id="UpdateShowTime" tabindex="-1" aria-labelledby="UpdateShowTimeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="UpdateShowTimeLabel">Sửa xuất chiếu(@CinemaCenterName - @CinemaName)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <UpdateShowTime CinemaCenterId="@ShowTimeSearchs.CinemaCenterId" CinemaId="@ShowTimeSearchs.CinemaId" Date="@Date" Id="@ShowTimeId" OnUpdateSuccess="HandleUpdateSuccess"></UpdateShowTime>
+            </div>
+        </div>
+    </div>
+</div>
+@* Modal Xóa *@
+<div class="modal fade" id="Delete" aria-hidden="true" aria-labelledby="DeleteLabel" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" data-bs-theme="dark">
+                <h1 class="modal-title fs-5" id="DeleteLabel">Xác nhận xóa lịch chiếu</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa lịch chiếu này không?</p>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteAsync(ShowTimeId)">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .action-row {
+    transition: all 0.3s ease-in-out;
+    }
+
+    .bi-justify {
+    cursor: pointer;
+    }
+
+    .bi-justify:hover {
+    color: #007bff; /* Màu sắc nổi bật khi hover */
+    transform: scale(1.1); /* Phóng to một chút khi hover */
+    transition: all 0.2s ease-in-out; /* Hiệu ứng mượt mà */
+    }
+
+</style>
+<script>
+    function closeModal(modalId) {
+    var modalElement = document.getElementById(modalId);
+    var modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+    modal.hide();
+    }
+    }
+    function toggleActions(element) {
+    // Lấy hàng hành động
+    const actionRow = element.closest('tr').nextElementSibling;
+
+    // Kiểm tra trạng thái hiển thị
+    if (actionRow.style.display === 'none' || actionRow.style.display === '') {
+    actionRow.style.display = 'table-row';
+    actionRow.setAttribute('data-open', 'true'); // Đánh dấu là đang mở
+    } else {
+    actionRow.style.display = 'none';
+    actionRow.removeAttribute('data-open'); // Xóa đánh dấu
+    }
+    }
+
+    function closeActionRow() {
+    // Tìm hàng đang mở (nếu có)
+    const openRow = document.querySelector('.action-row[data-open="true"]');
+    if (openRow) {
+    openRow.style.display = 'none'; // Ẩn hàng
+    openRow.removeAttribute('data-open'); // Xóa trạng thái mở
+    }
+    }
+
+    function openModalDelete(modalId) {
+    var modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
+    }
+    function closeModal(modalId) {
+    var modalElement = document.getElementById(modalId);
+    var modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+    modal.hide();
+    }
+    }
+    function showModal(modalId) {
+    const modal = new bootstrap.Modal(document.querySelector(modalId));
+    modal.show();
+    }
+
+</script>
+@code {
+    private List<ShowTimeDto> ShowTimes = new List<ShowTimeDto>();
+    private ShowTimeSearch ShowTimeSearchs = new ShowTimeSearch();
+    private PagingParameters PagingParameters = new PagingParameters();
+    public MetaData MetaData { set; get; } = new MetaData();
+    private IQueryable<CinemaCenterDto> cinemaCenters;
+    private IQueryable<CinemaDto> cinemas;
+    public CinemaCenterSearch cinemaCenterSearch = new CinemaCenterSearch();
+    private string CinemaName { get; set; }
+    private string CinemaCenterName { get; set; }
+    private DateTime Date = DateTime.Today;
+    private IQueryable<CinemaDto> cinemaSearch;
+    private string _lstCinema = string.Empty;
+    private CreateShowTime CreateShowTime;
+    private string ShowTimeId = string.Empty;
+    private bool isCinemaSelected = false;
+    private ShowTimeUpdateRequest showTimeUpdateRequest = new ShowTimeUpdateRequest();
+    private ShowTimeUpdateStatus updateStatus = new ShowTimeUpdateStatus();
+    protected override async Task OnInitializedAsync()
+    {
+        _lstCinema = "Select a cinema";
+        cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);		
+        ShowTimeSearchs.ShowtimeDate = Date;
+        await SearchShowTimes();
+    }
+    private async Task SelectedCinemaCenter(ChangeEventArgs e)
+    {
+        var selectedCinemaCenterId = e.Value.ToString();
+        var selectedCinemaCenter = cinemaCenters.FirstOrDefault(c => c.Id.ToString() == selectedCinemaCenterId);
+        if (selectedCinemaCenter != null)
+        {
+            CinemaCenterName = selectedCinemaCenter.Name;
+            cinemaSearch = await CinemaService.GetCinemasAsync(CinemaCenterName, null);
+            ShowTimeSearchs.CinemaCenterId = selectedCinemaCenter.Id;
+            // Reset Cinema
+            ShowTimeSearchs.CinemaId = null; 
+            CinemaName = string.Empty;     
+            // Cho phép chọn phòng chiếu
+            isCinemaSelected = true;
+        }
+        else
+        {
+            // Không cho phép chọn phòng chiếu
+            isCinemaSelected = false;
+            cinemaSearch = null;
+            ShowTimeSearchs.CinemaId = null;
+            CinemaName = string.Empty;
+        }
+
+        await SearchShowTimes();
+    }
+    private async Task SelectedCinema(ChangeEventArgs e)
+    {
+        var selectedCinemaId = e.Value.ToString();
+        var selectedCinema = cinemaSearch.FirstOrDefault(c => c.Id.ToString() == selectedCinemaId);
+        if (selectedCinema != null)
+        {
+            CinemaName = selectedCinema.Name;
+            ShowTimeSearchs.CinemaId = selectedCinema.Id;
+        }
+        else
+        {
+            ShowTimeSearchs.CinemaId = null;
+        }
+
+        await SearchShowTimes();
+    }
+    private async Task UpdateShowDate(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value.ToString(), out var date))
+        {
+            if (date == null)
+            {
+                ShowTimeSearchs.ShowtimeDate = Date;
+            }
+            else
+            {
+                Date = date;
+                ShowTimeSearchs.ShowtimeDate = Date;
+            }
+        }
+        await SearchShowTimes();
+    }
+    private async Task SearchShowTimes()
+    {
+        if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
+        {
+            var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, new PagingParameters()
+				{
+					PageSize = 20
+				});
+            ShowTimes = pagingResponse.Item.ToList();
+            foreach (var showTime in ShowTimes)
+            {
+                if (showTime.StartTime.HasValue && showTime.EndTime.HasValue)
+                {
+                    var now = DateTime.Now;
+
+                    if (now >= showTime.StartTime.Value && now < showTime.EndTime.Value)
+                    {
+                        showTime.Status = MovieTicket.Domain.Enums.ShowtimeStatus.Showing;
+                        updateStatus.Id = showTime.Id;
+                        updateStatus.Status = MovieTicket.Domain.Enums.ShowtimeStatus.Showing;
+						await ShowTimeService.UpdateStatus(updateStatus);
+					}
+					if (now >= showTime.EndTime.Value)
+					{
+						showTime.Status = MovieTicket.Domain.Enums.ShowtimeStatus.Ended;
+						updateStatus.Id = showTime.Id;
+                        updateStatus.Status = MovieTicket.Domain.Enums.ShowtimeStatus.Ended;
+						await ShowTimeService.UpdateStatus(updateStatus);
+					}
+				}
+			}
+			MetaData = pagingResponse.MetaData;
+			StateHasChanged();
+		}
+	}
+	private async Task HandleCreateCinemaSuccess()
+	{
+		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
+		{
+			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, new PagingParameters()
+				{
+					PageSize = 20
+				});
+			ShowTimes = pagingResponse.Item.ToList();
+			MetaData = pagingResponse.MetaData;
+			StateHasChanged();
+		}
+		await JSRuntime.InvokeVoidAsync("closeModal", "CreateShowTime");
+	}
+	private async Task HandleUpdateSuccess()
+	{
+		if (ShowTimeSearchs.CinemaCenterId.HasValue && ShowTimeSearchs.CinemaId.HasValue && ShowTimeSearchs.ShowtimeDate.HasValue)
+		{
+			var pagingResponse = await ShowTimeService.GetAll(ShowTimeSearchs, new PagingParameters()
+				{
+					PageSize = 20
+				});
+			ShowTimes = pagingResponse.Item.ToList();
+			MetaData = pagingResponse.MetaData;
+			StateHasChanged();
+		}
+		await JSRuntime.InvokeVoidAsync("closeModal", "UpdateShowTime");
+	}
+	private async Task HandleDeleteAsync(string id)
+	{
+		var result = await ShowTimeService.Delete(Guid.Parse(id));
+		if (result.Status == 200)
+		{
+			await JSRuntime.ToastrSuccess(result.Message);
+			await JSRuntime.InvokeVoidAsync("closeModal", "Delete");
+			await JSRuntime.InvokeVoidAsync("closeActionRow");
+			await SearchShowTimes();
+			StateHasChanged();
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result.Message);
+		}
+	}
+	private async Task DeleteId(string id)
+	{
+		ShowTimeId = id;
+		await JSRuntime.InvokeVoidAsync("openModalDelete", "Delete");
+	}
+	private async Task NavigateToUpdate(Guid id)
+	{
+		Navigation.NavigateTo($"/showtime-update/{id}");
+		await JSRuntime.InvokeVoidAsync("closeActionRow");
+	}
+	private async Task OpenCreateShowTimeModal()
+	{
+		if (!ShowTimeSearchs.CinemaCenterId.HasValue || !ShowTimeSearchs.CinemaId.HasValue)
+		{
+			await JSRuntime.ToastrError("Vui lòng chọn rạp chiếu và phòng chiếu trước khi thêm suất chiếu.");
+			return;
+		}
+
+		try
+		{
+			await JSRuntime.InvokeVoidAsync("bootstrap.Modal.getOrCreateInstance", "#CreateShowTime");
+			await JSRuntime.InvokeVoidAsync("showModal", "#CreateShowTime");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Lỗi khi mở modal: {ex.Message}");
+		}
+	}
+
+}

@@ -1,0 +1,213 @@
+@page "/admin"
+@layout AdminLayout
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+	<div class="row my-3">
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
+			<div class="card-body">
+				<h5 class="card-title">Doanh thu trong ngày</h5>
+				<p class="card-text fs-1 fw-semibold">@generalDto.DailyRevenue</p>
+			</div>
+		</div>
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
+			<div class="card-body">
+				<h5 class="card-title">Khách hàng mới</h5>
+				<p class="card-text fs-1 fw-semibold">@generalDto.NewCustomer</p>
+			</div>
+		</div>
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
+			<div class="card-body">
+				<h5 class="card-title">Tổng vé bán ra (@date.Month/@date.Year)</h5>
+				<p class="card-text fs-1 fw-semibold">@generalDto.TotalTicketsSold</p>
+			</div>
+		</div>
+		<div class="col mx-2 p-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); transition: 0.3s; border-radius: 10px;">
+			<div class="card-body">
+				<h5 class="card-title">Tổng doanh thu (@date.Month/@date.Year)</h5>
+				<p class="card-text fs-1 fw-semibold">@generalDto.TotalRevenue</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="" style="width: 100%; height: 400px;">
+		<div class="">
+			<h2 class="fw-semibold fs-5 text-center" style="">Doanh thu theo tháng</h2>
+			<canvas id="topRevenue" style="width: 100%; height: 400px;"></canvas>
+		</div>
+	</div>
+
+	<hr class="m-5" />
+
+	<div class="row">
+		<div class="col">
+			<div class="d-flex justify-content-between">
+				<h2 class="fw-bold">Doanh thu theo Phim</h2>
+				<NavLink href="revenue-by-movie" class="icon-link icon-link-hover fs-4">Xem tất cả</NavLink>
+			</div>
+			<div>
+				<table class="table table-hover">
+					<thead class="table-light">
+						<tr>
+							<th class="col-6">Tên phim</th>
+							<th scope="col">Tổng số vé bán ra</th>
+							<th scope="col">Doanh thu</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in revenueByMovieDtos)
+						{
+							<tr>
+								<th scope="row">@item.FilmName</th>
+								<td>@item.TotalTicket</td>
+								<td>@item.TotalRevenue</td>
+							</tr>
+						}
+					</tbody>
+				</table>				
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="d-flex justify-content-between">
+				<h2 class="fw-bold">Doanh thu theo Rạp</h2>
+				<NavLink class="icon-link fs-4 icon-link-hover" href="revenue-by-cinema">Xem tất cả</NavLink>
+			</div>
+			<div>
+				<table class="table table-hover">
+					<thead class="table-light">
+						<tr>
+							<th scope="col">Tên rạp</th>
+							<th scope="col">Tổng số vé bán ra</th>
+							<th scope="col">Doanh thu</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in revenueByCinemaDtos)
+						{
+							<tr>
+								<th scope="row">@item.Name</th>
+								<td>@item.TotalTicket</td>
+								<td>@item.TotalRevenue</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+@code {
+	private GeneralDto generalDto = new GeneralDto();
+	private List<RevenueByCinemaDto> revenueByCinemaDtos = new List<RevenueByCinemaDto>();
+	private List<RevenueByMovieDto> revenueByMovieDtos = new List<RevenueByMovieDto>();
+	private List<RevenueByMonthDto> revenueByMonthDtos = new List<RevenueByMonthDto>();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private MetaData metaData { get; set; } = new MetaData();
+	private DateTime date = DateTime.Now;
+	private bool isRendered = false;
+
+	protected override async Task OnInitializedAsync()
+	{	
+		DateTime start = new DateTime(date.Year, date.Month, 1);
+		generalDto = await AdminHomeService.GetAdminGeneralAsync();
+		var dataRevenueByCinemaDtos = await AdminHomeService.GetListRevenueByCinemaAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
+		revenueByCinemaDtos = dataRevenueByCinemaDtos.Item.ToList();
+		var dataRevenueByMovieDtos = await AdminHomeService.GetListRevenueByMovieAsync(new DateTime(date.Year, date.Month, 1), DateTime.Today, pagingParameters);
+		revenueByMovieDtos = dataRevenueByMovieDtos.Item.ToList();
+		revenueByMonthDtos = await AdminHomeService.RevenueByMonthDto();
+		StateHasChanged();
+	}
+
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !isRendered)
+		{
+			// Thêm thời gian chờ ngắn
+			await Task.Delay(100);
+
+			if (revenueByMonthDtos != null)
+			{
+				// Thêm dữ liệu từ tháng 1 đến tháng 10 với giá trị doanh thu bằng 0 nếu thiếu
+				var completeData = new List<RevenueByMonthDto>();
+				for (int i = 1; i <= 12; i++)
+				{
+					if (!revenueByMonthDtos.Any(r => r.Month == i && r.Year == date.Year))
+					{
+						completeData.Add(new RevenueByMonthDto
+							{
+								Month = i,
+								Year = date.Year,
+								TotalRevenue = 0
+							});
+					}
+				}
+
+				// Kết hợp dữ liệu cũ và dữ liệu mặc định
+				completeData.AddRange(revenueByMonthDtos);
+				completeData = completeData.OrderBy(r => r.Year).ThenBy(r => r.Month).ToList();
+
+				// Chuẩn bị dữ liệu cho biểu đồ
+				var revenueData = completeData.Select(r => new { r.Month, r.Year, r.TotalRevenue }).ToList();
+				await JSRuntime.InvokeVoidAsync("updateCharts", revenueData);
+			}
+			else
+			{
+				Console.WriteLine("Dữ liệu revenueByMonthDtos rỗng hoặc null.");
+			}
+
+			isRendered = true;
+		}
+	}
+
+}
+
+<script>
+	function updateCharts(revenueData) {
+		
+		var revenueTop = document.getElementById('topRevenue');
+
+		// Kiểm tra dữ liệu doanh thu trước khi vẽ biểu đồ
+		if (!revenueData || revenueData.length === 0) {
+			console.error(revenueData);
+			return;
+		}
+
+		// Biểu đồ doanh thu theo tháng
+		var labels = revenueData.map(item => `${item.month}/${item.year}`);
+		var data = revenueData.map(item => item.totalRevenue);
+
+		new Chart(revenueTop, {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Doanh thu',
+					data: data,
+					fill: false,
+					borderColor: 'rgb(75, 192, 192)',
+					tension: 0.1
+				}]
+			},
+			options: {
+				responsive: true, // Biểu đồ tự động thay đổi kích thước
+				scales: {
+					y: {
+						beginAtZero: true,
+						title: {
+							display: true,
+							text: 'Doanh thu'
+						}
+					},
+					x: {
+						title: {
+							display: true,
+							text: 'Tháng/Năm'
+						}
+					}
+				}
+			}
+		});
+	}
+</script>

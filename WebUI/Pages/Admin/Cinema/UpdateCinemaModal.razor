@@ -1,0 +1,110 @@
+﻿@page "/update-cinema/{id:guid}"
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-input">
+    <EditForm Model="request" OnValidSubmit="UpdateCinema">
+        <DataAnnotationsValidator />
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="CinemaCenterName">Rạp</label>
+            <input type="text" value="@CinemaCenterName" id="CinemaCenterName" class="form-control" disabled />
+        </div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="name">Tên phòng chiếu</label>
+            <InputText @bind-Value="request.Name" id="name" class="form-control"/>
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Name)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="cinemaType">Loại phòng chiếu</label>
+            <div id="cinemaType" class="form-control">
+                @foreach (var type in cinemaTypes)
+                {
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="seatType" id="@type.Name" checked="@(request.CinemaTypeId == type.Id)" @onchange="@(()=> request.CinemaTypeId = type.Id)" />
+                        <label class="form-check-label" for="@type.Name">@type.Name</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.CinemaTypeId)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="row">Số hàng</label>
+            <InputNumber @bind-Value="request.Row" id="row" class="form-control" disabled>@request.Row</InputNumber>
+        </div>
+        <div class="mt-1"><ValidationMessage For="@(() => request.Row)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="column">Số cột</label>
+            <InputNumber @bind-Value="request.Column" id="column" class="form-control" disabled>@request.Column</InputNumber>
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Column)" /></div>
+
+        <div class="input-group mt-3">
+            <label class="input-group-text" for="description">Mô tả</label>
+            <InputText @bind-Value="request.Description" id="description" class="form-control">@request.Description</InputText>
+        </div>
+        <div class="validate mt-1"><ValidationMessage For="@(() => request.Description)" /></div>
+
+        <div class="my-3 justify-content-center">
+            <input type="submit" class="btn btn-success" value="Sửa" />
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public Guid CinemaId { get; set; }
+    [Parameter]
+    public EventCallback<string> OnUpdateSuccess { get; set; }
+
+    private CinemaUpdateRequest request { get; set; } = new CinemaUpdateRequest();
+    private string CinemaCenterName { get; set; }
+    private string CinemaTypeName { get; set; }
+    private List<CinemaTypeDto> cinemaTypes = new();
+    private Guid CinemaTypeId;
+
+    protected override async Task OnParametersSetAsync()
+    {   
+        if (CinemaId != Guid.Empty)
+        {
+            cinemaTypes = await CinemaTypeService.GetListCinemaTypesAsync();
+            var cinema = await CinemaService.GetCinemaById(CinemaId);
+            CinemaCenterName = cinema.Data.CinemaCenterName;
+            CinemaTypeName = cinema.Data.CinemaTypeName;
+            request.Name = cinema.Data.Name;
+            request.Row = cinema.Data.Row;
+            request.Column = cinema.Data.Column;
+            request.Description = cinema.Data.Description;
+            CinemaTypeId = cinemaTypes.Where(x => x.Name == cinema.Data.CinemaTypeName).FirstOrDefault().Id;
+            request.CinemaTypeId = CinemaTypeId;
+            request.Id = CinemaId;
+            var CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch()
+                {
+                    Name = CinemaCenterName,
+                    Address = null
+                });
+            if (CinemaCenterDtos.Any())
+            {
+                request.CinemaCenterId = CinemaCenterDtos.First().Id;
+            }
+        }
+    }
+
+    private async Task UpdateCinema()
+    {
+        var response = await CinemaService.Update(request);
+        if (response.Status == StatusCodes.Status200OK)
+        {
+           await JSRuntime.InvokeVoidAsync("alert", response.Message);
+           await OnUpdateSuccess.InvokeAsync(CinemaCenterName);
+          
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+    }
+}

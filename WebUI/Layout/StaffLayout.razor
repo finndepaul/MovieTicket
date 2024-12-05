@@ -1,0 +1,154 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Routing
+@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div style="overflow: hidden;  height: 100vh;">
+	<div class="page">
+		<main>
+			<div class="pe-3" style="position: relative">
+				<AuthorizeView>
+					<Authorized>
+						<div class="d-flex justify-content-between align-items-center" style="min-height: 56px; font-size: 25px">
+							<!-- Add align-items-center class -->
+							@if (CinemaCenterName != null)
+							{
+								<div class="align-self-center" style="margin-left: 10px">Rạp @CinemaCenterName</div>
+							}
+							<div class="d-flex">
+								<div class="align-self-center">Xin chào, @context.User.Identity.Name</div>
+								<div class="align-self-center"><a class="btn btn-danger btn-sm ms-3" href="logout">Đăng xuất</a></div>
+							</div>
+						</div>
+					</Authorized>
+				</AuthorizeView>
+			</div>
+			<article class="content py-2" style="background-color: rgb(245, 245, 245);height: 100vh">
+				<div class="bg-white px-4 pt-4 rounded-3 scrollable" style="">
+					@Body
+				</div>
+			</article>
+		</main>
+	</div>
+
+	<div id="blazor-error-ui">
+		An unhandled error has occurred.
+		<a href="" class="reload">Reload</a>
+		<a class="dismiss">🗙</a>
+	</div>
+</div>
+<style>
+	.scrollable {
+	min-height: 90%;
+	max-height: 300px;/* 56px là chiều cao của navbar */
+
+	overflow-y: auto;
+	}
+
+	.container-fluid {
+	padding-bottom: 4rem;
+	}
+
+    main {
+        flex: 1;
+    }
+
+    .sidebar {
+        background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    }
+
+    .top-row {
+        background-color: #f7f7f7;
+        border-bottom: 1px solid #d6d5d5;
+        justify-content: flex-end;
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+        .top-row ::deep a, .top-row ::deep .btn-link {
+            white-space: nowrap;
+            margin-left: 1.5rem;
+            text-decoration: none;
+        }
+
+            .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
+                text-decoration: underline;
+            }
+
+            .top-row ::deep a:first-child {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+    
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+        .top-row.auth ::deep a:first-child {
+            flex: 1;
+            text-align: right;
+            width: 0;
+        }
+
+    .top-row, article {
+        padding-left: 1rem !important;
+        padding-right: 0rem !important;
+    }
+
+    }
+
+    #blazor-error-ui {
+        background: lightyellow;
+        bottom: 0;
+        box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+        display: none;
+        left: 0;
+        padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
+    }
+
+        #blazor-error-ui .dismiss {
+            cursor: pointer;
+            position: absolute;
+            right: 0.75rem;
+            top: 0.5rem;
+        }
+</style>
+
+@code {
+	private string CinemaCenterName;
+	private AccountDto accountDto = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		var AuthenState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+		var user = AuthenState.User;
+		var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		if (Guid.TryParse(userId, out var guidUserId)){
+			{
+				accountDto = await AccountService.GetByIdAsync(guidUserId);
+			};
+		}
+		
+	}
+	private void NavigationLogout()
+	{
+		Navigation.NavigateTo("/logout");
+	}
+}
