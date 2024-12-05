@@ -31,6 +31,11 @@
 	</div>
 
 	<div class="mb-3">
+		<label for="screeningDate" class="form-label">Ngày chiếu tiếp theo</label>
+		<input type="date" class="form-control" id="screeningDate" @bind="@ShowTime.ShowtimeEndDate">
+	</div>
+
+	<div class="mb-3">
 		<label for="format" class="form-label">Hình thức chiếu</label>
 		<select class="form-select" id="format" @bind="ShowTime.ScreenTypeId">
 			<option value="">Select a screen type</option>
@@ -144,7 +149,7 @@
 		ShowTime.ScheduleId = null;
 		idFilm = Guid.Empty;
 		startTimeValue = "";
-
+		ShowTime.ShowtimeEndDate = null;
 		// Reset danh sách hình thức chiếu và hình thức dịch
 		ScreenTypeValidate.Clear();
 		TranslationTypeValidate.Clear();

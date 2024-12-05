@@ -23,5 +23,6 @@ namespace MovieTicket.Application.DataTransferObjs.ShowTime
         public DateTime? ShowtimeDate { get; set; } // Ngày chiếu dự trên lịch chiếu
         public string? Desciption { get; set; }
         public ShowtimeStatus? Status { get; set; }
+        public string? City { get; set; }
     }
 }

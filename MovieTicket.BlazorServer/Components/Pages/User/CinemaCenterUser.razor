@@ -38,6 +38,13 @@
     <div class="theatre-list">
         <h1 class="header2">VHD CINEMAS</h1>
         <div class="cinemas">
+            <p class="cinema-item @(AddressCity == "Hà Nội" ? "selected" : "")" @onclick='() => OnCitySelected("Hà Nội")'>Hà Nội</p>
+            <p class="cinema-item @(AddressCity == "Hà Nam" ? "selected" : "")" @onclick='() => OnCitySelected("Hà Nam")'>Hà Nam</p>
+            <p class="cinema-item @(AddressCity == "Ninh Bình" ? "selected" : "")" @onclick='() => OnCitySelected("Ninh Bình")'>Ninh Bình</p>
+            <p class="cinema-item @(AddressCity == "Phú Thọ" ? "selected" : "")" @onclick='() => OnCitySelected("Phú Thọ")'>Phú Thọ</p>
+        </div>
+        <hr />
+        <div class="cinemas">
             @foreach (var item in CinemaCenterDtos)
             {
                 <p @onclick="() => OnCinemaCenterSelected(item.Id)"
@@ -52,6 +59,7 @@
         @if (cinemaCenterDto != null && cinemaCenterDto.Id != Guid.Empty)
         {
             <h2>Thông Tin Rạp</h2>
+            <p><strong>Tỉnh/Thành phố:</strong> @cinemaCenterDto.AddresCity</p>
             <p><strong>Tên rạp:</strong> @cinemaCenterDto.Name</p>
             <p><strong>Địa chỉ:</strong> @cinemaCenterDto.Address</p>
             <div>
@@ -189,10 +197,23 @@
     private CinemaCenterDto cinemaCenterDto = new CinemaCenterDto();
     private CinemaCenterSearch CinemaCenterSearch = new CinemaCenterSearch();
     private string ?ExtractedMapUrl;
+	private string AddressCity = "Hà Nội";
     protected override async Task OnInitializedAsync()
     {
-        CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(CinemaCenterSearch);
+		await LoadCinemas(AddressCity);
+    }
 
+    private void Clear(){
+		cinemaCenterDto = new CinemaCenterDto();
+		ExtractedMapUrl = null;
+
+    }
+
+    private async Task LoadCinemas(string city)
+    {
+        AddressCity = city;
+        var cinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+        CinemaCenterDtos = cinemaCenterDtos.Where(c => c.AddresCity == AddressCity);
         if (CinemaCenterDtos.Any())
         {
             var firstCinemaCenter = CinemaCenterDtos.First();
@@ -207,6 +228,16 @@
                 ExtractedMapUrl = ExtractUrlFromIframe(cinemaCenterDto.AddressMap);
             }
         }
+        else
+        {
+            Clear();    
+        }
+        StateHasChanged();
+    }
+
+    private async Task OnCitySelected(string city)
+    {
+        await LoadCinemas(city);
     }
 
     private async Task OnCinemaCenterSelected(Guid cinemaCenterId)

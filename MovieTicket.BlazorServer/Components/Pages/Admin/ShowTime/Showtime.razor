@@ -13,7 +13,7 @@
 		<div class="d-flex align-items-center me-4">
 			<label for="cinema" class="me-2 mb-0">Rạp chiếu:</label>
 			<select class="form-control form-control-sm" id="cinemaCenter" style="width: 150px;" @onchange="(e) => SelectedCinemaCenter(e)">
-				<option value="">Select a cinema center</option>
+				<option value="">Chọn rạp chiếu</option>
 				@if (cinemaCenters != null)
 				{
 					@foreach (var item in cinemaCenters)
@@ -29,7 +29,7 @@
 			<select class="form-control form-control-sm" id="cinema" style="width: 150px;"
 					@onchange="(e) => SelectedCinema(e)"
 					value="@ShowTimeSearchs.CinemaId" disabled="@(isCinemaSelected ? false : true)">
-				<option value="">Select a cinema</option>
+				<option value="">Chọn phòng chiếu</option>
 				@if (cinemaSearch != null)
 				{
 					@foreach (var item in cinemaSearch)
