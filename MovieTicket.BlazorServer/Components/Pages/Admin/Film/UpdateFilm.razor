@@ -31,6 +31,11 @@
                         </div>
                     }
                 </div>
+                @if (!selectedScreenTypeIds.Any())
+                {
+                    <span class="validation-message">Vui lòng chọn ít nhất một hình thức chiếu.</span>
+                }
+
             </div>
         </div>
 
@@ -51,6 +56,10 @@
                         </div>
                     }
                 </div>
+                @if (!selectedTranslationTypeIds.Any())
+                {
+                    <span class="validation-message">Vui lòng chọn ít nhất một hình thức dịch.</span>
+                }
             </div>
         </div>
 
@@ -99,7 +108,7 @@
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="ngayChieu" class="form-label">Lịch chiếu</label>
+                <label for="ngayChieu" class="form-label">Lịch khởi chiếu</label>
                 <InputDate class="form-control" id="ngayChieu" @bind-Value="filmUpdateRequest.StartDate" />
                 <ValidationMessage For="@(() => filmUpdateRequest.StartDate)" />
             </div>
@@ -118,7 +127,7 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="language" class="form-label">Ngôn ngữ</label>
-                <InputText type="text" class="form-control" id="language" @bind-Value="filmUpdateRequest.Language" placeholder="Enter language"/>
+                <InputText class="form-control" id="language" @bind-Value="filmUpdateRequest.Language" placeholder="Enter language"/>
                 <ValidationMessage For="@(() => filmUpdateRequest.Language)" />
             </div>
             <div class="col-md-6">
@@ -132,8 +141,9 @@
             <div class="col-md-12">
                 @if (filmUpdateRequest.Poster == null)
                 {
-                    <label for="customFile" class="form-label">Upload Image</label>
+                    <label for="customFile" class="form-label">Tải hình ảnh</label>
                     <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+                    <ValidationMessage For="@(() => filmUpdateRequest.Poster)" />
                 }
                 @if (filmUpdateRequest.Poster != null)
                 {
@@ -206,6 +216,19 @@
 
     private async Task HandleFilmUpdate()
     {
+        // Kiểm tra nếu không có ScreenType được chọn
+        if (!selectedScreenTypeIds.Any())
+        {
+            await _JSRuntime.ToastrError("Vui lòng chọn ít nhất một hình thức chiếu.");
+            return;
+        }
+
+        // Kiểm tra nếu không có TranslationType được chọn
+        if (!selectedTranslationTypeIds.Any())
+        {
+            await _JSRuntime.ToastrError("Vui lòng chọn ít nhất một hình thức dịch.");
+            return;
+        }
         filmUpdateRequest.ScreenTypeIds = selectedScreenTypeIds;
         filmUpdateRequest.TranslationTypeIds = selectedTranslationTypeIds;
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);

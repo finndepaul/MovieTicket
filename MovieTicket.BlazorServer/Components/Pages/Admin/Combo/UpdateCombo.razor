@@ -29,7 +29,7 @@
     <div class="mb-3">
         <label for="trangThai" class="form-label">Trạng thái</label>
         <InputSelect class="form-select" id="trangThai" @bind-Value="updateComboRequest.comboStatus">
-            <option selected>Select a Status</option>
+            <option selected disabled>Select a Status</option>
             @foreach (var Item in Enum.GetValues(typeof(ComboStatus)))
             {
                 <option value="@Item">@Item</option>
