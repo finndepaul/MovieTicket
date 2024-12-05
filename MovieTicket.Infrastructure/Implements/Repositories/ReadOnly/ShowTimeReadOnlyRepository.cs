@@ -49,7 +49,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 								 EndTime = showTime.EndTime,
 								 ShowtimeDate = showTime.ShowtimeDate,
 								 Desciption = showTime.Desciption,
-								 Status = showTime.Status
+								 Status = showTime.Status,
+								 City = cinemaCenter.AddresCity
 							 }).AsQueryable();
 
 			if (showTimeSearch.CinemaCenterId.HasValue)

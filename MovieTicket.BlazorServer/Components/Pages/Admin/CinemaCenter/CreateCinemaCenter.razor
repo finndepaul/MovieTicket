@@ -30,8 +30,14 @@
 			<!-- Địa chỉ -->
 			<div class="col-md-12">
 				<div class="form-group">
-					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
-					<textarea class="form-control" id="diaChiCity" rows="3" @bind="cinemaCenterCreateRequest.AddresCity"></textarea>
+					<label for="diaChiCity">Địa chỉ tỉnh/thành phố:</label>
+					<select class="form-control" id="diaChiCity" @bind="cinemaCenterCreateRequest.AddresCity">
+						<option value="">-- Chọn tỉnh/thành phố --</option>
+						<option value="Hà Nội">Hà Nội</option>
+						<option value="Hà Nam">Hà Nam</option>
+						<option value="Ninh Bình">Ninh Bình</option>
+						<option value="Phú Thọ">Phú Thọ</option>
+					</select>
 					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddresCity)" class="text-danger" />
 				</div>
 			</div>
