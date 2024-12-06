@@ -43,7 +43,7 @@
 <style>
 	.scrollable {
 		min-height: 90%;
-		max-height: 300px;/* 56px là chiều cao của navbar */
+		max-height: 300px; /* 56px là chiều cao của navbar */
 
 		overflow-y: auto;
 	}
@@ -51,6 +51,37 @@
 	.container-fluid {
 		padding-bottom: 4rem;
 	}
+
+	.add-btn {
+		-webkit-transition: all 0.3s ease-in-out;
+		background-color: #64B5F6;
+		color: #fff;
+	}
+
+		.add-btn:hover {
+			-webkit-transform: scale(1.1);
+			background-color: #64B5F6;
+			color: #fff;
+		}
+
+	.edit-btn {
+		background-color: #FFA726;
+		color: #fff;
+	}
+
+		.edit-btn:hover {
+			background-color: #FFA726;
+			color: #fff;
+		}
+
+	.btn {
+		-webkit-transition: all 0.3s ease-in-out;
+	}
+
+		.btn:hover {
+			-webkit-transform: scale(1.1);
+		}
+
 </style>
 @code {
 	private List<BreadcrumbItem> GetBreadcrumbItems()

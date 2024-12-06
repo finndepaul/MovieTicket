@@ -5,15 +5,15 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{0CF14C78-5DC8-48CB-8E5A-529B62E7CE8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.Application", "MovieTicket.Application\MovieTicket.Application.csproj", "{0D400CF5-E76A-43EF-AD49-3C47A2C9BF68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Application", "MovieTicket.Application\MovieTicket.Application.csproj", "{0D400CF5-E76A-43EF-AD49-3C47A2C9BF68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.Domain", "MovieTicket.Domain\MovieTicket.Domain.csproj", "{8C956E97-74AA-4B16-87DC-AEE1D498C6EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Domain", "MovieTicket.Domain\MovieTicket.Domain.csproj", "{8C956E97-74AA-4B16-87DC-AEE1D498C6EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.Infrastructure", "MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj", "{3F1F3167-32AE-45E2-B3DE-6778864C1F6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Infrastructure", "MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj", "{3F1F3167-32AE-45E2-B3DE-6778864C1F6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.API", "MovieTicket.API\MovieTicket.API.csproj", "{29BCBC47-BA61-4FAF-8F22-7979757844C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.API", "MovieTicket.API\MovieTicket.API.csproj", "{29BCBC47-BA61-4FAF-8F22-7979757844C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{A5DE0710-6E1B-4BD9-BB0F-33B3C76E7BA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{A5DE0710-6E1B-4BD9-BB0F-33B3C76E7BA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

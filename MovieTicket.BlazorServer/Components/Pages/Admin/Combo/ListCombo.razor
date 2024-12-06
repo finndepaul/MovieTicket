@@ -18,11 +18,12 @@
 </div>
 
 <div class="container-fluid">
-    <a class="btn btn-primary mb-3" href="/combo/create">+ Tạo khuyến mại</a>
+    <a class="btn add-btn me-md-2" href="/combo/create">  <i class="bi bi-plus-square"></i> Tạo combo</a>
     <div class="table-responsive mb-3">
         <table class="table">
             <thead class="table-light">
                 <tr>
+                    <th scope="col">STT</th>
                     <th scope="col">Ảnh</th>
                     <th scope="col">Tên Combo</th>
                     <th scope="col">Giá Combo</th>
@@ -33,22 +34,26 @@
             <tbody class="align-middle">
                 @if (Combos != null && Combos.Any())
                 {
+                    int count = 1;
                     @foreach (var combo in Combos)
                     {
                         <tr>
+                            <td>@count</td>
                             <td><img src="@combo.Image" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
                             <td>@combo.Name</td>
-                            <td>@combo.Price</td>
+                            <td>@combo.Price?.ToString("#,##0") VND</td>
                             <td><span class="badge @(GetBadgeClass(combo.comboStatus))">@combo.comboStatus</span></td>
                             <td>
-                                <a class="btn btn-outline-primary btn-sm" href="@($"/combo/update/{combo.Id}")">
-                                    <i class="bi bi-pencil"></i>
+                                <a class="btn edit-btn" href="@($"/combo/update/{combo.Id}")">
+                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <button class="btn btn-outline-danger btn-sm" @onclick="() => GetComboDeleteId(combo.Id)">
+                                <button class="btn btn-danger" @onclick="() => GetComboDeleteId(combo.Id)">
                                     <i class="bi bi-trash"></i>
+
                                 </button>
                             </td>
                         </tr>
+                        count++;
                     }
                 }
                 else

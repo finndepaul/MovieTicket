@@ -3,7 +3,7 @@
 @attribute [Authorize(Roles = "Admin")]
 <div class="container-fluid">
     <div class="ms-auto">
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCouponModal">+ Tạo khuyến mại</button>
+        <button class="btn add-btn me-md-2" data-bs-toggle="modal" data-bs-target="#addCouponModal"> <i class="bi bi-plus-square"></i> Tạo khuyến mại</button>
     </div>
 
     <div class="d-flex align-items-center mb-3">
@@ -28,6 +28,7 @@
         <table class="table">
             <thead class="table-light">
                 <tr>
+                    <th scope="col">STT</th>
                     <th scope="col">Mã khuyến mại</th>
                     <th scope="col">Giá trị</th>
                     <th scope="col">Thời gian bắt đầu</th>
@@ -45,9 +46,11 @@
                 }
                 else
                 {
+                    int count = 1;
                     @foreach (var item in lstCoupons)
                     {
                         <tr>
+                            <td>@count</td>
                             <td>@item.CouponCode</td>
                             <td>@item.AmountValue.ToString("N0") VND</td>
                             <td>@item.StartDate</td>
@@ -65,14 +68,15 @@
                                 </td>
                             }
                             <td>
-                                <button class="btn btn-outline-primary btn-sm" data-id="@item.Id" @onclick="() => OpenEditModal(item.Id.ToString())">
-                                    <i class="bi bi-pencil"></i>
+                                <button class="btn edit-btn" data-id="@item.Id" @onclick="() => OpenEditModal(item.Id.ToString())">
+                                    <i class="bi bi-pencil-square"></i>
                                 </button>
-                                <button class="btn btn-outline-danger btn-sm" data-id="@item.Id" @onclick="() => HandleRemoveCoupon(item.Id.ToString())">
+                                <button class="btn btn-danger" data-id="@item.Id" @onclick="() => HandleRemoveCoupon(item.Id.ToString())">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>
                         </tr>
+                        count++;
                     }
                 }
             </tbody>
