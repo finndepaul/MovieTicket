@@ -35,5 +35,6 @@ namespace MovieTicket.Application.DataTransferObjs.ShowTime
 		[Required(ErrorMessage = "Mô tả không được để trống")]
 		public string? Desciption { get; set; }
 		public ShowtimeStatus? Status { get; set; }
-    }
+		public DateTime? ShowtimeEndDate { get; set; }
+	}
 }

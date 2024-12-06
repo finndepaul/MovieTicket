@@ -18,15 +18,25 @@
 					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Address)" class="text-danger" />
 				</div>
 
-				<div class="form-group mt-3">
-					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
-					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.AddresCity" rows="3" />
-					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddresCity)" class="text-danger" />
+				<div class="row mt-3">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label for="diaChiCity">Địa chỉ tỉnh/thành phố:</label>
+							<select class="form-control" id="diaChiCity" @bind="cinemaCenterUpdateRequest.AddresCity">
+								<option value="">-- Chọn tỉnh/thành phố --</option>
+								<option value="Hà Nội">Hà Nội</option>
+								<option value="Hà Nam">Hà Nam</option>
+								<option value="Ninh Bình">Ninh Bình</option>
+								<option value="Phú Thọ">Phú Thọ</option>
+							</select>
+							<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddresCity)" class="text-danger" />
+						</div>
+					</div>
 				</div>
 
 				<div class="form-group mt-3">
 					<label for="diaChiMap">Địa chỉ map:</label>
-					<InputText class="form-control" id="diaChiMap" @bind-Value="cinemaCenterUpdateRequest.AddressMap" />
+					<InputText class="form-control" id="diaChiMap" rows="3" @bind-Value="cinemaCenterUpdateRequest.AddressMap" />
 					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddressMap)" class="text-danger" />
 				</div>
 

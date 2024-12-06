@@ -27,18 +27,6 @@
     </div>
 
     <div class="mb-3">
-        <label for="trangThai" class="form-label">Trạng thái</label>
-        <InputSelect class="form-select" id="trangThai" @bind-Value="createComboRequest.comboStatus">
-            <option selected>Select a Status</option>
-            @foreach (var Item in Enum.GetValues(typeof(ComboStatus)))
-            {
-                <option value="@Item">@Item</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => createComboRequest.comboStatus)" />
-    </div>
-
-    <div class="mb-3">
         @if (createComboRequest.Image == null)
         {
             <label for="customFile" class="form-label">Upload Image</label>

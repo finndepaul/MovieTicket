@@ -1,4 +1,5 @@
 ﻿@page "/userinformation"
+@using Microsoft.AspNetCore.WebUtilities
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Application.DataTransferObjs.Coupon
 @inject IAccountService AccountService
@@ -11,24 +12,24 @@
 <div class="container py-5">
     <ul class="nav nav-underline" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="true">Thông tin người dùng</button>
+            <button class="nav-link @(activeTab == "user-info" ? "active" : "")" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="@(activeTab == "user-info")">Thông tin người dùng</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="membership-points-tab" data-bs-toggle="tab" data-bs-target="#membership-points" type="button" role="tab" aria-controls="membership-points" aria-selected="false">Điểm VHD</button>
+            <button class="nav-link @(activeTab == "membership-points" ? "active" : "")" id="membership-points-tab" data-bs-toggle="tab" data-bs-target="#membership-points" type="button" role="tab" aria-controls="membership-points" aria-selected="@(activeTab == "membership-points")">Điểm VHD</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Đổi mật khẩu</button>
+            <button class="nav-link @(activeTab == "change-password" ? "active" : "")" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="@(activeTab == "change-password")">Đổi mật khẩu</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="false">Lịch sử đặt vé</button>
+            <button class="nav-link @(activeTab == "booking-history" ? "active" : "")" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="@(activeTab == "booking-history")">Lịch sử đặt vé</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="coupon-usage-history-tab" data-bs-toggle="tab" data-bs-target="#coupon-usage-history" type="button" role="tab" aria-controls="coupon-usage-history" aria-selected="false">Lịch sử sử dụng mã giảm giá</button>
+            <button class="nav-link @(activeTab == "coupon-usage-history" ? "active" : "")" id="coupon-usage-history-tab" data-bs-toggle="tab" data-bs-target="#coupon-usage-history" type="button" role="tab" aria-controls="coupon-usage-history" aria-selected="@(activeTab == "coupon-usage-history")">Lịch sử sử dụng mã giảm giá</button>
         </li>
     </ul>
 
     <div class="tab-content mt-3" id="myTabContent">
-        <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
+        <div class="tab-pane fade @(activeTab == "user-info" ? "show active" : "")" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
             <EditForm Model="userInfo" OnValidSubmit="UpdateUserInfo" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
                 <div class="mb-4 text-center">
@@ -78,7 +79,14 @@
             </EditForm>
         </div>
 
-        <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+        <div class="tab-pane fade @(activeTab == "membership-points" ? "show active" : "")" id="membership-points" role="tabpanel" aria-labelledby="membership-points-tab">
+            <div class="p-4 bg-white rounded-4 shadow-sm">
+                <h3 class="text-primary">Điểm VHD</h3>
+                <p>Bạn hiện có <strong>@membershipPoints</strong> điểm VHD.</p>
+            </div>
+        </div>
+
+        <div class="tab-pane fade @(activeTab == "change-password" ? "show active" : "")" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
             <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
                 <div class="mb-3">
@@ -100,7 +108,7 @@
             </EditForm>
         </div>
 
-        <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
+        <div class="tab-pane fade @(activeTab == "booking-history" ? "show active" : "")" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
             @if (bookingHistory?.Item != null && bookingHistory.Item.Any())
             {
                 <div class="row g-4">
@@ -131,7 +139,7 @@
                                         <i class="bi bi-geo-alt"></i> Địa điểm: <span>@bill.CinemaName</span>
                                     </p>
                                     <p class="fw-bold text-success fs-5 mt-auto">
-                                        @string.Format("{0:N0}", bill.TotalMoney)<span style="text-decoration: underline;">đ</span>
+                                        @string.Format("{0:N0}", bill.TotalMoney)<span> VND</span>
                                     </p>
                                 </div>
 
@@ -148,6 +156,10 @@
                         </div>
                     }
                 </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <Pagination MetaData="metaDataBookingHisTory" SelectedPage="SelectedPageBooking" Spread="2" />
+                </div>
             }
             else
             {
@@ -155,10 +167,10 @@
                     <p class="text-center text-muted fs-5">Không có lịch sử giao dịch</p>
                 </div>
             }
+
         </div>
 
-
-        <div class="tab-pane fade" id="coupon-usage-history" role="tabpanel" aria-labelledby="coupon-usage-history-tab">
+        <div class="tab-pane fade @(activeTab == "coupon-usage-history" ? "show active" : "")" id="coupon-usage-history" role="tabpanel" aria-labelledby="coupon-usage-history-tab">
             @if (couponUsageHistory?.Item != null && couponUsageHistory.Item.Any())
             {
                 <div class="row g-3">
@@ -168,7 +180,7 @@
                             <div class="card shadow-sm border-0">
                                 <div class="card-body">
                                     <h5 class="card-title fw-bold">@coupon.CouponCode</h5>
-                                    <p class="mb-1">Giá trị: @string.Format("{0:N0}", coupon.AmountValue)đ</p>
+                                    <p class="mb-1">Giá trị: @string.Format("{0:N0}", coupon.AmountValue)<span> VND</span></p>
                                     <p class="mb-1">Ngày bắt đầu: @coupon.StartDate.ToString("dd/MM/yyyy")</p>
                                     <p class="mb-1">Ngày kết thúc: @coupon.EndDate.ToString("dd/MM/yyyy")</p>
                                     <p class="mb-1">Trạng thái: @coupon.IsActive</p>
@@ -177,6 +189,9 @@
                         </div>
                     }
                 </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <Pagination MetaData="metaDataCoupon" SelectedPage="SelectedPageCoupon" Spread="2" />
+                </div>
             }
             else
             {
@@ -184,12 +199,6 @@
             }
         </div>
 
-        <div class="tab-pane fade" id="membership-points" role="tabpanel" aria-labelledby="membership-points-tab">
-            <div class="p-4 bg-white rounded-4 shadow-sm">
-                <h3 class="text-primary">Điểm VHD</h3>
-                <p>Bạn hiện có <strong>@membershipPoints</strong> điểm VHD.</p>
-            </div>
-        </div>
     </div>
 </div>
 <style>
@@ -202,15 +211,21 @@
     private AccountUpdateRequest userInfo = new AccountUpdateRequest();
     private string? _directoryPath { get; set; }
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-    private PageList<BillsDto>? bookingHistory;
-    private PageList<CouponDto>? couponUsageHistory;
+    private PageList<BillsDto> bookingHistory = new PageList<BillsDto>();
+    private PageList<CouponDto> couponUsageHistory = new PageList<CouponDto>();
     private int membershipPoints;
-
-    private MetaData metaData = new MetaData();
-    private PagingParameters pagingParameters = new PagingParameters { PageNumber = 1, PageSize = 10 };
+    private MetaData metaDataBookingHisTory = new MetaData();
+    private MetaData metaDataCoupon = new MetaData();
+    private string activeTab = "user-info";
 
     protected override async Task OnInitializedAsync()
     {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("tab", out var tab))
+        {
+            activeTab = tab;
+        }
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
@@ -233,10 +248,12 @@
                     };
                 _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Avatar");
                 changePasswordRequest.Id = guidUserId;
-
-                await LoadBookingHistory(guidUserId);
-                await LoadCouponUsageHistory(guidUserId);
                 membershipPoints = await AccountService.GetMembershipPointsAsync(guidUserId, CancellationToken.None);
+
+                bookingHistory = await AccountService.GetUserBookingHistoryAsync(Guid.Parse(userId), new PagingParameters { PageNumber = 1, PageSize = 3 });
+                metaDataBookingHisTory = bookingHistory.MetaData;
+                couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(Guid.Parse(userId), new PagingParameters { PageNumber = 1, PageSize = 3 }, CancellationToken.None);
+                metaDataCoupon = couponUsageHistory.MetaData;
 
             }
         }
@@ -275,7 +292,7 @@
         }
 
     }
-    
+
     private async Task ChangePassword()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -290,7 +307,7 @@
                 var result = await AccountUtilitiesService.ChangePasswordAsync(changePasswordRequest, CancellationToken.None);
                 if (result)
                 {
-                    await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công"); 
+                    await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công");
                     await OnInitializedAsync();
 
                 }
@@ -307,23 +324,34 @@
 
     }
 
-    private async Task LoadBookingHistory(Guid userId)
+
+    private async Task SelectedPageBooking(int page)
     {
-        bookingHistory = await AccountService.GetUserBookingHistoryAsync(userId, pagingParameters);
-        metaData = bookingHistory.MetaData;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userIds = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (Guid.TryParse(userIds, out var guidUserId))
+        {
+            bookingHistory = await AccountService.GetUserBookingHistoryAsync(Guid.Parse(userIds), new PagingParameters { PageNumber = page, PageSize = 3 });
+            metaDataBookingHisTory = bookingHistory.MetaData;
+        }
+
     }
 
-    private async Task SelectedPage(int page)
+    private async Task SelectedPageCoupon(int page)
     {
-        pagingParameters.PageNumber = page;
-        var userId = userInfo.Id;
-        await LoadBookingHistory(userId);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userIds = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (Guid.TryParse(userIds, out var guidUserId))
+        {
+            couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(Guid.Parse(userIds), new PagingParameters { PageNumber = 1, PageSize = 3 }, CancellationToken.None);
+            metaDataCoupon = couponUsageHistory.MetaData;
+        }
+
     }
-    private async Task LoadCouponUsageHistory(Guid userId)
-    {
-        couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(userId, pagingParameters, CancellationToken.None);
-        metaData = couponUsageHistory.MetaData;
-    }
+
+
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         var file = e.File;

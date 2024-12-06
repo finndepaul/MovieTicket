@@ -226,7 +226,7 @@ else
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
 			<div class="modal-body" style="height:67%">
-				<DiscountSelectionModal BillId="@BillId" OnAppliedDiscount="HandleAppliedDisCount" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint"/>
+				<DiscountSelectionModal BillId="@BillId" @ref="DiscountSelectionModalRef" OnAppliedDiscount="HandleAppliedDisCount" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
@@ -239,6 +239,7 @@ else
 				BillId="@BillId"
 				BillCombo="ComboCheckRequest"
 				Mempoint="@mempoint"
+                @ref="DiscountFooterRef"
 				BackToSeat="CancelCheckout" />
 			</div>
 		</div>
@@ -302,10 +303,12 @@ else
 	private Guid ShowTimeId;
 	public SeatSelectionModal seatSelectionModalref;
 	public ComboSelectionModal comboSelectionModalref;
+    public DiscountSelectionModal DiscountSelectionModalRef;
 	private Guid BillId = Guid.Empty;
 	private Guid MembershipId = Guid.Empty;
 	private SeatFooter seatFooterRef;
 	private ComboFooter comboFooterRef;
+    private DiscountFooter DiscountFooterRef;
 	private string SeatsSelectedstr;
 	private decimal TotalTicket;
 	private decimal TotalCombo = 0;
@@ -422,7 +425,7 @@ else
 
 	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
 	{
-		Task.Delay(300);
+        await comboFooterRef.Reset();
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
 		BillId = args.BillId;
 		MembershipId = args.MembershipId;
@@ -436,7 +439,7 @@ else
 		lstSeats.Clear();
         lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
-		// BillId = Guid.Empty;
+		BillId = Guid.Empty;
 		TotalMoney = 0;
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
         filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
@@ -460,9 +463,10 @@ else
 
 	private async Task CancelCheckout(Guid id)
 	{
-		await seatSelectionModalref.Reset();
-		await comboFooterRef.Reset();
-		await seatFooterRef.Reset();
+		// await seatSelectionModalref.Reset();
+		// await comboFooterRef.Reset();
+		// await seatFooterRef.Reset();
+  //       await DiscountFooterRef.Reset();
 		lstSeats.Clear();
         lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
@@ -496,7 +500,7 @@ else
 
 	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
-		Task.Delay(1000);
+        await DiscountFooterRef.Reset();
 		BillId = args.BillId;
 		MembershipId = args.MembershipId;
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");

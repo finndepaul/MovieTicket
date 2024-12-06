@@ -1,0 +1,28 @@
+﻿   @inject IJSRuntime JSRuntime
+
+<textarea id="@EditorId" @bind="Content"></textarea>
+
+@code {
+    [Parameter]
+    public string Content { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ContentChanged { get; set; }
+
+    private string EditorId { get; } = $"froala-editor-{Guid.NewGuid()}";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeFroalaEditor", EditorId, DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task UpdateContent(string content)
+    {
+        Content = content;
+        await ContentChanged.InvokeAsync(content);
+    }
+   }

@@ -5,6 +5,7 @@ using MovieTicket.Application.DataTransferObjs.Combo;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Application.ValueObjs.ViewModels;
 using MovieTicket.Domain.Entities;
+using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
@@ -56,6 +57,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 };
             }
 
+            combo.ComboStatus = ComboStatus.Available;
             await _dbContext.Combos.AddAsync(combo);
             await _dbContext.SaveChangesAsync();
 
@@ -73,12 +75,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             return new ResponseObject<ComboDto>
             {
                 Status = StatusCodes.Status200OK,
-                Message = "Combo created successfully.",
+                Message = "Tạo combo thành công",
                 Data = comboDto
             };
         }
-
-
 
         public async Task<ComboDto?> DeleteAsync(Guid id)
         {

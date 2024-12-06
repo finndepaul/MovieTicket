@@ -18,8 +18,5 @@ namespace MovieTicket.Application.DataTransferObjs.Combo
         public string? Description { get; set; }
 
         public string? Image { get; set; }
-
-        [Required(ErrorMessage = "Trạng thái Combo là bắt buộc.")]
-        public ComboStatus? comboStatus { get; set; }
     }
 }

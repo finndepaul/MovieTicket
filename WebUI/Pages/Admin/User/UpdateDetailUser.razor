@@ -1,0 +1,294 @@
+@page "/userdetail/{Id:guid}"
+@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Domain.Enums
+@inject ICinemaCenterService CinemaCenterService
+@inject IAccountService AccountService
+@inject IAccountUtilitiesService AccountUtilitiesService
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="container-fluid">
+    <ul class="nav nav-underline" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="true">Thông tin user</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="false">Lịch sử đặt vé</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Đổi mật khẩu</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="myTabContent">
+        <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
+            <EditForm Model="accountUpdateRequest" OnValidSubmit="UpdateAccount">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <a type="button" class="btn btn-light me-2" href="/user">Quay lại</a>
+                    <button type="submit" class="btn btn-primary me-2">Cập nhật</button>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fullname" class="form-label">Họ tên</label>
+                    <InputText class="form-control" id="fullname" @bind-Value="accountUpdateRequest.Name" />
+                    <ValidationMessage For="@(() => accountUpdateRequest.Name)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Tên tài khoản</label>
+                    <InputText class="form-control" id="username" @bind-Value="accountUpdateRequest.Username" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText class="form-control" id="email" @bind-Value="accountUpdateRequest.Email" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Số điện thoại</label>
+                    <InputText class="form-control" id="phone" @bind-Value="accountUpdateRequest.Phone" />
+                    <ValidationMessage For="@(() => accountUpdateRequest.Phone)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="role" class="form-label">Quyền</label>
+                    <InputSelect @bind-Value="accountUpdateRequest.Role" class="form-select" id="role">
+                        <option selected disabled>Select a Status</option>
+                        @foreach (var Item in Enum.GetValues(typeof(AccountRole)))
+                        {
+                            <option value="@Item">@Item</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => accountUpdateRequest.Role)" />
+                </div>
+                @if (accountUpdateRequest.Role == AccountRole.Staff)
+                {
+                    <div class="mb-3">
+                        <label for="cinemaCenter" class="form-label">Cinema Center</label>
+                        <InputSelect @bind-Value="accountUpdateRequest.CinemaCenterId" class="form-select" id="cinemaCenter">
+                            <option selected disabled>Select a Cinema Center</option>
+                            @foreach (var cinemaCenter in cinemaCenters)
+                            {
+                                <option value="@cinemaCenter.Id">@cinemaCenter.Name</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => accountUpdateRequest.CinemaCenterId)" />
+                    </div>
+                }
+                <div class="mb-3">
+                    <label for="status" class="form-label">Trạng thái</label>
+                    <InputSelect @bind-Value="accountUpdateRequest.Status" class="form-select" id="status">
+                        <option selected disabled>Select a Status</option>
+                        @foreach (var Item in Enum.GetValues(typeof(AccountStatus)))
+                        {
+                            <option value="@Item">@Item</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => accountUpdateRequest.Status)" />
+                </div>
+                <div class="mb-3">
+                    @if (accountUpdateRequest.Avatar == null)
+                    {
+                        <label for="customFile" class="form-label">Upload Image</label>
+                        <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+                    }
+                    @if (accountUpdateRequest.Avatar != null)
+                    {
+                        <div class="row">
+                            <div class="md-3 pt-3">
+                                <img src="@accountUpdateRequest.Avatar" alt="User Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
+                            </div>
+                            <div class="md-3 pt-3 ">
+                                <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </EditForm>
+        </div>
+        <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
+            @if (bookingHistory?.Item != null)
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên phim</th>
+                            <th>Tuổi</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>Thời gian kết thúc</th>
+                            <th>Rạp</th>
+                            <th>Tổng tiền</th>
+                            <th>Ngày đặt</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bill in bookingHistory.Item)
+                        {
+                            <tr class="align-middle">
+                                <td><img src="@bill.FilmPoster" alt="Film Image" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                                <td>@bill.FilmName</td>
+                                <td>@bill.FilmRating</td>
+                                <td>@bill.ShowStartTime</td>
+                                <td>@bill.ShowEndTime</td>
+                                <td>@bill.CinemaName</td>
+                                <td>@bill.TotalMoney</td>
+                                <td>@bill.CreateTime</td>
+                                <td>
+                                    <span class="badge text-bg-success">@bill.Status</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success" href="@($"billuserdetail/{bill.Id}")">Chi tiết</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Hiện tại chưa có thông tin đặt vé.</p>
+            }
+            <Pagination MetaData="metaData" SelectedPage="SelectedPage" Spread="2" />
+        </div>
+        <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+            <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
+                    <InputText type="password" class="form-control" id="oldPassword" @bind-Value="changePasswordRequest.OldPassword" />
+                    <ValidationMessage For="@(() => changePasswordRequest.OldPassword)" />
+                </div>
+                <div class="mb-3">
+                    <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                    <InputText type="password" class="form-control" id="newPassword" @bind-Value="changePasswordRequest.NewPassword" />
+                    <ValidationMessage For="@(() => changePasswordRequest.NewPassword)" />
+                </div>
+                <div class="mb-3">
+                    <label for="newPasswordConfirm" class="form-label">Xác nhận mật khẩu mới</label>
+                    <InputText type="password" class="form-control" id="newPasswordConfirm" @bind-Value="changePasswordRequest.NewPasswordConFirm" />
+                    <ValidationMessage For="@(() => changePasswordRequest.NewPasswordConFirm)" />
+                </div>
+                <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<style>
+    .validation-message {
+        color: red;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private string? _directoryPath { get; set; }
+    private AccountDto accountDtos = new AccountDto();
+    private AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest();
+    private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+    private PageList<BillsDto> bookingHistory = new PageList<BillsDto>();
+    private MetaData metaData = new MetaData();
+    private List<CinemaCenterDto> cinemaCenters = new List<CinemaCenterDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        accountDtos = await AccountService.GetByIdAsync(Id);
+        accountUpdateRequest = new AccountUpdateRequest
+            {
+                Id = accountDtos.Id,
+                Name = accountDtos.Name,
+                Username = accountDtos.Username,
+                Email = accountDtos.Email,
+                Phone = accountDtos.Phone,
+                Role = accountDtos.Role,
+                Status = accountDtos.Status,
+                Avatar = accountDtos.Avatar,
+                CinemaCenterId = accountDtos.CinemaCenterId
+            };
+        changePasswordRequest.Id = accountDtos.Id;
+        // _directoryPath = Path.Combine(WebHostEnv.ContentRootPath, "img", "Avatar");
+
+        bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = 1, PageSize = 10 });
+        metaData = bookingHistory.MetaData;
+
+        var cinemaCenterPageList = await CinemaCenterService.GetAllCinemaCenter(new CinemaCenterSearch(), new PagingParameters { PageNumber = 1, PageSize = 10 });
+        cinemaCenters = cinemaCenterPageList.Item.ToList();
+
+    }
+
+    private async Task ChangePassword()
+    {
+        changePasswordRequest.Id = Id;
+        var result = await AccountUtilitiesService.ChangePasswordAsync(changePasswordRequest, CancellationToken.None);
+        if (result)
+        {
+            await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công");
+            NavigationManager.NavigateTo("/list-user");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Đổi mật khẩu thất bại");
+        }
+    }
+
+    private async Task UpdateAccount()
+    {
+        if (accountUpdateRequest != null)
+        {
+            accountUpdateRequest.Id = Id;
+            await AccountService.UpdateAsync(accountUpdateRequest);
+            await JSRuntime.ToastrSuccess("Cập nhật thành công");
+            NavigationManager.NavigateTo("/user");
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Cập nhật thất bại");
+        }
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        FileInfo fileInfo = new(file.Name);
+        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
+        if (!Directory.Exists(_directoryPath))
+        {
+            Directory.CreateDirectory(_directoryPath);
+        }
+        var path = Path.Combine(_directoryPath, newFileName);
+        await using FileStream fs = new(path, FileMode.Create);
+        await file.OpenReadStream(file.Size).CopyToAsync(fs);
+        accountUpdateRequest.Avatar = $"/img/Avatar/{newFileName}";
+    }
+
+    void DeleteImage()
+    {
+        if (accountUpdateRequest.Avatar == null)
+        {
+            return;
+        }
+        var fileToDelete = accountUpdateRequest.Avatar.Split('/').Reverse().First();
+        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
+        if (!File.Exists(filePathToDeleteImage))
+        {
+            accountUpdateRequest.Avatar = null;
+            return;
+        }
+        File.Delete(filePathToDeleteImage);
+
+        accountUpdateRequest.Avatar = null;
+        return;
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = page, PageSize = 10 });
+        metaData = bookingHistory.MetaData;
+    }
+}
