@@ -54,7 +54,7 @@
 					<tr>
 						<th scope="row">@item.Name</th>
 						<td>@item.TotalTicket</td>
-						<td>@item.TotalRevenue</td>
+						<td>@item.TotalRevenue?.ToString("#,##0") VND</td>
 					</tr>
 				}
 			</tbody>

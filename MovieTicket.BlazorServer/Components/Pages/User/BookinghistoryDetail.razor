@@ -151,6 +151,7 @@
                 </div>
             </div>
         </div>
+        <img src="@BarcodeImage" width="100%" height="200" class="object-fit-contain border rounded" />
     </div>
 </div>
 
@@ -160,6 +161,7 @@
 	private List<TicketDto> lstTicket = new List<TicketDto>();
 	private TicketDto objTicket = new TicketDto();
 	private ShowTimeDto objShowTime = new ShowTimeDto();
+    private string BarcodeImage;
 	private class BillSeat
 	{
 		public string SeatName { get; set; }
@@ -210,6 +212,7 @@
 				});
 		}
 		lstBillCombo = await BillComboService.GetListBillComboByBillId(Id);
+        BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
 	}
 
 	private void GoToUserDetail()

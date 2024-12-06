@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <div>
-                <a class="btn btn-primary me-2" href="/user/create">+ Tạo user</a>
+                <a class="btn add-btn me-md-2" href="/user/create"> <i class="bi bi-plus-square"></i> Tạo user</a>
             </div>
         </div>
     </div>
@@ -17,6 +17,7 @@
             <table class="table table-hover table-stripted">
                 <thead>
                     <tr>
+                        <th>STT</th>
                         <th>Avatar</th>
                         <th>Họ tên</th>
                         <th>Tên tài khoản</th>
@@ -33,9 +34,11 @@
                     {
                         @if (accounts.Any())
                         {
+                            int count = 1;
                             @foreach (var account in accounts)
                             {
                                 <tr>
+                                    <td>@count</td>
                                     <td><img src="@account.Avatar" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
                                     <td>@account.Name</td>
                                     <td>@account.Username</td>
@@ -45,11 +48,12 @@
                                     <td><span class="badge bg-success">@account.Status</span></td>
                                     <td>@account.CreateDate?.ToString("dd-MM-yyyy")</td>
                                     <td>
-                                        <a class="btn btn-outline-primary" href="@($"/userdetail/{account.Id}")">
+                                        <a class="btn edit-btn" href="@($"/userdetail/{account.Id}")">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                     </td>
                                 </tr>
+                                count++;
                             }
                         }
                         else

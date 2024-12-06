@@ -21,7 +21,7 @@
 
 <div class="container-fluid">
     <div class="d-flex justify-content-start align-items-center mb-3">
-        <a class="btn btn-success me-2" href="/cinema-center/create">Tạo Rạp Chiếu</a>
+        <a class="btn add-btn me-md-2" href="/cinema-center/create"><i class="bi bi-plus-square"></i>Tạo Rạp Chiếu</a>
     </div>
 
     <div class="d-flex mt-4" style="max-width: 900px;">
@@ -33,7 +33,7 @@
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th scope="col" class="small-col">#</th>
+                <th scope="col" class="small-col">STT</th>
                 <th scope="col">Tên Rạp Chiếu</th>
                 <th scope="col">Địa Chỉ</th>
                 <th scope="col">Ngày Tạo</th>
@@ -47,16 +47,16 @@
                 @foreach (var item in CinemaCenters)
                 {
                     <tr>
-                        <th scope="row" class="small-col">@index</th>
+                        <td scope="row" class="small-col">@index</td>
                         <td>@item.Name</td>
                         <td>@item.Address</td>
                         <td>@item.CreateDate?.ToString("dd-MM-yyyy")</td>
                         <td>
-                            <span class="p-2 m-2 badge text-light bg-primary" role="button" @onclick="() => NavigateToUpdate(item.Id)">
+                            <span class="btn edit-btn" role="button" @onclick="() => NavigateToUpdate(item.Id)">
                                 <i class="bi bi-pencil-square fs-6"></i>
                             </span>
-                            <span class="p-2 m-2 badge text-light bg-danger" role="button" @onclick="() => DeleteId(item.Id.ToString())">
-                                <i class="bi bi-trash3 fs-6"></i>
+                            <span class="btn btn-danger" role="button" @onclick="() => DeleteId(item.Id.ToString())">
+                                <i class="bi bi-trash"></i>
                             </span>
                         </td>
                     </tr>

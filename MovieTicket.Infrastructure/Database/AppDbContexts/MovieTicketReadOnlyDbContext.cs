@@ -1,4 +1,4 @@
-﻿using Bogus;
+using Bogus;
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Domain.Entities;
 using MovieTicket.Domain.Entitis;
@@ -9,68 +9,68 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts;
 
 public class MovieTicketReadOnlyDbContext : DbContext
 {
-	public MovieTicketReadOnlyDbContext()
-	{
-	}
+    public MovieTicketReadOnlyDbContext()
+    {
+    }
 
-	public MovieTicketReadOnlyDbContext(DbContextOptions<MovieTicketReadOnlyDbContext> options)
-		: base(options)
-	{
-	}
+    public MovieTicketReadOnlyDbContext(DbContextOptions<MovieTicketReadOnlyDbContext> options)
+        : base(options)
+    {
+    }
 
-	#region DbSet
+    #region DbSet
 
-	public virtual DbSet<Account> Accounts { get; set; }
-	public virtual DbSet<Bill> Bills { get; set; }
-	public virtual DbSet<BillCombo> BillCombos { get; set; }
-	public virtual DbSet<Cinema> Cinemas { get; set; }
-	public virtual DbSet<CinemaCenter> CinemaCenters { get; set; }
-	public virtual DbSet<CinemaType> CinemaTypes { get; set; }
-	public virtual DbSet<Combo> Combos { get; set; }
-	public virtual DbSet<ConfirmedEmail> ConfirmedEmails { get; set; }
-	public virtual DbSet<Film> Films { get; set; }
-	public virtual DbSet<FilmScreenType> FilmScreenTypes { get; set; }
-	public virtual DbSet<FilmTranslationType> FilmTranslationTypes { get; set; }
-	public virtual DbSet<Membership> Memberships { get; set; }
-	public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-	public virtual DbSet<Schedule> Schedules { get; set; }
-	public virtual DbSet<ScreenType> ScreenTypes { get; set; }
-	public virtual DbSet<ScreeningDay> ScreeningDays { get; set; }
-	public virtual DbSet<Seat> Seats { get; set; }
-	public virtual DbSet<SeatType> SeatTypes { get; set; }
-	public virtual DbSet<ShowTime> ShowTimes { get; set; }
-	public virtual DbSet<Ticket> Tickets { get; set; }
-	public virtual DbSet<TicketPrice> TicketPrices { get; set; }
-	public virtual DbSet<TranslationType> TranslationTypes { get; set; }
-	public virtual DbSet<Coupon> Coupons { get; set; }
-	public virtual DbSet<Banner> Banners { get; set; }
-	public virtual DbSet<About> Abouts { get; set; }
+    public virtual DbSet<Account> Accounts { get; set; }
+    public virtual DbSet<Bill> Bills { get; set; }
+    public virtual DbSet<BillCombo> BillCombos { get; set; }
+    public virtual DbSet<Cinema> Cinemas { get; set; }
+    public virtual DbSet<CinemaCenter> CinemaCenters { get; set; }
+    public virtual DbSet<CinemaType> CinemaTypes { get; set; }
+    public virtual DbSet<Combo> Combos { get; set; }
+    public virtual DbSet<ConfirmedEmail> ConfirmedEmails { get; set; }
+    public virtual DbSet<Film> Films { get; set; }
+    public virtual DbSet<FilmScreenType> FilmScreenTypes { get; set; }
+    public virtual DbSet<FilmTranslationType> FilmTranslationTypes { get; set; }
+    public virtual DbSet<Membership> Memberships { get; set; }
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+    public virtual DbSet<Schedule> Schedules { get; set; }
+    public virtual DbSet<ScreenType> ScreenTypes { get; set; }
+    public virtual DbSet<ScreeningDay> ScreeningDays { get; set; }
+    public virtual DbSet<Seat> Seats { get; set; }
+    public virtual DbSet<SeatType> SeatTypes { get; set; }
+    public virtual DbSet<ShowTime> ShowTimes { get; set; }
+    public virtual DbSet<Ticket> Tickets { get; set; }
+    public virtual DbSet<TicketPrice> TicketPrices { get; set; }
+    public virtual DbSet<TranslationType> TranslationTypes { get; set; }
+    public virtual DbSet<Coupon> Coupons { get; set; }
+    public virtual DbSet<Banner> Banners { get; set; }
+    public virtual DbSet<About> Abouts { get; set; }
 
-	#endregion DbSet
+    #endregion DbSet
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-	{
-		// Đăng:
-		//optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        // Đăng:
+        //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-		// Trung:
-		//optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
+        // Trung:
+        //optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
 
-		// Toản:
-		//optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+        // Toản:
+        //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-		// Vũ:
-		//optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+        // Vũ:
+        //optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-		// Đông:
-		//optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
-	}
+        // Đông:
+        //optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+    }
 
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
-	{
-		modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
-		SeedingDataWithBogus(modelBuilder);
-	}
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
+        SeedingDataWithBogus(modelBuilder);
+    }
 
 	private void SeedingDataWithBogus(ModelBuilder modelBuilder)
 	{
@@ -91,8 +91,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		});
 		accounts.Add(new Account()
 		{
-			Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
-			Username = "User",
+			Id = Guid.Parse("0c3d44f5-af62-4e88-8ba5-062c1345354b"),
+			Username = "User1",
 			Password = Hash.EncryptPassword("123"),
 			Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
@@ -104,9 +104,23 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		});
 		accounts.Add(new Account()
 		{
+			Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+			Username = "User",
+			Password = Hash.EncryptPassword("123"),
+			Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
+			Avatar = "img/Avatar/avatar.jpg",
+			Name = "ClientTest",
+			Phone = "000-000-000",
+			Email = "dangnph36044@fpt.edu.vn",
+			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
+			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
+		});
+		accounts.Add(new Account()
+		{
 			Id = Guid.Parse("91b9fa1f-a898-4359-8c35-0cc0df5a22f1"),
 			Username = "Staff",
 			Password = Hash.EncryptPassword("123"),
+			CinemaCenterId = Guid.Parse("ad9ca2fb-ae80-49a1-835f-8c2f26a30f3a"),
 			Role = Domain.Enums.AccountRole.Staff, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "StaffTest",
@@ -117,34 +131,138 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		});
 		modelBuilder.Entity<Account>().HasData(accounts);
 
-		var filmFaker = new Faker<Film>("vi")
-		.RuleFor(f => f.Id, f => Guid.NewGuid())
-		.RuleFor(f => f.Name, f => $"Mộ đom đóm (Lần {f.IndexFaker})")
-		.RuleFor(f => f.EnglishName, f => $"Grave of the Fireflies (English)")
-		.RuleFor(f => f.Trailer, f => "https://youtu.be/p6jOf_uDeH8")
-		.RuleFor(f => f.Description, f => f.Lorem.Sentence())
-		.RuleFor(f => f.Gerne, f => f.PickRandom("Romantic", "School Love"))
-		.RuleFor(f => f.Director, f => f.Name.FullName())
-		.RuleFor(f => f.Cast, f => $"{f.Name.FirstName()} {f.Name.LastName()}")
-		.RuleFor(f => f.Rating, f => f.PickRandom(12, 16, 18))
-		.RuleFor(f => f.StartDate, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(10)))
-		.RuleFor(f => f.ReleaseYear, 2024)
-		.RuleFor(f => f.RunningTime, f => f.Random.Int(60, 180))
-		.RuleFor(f => f.Nation, f => f.PickRandom("USA", "Japan"))
-		.RuleFor(f => f.Poster, "img/posterFilm/film_modomdom.jpg")
-		.RuleFor(f => f.Language, f => f.PickRandom("English", "Japanese"))
-		.RuleFor(f => f.CreatDate, DateTime.Now);
-		// Generate list of films
-		var films = filmFaker.Generate(15);
+		List<Film> films = new List<Film>();
+		films.Add(new Film()
+		{
+			Id = Guid.Parse("4342c2b9-8810-4d4b-bff5-2a88a2b65c04"),
+			Name = "HÀNH TRÌNH CỦA MOANA 2",
+			Cast = "Auli‘i Cravalho, Dwayne Johnson, Rachel House, Temuera Morrison, Nicole Scherzinger, Hualālai Chung, David Fane, Rose Matafeo, Awhimai Fraser, Gerald Ramsey, Khaleesi Lambert-Tsuda",
+			CreatDate = DateTime.Now,
+			Director = "David G. Derrick Jr.",
+			EnglishName = "MOANA 2",
+			Gerne = "Hành Động, Hoạt Hình, Phiêu Lưu, Thần thoại",
+			Poster = "img/posterFilm/moana2.jpg",
+			RunningTime = 99,
+			Language = "Tiếng Việt",
+			Nation = "Mỹ",
+			Rating = 12,
+			ReleaseYear = 2024,
+			Trailer = "https://www.youtube.com/embed/cBG30KsGRH8",
+			StartDate = DateTime.Now,
+			Description = "Không biết viết gì"
+		});
+		films.Add(new Film()
+		{
+			Id = Guid.Parse("288e19a4-c528-4fe5-8e03-5a3066255936"),
+			Name = "LINH MIÊU",
+			Cast = "Hồng Đào, Thiên An, Thuỳ Tiên, Văn Anh, Samuel An,...",
+			CreatDate = DateTime.Now,
+			Director = "Lưu Thành Luân",
+			EnglishName = "LINH MIÊU",
+			Gerne = "Kinh Dị",
+			Poster = "img/posterFilm/linhmieu.jpg",
+			RunningTime = 109,
+			Language = "Tiếng Việt",
+			Nation = "Việt Nam",
+			Rating = 18,
+			ReleaseYear = 2024,
+			Trailer = "https://www.youtube.com/embed/4oxoPMxBO6s",
+			StartDate = DateTime.Now,
+			Description = "Không biết viết gì"
+		});
+		films.Add(new Film()
+		{
+			Id = Guid.Parse("afb5722b-e26e-4ea5-8b78-8cfc648a00ce"),
+			Name = "CHIẾN ĐỊA TỬ THI",
+			Cast = "Nonkul, Awat Ratanapintha, Supitcha Sangkhachinda, Akkarat Nimitchai, Thawatchanin Darayon, Thanadol Auepong, Guntapat Kasemsan Na Ayudhya, Seigi Ohzeki.",
+			CreatDate = DateTime.Now,
+			Director = "Kongkiat Komesiri",
+			EnglishName = "CHIẾN ĐỊA TỬ THI",
+			Gerne = "Kinh Dị",
+			Poster = "img/posterFilm/tuthi.jpg",
+			RunningTime = 105,
+			Language = "Tiếng Việt",
+			Nation = "Thái lan",
+			Rating = 18,
+			ReleaseYear = 2024,
+			Trailer = "https://www.youtube.com/embed/k_uHgoVKppU",
+			StartDate = DateTime.Now,
+			Description = "Không biết viết gì"
+		});
+		films.Add(new Film()
+		{
+			Id = Guid.Parse("7f4a0fe8-21b8-4333-958a-28cffd373782"),
+			Name = "CƯỜI XUYÊN BIÊN GIỚI",
+			Cast = "Ryu Seung-ryong , Jin Sun-kyu, Igor Rafael P EDROSO, Luan B RUM DE ABREU E LIMA, JB João Batista GOMES DE O LIVEIRA, Yeom Hye-ran và Go Kyoung- pyo, Lee Soon-won",
+			CreatDate = DateTime.Now,
+			Director = "KIM Chang-ju",
+			EnglishName = "CƯỜI XUYÊN BIÊN GIỚI",
+			Gerne = "Hài",
+			Poster = "img/posterFilm/cuoi.jpg",
+			RunningTime = 113,
+			Language = "Tiếng Việt",
+			Nation = "Hàn Quốc",
+			Rating = 13,
+			ReleaseYear = 2024,
+			Trailer = "https://www.youtube.com/embed/4ALt4VT7grw",
+			StartDate = DateTime.Now,
+			Description = "Không biết viết gì"
+		});
+		films.Add(new Film()
+		{
+			Id = Guid.Parse("ed01e472-79ad-48cd-b67f-19e3d315f02f"),
+			Name = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
+			Cast = "Ayana Taketatsu, Ayane Sakura, Inori Minase, Kana Hanazawa, Miku Itō, Yoshitsugu Matsuoka",
+			CreatDate = DateTime.Now,
+			Director = "Masato Jinbo",
+			EnglishName = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
+			Gerne = "Hoạt Hình",
+			Poster = "img/posterFilm/namdau.jpg",
+			RunningTime = 47,
+			Language = "Tiếng Việt",
+			Nation = "Nhật bản",
+			Rating = 13,
+			ReleaseYear = 2024,
+			Trailer = "https://www.youtube.com/embed/yBp6nAkI3ns",
+			StartDate = DateTime.Now,
+			Description = "Không biết viết gì"
+		});
+		films.Add(new Film()
+		{
+			Id = Guid.Parse("035b2879-ebe6-432e-b198-a66b29c3c7c5"),
+			Name = "TRAPEZIUM",
+			Cast = "Yu Azuma, Kurumi Taiga, Ranko Katori, Mika Kamei",
+			CreatDate = DateTime.Now,
+			Director = "Masahiro Shinohara",
+			EnglishName = "TRAPEZIUM",
+			Gerne = "Hoạt Hình",
+			Poster = "img/posterFilm/trapezium.jpg",
+			RunningTime = 102,
+			Language = "Tiếng Việt",
+			Nation = "Nhật bản",
+			Rating = 13,
+			ReleaseYear = 2024,
+			Trailer = "https://www.youtube.com/embed/MIFfAMck7oA",
+			StartDate = DateTime.Now,
+			Description = "Không biết viết gì"
+		});
 		modelBuilder.Entity<Film>().HasData(films);
 
 		// Faker for Membership
-		var membershipFaker = new Faker<Membership>()
-			.RuleFor(m => m.Id, Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"))
-			.RuleFor(m => m.Point, 0)
-			.RuleFor(m => m.Status, Domain.Enums.MembershipStatus.Active);
-
-		modelBuilder.Entity<Membership>().HasData(membershipFaker.Generate(1));
+		List<Membership> memberships = new List<Membership>();
+		memberships.Add(new Membership()
+		{
+			Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+			Point = 0,
+			Status = Domain.Enums.MembershipStatus.Active
+		});
+		memberships.Add(new Membership()
+		{
+			Id = Guid.Parse("0c3d44f5-af62-4e88-8ba5-062c1345354b"),
+			Point = 0,
+			Status = Domain.Enums.MembershipStatus.Active
+		});
+		modelBuilder.Entity<Membership>().HasData(memberships);
 
 		// Faker for CinemaCenter
 		List<CinemaCenter> cinemaCenters = new List<CinemaCenter>();
@@ -154,15 +272,16 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Id = Guid.NewGuid(),
 			Name = "VHD Vincom Mỹ Đình",
 			Address = "Số 1 Mỹ Đình, Nam Từ Liêm,Hà Nội",
-			AddressMap = "https://goo.gl/maps/1",
+			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.329821256736!2d105.77868087606693!3d21.01948508062756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313455b1766330d1%3A0x1511e0d5bf3067fd!2zVmluY29tIFBsYXphIFZpbmhvbWVzIFNreSBMYWtlIFBo4bqhbSBIw7luZyBN4bu5IMSQw6xuaA!5e0!3m2!1svi!2s!4v1733299099671!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
+
 		});
 		cinemaCenters.Add(new CinemaCenter()
 		{
-			Id = Guid.NewGuid(),
+			Id = Guid.Parse("ad9ca2fb-ae80-49a1-835f-8c2f26a30f3a"),
 			Name = "VHD Vincom Nguyễn Chí Thanh",
 			Address = "Số 1 Nguyễn Chí Thanh, Ba Đình,Hà Nội",
-			AddressMap = "https://goo.gl/maps/2",
+			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.2303104777766!2d105.806904776067!3d21.02346878062462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab6a17e518e3%3A0x82ef164fc911c781!2sVincom%20Center%20Nguy%E1%BB%85n%20Ch%C3%AD%20Thanh!5e0!3m2!1svi!2s!4v1733298758785!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
 		});
 		cinemaCenters.Add(new CinemaCenter()
@@ -170,7 +289,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Id = Guid.NewGuid(),
 			Name = "VHD TimeCity",
 			Address = "Số 1 Minh Khai, Hai Bà Trưng,Hà Nội",
-			AddressMap = "https://goo.gl/maps/2",
+			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.9458662701677!2d105.8652574760663!3d20.994806980646135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac04b6fcfa63%3A0x579e974a43b9f42f!2sVincom%20Mega%20Mall%20Times%20City!5e0!3m2!1svi!2s!4v1733299130109!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
 		});
 		modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
@@ -178,7 +297,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		var comboFaker = new Faker<Combo>()
 			   .RuleFor(c => c.Id, f => Guid.NewGuid())
 			   .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
-			   .RuleFor(c => c.Price, 90000)
+			   .RuleFor(c => c.Price, f => 30000 * f.IndexFaker)
 			   .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
 			   .RuleFor(c => c.ComboStatus, ComboStatus.Available)
 			   .RuleFor(c => c.Image, "img/Combo/combo.png");
@@ -285,19 +404,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		}
 		// Generate list of film translation types
 		modelBuilder.Entity<FilmTranslationType>().HasData(filmTranslationTypeFaker);
-		// Faker for Bill
-		var billFaker = new Faker<Bill>()
-			.RuleFor(b => b.Id, f => Guid.NewGuid())
-			.RuleFor(b => b.TotalMoney, f => f.Finance.Amount(70000, 300000))
-			.RuleFor(b => b.CreateTime, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(30)))
-			.RuleFor(b => b.BarCode, f => $"barcode{f.IndexFaker}.jpg")
-			.RuleFor(b => b.Status, BillStatus.Paid)
-			.RuleFor(b => b.ActivationStatus, true)
-			.RuleFor(b => b.MembershipId, Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"))
-			.RuleFor(b => b.CouponId, (Guid?)null);
-		var bills = billFaker.Generate(10);
-		modelBuilder.Entity<Bill>().HasData(bills);
-
 		// Faker for Schedule
 		var schedules = new List<Schedule>();
 
@@ -307,8 +413,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			var schedule = new Faker<Schedule>()
 				.RuleFor(s => s.Id, f => Guid.NewGuid())
 				.RuleFor(s => s.FilmId, f => film.Id)
-				.RuleFor(s => s.StartDate, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(20)))
-			.RuleFor(s => s.EndDate, (f, s) => s.StartDate.AddDays(30))
+				.RuleFor(s => s.StartDate, f => DateTime.Now)
+				.RuleFor(s => s.EndDate, (f, s) => s.StartDate.AddDays(30))
 				.RuleFor(s => s.Type, ScheduleType.Regular)
 				.RuleFor(s => s.Status, ScheduleStatus.Showing)
 				.Generate();
@@ -405,7 +511,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			AmountValue = 25000,
 			StartDate = DateTime.Now,
 			EndDate = DateTime.Now.AddDays(30),
-			IsActive = false,
+			IsActive = true,
 		});
 		coupon.Add(new Coupon()
 		{
@@ -417,7 +523,6 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			IsActive = false,
 		});
 		modelBuilder.Entity<Coupon>().HasData(coupon);
-
 		var abouts = new List<About>();
 
 		#region About
