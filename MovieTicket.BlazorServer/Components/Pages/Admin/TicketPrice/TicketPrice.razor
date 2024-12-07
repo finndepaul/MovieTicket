@@ -58,8 +58,8 @@
 </div>
 <div class="mb-3">
 	<!--Create Ticket Price-->
-	<a class="btn btn-primary me-2" data-bs-toggle="modal" href="#CreateTicketPriceModalToggle" role="button">
-		<i class="bi bi-plus-lg"></i> Tạo giá vé
+	<a class="btn add-btn me-md-2" data-bs-toggle="modal" href="#CreateTicketPriceModalToggle" role="button">
+		<i class="bi bi-plus-square"></i> Tạo giá vé
 	</a>
 	<a class="btn btn-info bg-opacity-25 text-light" role="button" @onclick="Refresh_Button">
 		<i class="bi bi-arrow-clockwise"></i>Refresh
@@ -69,6 +69,8 @@
 <table class="table align-middle" style="table-layout: fixed">
 	<thead class="">
 		<tr class="">
+			<th class="">STT
+				</th>
 			<th class="">
 				<div class="d-flex justify-content-between border-end">
 					<p class="">Loại ghế</p>
@@ -160,14 +162,16 @@
 	<tbody>
 		@if (ticketPrice != null)
 		{
+			int count = 1;
 			@foreach (var item in ticketPrice)
 			{
 				<tr>
+					<td>@count</td>
 					<td scope="row"><span class="p-2 m-2 badge seat-@item.SeatName">@item.SeatName</span></td>
 					<td><span class="p-2 m-2 badge screentype-@item.Type">@item.Type</span></td>
 					<td><span class="p-2 m-2 badge screenday-@item.Day">@item.Day</span></td>
 					<td><span class="p-2 m-2 badge cinematype-@item.CinemaTypeName.Replace(" ","")">@item.CinemaTypeName</span></td>
-					<td><span class="">@item.Price.Value.ToString("#,##0")</span></td>
+					<td><span class="">@item.Price.Value.ToString("#,##0") VND</span></td>
 
 					<td>
 						@if (item.Status == Domain.Enums.TicketPriceStatus.Active)
@@ -180,15 +184,16 @@
 						}
 					</td>
 					<td>
-						<span class="p-2 m-2 badge text-light bg-primary" data-id="@item.Id" role="button" @onclick="() => GetTicketPriceUpdateId(item.Id.ToString())">
-							<i class="bi bi-pencil-square fs-6"></i>
+						<span class="btn edit-btn" data-id="@item.Id" role="button" @onclick="() => GetTicketPriceUpdateId(item.Id.ToString())">
+							<i class="bi bi-pencil-square"></i>
 						</span>
-						<span class="p-2 m-2 badge text-light bg-danger" @onclick="() => GetTicketPriceDeleteId(item.Id.ToString())">
-							<i class="bi bi-trash3 fs-6"></i>
+						<span class="btn btn-danger" @onclick="() => GetTicketPriceDeleteId(item.Id.ToString())">
+							<i class="bi bi-trash"></i>
 						</span>
 					</td>
 
 				</tr>
+				count++;
 			}
 		}
 		else

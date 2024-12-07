@@ -32,9 +32,10 @@
 	<table class="table align-middle">
 		<thead>
 			<tr>
+				<th>STT</th>
 				<th>
 					<div class="d-flex justify-content-between border-end">
-						<p class="">Mã thanh toán</p>
+						<p class="">Mã hóa đơn</p>
 						<div class="d-flex">
 							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("BarCode"))"></i>
 
@@ -152,37 +153,46 @@
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var item in lstBills)
+			@if (lstBills != null)
 			{
-				<tr>
-					<td>@item.BarCode</td>
-					<td>@item.FilmName</td>
-					<td><span class="p-2 m-2 badge text-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-opacity-10 border border-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css"))">@(FormatShowtimeStatus(@item.ShowtimeStatus.Value, "ui"))</span></td>
-					<td>@item.CinemaType_Name</td>
-					<td >
-						<span data-bs-toggle="dropdown"
-							  aria-expanded="false" class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))" style="cursor: pointer">@(FormatBillStatus(@item.Status.Value, "ui"))</span>
-						<div class="dropdown-menu p-3">
-							<select class="form-select mb-3" @bind="billStatus">
-								<option selected>Tất cả</option>
-								@foreach (var status in Enum.GetValues(typeof(BillStatus)))
-								{
-									<option value="@status">@(FormatBillStatus((Enum.Parse<BillStatus>(status.ToString())), "ui"))</option>
-								}
-							</select>
-							<button class="btn btn-primary w-100" @onclick="@(() => UpdateStatusBill(item.Id,billStatus))">
-								Xác nhận thay đổi
+				int count = 1;
+				@foreach (var item in lstBills)
+				{
+					<tr>
+						<td>@count</td>
+						<td>@item.BarCode</td>
+						<td>@item.FilmName</td>
+						<td><span class="p-2 m-2 badge text-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-opacity-10 border border-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css"))">@(FormatShowtimeStatus(@item.ShowtimeStatus.Value, "ui"))</span></td>
+						<td>@item.CinemaType_Name</td>
+						<td>
+							<span data-bs-toggle="dropdown"
+								  aria-expanded="false" class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))" style="cursor: pointer">@(FormatBillStatus(@item.Status.Value, "ui"))</span>
+							<div class="dropdown-menu p-3">
+								<select class="form-select mb-3" @bind="billStatus">
+									<option selected>Tất cả</option>
+									@foreach (var status in Enum.GetValues(typeof(BillStatus)))
+									{
+										<option value="@status">@(FormatBillStatus((Enum.Parse<BillStatus>(status.ToString())), "ui"))</option>
+									}
+								</select>
+								<button class="btn btn-primary w-100" @onclick="@(() => UpdateStatusBill(item.Id,billStatus))">
+									Xác nhận thay đổi
+								</button>
+							</div>
+						</td>
+						<td>@item.TotalMoney.Value.ToString("#,##0") VND</td>
+						<td>@item.CreateTime</td>
+						<td>
+							<a class="btn btn-primary" href="bill/detail/@item.Id.ToString()"><i class="bi bi-info-circle"></i></a>
+							<button class="btn btn-danger" @onclick="() => OnSeletedBill(item.Id)">
+								<i class="bi bi-trash"></i>
 							</button>
-						</div>
-					</td>
-					<td>@item.TotalMoney</td>
-					<td>@item.CreateTime</td>
-					<td>
-						<a class="btn btn-info btn-sm text-light" href="bill/detail/@item.Id.ToString()"><i class="bi bi-pencil-square fs-6"></i></a>
-						<button class="btn btn-danger btn-sm" @onclick="() => OnSeletedBill(item.Id)"><i class="bi bi-trash3 fs-6"></i></button>
-					</td>
-				</tr>
+						</td>
+					</tr>
+					count++;
+				}
 			}
+			
 
 		</tbody>
 		<tfoot>

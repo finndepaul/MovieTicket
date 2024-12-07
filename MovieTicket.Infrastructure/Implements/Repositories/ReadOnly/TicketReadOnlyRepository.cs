@@ -22,6 +22,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     BillId = x.BillId,
                     ShowTimeId = x.ShowTimeId,
                     SeatId = x.SeatId,
+                    Price = x.Price,
                     TicketPriceId = x.TicketPriceId,
                     Qrcode = x.Qrcode,
                     Description = x.Description,
@@ -37,7 +38,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 {
                     Id = x.Id,
                     BillId = x.BillId,
-                    ShowTimeId = x.ShowTimeId,
+					Price = x.Price,
+					ShowTimeId = x.ShowTimeId,
                     SeatId = x.SeatId,
                     TicketPriceId = x.TicketPriceId,
                     Qrcode = x.Qrcode,

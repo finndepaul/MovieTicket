@@ -19,11 +19,12 @@
     </div>
 </div>
 <div class="container-fluid">
-    <a class="btn btn-primary mb-3" href="/create-about">+ Tạo nội dung</a>
+    <a class="btn add-btn me-md-2" href="/about/create"> <i class="bi bi-plus-square"></i> Tạo nội dung</a>
     <div class="table-responsive mb-3">
         <table class="table">
             <thead class="table-light">
                 <tr>
+                    <th scope="col">STT</th>
                     <th scope="col">Tiêu đề</th>
                     <th scope="col">Hành động</th>
                 </tr>
@@ -33,19 +34,25 @@
                 {
                     @if (aboutDtos.Any())
                     {
+                        int count = 1;
                         @foreach (var about in aboutDtos)
                         {
+                            
                             <tr>
+                                <td>@count</td>
                                 <td>@about.Title</td>
                                 <td>
-                                    <a class="btn btn-outline-primary btn-sm" href="@($"/about/update/{about.Id}")">
-                                        <i class="bi bi-pencil"></i>
+                                    <a class="btn edit-btn" href="@($"/about/update/{about.Id}")">
+                                        <i class="bi bi-pencil-square"></i>
+
                                     </a>
-                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => GetDeleteId(about.Id)">
+                                    <button class="btn btn-danger" @onclick="() => GetDeleteId(about.Id)">
                                         <i class="bi bi-trash"></i>
+
                                     </button>
                                 </td>
                             </tr>
+                            count++;
                         }
                     }
                     else
