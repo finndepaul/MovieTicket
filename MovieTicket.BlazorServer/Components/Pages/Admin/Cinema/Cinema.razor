@@ -7,7 +7,7 @@
         <!-- Nút -->
         <div class="d-grid gap-3 d-md-flex justify-content-md-start">
             <select class="form-select" style="width:auto" @onchange="OnChangeCinemaCenter">
-                <option value="">Chọn rạp</option>
+                <option value="" selected disabled>Chọn rạp</option>
                 @foreach (var item in _lstCinemaCenters)
                 {
                     <option value="@item.Name">@item.Name</option>
