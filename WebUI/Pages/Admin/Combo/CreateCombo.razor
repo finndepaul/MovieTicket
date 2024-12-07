@@ -7,7 +7,7 @@
         <a type="button" class="btn btn-light me-2" href="/combo">Quay lại</a>
         <button type="submit" class="btn btn-primary me-2">Create</button>
     </div>
-    
+
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <InputText id="name" class="form-control" @bind-Value="createComboRequest.Name" />
@@ -24,18 +24,6 @@
         <label for="description" class="form-label">Description</label>
         <InputTextArea id="description" class="form-control" @bind-Value="createComboRequest.Description" />
         <ValidationMessage For="@(() => createComboRequest.Description)" />
-    </div>
-
-    <div class="mb-3">
-        <label for="trangThai" class="form-label">Trạng thái</label>
-        <InputSelect class="form-select" id="trangThai" @bind-Value="createComboRequest.comboStatus">
-            <option selected>Select a Status</option>
-            @foreach (var Item in Enum.GetValues(typeof(ComboStatus)))
-            {
-                <option value="@Item">@Item</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => createComboRequest.comboStatus)" />
     </div>
 
     <div class="mb-3">
@@ -69,7 +57,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // _directoryPath = Path.Combine(WebHostEnv.ContentRootPath, "img", "Combo");
+        // _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Combo");
     }
     private async Task HandleOnSubmit()
     {
