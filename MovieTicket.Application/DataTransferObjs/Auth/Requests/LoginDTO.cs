@@ -4,10 +4,11 @@ namespace MovieTicket.Application.DataTransferObjs.Auth.Requests
 {
     public class LoginDTO
     {
-        [Required]
+        [Required(ErrorMessage = "Chưa nhập tên tài khoản")]
         public string Username { get; set; }
 
-        [Required, DataType(DataType.Password)]
+        [Required(ErrorMessage = "Chưa nhập mật khẩu")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }
