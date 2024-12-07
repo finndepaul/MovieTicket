@@ -1,0 +1,585 @@
+﻿@page "/offline-counter"
+@layout StaffLayout
+@attribute [Authorize(Roles = "Staff")]
+
+<div class="container-fluid">
+    <ul class="nav nav-tabs" id="counterTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="points-tab" data-bs-toggle="tab" data-bs-target="#showtime" type="button" role="tab" aria-controls="showtime" aria-selected="true">
+                <i class="bi bi-award-fill"></i> Suất chiếu
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#bill" type="button" role="tab" aria-controls="bills" aria-selected="false">
+                <i class="bi bi-gift-fill"></i> Hóa đơn
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#printTicket" type="button" role="tab" aria-controls="printTicket" aria-selected="false">
+                <i class="bi bi-gift-fill"></i> In vé
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="counterTabsContent" style="height: 100vh;">
+        <div class="tab-pane fade show active p-4 shadow-sm rounded-3"  id="showtime" role="tabpanel" aria-labelledby="showtime-tab">
+            <h3 class="text-primary">Suất chiếu</h3>
+            <div class="schedule-container">
+                <div class="date-navigation">
+                    <button class="nav-btn" @onclick="PreviousPage" disabled="@(PageIndex == 0)"> &lt; </button>
+                    <div class="dates">
+                        @foreach (var date in VisibleDates)
+                        {
+                            <div class="date-item @(date == showTimeSearch.ShowtimeDate ? "active" : "")"
+                            @onclick="() => OnDateSelected(date)">
+                                @date.ToString("dd/MM")
+                            </div>
+                        }
+                    </div>
+                    <button class="nav-btn" @onclick="NextPage" disabled="@(PageIndex == TotalPages - 1)"> > </button>
+                </div>
+
+                <div class="movie-info">
+                    @if (showTimeDtos.Any())
+                    {
+                        <div class="movie-schedule">
+                            @foreach (var group in showTimeDtos.GroupBy(s => s.FilmId))
+                            {
+                                var film = filmDto.FirstOrDefault(f => f.Id == group.Key);
+                                if (film != null)
+                                {
+                                    <div class="movie-info">
+                                        <h3 class="movie-title">@film.Name</h3>
+                                        <div class="rating-tag">@film.Rating</div>
+                                        <div class="movie-details">
+                                            <img src="@film.Poster" alt="@film.Name" class="poster">
+                                            <div class="showtimes">
+                                                @foreach (var subGroup in group.GroupBy(s => new { s.ScreenTypeName, s.TranslationTypeName }))
+                                                {
+                                                    <p><b>Suất chiếu:</b> @subGroup.Key.ScreenTypeName | @subGroup.Key.TranslationTypeName</p>
+                                                    <div class="time-slots">
+                                                        @foreach (var showtime in subGroup)
+                                                        {
+                                                            <button @onclick="() => OpenSeatSelectionModal(showtime.Id)" class="time-slot @(ShowTimeId == showtime.Id ? "selected" : "")">
+                                                                @showtime.StartTime.Value.ToString("HH:mm")
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p>Không có suất chiếu nào cho ngày đã chọn.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade p-4 shadow-sm rounded-3" id="bill" role="tabpanel" aria-labelledby="bills-tab">
+            <h3 class="text-success">Hóa đơn</h3>
+            <WebUI.Components.Pages.Admin.Bill.BillList/>
+        </div>
+        <div class="tab-pane fade p-4 shadow-sm rounded-3" id="printTicket" role="tabpanel" aria-labelledby="print-tab">
+            <h3 class="text-success">In vé</h3>
+        </div>
+
+    </div>
+</div>
+<!--Modal chọn ghế -->
+<div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title text-center">Chọn ghế</h4>
+                <button type="button" class="btn-close" @onclick="() => CloseSeatSelectionModal()" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" style="background-color: #fdfcf0">
+                <WebUI.Pages.Staff.SeatSelectionModal 
+                @ref="seatSelectionModalref" 
+                ShowtimeId="@ShowTimeId" 
+                OnSeatSelectionOfflineCounter="HandleSelectedSeats" />
+			</div>
+			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+				<WebUI.Pages.Staff.SeatFooter ShowtimeId="@ShowTimeId"
+				SeatDTOs="lstSeats"
+				
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalTicket="@TotalTicket"
+				NextToComboOfflineCounter="OpenComboSelectionModal"
+				BackToShowtimeOfflineCounter="CloseSeatSelectionModal" />
+			</div>
+		</div>
+	</div>
+</div>
+<!--Modal combo -->
+<div class="modal fade" id="ComboSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Chọn Combo</h4>
+			</div>
+			<div class="modal-body">
+                <WebUI.Pages.Staff.ComboSelectionModal 
+                @ref="comboSelectionModalref" 
+                BillId="@BillId" 
+                OnComboSelectionOfflineCounter="HandleSelectedCombos" />
+			</div>
+            <div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+                <WebUI.Pages.Staff.ComboFooter ShowtimeId="@ShowTimeId"
+				CheckedSeats="lstCheckedSeats"
+				SelectedCombos="lstSelectedCombos"
+				BillId="@BillId" @ref="comboFooterRef"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalCombo="@TotalCombo"
+				TotalMoney="@TotalMoney"
+				TotalTicket="@TotalTicket"
+                BackToSeatOfflineCounter="PreComboSelectionModal"
+				NextToDiscountOfflineCounter="OpenDiscountModal" />
+			</div>
+		</div>
+	</div>
+</div>
+<!--Modal Discount-->
+<div class="modal fade" id="DiscountSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h4 class="modal-title">Thanh toán</h4>
+                <button type="button" class="btn-close" @onclick="() => CloseDiscount()" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+                <WebUI.Pages.Staff.DiscountSelectionModal />
+			</div>
+            <div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
+                <WebUI.Pages.Staff.DiscountFooter ShowtimeId="@ShowTimeId"
+				CheckedSeats="lstCheckedSeats"
+				SeatsSelectedstr="@SeatsSelectedstr"
+				TotalCombo="@TotalCombo"
+				TotalMoney="@TotalMoney"
+				TotalTicket="@TotalTicket"
+				BillId="@BillId"
+				
+				BackToSeatOfflineCounter="CancelCheckout" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+    /* Phần chung */
+    .theatre-list {
+        font-family: Arial, sans-serif;
+        background-color: #1c1c1c;
+        color: white;
+        width: 100%;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+        font-size: 36px;
+        font-weight: bold;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+
+    .cinemas {
+        display: flex;
+        flex-wrap: wrap; /* Cho phép các phần tử xuống hàng khi không đủ không gian */
+        gap: 15px; /* Khoảng cách giữa các phần tử */
+    }
+
+    .cinema-item {
+        margin: 0;
+        padding: 10px;
+        background-color: #2c2c2c;
+        border-radius: 5px;
+        text-align: center;
+        color: white;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        flex-basis: calc(25% - 15px); /* Đảm bảo mỗi phần tử chiếm 1/4 chiều rộng của container, trừ khoảng cách */
+        box-sizing: border-box; /* Đảm bảo padding và margin không ảnh hưởng đến kích thước phần tử */
+    }
+
+        .cinema-item:hover {
+            background-color: red;
+        }
+
+        .cinema-item.selected {
+            background-color: red;
+            font-weight: bold;
+            transition: none; /* Tắt transition cho phần tử đã chọn */
+        }
+
+            .cinema-item.selected:hover {
+                background-color: #cc0000;
+            }
+
+    /* Carousel */
+    .carousel-item img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+    }
+
+    .carousel-control.left,
+    .carousel-control.right {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 5%;
+        text-align: center;
+        opacity: 0.5;
+        background: none;
+        border: none;
+        transition: opacity 0.3s ease;
+    }
+
+        .carousel-control.left:hover,
+        .carousel-control.right:hover {
+            opacity: 0.8;
+            background-image: linear-gradient(to right, rgba(0,0,0,0.5) 0, rgba(0,0,0,0.0001) 100%);
+        }
+
+    /* Phần lịch chiếu */
+    .schedule-container {
+        width: 80%;
+        margin: 20px auto;
+        border-top: 2px solid black;
+        padding-top: 20px;
+    }
+
+    .date-navigation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .nav-btn {
+        background-color: black;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+    .dates {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 0 15px;
+    }
+
+    .date-item {
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        background-color: white;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        color: #555;
+        transition: background-color 0.3s ease, font-weight 0.3s ease;
+    }
+
+        .date-item:hover {
+            background-color: #ccc;
+            font-weight: bold;
+        }
+
+        .date-item.active {
+            background-color: #444;
+            color: white;
+            font-weight: bold;
+        }
+
+    /* Phần thông tin phim */
+    .movie-info {
+        margin-top: 20px;
+    }
+
+    .movie-title {
+        text-transform: uppercase;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .rating-tag {
+        display: inline-block;
+        background-color: yellow;
+        font-weight: bold;
+        padding: 2px 5px;
+        border-radius: 3px;
+        margin-bottom: 15px;
+    }
+
+    .movie-details {
+        display: flex;
+        gap: 20px;
+    }
+
+    .poster {
+        width: 200px;
+        height: auto;
+        border: 1px solid #ccc;
+    }
+
+    .showtimes {
+        flex: 1;
+    }
+
+    .time-slots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .time-slots button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .time-slots button:hover {
+                background-color: #ddd;
+                transform: scale(1.1);
+            }
+
+    /* Các nút modal */
+    .modal-footer .nav-btn {
+        background-color: #444;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+        .modal-footer .nav-btn:hover {
+            background-color: #666;
+        }
+
+</style>
+
+<script>
+    function openModalShowTime() {
+        document.getElementById('myModalBuyTicket').style.display = 'flex';
+    }
+    function openModal(modalId) {
+        var modalElement = document.getElementById(modalId);
+        var modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+    function closeModall(modalId) {
+        var modalElement = document.getElementById(modalId);
+        var modal = bootstrap.Modal.getInstance(modalElement);
+        if (modal) {
+            modal.hide();
+        }
+    }
+</script>
+
+@code{
+    private List<DateTime> Dates = new();
+    private List<DateTime> VisibleDates => Dates.Skip(PageIndex * ItemsPerPage).Take(ItemsPerPage).ToList();
+    private List<ShowTimeDto> showTimeDtos = new();
+    private ShowTimeSearch showTimeSearch = new();
+    private int PageIndex = 0;
+    private int ItemsPerPage = 9;
+    private int TotalPages => (int)Math.Ceiling((double)Dates.Count / ItemsPerPage);
+    private IEnumerable<FilmDto> filmDto { get; set; } = new List<FilmDto>();
+    private AuthenticationState AuthenState;
+    private Guid ShowTimeId;
+    private string? location;
+    private List<SeatDTO> lstSeats = new List<SeatDTO>();
+    private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
+    private List<ComboRequest> lstSelectedCombos = new();
+    public SeatSelectionModal seatSelectionModalref;
+    public ComboSelectionModal comboSelectionModalref;
+    private Guid BillId = Guid.Empty;
+    public SeatFooter seatFooterRef;
+    public ComboFooter comboFooterRef;
+    private string SeatsSelectedstr;
+    private decimal TotalTicket;
+    private decimal TotalCombo = 0;
+    private decimal TotalMoney = 0;
+    private decimal Discount;
+
+    public class EventCallbackOfflineCounterArgs
+    {
+        public Guid MembershipId { get; set; }
+        public List<SeatDTO> lstSeats { get; set; }
+        public string str { get; set; }
+        public decimal TotalMoney { get; set; }
+        public decimal TotalTicket { get; set; }
+        public decimal TotalCombo { get; set; }
+        public decimal Discount { get; set; }
+        public List<ComboDto>? lstCombo { get; set; }
+        public Guid BillId { get; set; }
+        public List<SeatDTO> lstCheckedSeat { get; set; }
+        public List<ComboRequest> _lstCombo = new();
+        public ComboCheckRequest ComboCheckRequest { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Dates = Enumerable.Range(0, 28).Select(offset => DateTime.Today.AddDays(offset)).ToList();
+        AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = AuthenState.User;
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userDto = await AccountService.GetByIdAsync(Guid.Parse(userId));
+        var CinemaCenter = await CinemaCenterService.GetCinemaCenterById(userDto.CinemaCenterId.Value);
+        showTimeSearch.CinemaCenterId = userDto.CinemaCenterId;
+        await LoadShowTimes();
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "page", "OfflineCounter");
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (PageIndex > 0)
+        {
+            PageIndex--;
+        }
+    }
+
+    private void NextPage()
+    {
+        if (PageIndex < TotalPages - 1)
+        {
+            PageIndex++;
+        }
+    }
+
+    private async Task OnDateSelected(DateTime date)
+    {
+        showTimeSearch.ShowtimeDate = date;
+        await LoadShowTimes();
+    }
+
+    private async Task LoadShowTimes()
+    {
+        if (showTimeSearch.CinemaCenterId.HasValue && showTimeSearch.ShowtimeDate.HasValue)
+        {
+            var pagingResponse = await ShowTimeService.GetAll(showTimeSearch, new PagingParameters() { PageSize = 50 });
+            showTimeDtos = pagingResponse.Item.ToList();
+
+            var filmIds = showTimeDtos.Select(s => s.FilmId).Distinct();
+            filmDto = (await FilmService.GetAllFilms()).Where(f => filmIds.Contains(f.Id)).ToList();
+        }
+        else
+        {
+            showTimeDtos.Clear();
+            filmDto = new List<FilmDto>();
+        }
+    }
+
+    private async Task OpenSeatSelectionModal(Guid id)
+    {
+        await seatSelectionModalref.Reset();
+        ShowTimeId = id;
+        await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+    }
+
+    private void HandleSelectedSeats(EventCallbackOfflineCounterArgs args)
+    {
+        lstSeats = args.lstSeats;
+        SeatsSelectedstr = args.str;
+        TotalTicket = args.TotalTicket;
+        TotalMoney = TotalTicket;
+        StateHasChanged();
+    }
+
+    private async Task CloseSeatSelectionModal()
+    {
+        await seatSelectionModalref.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");                                                           
+    }
+    private async Task OpenComboSelectionModal(EventCallbackOfflineCounterArgs args)
+    {
+        Task.Delay(300);
+        BillId = args.BillId;
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
+    }
+    private void HandleSelectedCombos(EventCallbackOfflineCounterArgs args)
+    {
+        lstSelectedCombos = args._lstCombo;
+        TotalCombo = args.TotalCombo;
+        TotalMoney = TotalCombo + TotalTicket;
+        StateHasChanged();
+    }
+    private async Task PreComboSelectionModal(Guid id)
+    {
+        await seatSelectionModalref.Reset();
+        await comboFooterRef.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        TotalTicket = 0;
+        ShowTimeId = id;
+        await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+    }
+    private async Task OpenDiscountModal(EventCallbackOfflineCounterArgs args)
+    {
+        Task.Delay(1000);
+        
+        await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
+    }
+    private async Task CancelCheckout(Guid id)
+    {
+        await seatSelectionModalref.Reset();
+        await comboFooterRef.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        TotalTicket = 0;
+        TotalCombo = 0;
+        Discount = 0;
+        ShowTimeId = id;
+        await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
+    }
+    private async Task CloseDiscount()
+    {
+        await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
+    }
+}

@@ -1,0 +1,86 @@
+﻿@page "/cinema-center/create"
+@inject IJSRuntime _IJSRuntime;
+@attribute [Authorize(Roles = "Admin")]
+<EditForm Model="cinemaCenterCreateRequest" OnValidSubmit="HandCreateCinemaCenter">
+	<DataAnnotationsValidator />
+	<div class="container-fluid">
+		<div class="row">
+			<!-- Tên rạp chiếu -->
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="tenRap">Tên rạp chiếu:</label>
+					<input type="text" class="form-control" id="tenRap" @bind="cinemaCenterCreateRequest.Name" />
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Name)" class="text-danger" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3">
+			<!-- Địa chỉ -->
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="diaChi">Địa chỉ:</label>
+					<textarea class="form-control" id="diaChi" rows="3" @bind="cinemaCenterCreateRequest.Address"></textarea>
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.Address)" class="text-danger" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3">
+			<!-- Địa chỉ -->
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
+					<textarea class="form-control" id="diaChiCity" rows="3" @bind="cinemaCenterCreateRequest.AddresCity"></textarea>
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddresCity)" class="text-danger" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3">
+			<!-- Địa chỉ map -->
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="diaChiMap">Địa chỉ map:</label>
+					<textarea class="form-control" id="diaChiMap" rows="3" @bind="cinemaCenterCreateRequest.AddressMap"></textarea>
+					<ValidationMessage For="@(() => cinemaCenterCreateRequest.AddressMap)" class="text-danger" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-4">
+			<div class="col-md-2 d-flex justify-content-between">
+				<a href="/cinema-center" class="btn btn-secondary">Quay lại</a>
+				<button class="btn btn-primary" type="submit">Tạo mới</button>
+			</div>
+		</div>
+	</div>
+</EditForm>
+<style>
+	.pagination-wrapper {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.btn:hover, .badge:hover {
+		transform: scale(1.1);
+		transition: transform 0.2s ease-in-out;
+	}
+</style>
+@code {
+	private CinemaCenterCreateRequest cinemaCenterCreateRequest = new CinemaCenterCreateRequest();
+	private DateTime dateTime = DateTime.Now;
+	private async Task HandCreateCinemaCenter()
+	{
+		cinemaCenterCreateRequest.CreateDate = dateTime;
+		var result = await CinemaCenterService.Create(cinemaCenterCreateRequest);
+		if (result.Status == 200)
+		{
+			NavigationManager.NavigateTo("/cinema-center");
+		}
+		else
+		{
+			await _IJSRuntime.ToastrError(result.Message);
+		}
+	}
+}

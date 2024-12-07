@@ -36,7 +36,7 @@ else
 {
 	<h4>Không có banner</h4>
 }
-<div class="container">
+<div class="container mt-4">
 	<div class="tab mt-0 mb-5 d-flex justify-content-center border-bottom">
 		<button class="tablinks" onclick="openCity(event, 'SapChieu')">PHIM SẮP CHIẾU</button>
 		<button class="tablinks" onclick="openCity(event, 'DangChieu')" id="defaultOpen">PHIM ĐANG CHIẾU</button>
@@ -46,7 +46,7 @@ else
 		<!-- Tab content -->
 		<div id="SapChieu" class="tabcontent">
 			<div class="row">
-				@if (listObjFilm == null)
+				@if (listObjFilm.Count() == 0)
 				{
 					<p>Chưa có phim</p>
 				}
@@ -55,40 +55,18 @@ else
 					<!-- Movie 1 -->
 					@foreach (var item in listObjFilm)
 					{
-						@if (item.SType == ScheduleType.Early)
-						{
-							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
-							<div class="col-lg-3 mb-5">
-								<div class="movie-card">
-									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
-									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
-									<span class="sticker sticker-new"></span>
-
-									<div class="movie-info">
-										<h5 class="text-primary">@item.Name</h5>
-										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
-										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
-										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
-									</div>
-									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
-										<span><i class="bi bi-ticket-perforated"></i></span>
-										MUA VÉ
-									</a>
-								</div>
-							</div>
-						}
 						if (item.SType == null)
 						{
 							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<a href="film-view/@item.Id"><img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px"></a>
 									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
-										<h5 class="text-primary">@item.Name</h5>
-										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<h5 class="text-primary" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;"><a href="film-view/@item.Id" style="text-decoration:none">@item.Name</a></h5>
+										<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;"><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 										<p><strong>Ngày khởi chiếu:</strong> @item.StartDate.Value.ToString("dd-MM-yyyy")</p>
 									</div>
@@ -104,7 +82,7 @@ else
 		<div id="DangChieu" class="tabcontent">
 			<div class="row">
 				<!-- Movie 1 -->
-				@if (listObjFilm == null)
+				@if (listObjFilm.Count() == 0)
 				{
 					<p>Chưa có phim</p>
 				}
@@ -117,14 +95,14 @@ else
 							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<a href="film-view/@item.Id"><img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px"></a>
 									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
-										<h5 class="text-primary">@item.Name</h5>
-										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
-										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
+										<h5 class="text-primary" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;"><a href="film-view/@item.Id" style="text-decoration:none">@item.Name</a></h5>
+										<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;"><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime phút</p>
 									</div>
 									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">
 										<span><i class="bi bi-ticket-perforated"></i></span>
@@ -141,7 +119,7 @@ else
 
 		<div id="Dacbiet" class="tabcontent">
 			<div class="row">
-				@if (listObjFilm == null)
+				@if (listObjFilm.Count() == 0)
 				{
 					<p>Chưa có phim</p>
 				}
@@ -149,18 +127,18 @@ else
 				{
 					@foreach (var item in listObjFilm)
 					{
-						@if (item.SType == ScheduleType.Special)
+						@if (item.SType == ScheduleType.Regular || item.SType == ScheduleType.Special)
 						{
 							var rating = "c" + "-" + item.Rating.Value.ToString() + ".png";
 							<div class="col-lg-3 mb-5">
 								<div class="movie-card">
-									<img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px">
+									<a href="film-view/@item.Id"><img src="@item.Poster" alt="Movie Poster" class="object-fit-fill" style="height: 316px"></a>
 									<span style="position: absolute; top: 10px; left: 10px;"><img src="./img/icons/@rating" /></span>
 									<span class="sticker sticker-new"></span>
 
 									<div class="movie-info">
-										<h5 class="text-primary">@item.Name</h5>
-										<p><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
+										<h5 class="text-primary" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;"><a href="film-view/@item.Id" style="text-decoration:none">@item.Name</a></h5>
+										<p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 200px;"><strong class="me-2">Thể loại:</strong>@item.Gerne</p>
 										<p><strong class="me-2">Thời lượng:</strong>@item.RunningTime</p>
 									</div>
 									<a style="display: block;" @onclick="() => OpenModalShowTime(item.Id.ToString())" class="btn btn-2 btn-mua-ve2 fancybox-fast-view">

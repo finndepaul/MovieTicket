@@ -119,12 +119,12 @@
                                 }
                             </td>
                             <td>
-                                <button class="btn btn-sm edit-btn" data-id="@item.Id" @onclick="() => OpenEditModal(item.Id.ToString())">
+                                <button class="btn edit-btn" data-id="@item.Id" @onclick="() => OpenEditModal(item.Id.ToString())">
                                     <i class="bi bi-pencil-square"></i>
                                     Sửa
                                 </button>
 
-                                <button class="btn btn-sm btn-outline-danger" data-id="@item.Id" @onclick="() => HandleRemoveSchedule(item.Id.ToString())">
+                                <button class="btn btn-danger" data-id="@item.Id" @onclick="() => HandleRemoveSchedule(item.Id.ToString())">
                                     <i class="bi bi-trash"></i>
                                     Xóa
                                 </button>

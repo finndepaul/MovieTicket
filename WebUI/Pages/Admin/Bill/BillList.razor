@@ -1,0 +1,401 @@
+﻿@page "/bill"
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="modal fade" id="DeleteBillModalToggle" aria-hidden="true" aria-labelledby="DeleteBillModalToggleLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h1 class="modal-title fs-5" id="DeleteTicketPriceToggleLabel">Xác nhận xóa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<p>Bạn có chắc chắn muốn xóa giá vé này không?</p>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => OnDeleteSubmit(SelectedBillId)">Xóa</button>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt-4">
+	<div class="row mb-3">
+		<div class="col">
+			<input type="text" class="form-control" @bind-value="request.BarCode" placeholder="Search by BarCode or Status" />
+		</div>
+		<div class="col-auto">
+			<button class="btn btn-primary" @onclick="SearchBarCode">Search</button>
+		</div>
+	</div>
+
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Mã thanh toán</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("BarCode"))"></i>
+
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Tên phim</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("FilmName"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("FilmName", e.Value.ToString()))">
+								<option value="">Tất cả</option>
+								@foreach (var item in lstFilmName)
+								{
+									<option class="dropdown-item" value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Suất chiếu</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("ShowtimeStatus"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("ShowtimeStatus", e.Value.ToString()))">
+								<option value="">Tất cả</option>
+								@foreach (var item in Enum.GetValues(typeof(ShowtimeStatus)))
+								{
+									<option value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Phòng chiếu </p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("CinemaTypeName"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("CinemaTypeName", e.Value.ToString()))">
+								<option value="">Tất cả</option>
+								@foreach (var item in lstCinemaType_Name)
+								{
+									<option class="dropdown-item" value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Trạng thái</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Status"))"></i>
+							<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+							<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("Status", e.Value.ToString()))">
+								<option value="">Tất cả</option>
+								@foreach (var item in Enum.GetValues(typeof(BillStatus)))
+								{
+									<option value="@item">@item</option>
+								}
+							</select>
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Tổng tiền</p>
+						<div class="d-flex">
+							<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("TotalMoney"))"></i>
+
+						</div>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p>Ngày đặt</p>
+						<div class="d-flex">
+							<!-- Sort Icon -->
+							<i class="bi bi-sort-alpha-down" style="width: 20px; height: 24px;"
+							   @onclick="@(() => SortTable("CreateTime"))"></i>
+
+							<!-- Filter Dropdown -->
+							<i class="bi bi-funnel-fill" style="width: 20px; height: 24px;" type="button"
+							   data-bs-toggle="dropdown"
+							   aria-expanded="false"></i>
+
+							<!-- Date Range Filter -->
+							<div class="dropdown-menu p-3">
+								<label>From:</label>
+								<input type="datetime-local" class="form-control mb-2" @bind="StartTime">
+								<label>To:</label>
+								<input type="datetime-local" class="form-control mb-2" @bind="EndTime">
+								<button class="btn btn-primary w-100" @onclick="@(() => ApplyFilter("CreateTime", null, StartTime.Value, EndTime.Value))">
+									Apply
+								</button>
+							</div>
+						</div>
+					</div>
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in lstBills)
+			{
+				<tr>
+					<td>@item.BarCode</td>
+					<td>@item.FilmName</td>
+					<td><span class="p-2 m-2 badge text-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-opacity-10 border border-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css"))">@(FormatShowtimeStatus(@item.ShowtimeStatus.Value, "ui"))</span></td>
+					<td>@item.CinemaType_Name</td>
+					<td >
+						<span data-bs-toggle="dropdown"
+							  aria-expanded="false" class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))" style="cursor: pointer">@(FormatBillStatus(@item.Status.Value, "ui"))</span>
+						<div class="dropdown-menu p-3">
+							<select class="form-select mb-3" @bind="billStatus">
+								<option selected>Tất cả</option>
+								@foreach (var status in Enum.GetValues(typeof(BillStatus)))
+								{
+									<option value="@status">@(FormatBillStatus((Enum.Parse<BillStatus>(status.ToString())), "ui"))</option>
+								}
+							</select>
+							<button class="btn btn-primary w-100" @onclick="@(() => UpdateStatusBill(item.Id,billStatus))">
+								Xác nhận thay đổi
+							</button>
+						</div>
+					</td>
+					<td>@item.TotalMoney</td>
+					<td>@item.CreateTime</td>
+					<td>
+						<a class="btn btn-info btn-sm text-light" href="bill/detail/@item.Id.ToString()"><i class="bi bi-pencil-square fs-6"></i></a>
+						<button class="btn btn-danger btn-sm" @onclick="() => OnSeletedBill(item.Id)"><i class="bi bi-trash3 fs-6"></i></button>
+					</td>
+				</tr>
+			}
+
+		</tbody>
+		<tfoot>
+			<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+		</tfoot>
+	</table>
+	
+</div>
+
+<script>
+	function openModalDelete(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}
+</script>
+
+@code {
+	private List<BillsDto> lstBills = new List<BillsDto>();
+	private List<TicketDto> lstTicketDto = new List<TicketDto>();
+	private TicketDto ticketDto = new TicketDto();
+	private MetaData metaData { get; set; } = new MetaData();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private BillWithPaginationRequest request = new BillWithPaginationRequest();
+	private List<string> lstFilmName = new List<string>();
+	private List<string> lstCinemaType_Name = new List<string>();
+	private string currentSortColumn;
+	private DateTime? StartTime { get; set; }
+	private DateTime? EndTime { get; set; }
+	private BillStatus billStatus { get; set; }
+	private Guid SelectedBillId { get; set; }
+	private bool ascending = true;
+	private CancellationToken cancellationToken;
+
+	protected async override Task OnInitializedAsync()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(new BillWithPaginationRequest(), new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		lstFilmName = pageList.Item.Select(x => x.FilmName).Distinct().ToList();
+		lstCinemaType_Name = pageList.Item.Select(x => x.CinemaType_Name).Distinct().ToList();
+		metaData = pageList.MetaData;
+		StateHasChanged();
+	}
+	private async Task Refresh()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		metaData = pageList.MetaData;
+	}
+	private async Task SelectedPage(int page)
+	{
+		pagingParameters.PageNumber = page;
+		await Refresh();
+
+	}
+	private async Task SearchBarCode()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		metaData = pageList.MetaData;
+		StateHasChanged();
+	}
+	private async Task SortTable(string column)
+	{
+		if (currentSortColumn == column)
+		{
+			ascending = !ascending; // Toggle sorting direction
+		}
+		else
+		{
+			currentSortColumn = column;
+			ascending = true; // Default to ascending on new column
+		}
+
+		lstBills = column switch
+		{
+			"BarCode" => ascending ? lstBills.OrderBy(x => x.BarCode).ToList() : lstBills.OrderByDescending(x => x.BarCode).ToList(),
+			"FilmName" => ascending ? lstBills.OrderBy(x => x.FilmName).ToList() : lstBills.OrderByDescending(x => x.FilmName).ToList(),
+			"ShowtimeStatus" => ascending ? lstBills.OrderBy(x => x.ShowtimeStatus).ToList() : lstBills.OrderByDescending(x => x.ShowtimeStatus).ToList(),
+			"CinemaTypeName" => ascending ? lstBills.OrderBy(x => x.CinemaType_Name).ToList() : lstBills.OrderByDescending(x => x.CinemaType_Name).ToList(),
+			"Status" => ascending ? lstBills.OrderBy(x => x.Status).ToList() : lstBills.OrderByDescending(x => x.Status.Value).ToList(),
+			"TotalMoney" => ascending ? lstBills.OrderBy(x => x.TotalMoney).ToList() : lstBills.OrderByDescending(x => x.TotalMoney).ToList(),
+			"CreateTime" => ascending ? lstBills.OrderBy(x => x.CreateTime).ToList() : lstBills.OrderByDescending(x => x.CreateTime).ToList(),
+			_ => lstBills
+		};
+	}
+	// Phương thức chọn bộ lọc
+	private async Task ApplyFilter(string filterType, string value, DateTime? startTime = null, DateTime? endTime = null)
+	{
+		switch (filterType)
+		{
+			case "FilmName":
+				request.FilmName = value;
+				break;
+			case "ShowtimeStatus":
+				if (String.IsNullOrEmpty(value))
+				{
+					request.ShowtimeStatus = null;
+				}
+				else
+				{
+					request.ShowtimeStatus = (ShowtimeStatus)Enum.Parse(typeof(ShowtimeStatus), value);
+				}
+				break;
+			case "CinemaTypeName":
+				request.CinemaType_Name = value;
+				Console.WriteLine(value);
+				break;
+			case "Status":
+				if (String.IsNullOrEmpty(value))
+				{
+					request.Status = null;
+				}
+				else
+				{
+					request.Status = (BillStatus)Enum.Parse(typeof(BillStatus), value);
+				}
+				break;
+			case "CreateTime":
+				request.StartTime = startTime;
+				request.EndTime = endTime;
+				break;
+
+		}
+		await SelectedPage(1);
+		await Refresh();
+	}
+	private string FormatShowtimeStatus(ShowtimeStatus type, string formatType)
+	{
+		if (formatType == "css")
+		{
+			return type switch
+			{
+				ShowtimeStatus.Ended => "danger",
+				ShowtimeStatus.Showing => "primary",
+				ShowtimeStatus.ComingSoon => "warning",
+				_ => "Không xác định"
+			};
+		}
+		return type switch
+		{
+			ShowtimeStatus.Ended => "Đã chiếu",
+			ShowtimeStatus.Showing => "Đang chiếu",
+			ShowtimeStatus.ComingSoon => "Sắp chiếu",
+			_ => "Không xác định"
+		};
+	}
+	private string FormatBillStatus(BillStatus status, string formatType)
+	{
+		if (formatType == "css")
+		{
+			return status switch
+			{
+				BillStatus.Pending => "warning",
+				BillStatus.Cancelled => "danger",
+				BillStatus.Paid => "success",
+				_ => "Không xác định"
+			};
+		}
+		return status switch
+		{
+			BillStatus.Pending => "Chờ thanh toán",
+			BillStatus.Cancelled => "Đã Hủy",
+			BillStatus.Paid => "Đã thanh toán",
+			_ => "Không xác định"
+		};
+	}
+	private async Task UpdateStatusBill(Guid id, BillStatus status)
+	{
+		var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận sửa trạng thái");
+		if (confirm)
+		{
+			// Người dùng nhấn OK
+			var result = await BillService.UpdateStatusAsync(id, status);
+			if (result.Status == 200)
+			{
+				await JSRuntime.ToastrSuccess(result.Message);
+				await Refresh();
+			}
+			else
+			{
+				await JSRuntime.ToastrError(result.Message);
+			}
+		}
+	}
+	private async Task OnDeleteSubmit(Guid id)
+	{
+		var result = await UserHomeService.DeleteCheckAsync(id,CancellationToken.None);
+		if (result == "Success")
+		{
+			await JSRuntime.ToastrSuccess(result);
+			await Refresh();
+
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result);
+		}	
+	}
+	private async Task OnSeletedBill(Guid id)
+	{
+		SelectedBillId = id;
+		await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteBillModalToggle");
+		
+	}
+}

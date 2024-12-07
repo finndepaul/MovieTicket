@@ -1,0 +1,140 @@
+@page "/combo"
+@inject IComboService ComboService
+@attribute [Authorize(Roles = "Admin")]
+
+<div class="modal fade" id="DeleteFilmModalToggle" aria-hidden="true" aria-labelledby="DeleteFilmModalToggle" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="DeleteFilmModalToggle">Xác nhận xóa combo</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa Combo này không?</p>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteCombo(SelectedDeleteComboId)">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <a class="btn btn-primary mb-3" href="/combo/create">+ Tạo khuyến mại</a>
+    <div class="table-responsive mb-3">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Ảnh</th>
+                    <th scope="col">Tên Combo</th>
+                    <th scope="col">Giá Combo</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                @if (Combos != null && Combos.Any())
+                {
+                    @foreach (var combo in Combos)
+                    {
+                        <tr>
+                            <td><img src="@combo.Image" alt="User Avatar" class="rounded-circle" style="width: 40px; height: 40px;"></td>
+                            <td>@combo.Name</td>
+                            <td>@combo.Price</td>
+                            <td><span class="badge @(GetBadgeClass(combo.comboStatus))">@combo.comboStatus</span></td>
+                            <td>
+                                <a class="btn btn-outline-primary btn-sm" href="@($"/combo/update/{combo.Id}")">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="() => GetComboDeleteId(combo.Id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">Không có dữ liệu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <Pagination MetaData="MetaData" Spread="3" SelectedPage="OnPageSelected" />
+</div>
+
+<style>
+    .badge-available {
+        background-color: greenyellow;
+        color: black;
+    }
+
+    .badge-outofstock {
+        background-color: gray;
+        color: white;
+    }
+</style>
+
+<script>
+    function openModalDelete(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+</script>
+
+@code {
+    private List<ComboDto> Combos = new List<ComboDto>();
+    private Guid SelectedDeleteComboId { get; set; }
+    private MetaData MetaData { get; set; } = new MetaData();
+    private PagingParameters PagingParameters { get; set; } = new PagingParameters { PageNumber = 1, PageSize = 10 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCombos();
+    }
+
+    private async Task LoadCombos()
+    {
+        var pagedCombos = await ComboService.GetAllPaging(PagingParameters);
+        Combos = pagedCombos.Item.ToList();
+        MetaData = pagedCombos.MetaData;
+    }
+
+    private async Task OnPageSelected(int page)
+    {
+        PagingParameters.PageNumber = page;
+        await LoadCombos();
+    }
+
+    private async Task GetComboDeleteId(Guid id)
+    {
+        SelectedDeleteComboId = id;
+        await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteFilmModalToggle");
+    }
+
+    private async Task HandleDeleteCombo(Guid id)
+    {
+        var result = await ComboService.Delete(id);
+        if (result != null)
+        {
+            await JSRuntime.ToastrSuccess("Xóa thành công");
+            await LoadCombos();
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Xóa thất bại");
+        }
+    }
+
+    private string GetBadgeClass(ComboStatus? status)
+    {
+        return status switch
+        {
+            ComboStatus.Available => "badge-available",
+            ComboStatus.OutOfStock => "badge-outofstock",
+            _ => "badge-secondary"
+        };
+    }
+}

@@ -1,0 +1,103 @@
+﻿@page "/cinema-center/update/{Id:guid}"
+@attribute [Authorize(Roles = "Admin")]
+<EditForm Model="cinemaCenterUpdateRequest" OnValidSubmit="UpdateCinemaCenter">
+	<DataAnnotationsValidator />
+	<div class="container">
+		<div class="row">
+			<!-- Left Column with Form Fields -->
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="tenRap">Tên rạp chiếu:</label>
+					<InputText class="form-control" id="tenRap" @bind-Value="cinemaCenterUpdateRequest.Name" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Name)" class="text-danger" />
+				</div>
+
+				<div class="form-group mt-3">
+					<label for="diaChi">Địa chỉ:</label>
+					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.Address" rows="3" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.Address)" class="text-danger" />
+				</div>
+
+				<div class="form-group mt-3">
+					<label for="diaChi">Địa chỉ tỉnh/thành phố:</label>
+					<InputTextArea class="form-control" id="diaChi" @bind-Value="cinemaCenterUpdateRequest.AddresCity" rows="3" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddresCity)" class="text-danger" />
+				</div>
+
+				<div class="form-group mt-3">
+					<label for="diaChiMap">Địa chỉ map:</label>
+					<InputText class="form-control" id="diaChiMap" @bind-Value="cinemaCenterUpdateRequest.AddressMap" />
+					<ValidationMessage For="@(() => cinemaCenterUpdateRequest.AddressMap)" class="text-danger" />
+				</div>
+
+				<div class="d-flex justify-content-start mt-4">
+					<NavLink class="btn btn-secondary me-2" href="/cinema-center">Quay lại</NavLink>
+					<button type="submit" class="btn btn-primary me-2">Cập nhật</button>
+				</div>
+			</div>
+
+			<!-- Right Column with Map -->
+			<div class="col-md-6">
+				@if (!string.IsNullOrWhiteSpace(ExtractedMapUrl))
+				{
+					<div class="map-container" style="height: 300px;">
+						<iframe src="@ExtractedMapUrl" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</EditForm>
+<style>
+	.pagination-wrapper {
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.btn:hover, .badge:hover {
+		transform: scale(1.1);
+		transition: transform 0.2s ease-in-out;
+	}
+</style>
+@code {
+	[Parameter]
+	public Guid Id { get; set; }
+	private CinemaCenterDto CinemaCenter = new CinemaCenterDto();
+	private CinemaCenterUpdateRequest cinemaCenterUpdateRequest = new CinemaCenterUpdateRequest();
+	private string ExtractedMapUrl;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var data = await CinemaCenterService.GetCinemaCenterById(Id);
+		CinemaCenter = data.Data;
+		cinemaCenterUpdateRequest.Name = CinemaCenter.Name;
+		cinemaCenterUpdateRequest.Address = CinemaCenter.Address;
+		cinemaCenterUpdateRequest.AddresCity = CinemaCenter.AddresCity;
+		cinemaCenterUpdateRequest.AddressMap = CinemaCenter.AddressMap;
+		ExtractedMapUrl = ExtractUrlFromIframe(cinemaCenterUpdateRequest.AddressMap);
+	}
+
+	private string ExtractUrlFromIframe(string iframeHtml)
+	{
+		if (string.IsNullOrWhiteSpace(iframeHtml))
+		{
+			return null;
+		}
+		var match = System.Text.RegularExpressions.Regex.Match(iframeHtml, "src\\s*=\\s*\"([^\"]+)\"");
+		return match.Success ? match.Groups[1].Value : null;
+	}
+
+	private async Task UpdateCinemaCenter()
+	{
+		var response = await CinemaCenterService.Update(Id, cinemaCenterUpdateRequest);
+		if (response.Status == 200)
+		{
+			NavigationManager.NavigateTo("/cinema-center");
+		}
+		else
+		{
+			await Task.Delay(100);
+			await JSRuntime.ToastrError(response.Message);
+		}
+	}
+}

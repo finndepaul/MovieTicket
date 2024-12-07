@@ -1,0 +1,100 @@
+﻿@page "/about"
+@using MovieTicket.Application.DataTransferObjs.About
+@inject IAboutService aboutService
+@attribute [Authorize(Roles = "Admin")]
+<div class="modal fade" id="DeleteFilmModalToggle" aria-hidden="true" aria-labelledby="DeleteFilmModalToggle" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="DeleteFilmModalToggle">Xác nhận</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p>Bạn có chắc chắn muốn xóa không?</p>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteCombo(SelectedDeleteComboId)">Xóa</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <a class="btn btn-primary mb-3" href="/create-about">+ Tạo nội dung</a>
+    <div class="table-responsive mb-3">
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Tiêu đề</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                @if (aboutDtos != null)
+                {
+                    @if (aboutDtos.Any())
+                    {
+                        @foreach (var about in aboutDtos)
+                        {
+                            <tr>
+                                <td>@about.Title</td>
+                                <td>
+                                    <a class="btn btn-outline-primary btn-sm" href="@($"/about/update/{about.Id}")">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm" @onclick="() => GetDeleteId(about.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">Loading...</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function openModalDelete(modalId) {
+        var modal = new bootstrap.Modal(document.getElementById(modalId));
+        modal.show();
+    }
+</script>
+@code {
+    private IEnumerable<AboutDto> aboutDtos = new List<AboutDto>();
+    private Guid SelectedDeleteComboId { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        aboutDtos = await aboutService.GetAllAsync();
+    }
+    private async Task GetDeleteId(Guid id)
+    {
+        SelectedDeleteComboId = id;
+        await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteFilmModalToggle");
+    }
+    private async Task HandleDeleteCombo(Guid id)
+    {
+        var result = await aboutService.DeleteAsync(id);
+        if (result != null)
+        {
+            await JSRuntime.ToastrSuccess("Xóa thành công");
+            aboutDtos = await aboutService.GetAllAsync();
+
+        }
+        else
+        {
+            await JSRuntime.ToastrError("Xóa thất bại");
+        }
+    }
+}

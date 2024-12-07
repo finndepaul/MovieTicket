@@ -1,0 +1,382 @@
+﻿@page "/ticket-price"
+@using MovieTicket.Application.DataTransferObjs.CinemaType
+@using MovieTicket.Application.DataTransferObjs.ScreenType
+@using MovieTicket.Application.DataTransferObjs.ScreeningDay
+@using MovieTicket.Application.DataTransferObjs.SeatType
+@using MovieTicket.Application.DataTransferObjs.TicketPrice
+@using MovieTicket.Application.ValueObjs.Paginations
+@using WebUI.Helper
+@attribute [Authorize(Roles = "Admin")]
+@inject ITicketPriceService _serTicketPrice;
+@inject IScreeningDayService _serScreeningDay;
+@inject IScreenTypeServices _serScreenType;
+@inject ICinemaTypeService _serCinemaType;
+@inject ISeatTypeService _serSeatType;
+<div class="modal fade" id="CreateTicketPriceModalToggle" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="CreateTicketPriceToggleLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h1 class="modal-title fs-5" id="CreateTicketPriceToggleLabel">Tạo giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<CreateTicketPrice />
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="UpdateTicketPriceModalToggle" aria-hidden="true" aria-labelledby="UpdateTicketPriceToggleLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h1 class="modal-title fs-5" id="UpdateTicketPriceToggleLabel">Sửa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<UpdateTicketPrice Id="@SelectTicketPriceId" />
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="DeleteTicketPriceModalToggle" aria-hidden="true" aria-labelledby="DeleteTicketPriceToggleLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h1 class="modal-title fs-5" id="DeleteTicketPriceToggleLabel">Xác nhận xóa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<p>Bạn có chắc chắn muốn xóa giá vé này không?</p>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteAsync(SelectTicketPriceId)">Xóa</button>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="mb-3">
+	<!--Create Ticket Price-->
+	<a class="btn btn-primary me-2" data-bs-toggle="modal" href="#CreateTicketPriceModalToggle" role="button">
+		<i class="bi bi-plus-lg"></i> Tạo giá vé
+	</a>
+	<a class="btn btn-info bg-opacity-25 text-light" role="button" @onclick="Refresh_Button">
+		<i class="bi bi-arrow-clockwise"></i>Refresh
+	</a>
+
+</div>
+<table class="table align-middle" style="table-layout: fixed">
+	<thead class="">
+		<tr class="">
+			<th class="">
+				<div class="d-flex justify-content-between border-end">
+					<p class="">Loại ghế</p>
+					<div class="d-flex">
+						<i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("SeatName"))"></i>
+						<i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+						   data-bs-toggle="dropdown"
+						   aria-expanded="false"></i>
+						<select class="dropdown-menu" @onchange="@((e) => ApplyFilter("SeatType", Guid.Parse(e.Value.ToString())))">
+							<option value="@Guid.Empty">Tất cả</option>
+							@foreach (var seatType in seatTypes)
+                            {
+                                <option class="dropdown-item" value="@seatType.Id">@seatType.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </th>
+            <th class="">
+                <div class="d-flex justify-content-between border-end">
+                    <p class="">Hình thức chiếu</p>
+                    <div class="d-flex">
+                        <i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Type"))"></i>
+                        <i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"></i>
+                        <select class="dropdown-menu" @onchange="@((e) => ApplyFilter("ScreenType", Guid.Parse(e.Value.ToString())))">
+                            <option value="@Guid.Empty">Tất cả</option>
+                            @foreach (var screenType in screenTypes)
+                            {
+                                <option value="@screenType.Id">@screenType.Type</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </th>
+            <th class="">
+                <div class="d-flex justify-content-between border-end">
+                    <p class="">Loại ngày áp dụng</p>
+
+                    <div class="d-flex">
+                        <i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Day"))"></i>
+                        <i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"></i>
+                        <select class="dropdown-menu" @onchange="@((e) => ApplyFilter("ScreeningDay", Guid.Parse(e.Value.ToString())))">
+                            <option value="@Guid.Empty">Tất cả</option>
+                            @foreach (var screeningDay in screeningDays)
+                            {
+                                <option value="@screeningDay.Id">@screeningDay.Day</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </th>
+            <th class="">
+                <div class="d-flex justify-content-between border-end">
+                    <p class="">Loại phòng chiếu</p>
+
+                    <div class="d-flex">
+                        <i class="bi bi-sort-alpha-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("CinemaTypeName"))"></i>
+                        <i class="bi bi-funnel-fill" style="width: 20px;height:24px;" type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"></i>
+                        <select class="dropdown-menu" @onchange="@((e) => ApplyFilter("CinemaType", Guid.Parse(e.Value.ToString())))">
+                            <option value="@Guid.Empty">Tất cả</option>
+                            @foreach (var cinemaType in cinemaTypes)
+                            {
+                                <option value="@cinemaType.Id">@cinemaType.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </th>
+            <th class="">
+                <div class="d-flex justify-content-between border-end">
+                    <p class="">Giá vé</p>
+                    <div class="d-flex">
+                        <i class="bi bi-sort-numeric-down" style="width: 20px;height:24px;" @onclick="@(() => SortTable("Price"))"></i>
+                    </div>
+                </div>
+            </th>
+            <th class="">
+                <p class="">Trạng thái</p>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ticketPrice != null)
+        {
+            @foreach (var item in ticketPrice)
+            {
+                <tr>
+                    <td scope="row"><span class="p-2 m-2 badge seat-@item.SeatName">@item.SeatName</span></td>
+                    <td><span class="p-2 m-2 badge screentype-@item.Type">@item.Type</span></td>
+                    <td><span class="p-2 m-2 badge screenday-@item.Day">@item.Day</span></td>
+                    <td><span class="p-2 m-2 badge cinematype-@item.CinemaTypeName.Replace(" ","")">@item.CinemaTypeName</span></td>
+                    <td><span class="">@item.Price.Value.ToString("#,##0")</span></td>
+
+                    <td>
+                        @if (item.Status == MovieTicket.Domain.Enums.TicketPriceStatus.Active)
+                        {
+							<span class="p-2 m-2 badge status-Active">Đang kích hoạt</span>
+						}
+						else
+						{
+							<span class="p-2 m-2 badge status-Inactive">Ngưng kích hoạt</span>
+						}
+					</td>
+					<td>
+						<span class="p-2 m-2 badge text-light bg-primary" data-id="@item.Id" role="button" @onclick="() => GetTicketPriceUpdateId(item.Id.ToString())">
+							<i class="bi bi-pencil-square fs-6"></i>
+						</span>
+						<span class="p-2 m-2 badge text-light bg-danger" @onclick="() => GetTicketPriceDeleteId(item.Id.ToString())">
+							<i class="bi bi-trash3 fs-6"></i>
+						</span>
+					</td>
+
+				</tr>
+			}
+		}
+		else
+		{
+			<tr>
+				<td colspan="7"><div class="loader"></div></td>
+			</tr>
+		}
+	</tbody>
+	<tfoot>
+		<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+	</tfoot>
+</table>
+
+<style>
+	.status-Active {
+		color: white;
+		background-color: rgb(102, 187, 106);
+		border-radius: 10px;
+		padding: 5px;
+	}
+
+	.status-Inactive {
+		color: white;
+		background-color: rgb(239, 83, 80);
+		border-radius: 10px;
+		padding: 5px;
+	}
+</style>
+<script>
+	function openModalUpdate(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}
+	function openModalDelete(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}
+</script>
+
+@code {
+	private string SelectTicketPriceId { get; set; }
+	private List<TicketPriceDto> ticketPrice;
+	private PagingParameters pagingParameters = new PagingParameters();
+	private TicketPriceWithPaginationRequest request = new TicketPriceWithPaginationRequest();
+	private MetaData metaData { get; set; } = new MetaData();
+	private string currentSortColumn;
+	private bool ascending = true;
+	// Thêm các trường cho bộ lọc
+
+	// Các danh sách cho lọc dữ liệu
+	private List<SeatTypeDto> seatTypes = new();
+	private List<ScreenTypeDto> screenTypes = new();
+	private List<ScreeningDayDto> screeningDays = new();
+	private List<CinemaTypeDto> cinemaTypes = new();
+
+	protected async override Task OnInitializedAsync()
+	{
+		seatTypes = await _serSeatType.GetListSeatTypesAsync();
+		screenTypes = await _serScreenType.GetAllScreenTypes();
+		screeningDays = await _serScreeningDay.GetListScreeningDaysAsync();
+		cinemaTypes = await _serCinemaType.GetListCinemaTypesAsync();
+		var pagination = await _serTicketPrice.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		ticketPrice = pagination.Item.ToList();
+		metaData = pagination.MetaData;
+		StateHasChanged();
+	}
+	private async Task Refresh()
+	{
+		var pagination = await _serTicketPrice.GetAllAsync(request, new PagingParameters()
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		ticketPrice = pagination.Item.ToList();
+		metaData = pagination.MetaData;
+	}
+	private async Task Refresh_Button()
+	{
+		var pagination = await _serTicketPrice.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		ticketPrice = pagination.Item.ToList();
+		metaData = pagination.MetaData;
+	}
+	private async Task SortTable(string column)
+	{
+		if (currentSortColumn == column)
+		{
+			ascending = !ascending; // Toggle sorting direction
+		}
+		else
+		{
+			currentSortColumn = column;
+			ascending = true; // Default to ascending on new column
+		}
+
+		ticketPrice = column switch
+		{
+			"SeatName" => ascending ? ticketPrice.OrderBy(x => x.SeatName).ToList() : ticketPrice.OrderByDescending(x => x.SeatName).ToList(),
+			"Type" => ascending ? ticketPrice.OrderBy(x => x.Type).ToList() : ticketPrice.OrderByDescending(x => x.Type).ToList(),
+			"Day" => ascending ? ticketPrice.OrderBy(x => x.Day).ToList() : ticketPrice.OrderByDescending(x => x.Day).ToList(),
+			"CinemaTypeName" => ascending ? ticketPrice.OrderBy(x => x.CinemaTypeName).ToList() : ticketPrice.OrderByDescending(x => x.CinemaTypeName).ToList(),
+			"Price" => ascending ? ticketPrice.OrderBy(x => x.Price.Value).ToList() : ticketPrice.OrderByDescending(x => x.Price.Value).ToList(),
+			_ => ticketPrice
+		};
+	}
+	// Phương thức chọn bộ lọc
+	private async Task ApplyFilter(string filterType, Guid value)
+	{
+		// Nếu chọn "Tất cả" (Guid.Empty), thì reset bộ lọc tương ứng
+		if (value == Guid.Empty)
+		{
+			switch (filterType)
+			{
+				case "SeatType":
+					request.SeatTypeId = null;
+					break;
+				case "ScreenType":
+					request.ScreenTypeId = null;
+					break;
+				case "ScreeningDay":
+					request.ScreeningDayId = null;
+					break;
+				case "CinemaType":
+					request.CinemaTypeId = null;
+					break;
+			}
+		}
+		else
+		{
+			// Gán giá trị lọc khi không phải "Tất cả"
+			switch (filterType)
+			{
+				case "SeatType":
+					request.SeatTypeId = value;
+					break;
+				case "ScreenType":
+					request.ScreenTypeId = value;
+					break;
+				case "ScreeningDay":
+					request.ScreeningDayId = value;
+					break;
+				case "CinemaType":
+					request.CinemaTypeId = value;
+					break;
+			}
+		}
+		await SelectedPage(1);
+		await Refresh();
+		
+	}
+	private async Task GetTicketPriceUpdateId(string id)
+	{
+		SelectTicketPriceId = id;
+
+		await JSRuntime.InvokeVoidAsync("openModalUpdate", "UpdateTicketPriceModalToggle");  // Mở modal sửa
+
+	}
+	private async Task GetTicketPriceDeleteId(string id)
+	{
+		SelectTicketPriceId = id;
+		await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteTicketPriceModalToggle");
+	}
+	private async Task SelectedPage(int page)
+	{
+		pagingParameters.PageNumber = page;
+		await Refresh();
+	}
+	private async Task HandleDeleteAsync(string id)
+	{
+		var result = await _serTicketPrice.Delete(Guid.Parse(id));
+
+		if (result.Status == 200)
+		{
+			await JSRuntime.ToastrSuccess(result.Message);
+			NavigationManager.NavigateTo("/ticket-price", forceLoad: true);
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result.Message);
+		}
+
+	}
+}
