@@ -1,0 +1,497 @@
+@using static WebUI.Pages.Staff.OfflineCounter
+@using static WebUI.Pages.User.CinemaSystem
+@using static WebUI.Pages.Home
+
+@if (cinemaDto != null)
+{
+    <div class="container-modal">
+        <!--Seats Layout-->
+        <div class="seat-grid text-center">
+            @for (int x = 1; x <= cinemaDto.Row; x++)
+            {
+                int row = x;
+                <div class="row row-cols-auto">
+                    @for (int y = 1; y <= cinemaDto.Column; y++)
+                    {
+                        var seat = lstSeats.FirstOrDefault(s => s.Row == x && s.Column == y);
+                        <div class="col">
+                            @if (ticketsByShowtime != null && ticketsByShowtime.Any(t => t.SeatId == seat.Id))
+                            {
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-selection="Checked" class="btn seat-btn" data-id="@seat.Id">
+                                    @seat.Position
+                                </button>
+                            }
+                            else if (seat.Status == SeatStatus.Available)
+                            {
+                                <button type="button" id="seat" data-bs-toggle="button" data-seat-type="@seat.SeatTypeName" class="btn seat-btn" data-id="@seat.Id" aria-pressed="false" @onclick="(() => SeatSelection(seat.Id))">
+                                    @seat.Position
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" id="seat" data-seat-status="@(seat.Status == SeatStatus.Unavailable ? "Unavailable" : @seat.SeatTypeName)" class="btn seat-unavailable" data-id="@seat.Id">
+                                    @seat.Position
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <hr>
+    </div>
+}
+else
+{
+    <p>Không có dữ liệu</p>
+}
+
+<div class="seatInfo">
+    <div class="mx-2">
+        <button type="button" class="btn seat-Normal">
+        </button>
+        <label>Ghế thường</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-VIP">
+        </button>
+        <label>Ghế VIP</label>
+    </div>
+
+    <div class="mx-2">
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Couple">
+        </button>
+        <label>Ghế Couple</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Checked">
+        </button>
+        <label>Ghế đã chọn</label>
+    </div>
+
+    <div class="mx-2">
+        <button type="button" class="btn seat-Unavailable">
+        </button>
+        <label>Không chọn được</label>
+    </div>
+</div>
+
+<style>
+    .seat-btn[open] {
+        outline: solid 1px #000;
+    }
+
+    .btn {
+        -webkit-transition: all 0.3s ease-in-out;
+    }
+
+        /*.btn:hover {
+            -webkit-transform: scale(1.1);
+        }*/
+
+        .btn.active {
+            background-color: orangered;
+            color: white;
+            outline: none;
+        }
+
+    /*[aria-pressed="false"] {
+        outline: solid;
+    }*/
+
+    .seat-unavailable {
+        display: none;
+    }
+
+
+
+    [data-seat-type="Normal"] {
+        background-color: #fff;
+        color: #000;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        outline: solid 3px #005a32 !important;
+        outline-offset: -4px;
+    }
+
+    /*[data-seat-status="Normal"]:hover {
+            background-color: #7C4DFF;
+            color: #fff;
+        }*/
+
+    [data-seat-type="VIP"] {
+        background-color: #fff;
+        color: #000;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        outline: solid 3px #DD2C00 !important;
+        outline-offset: -4px;
+    }
+
+    /*[data-seat-status="VIP"]:hover {
+            background-color: #DD2C00;
+            color: #fff;
+        }*/
+
+    [data-seat-type="Couple"] {
+        background-color: #fff;
+        color: #000;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        outline: solid 3px #fe019a !important;
+        outline-offset: -4px;
+    }
+
+    /*[data-seat-status="Couple"]:hover {
+            background-color: #FF8A80;
+            color: #fff;
+        }*/
+
+    .row {
+        padding: 0px;
+        margin: 0.5rem;
+    }
+
+    .col {
+        padding: 0rem;
+        width: 50px;
+        /*margin-left: 0.25rem;
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+        margin-top: 0.25rem;*/
+    }
+
+    .seat-grid {
+        width: max-content;
+    }
+
+    .seatInfo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .container-modal {
+        display: grid;
+        justify-content: center;
+    }
+
+    .detail {
+        display: grid;
+        width: 100%;
+    }
+
+    .selectedSeats {
+    }
+
+    .ticketPrices {
+    }
+
+    .checkout {
+        align-content: center;
+    }
+
+    [data-seat-selection="Checked"] {
+        background-color: #808080 !important;
+        color: #fff;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        outline: none;
+    }
+
+    .seat-Normal {
+        background-color: #fff;
+        color: #000;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        outline: solid 3px #005a32 !important;
+        outline-offset: -4px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-VIP {
+        background-color: #fff;
+        color: #000;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        outline: solid 3px #DD2C00 !important;
+        outline-offset: -4px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-Couple {
+        background-color: #fff;
+        color: #000;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        outline: solid 3px #fe019a !important;
+        outline-offset: -4px;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-Checked {
+        background-color: orangered !important;
+        color: orangered;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        outline: none;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-Unavailable {
+        background-color: #808080 !important;
+        color: #fff;
+        width: 45px;
+        height: 45px;
+        margin: 0px;
+        padding: 10px;
+        cursor: not-allowed !important;
+        pointer-events: none !important;
+        outline: none;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+</style>
+
+<script>
+    function toggleButtonById(buttonId) {
+        var button = document.querySelector(`button[data-id='${buttonId}']`);
+        if (button) {
+        button.classList.toggle('active');
+        }
+    }
+</script>
+
+@code {
+    [Parameter] public Guid ShowtimeId { get; set; }
+    [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnSeatSelectionOfflineCounter { get; set; }
+    public EventCallbackOfflineCounterArgs argsOfflineCounter = new();
+    private CinemaDto cinemaDto { get; set; } = new();
+    private IQueryable<SeatDTO> lstSeats { get; set; }
+    private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
+    private List<TicketPriceDto> lstTicketPrices { get; set; }
+    private Guid SeatId = Guid.Empty;
+    private List<SeatDTO> lstSeatsSelected = new();//list ghế đã chọn
+    private string SeatsSelectedstr = "";
+    private string TickeTotalString = null;
+    private decimal TotalTicket;
+    private ShowTimeDto showtimeDto = new();
+    string today = DateTime.Now.DayOfWeek.ToString();
+    private AuthenticationState AuthenState;
+    private Guid userId = Guid.Empty;
+    private CreateCheckRequest request = new();
+    private List<TicketRequest> lstTicketRequests = new();
+    private CancellationToken cancellationToken;
+    private List<TicketDto>? ticketsByShowtime = new();
+    private string? location;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (ShowtimeId != Guid.Empty)
+        {
+            var response = await ShowTimeService.GetById(ShowtimeId);
+            showtimeDto = response.Data;
+            var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+            cinemaDto = cinema.Data;
+            lstSeats = await SeatService.GetSeats(cinemaDto.Id);
+            var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+                {
+                    PageNumber = 1,
+                    PageSize = 180
+                });
+            lstTicketPrices = responseTicket.Item.ToList();
+            AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var getUser = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            userId = Guid.Parse(getUser);
+            var lstTicketByShowtime = await TicketService.GetListTicketByShowTimeIdAsync(ShowtimeId);
+            if (lstTicketByShowtime != null)
+            {
+                ticketsByShowtime = lstTicketByShowtime;
+            }
+        }
+        base.OnParametersSet();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+        }
+    }
+
+    private async Task SeatSelection(Guid id)
+    {
+        await Task.Delay(300);
+        if (id != Guid.Empty)
+        {
+            SeatId = id;
+            var response = await SeatService.GetById(SeatId);
+            var seat = response.Data;
+            List<SeatDTO> Couple = new();
+            SeatDTO seat2 = new();
+            if (seat.SeatTypeName == "Couple")
+            {
+                Couple.Add(seat);
+                if (seat.Column % 2 == 0)
+                {
+                    seat2 = lstSeats.FirstOrDefault(s => s.Row == seat.Row && s.Column == seat.Column - 1);
+                    Couple.Add(seat2);
+                    await JSRuntime.InvokeVoidAsync("toggleButtonById", seat2.Id.ToString());
+                }
+                else
+                {
+                    seat2 = lstSeats.FirstOrDefault(s => s.Row == seat.Row && s.Column == seat.Column + 1);
+                    Couple.Add(seat2);
+                    await JSRuntime.InvokeVoidAsync("toggleButtonById", seat2.Id.ToString());
+                }
+                foreach (var item in Couple)
+                {
+                    if (lstSeatsSelected.Any(s => s.Id == item.Id)) //check tồn tại trong list ghế đã chọn
+                    {
+                        //nếu đã tồn tại thì xóa
+                        if (SeatsSelectedstr.Contains(item.Position))
+                        {
+                            SeatsSelectedstr = SeatsSelectedstr.Replace(item.Position, "");
+                        }
+                        lstSeatsSelected.RemoveAll(s => s.Id == item.Id);
+                        // lstSeatUpdateRequests.RemoveAll(s => s.Id == item.Id);
+                    }
+                    else
+                    {
+                        //nếu chưa tồn tại thì thêm
+                        if (lstSeatsSelected.Count >= 8)
+                        {
+                            await JSRuntime.InvokeVoidAsync("alert", "Bạn chỉ được chọn tối đa 8 ghế");
+                            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat2.Id.ToString());
+                            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+                            StateHasChanged();
+                            return;
+                        }
+                        if (!SeatsSelectedstr.Contains(item.Position))
+                        {
+                            SeatsSelectedstr += item.Position + " ";
+                        }
+                        lstSeatsSelected.Add(item);
+                    };
+                }
+                CalculateTotal();
+                TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
+                argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                    {
+                        lstSeats = lstSeatsSelected,
+                        str = SeatsSelectedstr,
+                        TotalTicket = TotalTicket,
+                    };
+                await OnSeatSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
+            }
+            else
+            {
+                if (lstSeatsSelected.Any(s => s.Id == seat.Id)) //check tồn tại trong list ghế đã chọn
+                {
+                    //nếu đã tồn tại thì xóa
+                    if (SeatsSelectedstr.Contains(seat.Position))
+                    {
+                        SeatsSelectedstr = SeatsSelectedstr.Replace(seat.Position, "");
+                    }
+                    lstSeatsSelected.RemoveAll(s => s.Id == seat.Id);
+                }
+                else
+                {
+                    //nếu chưa tồn tại thì thêm
+                    if (lstSeatsSelected.Count >= 8)
+                    {
+                        await JSRuntime.InvokeVoidAsync("alert", "Bạn chỉ được chọn tối đa 8 ghế");
+                        await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+                        StateHasChanged();
+                        return;
+                    }
+                    if (!SeatsSelectedstr.Contains(seat.Position))
+                    {
+                        SeatsSelectedstr += seat.Position + " ";
+                    }
+                    lstSeatsSelected.Add(seat);
+                };
+                CalculateTotal();
+                TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
+                argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                    {
+                        lstSeats = lstSeatsSelected,
+                        str = SeatsSelectedstr,
+                        TotalTicket = TotalTicket,
+                    };
+                await OnSeatSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
+            StateHasChanged();
+            }
+        }
+    }
+
+    private decimal CalculateTotal() //tính tổng tiền
+    {
+        TotalTicket = 0;
+        foreach (var item in lstSeatsSelected)
+        {
+            var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
+                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+            if (ticketPrice != null)
+            {
+                TotalTicket += (Decimal)ticketPrice.Price;
+            }
+        }
+        return TotalTicket;
+    }
+
+    private string DayOfTheWeek(string day) //check ngày
+    {
+        if (day.Equals("Saturday") || day.Equals("Sunday"))
+        {
+            return "T7-CN";
+        }
+        else
+        {
+            return "T2-T6";
+        }
+    }
+    public async Task Reset()
+    {
+        foreach (var seat in lstSeatsSelected)
+        {
+            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+        }
+        lstSeatsSelected.Clear();
+        SeatsSelectedstr = "";
+        TotalTicket = 0;
+        StateHasChanged();
+    }
+}
