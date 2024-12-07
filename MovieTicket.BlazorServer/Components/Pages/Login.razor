@@ -1,19 +1,22 @@
-﻿@page "/login"
+﻿@page "/"
 @using MovieTicket.Application.DataTransferObjs.Auth
 @using MovieTicket.BlazorServer.Components.Layout
-@inject AppState AppState
-@layout UserLayout
+@layout AdminLayout
+
 
 <EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="mb-3">
-        <label class="form-label">Username</label>
+    <div class="input-group">
+        <span class="input-group-text">Tên tài khoản</span>
         <InputText id="loginUsername" class="form-control" @bind-Value="loginModel.Username" />
     </div>
-    <div class="mb-3">
-        <label for="loginPPassword" class="form-label">Password</label>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => loginModel.Username)" /></div>
+    <div class="input-group">
+        <span class="input-group-text">Mật khẩu</span>
         <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+    <div class="validate mb-3 mt-1">
+        <ValidationMessage For="@(() => loginModel.Username)" />
     </div>
     <button type="submit" class="btn btn-primary">Đăng nhập</button>
 </EditForm>
@@ -30,17 +33,13 @@
         var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
         await customState.UpdateAuthenticationState(response.JWTToken);
         CustomUserClaims claims = DecryptJWTService.DecryptToken(response.JWTToken);
-        AppState.LoggedIn = true;
         if(claims.Role == "Admin")
         {
             NavigationManager.NavigateTo("/admin", forceLoad: true);
         }
-        else if (claims.Role == "Staff")
-        {
-            NavigationManager.NavigateTo("/offline-counter", forceLoad: true);
-        }
         else
         {
+            await JSRuntime.InvokeVoidAsync("alert", "Bạn không có quyền truy cập trang này");
             NavigationManager.NavigateTo("/", forceLoad: true);
         }
     }

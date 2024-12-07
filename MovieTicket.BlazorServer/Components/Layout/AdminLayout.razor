@@ -6,7 +6,7 @@
 <div style="overflow: hidden;  height: 100vh;">
 	<div class="page">
 		<div class="sidebar">
-			<AuthorizeView>
+			<AuthorizeView Roles="Admin">
 				<Authorized>
 					<AdminNavMenu />
 				</Authorized>
@@ -15,7 +15,7 @@
 		</div>
 		<main>
 			<div class="pe-3" style="position: relative">
-				<AuthorizeView>
+				<AuthorizeView Roles="Admin">
 					<Authorized>
 						<div class="d-flex justify-content-end align-items-center" style="min-height: 56px">
 							<!-- Add align-items-center class -->
