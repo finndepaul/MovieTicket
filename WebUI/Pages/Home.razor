@@ -570,12 +570,12 @@ else
 	protected async override Task OnInitializedAsync()
 	{	
 		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
-
 		var banners = await BannerService.GetBannersAsync();
 		if (banners != null)
 		{
 			lstBanner = banners.Where(b => b.Status == BannerStatus.Active).ToList();
 		}
+		await DeletePendingBill();
 		base.OnInitialized();
 	}
 
