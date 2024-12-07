@@ -99,12 +99,15 @@
                 <button type="button" class="btn-close" @onclick="() => CloseSeatSelectionModal()" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="background-color: #fdfcf0">
-				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelectionOfflineCounter="HandleSelectedSeats" />
+                <WebUI.Pages.Staff.SeatSelectionModal 
+                @ref="seatSelectionModalref" 
+                ShowtimeId="@ShowTimeId" 
+                OnSeatSelectionOfflineCounter="HandleSelectedSeats" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
-				<SeatFooter ShowtimeId="@ShowTimeId"
+				<WebUI.Pages.Staff.SeatFooter ShowtimeId="@ShowTimeId"
 				SeatDTOs="lstSeats"
-				@ref="seatFooterRef"
+				
 				SeatsSelectedstr="@SeatsSelectedstr"
 				TotalTicket="@TotalTicket"
 				NextToComboOfflineCounter="OpenComboSelectionModal"
@@ -121,10 +124,13 @@
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
 			<div class="modal-body">
-				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelectionOfflineCounter="HandleSelectedCombos" />
+                <WebUI.Pages.Staff.ComboSelectionModal 
+                @ref="comboSelectionModalref" 
+                BillId="@BillId" 
+                OnComboSelectionOfflineCounter="HandleSelectedCombos" />
 			</div>
             <div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
-				<ComboFooter ShowtimeId="@ShowTimeId"
+                <WebUI.Pages.Staff.ComboFooter ShowtimeId="@ShowTimeId"
 				CheckedSeats="lstCheckedSeats"
 				SelectedCombos="lstSelectedCombos"
 				BillId="@BillId" @ref="comboFooterRef"
@@ -147,17 +153,17 @@
                 <button type="button" class="btn-close" @onclick="() => CloseDiscount()" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<DiscountSelectionModal />
+                <WebUI.Pages.Staff.DiscountSelectionModal />
 			</div>
             <div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
-				<DiscountFooter ShowtimeId="@ShowTimeId"
+                <WebUI.Pages.Staff.DiscountFooter ShowtimeId="@ShowTimeId"
 				CheckedSeats="lstCheckedSeats"
 				SeatsSelectedstr="@SeatsSelectedstr"
 				TotalCombo="@TotalCombo"
 				TotalMoney="@TotalMoney"
 				TotalTicket="@TotalTicket"
 				BillId="@BillId"
-				BillCombo="ComboCheckRequest"
+				
 				BackToSeatOfflineCounter="CancelCheckout" />
 			</div>
 		</div>
@@ -411,17 +417,17 @@
     public SeatSelectionModal seatSelectionModalref;
     public ComboSelectionModal comboSelectionModalref;
     private Guid BillId = Guid.Empty;
-    private SeatFooter seatFooterRef;
-    private ComboFooter comboFooterRef;
+    public SeatFooter seatFooterRef;
+    public ComboFooter comboFooterRef;
     private string SeatsSelectedstr;
     private decimal TotalTicket;
     private decimal TotalCombo = 0;
     private decimal TotalMoney = 0;
     private decimal Discount;
-    private ComboCheckRequest ComboCheckRequest;
 
     public class EventCallbackOfflineCounterArgs
     {
+        public Guid MembershipId { get; set; }
         public List<SeatDTO> lstSeats { get; set; }
         public string str { get; set; }
         public decimal TotalMoney { get; set; }
@@ -552,7 +558,7 @@
     private async Task OpenDiscountModal(EventCallbackOfflineCounterArgs args)
     {
         Task.Delay(1000);
-        ComboCheckRequest = args.ComboCheckRequest;
+        
         await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
         await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
     }

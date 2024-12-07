@@ -129,18 +129,7 @@
 
 	private async Task BackToShowtime()
 	{
-		if(location != null && location == "Home")
-		{
-			await BackToShowtimeModal.InvokeAsync(ShowtimeId);
-        }
-        else if (location != null && location == "CinemaSystem")
-        {
-			await BackToShowtimeCinemaSystem.InvokeAsync(ShowtimeId);
-        }
-        else if (location != null && location == "OfflineCounter")
-        {
-			await BackToShowtimeOfflineCounter.InvokeAsync(argsOfflineCounter);
-        }
+		await BackToShowtimeOfflineCounter.InvokeAsync(argsOfflineCounter);
 	}
 
 	private async Task NextToCombo()
@@ -182,44 +171,15 @@
 			checkrequest.ShowTimeId = ShowtimeId;
 			checkrequest.LstSeatAndTicketPrice = lstTicketRequests;
 			string billId = await UserHomeService.CreateCheckAsync(checkrequest, cancellationToken);
-			if(location != null && location == "Home")
-			{
-				if (!string.IsNullOrEmpty(billId))
-				{
-					args = new EventCallbackHomeArgs
-						{
-							BillId = Guid.Parse(billId),
-							MembershipId = userId
-						};
-				}
-				Console.WriteLine("check");
-				await NextToComboModal.InvokeAsync(args);
-			}
-			else if (location != null && location == "CinemaSystem")
-			{
-				if(!string.IsNullOrEmpty(billId))
-				{
-                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                        {
-                            BillId = Guid.Parse(billId),
-							MembershipId = userId
-                        };
-				}
-				Console.WriteLine("check");
-				await NextToComboModalCinemaSystem.InvokeAsync(argsCinemaSystem);
-			}
-            else if (location != null && location == "OfflineCounter")
+            if (!string.IsNullOrEmpty(billId))
             {
-                if (!string.IsNullOrEmpty(billId))
-                {
-                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                        {
-                            BillId = Guid.Parse(billId)
-                        };
-                }
-                Console.WriteLine("check");
-                await NextToComboOfflineCounter.InvokeAsync(argsOfflineCounter);
+                argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                    {
+                        BillId = Guid.Parse(billId)
+                    };
             }
+            Console.WriteLine("check");
+            await NextToComboOfflineCounter.InvokeAsync(argsOfflineCounter);
 		}
 	}
 	private string DayOfTheWeek(string day) //check ngày
