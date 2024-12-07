@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.Interfaces.Repositories.ReadWrite;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
@@ -54,6 +55,7 @@ namespace MovieTicket.Infrastructure.Extensions
             services.AddScoped<IBillComboReadOnlyRepository, BillComboReadOnlyRepository>();
             services.AddScoped<ICouponReadWriteRepository, CouponReadWriteRepository>();
             services.AddScoped<ICouponReadOnlyRepository, CouponReadOnlyRepository>();
+            services.AddScoped<ICloudinaryReadWriteRepository, CloudinaryReadWriteRepository>();
             return services;
         }
     }
