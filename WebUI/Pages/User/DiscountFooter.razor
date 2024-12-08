@@ -149,8 +149,8 @@
 			Convert.ToInt32(bill.AfterDiscount),
 			"VHD Cinema",
 			lstItemDatas,
-			$"https://localhost:7239/check-out-failed/{BillId}",
-			$"https://localhost:7239/check-out-success/{BillId}&{Mempoint}"
+			$"https://localhost:9999/check-out-failed/{BillId}",
+			$"https://localhost:9999/check-out-success/{BillId}&{Mempoint}"
 		);
 		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
