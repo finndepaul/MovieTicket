@@ -11,13 +11,13 @@
     </div>
 
     <div class="mb-3">
-        <label for="Title" class="form-label">Title</label>
+        <label for="Title" class="form-label">Tiêu đề</label>
         <InputText id="Title" class="form-control" @bind-Value="createAboutDto.Title" />
         <ValidationMessage For="@(() => createAboutDto.Title)" />
     </div>
 
     <div class="mb-3">
-        <label for="Content" class="form-label">Content</label>
+        <label for="Content" class="form-label">Nội dung</label>
         <FroalaEditor @bind-Content="createAboutDto.Content" />
         <ValidationMessage For="@(() => createAboutDto.Content)" />
     </div>

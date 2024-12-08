@@ -2,25 +2,23 @@
 using Microsoft.EntityFrameworkCore;
 using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.Combo;
-using MovieTicket.Application.DataTransferObjs.TicketPrice;
 using MovieTicket.Application.Interfaces.Repositories.ReadOnly;
 using MovieTicket.Application.ValueObjs.Paginations;
 using MovieTicket.Domain.Enums;
 using MovieTicket.Infrastructure.Database.AppDbContexts;
-using System.Threading;
 
 namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 {
-	public class BillReadOnlyRepository : IBillReadOnlyRepository
-	{
-		private readonly MovieTicketReadOnlyDbContext _dbContext;
-		private readonly IMapper _mapper;
+    public class BillReadOnlyRepository : IBillReadOnlyRepository
+    {
+        private readonly MovieTicketReadOnlyDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-		public BillReadOnlyRepository(MovieTicketReadOnlyDbContext dbContext, IMapper mapper)
-		{
-			_dbContext = dbContext;
-			_mapper = mapper;
-		}
+        public BillReadOnlyRepository(MovieTicketReadOnlyDbContext dbContext, IMapper mapper)
+        {
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
         public async Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
             var query = _dbContext.Bills
@@ -35,7 +33,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 .Select(btscfsc => new BillsDto
                 {
                     Id = btscfsc.b.Id,
-                    CinemaName =btscfsc.cc.Name,
+                    CinemaName = btscfsc.cc.Name,
                     FilmName = btscfsc.f.Name,
                     FilmPoster = btscfsc.f.Poster,
                     FilmRating = btscfsc.f.Rating,
@@ -59,70 +57,66 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         }
         // Phương thức bất đồng bộ để lấy tất cả các Bill dưới dạng IQueryable<BillDto>
         public async Task<IQueryable<BillDto>> GetAllAsync()
-		{
-			// Lấy danh sách các Bill từ dbContext và chuyển đổi sang BillDto
-			var bills = _dbContext.Bills
-				.Select(b => new BillDto
-				{
-					Id = b.Id,
-					MembershipId = b.MembershipId,
-					FilmName = (from ticket in _dbContext.Tickets
-								join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
-								join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
-								join film in _dbContext.Films on schedule.FilmId equals film.Id
-								where ticket.BillId == b.Id
-								select film.Name).FirstOrDefault(),
-					TotalMoney = b.TotalMoney,
-					CreateTime = b.CreateTime,
-					BarCode = b.BarCode,
-					Status = b.Status.ToString()
-				});
+        {
+            // Lấy danh sách các Bill từ dbContext và chuyển đổi sang BillDto
+            var bills = _dbContext.Bills
+                .Select(b => new BillDto
+                {
+                    Id = b.Id,
+                    MembershipId = b.MembershipId,
+                    FilmName = (from ticket in _dbContext.Tickets
+                                join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
+                                join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
+                                join film in _dbContext.Films on schedule.FilmId equals film.Id
+                                where ticket.BillId == b.Id
+                                select film.Name).FirstOrDefault(),
+                    TotalMoney = b.TotalMoney,
+                    CreateTime = b.CreateTime,
+                    BarCode = b.BarCode,
+                    Status = b.Status.ToString()
+                });
+            return bills;
+        }
 
-			
+        // Phương thức bất đồng bộ để lấy Bill theo ID
+        public async Task<BillDetailDto?> GetByIdAsync(Guid id)
+        {
+            // Kiểm tra nếu ID là rỗng, ném ra ngoại lệ
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("Invalid ID.", nameof(id));
+            }
 
-			return bills;
-		}
+            // Lấy Bill từ dbContext theo ID và chuyển đổi sang BillDtoGetById
+            var bill = await _dbContext.Bills
+                    .Where(x => x.Id == id)
+                    .Select(b => new BillDetailDto
+                    {
+                        Id = b.Id,
+                        MembershipId = b.MembershipId,
+                        BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
+                        TotalMoney = b.TotalMoney,
+                        AfterDiscount = b.AfterDiscount,
+                        FilmName = (from ticket in _dbContext.Tickets
+                                    join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
+                                    join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
+                                    join film in _dbContext.Films on schedule.FilmId equals film.Id
+                                    where ticket.BillId == b.Id
+                                    select film.Name).FirstOrDefault(),
+                        CreateTime = b.CreateTime,
+                        BarCode = b.BarCode,
+                        Status = b.Status.ToString(),
+                        Combos = b.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList()
+                    })
+                    .FirstOrDefaultAsync();
+            // Nếu không tìm thấy Bill, ném ra ngoại lệ
+            if (bill == null)
+            {
+                throw new InvalidOperationException($"No bill found with ID {id}.");
+            }
 
-		// Phương thức bất đồng bộ để lấy Bill theo ID
-		public async Task<BillDetailDto?> GetByIdAsync(Guid id)
-		{
-			// Kiểm tra nếu ID là rỗng, ném ra ngoại lệ
-			if (id == Guid.Empty)
-			{
-				throw new ArgumentException("Invalid ID.", nameof(id));
-			}
-
-			// Lấy Bill từ dbContext theo ID và chuyển đổi sang BillDtoGetById
-			var bill = await _dbContext.Bills
-					.Where(x => x.Id == id)
-					.Select(b => new BillDetailDto
-					{
-						Id = b.Id,
-						MembershipId = b.MembershipId,
-						BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
-						TotalMoney = b.TotalMoney,
-						AfterDiscount = b.AfterDiscount,
-						FilmName = (from ticket in _dbContext.Tickets
-									join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
-									join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
-									join film in _dbContext.Films on schedule.FilmId equals film.Id
-									where ticket.BillId == b.Id
-									select film.Name).FirstOrDefault(),
-						CreateTime = b.CreateTime,
-						BarCode = b.BarCode,
-						Status = b.Status.ToString(),
-						Combos = b.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList()
-					})
-					.FirstOrDefaultAsync();
-			// Nếu không tìm thấy Bill, ném ra ngoại lệ
-			if (bill == null)
-			{
-				throw new InvalidOperationException($"No bill found with ID {id}.");
-			}
-
-			return bill;
-		}
-
+            return bill;
+        }
 		public async Task<PageList<BillsDto>> GetListBillWithPaginationAsync(BillWithPaginationRequest request, PagingParameters pagingParameters, CancellationToken cancellationToken)
 		{
 			var query = _dbContext.Bills

@@ -9,6 +9,7 @@
 @inject IJSRuntime _JSRuntime
 @inject ITranslationTypeService TranslationTypeService
 @inject IScreenTypeServices ScreenTypeService
+@inject ICloudinaryService CloudinaryService
 <div class="container-fluid">
     <EditForm Model="filmUpdateRequest" OnValidSubmit="HandleFilmUpdate">
         <DataAnnotationsValidator />
@@ -138,25 +139,15 @@
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-12">
-                @if (filmUpdateRequest.Poster == null)
-                {
-                    <label for="customFile" class="form-label">Tải hình ảnh</label>
-                    <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
-                    <ValidationMessage For="@(() => filmUpdateRequest.Poster)" />
-                }
-                @if (filmUpdateRequest.Poster != null)
-                {
-                    <div class="row">
-                        <div class="col-md-12 pt-3">
-                            <img src="@filmUpdateRequest.Poster" alt="Film Image" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
-                        </div>
-                    </div>
-                }
-            </div>
+            <label for="image" class="form-label">Tải hình ảnh mới (nếu có)</label>
+            <InputFile OnChange="HandleImageChange" class="form-control" />
+            @if (!string.IsNullOrEmpty(filmUpdateRequest.Poster))
+            {
+                <div class="pt-3">
+                    <img src="@filmUpdateRequest.Poster" alt="Combo Image" class="img-fluid" />
+                </div>
+            }
+            <ValidationMessage For="@(() => filmUpdateRequest.Poster)" />
         </div>
     </EditForm>
 </div>
@@ -170,7 +161,6 @@
     public Guid Id { get; set; }
     private FilmUpdateRequest filmUpdateRequest = new FilmUpdateRequest();
     private FilmDto filmDto = new FilmDto();
-    private string? _directoryPath { get; set; }
     private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
     private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
     private List<Guid> selectedScreenTypeIds = new List<Guid>();
@@ -205,7 +195,6 @@
 
             selectedScreenTypeIds = filmDto.ScreenTypeDtos.Select(st => st.Id).ToList();
             selectedTranslationTypeIds = filmDto.TranslationTypeDtos.Select(tt => tt.Id).ToList();
-            _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "posterFilm");
         }
         else
         {
@@ -229,6 +218,12 @@
             await _JSRuntime.ToastrError("Vui lòng chọn ít nhất một hình thức dịch.");
             return;
         }
+
+        if (string.IsNullOrEmpty(filmUpdateRequest.Poster))
+        {
+            await JSRuntime.ToastrError("Vui lòng tải lên ảnh hợp lệ.");
+            return;
+        }
         filmUpdateRequest.ScreenTypeIds = selectedScreenTypeIds;
         filmUpdateRequest.TranslationTypeIds = selectedTranslationTypeIds;
         var response = await FilmService.UpdateFilm(Id, filmUpdateRequest);
@@ -243,39 +238,44 @@
         }
 
     }
-
-    private async Task LoadFiles(InputFileChangeEventArgs e)
+    private async Task HandleImageChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
-        FileInfo fileInfo = new(file.Name);
-        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
-        if (!Directory.Exists(_directoryPath))
+        if (file != null)
         {
-            Directory.CreateDirectory(_directoryPath);
-        }
-        var path = Path.Combine(_directoryPath, newFileName);
-        await using FileStream fs = new(path, FileMode.Create);
-        await file.OpenReadStream(file.Size).CopyToAsync(fs);
-        filmUpdateRequest.Poster = $"/img/posterFilm/{newFileName}";
-    }
+            try
+            {
+                // Kiểm tra kích thước file trước khi xử lý
+                if (file.Size > 10 * 1024 * 1024) // 10 MB
+                {
+                    await JSRuntime.ToastrError("Kích thước file vượt quá giới hạn cho phép (10 MB).");
+                    return;
+                }
 
-    void DeleteImage()
-    {
-        if (filmUpdateRequest.Poster == null)
-        {
-            return;
-        }
-        var fileToDelete = filmUpdateRequest.Poster.Split('/').Reverse().First();
-        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
-        if (!File.Exists(filePathToDeleteImage))
-        {
-            filmUpdateRequest.Poster = null;
-            return;
-        }
-        File.Delete(filePathToDeleteImage);
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB
+                using var content = new MultipartFormDataContent();
+                using var fileContent = new StreamContent(stream);
 
-        filmUpdateRequest.Poster = null;
-        return;
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "formFile", file.Name);
+
+                // Gọi API để upload ảnh
+                var imageUrl = await CloudinaryService.UploadImageAsync(content);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    filmUpdateRequest.Poster = imageUrl;
+                    await JSRuntime.ToastrSuccess("Upload ảnh thành công.");
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Upload ảnh thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.ToastrError($"Đã xảy ra lỗi: {ex.Message}");
+            }
+        }
     }
 
     private void OnScreenTypeCheckbox(Guid screenTypeId, object isChecked)
