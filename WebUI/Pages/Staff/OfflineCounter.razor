@@ -82,7 +82,7 @@
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="bill" role="tabpanel" aria-labelledby="bills-tab">
             <h3 class="text-success">Hóa đơn</h3>
-            <WebUI.Components.Pages.Admin.Bill.BillList/>
+            <BillList Id="@CinemaCenterId" />
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="printTicket" role="tabpanel" aria-labelledby="print-tab">
             <h3 class="text-success">In vé</h3>
@@ -411,6 +411,7 @@
     private AuthenticationState AuthenState;
     private Guid ShowTimeId;
     private string? location;
+    private string? CinemaCenterId;
     private List<SeatDTO> lstSeats = new List<SeatDTO>();
     private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
     private List<ComboRequest> lstSelectedCombos = new();
@@ -449,6 +450,7 @@
         var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var userDto = await AccountService.GetByIdAsync(Guid.Parse(userId));
         var CinemaCenter = await CinemaCenterService.GetCinemaCenterById(userDto.CinemaCenterId.Value);
+        CinemaCenterId = CinemaCenter.Data.Id.ToString();
         showTimeSearch.CinemaCenterId = userDto.CinemaCenterId;
         await LoadShowTimes();
         base.OnInitialized();

@@ -303,12 +303,12 @@ else
 	private Guid ShowTimeId;
 	public SeatSelectionModal seatSelectionModalref;
 	public ComboSelectionModal comboSelectionModalref;
-    public DiscountSelectionModal DiscountSelectionModalRef;
+	public DiscountSelectionModal DiscountSelectionModalRef;
 	private Guid BillId = Guid.Empty;
 	private Guid MembershipId = Guid.Empty;
 	private SeatFooter seatFooterRef;
 	private ComboFooter comboFooterRef;
-    private DiscountFooter DiscountFooterRef;
+	private DiscountFooter DiscountFooterRef;
 	private string SeatsSelectedstr;
 	private decimal TotalTicket;
 	private decimal TotalCombo = 0;
@@ -319,7 +319,7 @@ else
 	private List<BannerDTO> lstBanner = new();
 	private int mempoint;
 	private CancellationToken cancellationToken;
-    private List<BillDto> billDtos = new();
+	private List<BillDto> billDtos = new();
 
 	public class EventCallbackHomeArgs
 	{
@@ -346,6 +346,7 @@ else
 		{
 			lstBanner = banners.Where(b => b.Status == BannerStatus.Active).ToList();
 		}
+		await DeletePendingBill();
 		base.OnInitialized();
 	}
 
