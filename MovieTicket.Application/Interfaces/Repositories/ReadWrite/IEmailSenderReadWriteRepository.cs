@@ -6,5 +6,7 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
     public interface IEmailSenderReadWriteRepository
     {
         Task<ResponseObject<Guid>> SendEmail(string email, EmailType type, CancellationToken cancellationToken);
+
+        Task SendEmailForCheckOutAsync(Guid billId, CancellationToken cancellationToken);
     }
 }

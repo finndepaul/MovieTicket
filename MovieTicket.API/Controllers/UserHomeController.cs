@@ -12,11 +12,13 @@ namespace MovieTicket.API.Controllers
     {
         private readonly IUserHomeReadOnlyRepository _userHomeReadOnly;
         private readonly IUserHomeReadWriteRepository _userHomeReadWrite;
+        private readonly IEmailSenderReadWriteRepository _emailSenderReadWrite;
 
-        public UserHomeController(IUserHomeReadOnlyRepository userHomeReadOnly, IUserHomeReadWriteRepository userHomeReadWrite)
+        public UserHomeController(IUserHomeReadOnlyRepository userHomeReadOnly, IUserHomeReadWriteRepository userHomeReadWrite, IEmailSenderReadWriteRepository emailSenderReadWrite)
         {
             _userHomeReadOnly = userHomeReadOnly;
             _userHomeReadWrite = userHomeReadWrite;
+            _emailSenderReadWrite = emailSenderReadWrite;
         }
 
         [HttpGet]
@@ -67,11 +69,19 @@ namespace MovieTicket.API.Controllers
             var model = await _userHomeReadWrite.DeleteCheckAsync(billId, cancellationToken);
             return Ok(model);
         }
+
         [HttpGet]
         public async Task<ActionResult> ResetDiscount(Guid billId, CancellationToken cancellationToken)
         {
             var model = await _userHomeReadWrite.ResetDiscountAsync(billId, cancellationToken);
             return Ok(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SendEmailForCheckOut(Guid billId, CancellationToken cancellationToken)
+        {
+            await _emailSenderReadWrite.SendEmailForCheckOutAsync(billId, cancellationToken);
+            return Ok();
         }
     }
 }

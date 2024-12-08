@@ -77,5 +77,10 @@ namespace WebUI.Services.Implements
             if (message == "true") return true;
             return false;
         }
+
+        public async Task SendMailForCheckOutAsync(Guid billId, CancellationToken cancellationToken)
+        {
+            var result = await _http.GetAsync($"api/EmailSender/SendMailForCheckOut?billId={billId}", cancellationToken);
+        }
     }
 }

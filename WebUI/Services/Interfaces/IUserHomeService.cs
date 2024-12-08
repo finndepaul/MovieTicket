@@ -23,5 +23,7 @@ namespace WebUI.Services.Interfaces
         Task CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken);
 
         Task<bool> ResetDiscountAsync(Guid billId, CancellationToken cancellationToken);
+
+        Task SendMailForCheckOutAsync(Guid billId, CancellationToken cancellationToken);
     }
 }
