@@ -35,11 +35,7 @@
         var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
         await customState.UpdateAuthenticationState(jwt);
         CustomUserClaims claims = DecryptJWTService.DecryptToken(jwt);
-        if(claims.Role == "Admin")
-        {
-            NavigationManager.NavigateTo("/admin", forceLoad: true);
-        }
-        else if (claims.Role == "Staff")
+        if (claims.Role == "Staff")
         {
             NavigationManager.NavigateTo("/offline-counter", forceLoad: true);
         }

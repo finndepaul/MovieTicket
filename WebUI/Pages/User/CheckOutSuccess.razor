@@ -8,6 +8,7 @@
     {
         await UserHomeService.CheckOutSuccessAsync(new CheckOutSuccessRequest {BillId = id, MembershipPoint = Mempoint},
             cancellationToken);
-        NavigationManager.NavigateTo("/");
+        await UserHomeService.SendMailForCheckOutAsync(id, cancellationToken);
+        NavigationManager.NavigateTo("/");   
     }
 }
