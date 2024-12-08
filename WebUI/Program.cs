@@ -47,6 +47,7 @@ namespace WebUI
             builder.Services.AddScoped<IBillComboService, BillComboService>();
             builder.Services.AddScoped<IAccountUtilitiesService, AccountUtilitiesService>();
             builder.Services.AddScoped<ICouponService, CouponService>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             var cultureInfo = new CultureInfo("en-UK");
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
