@@ -14,6 +14,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 		public string? FilmName { get; set; }
 		public string? CinemaType_Name { get; set; }
 
+		public Guid? CinemaCenterId { get; set; }
 		public BillStatus? Status { get; set; }
 
 		public ShowtimeStatus? ShowtimeStatus { get; set; }

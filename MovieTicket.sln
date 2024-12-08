@@ -1,9 +1,8 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{1DE393AE-3C19-4383-AA99-15BA08906364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI", "WebUI\WebUI.csproj", "{1DE393AE-3C19-4383-AA99-15BA08906364}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.Application", "MovieTicket.Application\MovieTicket.Application.csproj", "{0D400CF5-E76A-43EF-AD49-3C47A2C9BF68}"
 EndProject
@@ -15,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.API", "MovieTic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{652BD678-11A2-453D-AA5D-FA78FCCB5D63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{79A54686-52BC-4DD5-BDF1-096B96954D01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieTicket.BlazorServer", "MovieTicket.BlazorServer\MovieTicket.BlazorServer.csproj", "{79A54686-52BC-4DD5-BDF1-096B96954D01}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{9096B00F-C991-4390-BDA3-FFD4151022A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,10 +53,12 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{1DE393AE-3C19-4383-AA99-15BA08906364} = {9096B00F-C991-4390-BDA3-FFD4151022A1}
 		{0D400CF5-E76A-43EF-AD49-3C47A2C9BF68} = {652BD678-11A2-453D-AA5D-FA78FCCB5D63}
 		{8C956E97-74AA-4B16-87DC-AEE1D498C6EA} = {652BD678-11A2-453D-AA5D-FA78FCCB5D63}
 		{3F1F3167-32AE-45E2-B3DE-6778864C1F6A} = {652BD678-11A2-453D-AA5D-FA78FCCB5D63}
 		{29BCBC47-BA61-4FAF-8F22-7979757844C5} = {652BD678-11A2-453D-AA5D-FA78FCCB5D63}
+		{79A54686-52BC-4DD5-BDF1-096B96954D01} = {9096B00F-C991-4390-BDA3-FFD4151022A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4322D78-A3A0-4125-B7CF-22D29168123F}

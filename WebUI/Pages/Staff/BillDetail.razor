@@ -1,16 +1,15 @@
-﻿@page "/billuserdetail/{Id:guid}"
+﻿@page "/bill-staff/detail/{Id}"
 @using BarcodeStandard
 @using System.Drawing
 @using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Application.DataTransferObjs.BillCombo
 @using MovieTicket.Application.DataTransferObjs.Ticket
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Staff")]
 <div class="container-fluid">
-    <div class="mb-2">
-		<button @onclick="GoToUserDetail" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</button>
-    </div>
-
+	<div class="mb-2">
+		<NavLink href="bill" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
+	</div>
 	<div class="row">
 		<!-- Thông tin đơn hàng -->
 		<div class="col-md-6 mb-3">
@@ -50,7 +49,7 @@
 				}
 
 			</div><div class="">
-				<img src="https://tritonstore.com.au/wp-content/uploads/MSI-Plessey.webp" width="100%" height="200" class="object-fit-contain border rounded" />
+				<img src="@BarcodeImage" width="100%" height="200" class="object-fit-contain border rounded" />
 			</div>
 		</div>
 
@@ -76,8 +75,8 @@
 						{
 							<tr>
 								<td>@item.SeatName</td>
-								<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">@item.SeatType</span></td>
-								<td>@item.Price.ToString("#,##0")</td>
+								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
+								<td>@item.Price.ToString("#,##0") VND</td>
 							</tr>
 						}
 
@@ -109,8 +108,8 @@
 							<tr>
 								<td>@item.ComboName</td>
 								<td>@item.Quantity</td>
-								<td>@item.Price</td>
-								<td>@item.TotalPrice</td>
+								<td>@item.Price.Value.ToString("#,##0") VND</td>
+								<td>@item.TotalPrice.Value.ToString("#,##0") VND</td>
 							</tr>
 						}
 					}
@@ -129,7 +128,7 @@
 </div>
 
 @code {
-	[Parameter] public Guid Id { get; set; }
+	[Parameter] public string Id { get; set; }
 	private List<TicketDto> lstTicket = new List<TicketDto>();
 	private TicketDto objTicket = new TicketDto();
 	private ShowTimeDto objShowTime = new ShowTimeDto();
@@ -149,44 +148,59 @@
 	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
 	private BillDetailDto objBill = new BillDetailDto();
 	private AccountDto objAccount = new AccountDto();
+	private string BarcodeImage;
+	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
 
 	protected async override Task OnInitializedAsync()
 	{
-		//lay bill theo id
-		objBill = await BillService.GetBillByIdAsync(Id);
-		//lay account theo bill id
-		objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
-		//lay list ticket theo bill id
-		lstTicket = await TicketService.GetListTicketByBillIdAsync(Id);
-		//lay 1 ticket dau tien cua bill id do
-		objTicket = lstTicket.FirstOrDefault(x => x.BillId == Id);
-		//lay showtimeid cua ticket
-		var showtimeId = objTicket.ShowTimeId.Value;
-		//tim showtime theo id
-		var findShowtime = await ShowTimeService.GetById(showtimeId);
-		//lay showtime
-		objShowTime = findShowtime.Data;
-		lstSeatId = lstTicket.Select(x => new SeatPrice
-			{
-				SeatId = x.SeatId.Value,
-				Price = x.Price
-			}).ToList();
-		foreach (var item in lstSeatId)
+		if (!String.IsNullOrEmpty(Id))
 		{
-			var obj = await SeatService.GetById(item.SeatId);
-			var seat = obj.Data;
-			lstSeat.Add(new BillSeat
+			//lay bill theo id
+			objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
+			//lay account theo bill id
+			objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+			//lay list ticket theo bill id
+			lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
+			//lay 1 ticket dau tien cua bill id do
+			objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
+			//lay showtimeid cua ticket
+			var showtimeId = objTicket.ShowTimeId.Value;
+			//tim showtime theo id
+			var findShowtime = await ShowTimeService.GetById(showtimeId);
+			//lay showtime
+			objShowTime = findShowtime.Data;
+			lstSeatId = lstTicket.Select(x => new SeatPrice
 				{
-					SeatType = seat.SeatTypeName,
-					SeatName = seat.Position,
-					Price = item.Price
-				});
+					SeatId = x.SeatId.Value,
+					Price = x.Price
+				}).ToList();
+			foreach (var item in lstSeatId)
+			{
+				var obj = await SeatService.GetById(item.SeatId);
+				var seat = obj.Data;
+				lstSeat.Add(new BillSeat
+					{
+						SeatType = seat.SeatTypeName,
+						SeatName = seat.Position,
+						Price = item.Price
+					});
+			}
+			lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
+			BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+
 		}
-		lstBillCombo = await BillComboService.GetListBillComboByBillId(Id);
+	
+
+	}
+	private string FormatSeatTypeName(string type)
+	{
+		return type switch
+		{
+			"Normal" => "secondary",
+			"VIP" => "warning",
+			"Couple" => "danger",
+			_ => "Không xác định"
+		};
 	}
 
-	private void GoToUserDetail()
-	{
-		NavigationManager.NavigateTo($"/userdetail/{objBill.MembershipId}");
-	}
 }

@@ -141,7 +141,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Director = "David G. Derrick Jr.",
 			EnglishName = "MOANA 2",
 			Gerne = "Hành Động, Hoạt Hình, Phiêu Lưu, Thần thoại",
-			Poster = "img/posterFilm/moana2.jpg",
+			Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634578/yffvfsxiuf4ixbw9ddnx.jpg",
 			RunningTime = 99,
 			Language = "Tiếng Việt",
 			Nation = "Mỹ",
@@ -160,7 +160,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Director = "Lưu Thành Luân",
 			EnglishName = "LINH MIÊU",
 			Gerne = "Kinh Dị",
-			Poster = "img/posterFilm/linhmieu.jpg",
+			Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634563/ape0ki5noohoxdc9gzkq.jpg",
 			RunningTime = 109,
 			Language = "Tiếng Việt",
 			Nation = "Việt Nam",
@@ -179,7 +179,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Director = "Kongkiat Komesiri",
 			EnglishName = "CHIẾN ĐỊA TỬ THI",
 			Gerne = "Kinh Dị",
-			Poster = "img/posterFilm/tuthi.jpg",
+			Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634546/za98kf952chgo70lwgt5.jpg",
 			RunningTime = 105,
 			Language = "Tiếng Việt",
 			Nation = "Thái lan",
@@ -198,7 +198,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Director = "KIM Chang-ju",
 			EnglishName = "CƯỜI XUYÊN BIÊN GIỚI",
 			Gerne = "Hài",
-			Poster = "img/posterFilm/cuoi.jpg",
+			Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634595/qvokyz23egxqdubqtpo4.jpg",
 			RunningTime = 113,
 			Language = "Tiếng Việt",
 			Nation = "Hàn Quốc",
@@ -217,7 +217,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Director = "Masato Jinbo",
 			EnglishName = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
 			Gerne = "Hoạt Hình",
-			Poster = "img/posterFilm/namdau.jpg",
+			Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634607/tv2wzjrjndylbiob33tv.jpg",
 			RunningTime = 47,
 			Language = "Tiếng Việt",
 			Nation = "Nhật bản",
@@ -236,7 +236,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Director = "Masahiro Shinohara",
 			EnglishName = "TRAPEZIUM",
 			Gerne = "Hoạt Hình",
-			Poster = "img/posterFilm/trapezium.jpg",
+			Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634484/vy0dr6fhhmuuya5exfmy.jpg",
 			RunningTime = 102,
 			Language = "Tiếng Việt",
 			Nation = "Nhật bản",
@@ -300,7 +300,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			   .RuleFor(c => c.Price, f => 30000 * f.IndexFaker)
 			   .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
 			   .RuleFor(c => c.ComboStatus, ComboStatus.Available)
-			   .RuleFor(c => c.Image, "img/Combo/combo.png");
+			   .RuleFor(c => c.Image, "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634716/h3hwwervvd5rekegmb8b.png");
 
 		modelBuilder.Entity<Combo>().HasData(comboFaker.Generate(5));
 		// Faker for ScreeningDay (ensure unique values)
