@@ -224,7 +224,14 @@ else
 				<h4 class="modal-title">Thanh toán</h4>
 			</div>
 			<div class="modal-body" style="height:67%">
-				<DiscountSelectionModal BillId="@BillId" @ref="DiscountSelectionModalRef" OnAppliedDiscount="HandleAppliedDisCount" MembershipId="@MembershipId" Mempoint="HandleMembershipPoint" />
+				<DiscountSelectionModal
+					BillId="@BillId" 
+					@ref="DiscountSelectionModalRef" 
+					OpenDiscount="OpenDiscount" 
+					OnAppliedDiscount="HandleAppliedDisCount" 
+					MembershipId="@MembershipId" 
+					Mempoint="HandleMembershipPoint"
+					TimerOutDiscount="HandleTimerOutDiscount" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:23%;background-color:#031529;color:#fff">
 				<DiscountFooter ShowtimeId="@ShowTimeId"
