@@ -103,7 +103,7 @@ public partial class Countdown : ComponentBase, IDisposable
         {
             _secondsToRun--;
             Time = TimeSpan.FromSeconds(_secondsToRun).ToString(@"mm\:ss");
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         }
         else
         {
