@@ -6,6 +6,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
 @inject IAccountUtilitiesService AccountUtilitiesService
+@inject ICloudinaryService CloudinaryService
 @layout Layout.UserLayout
 
 <div class="container py-5">
@@ -32,18 +33,16 @@
             <EditForm Model="userInfo" OnValidSubmit="UpdateUserInfo" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
                 <div class="mb-4 text-center">
-                    @if (userInfo.Avatar == null)
-                    {
-                        <label for="customFile" class="form-label text-secondary">Cập nhật ảnh đại diện</label>
-                        <InputFile OnChange="LoadFiles" class="form-control border-primary" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
-                    }
-                    else
+                    @if (!string.IsNullOrEmpty(userInfo.Avatar))
                     {
                         <div class="d-flex flex-column align-items-center">
                             <img src="@userInfo.Avatar" alt="User Avatar" class="rounded-circle mb-3 border border-3 border-primary" style="width: 120px; height: 120px; object-fit: cover;">
-                            <button type="button" class="btn btn-danger btn-sm" @onclick="DeleteImage">Xóa ảnh</button>
                         </div>
                     }
+
+                    <label for="customFile" class="form-label text-secondary">Cập nhật ảnh đại diện</label>
+                    <InputFile OnChange="HandleImageChange" class="form-control border-primary" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
+                    
                 </div>
                 <!-- Row for Username and Email -->
                 <div class="row mb-4">
@@ -205,7 +204,6 @@
     private PageList<BillsDto>? bookingHistory;
     private PageList<CouponDto>? couponUsageHistory;
     private int membershipPoints;
-
     private MetaData metaData = new MetaData();
     private PagingParameters pagingParameters = new PagingParameters { PageNumber = 1, PageSize = 10 };
 
@@ -256,6 +254,11 @@
             var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (Guid.TryParse(userId, out var guidUserId))
             {
+                if (string.IsNullOrEmpty(userInfo.Avatar))
+                {
+                    await JSRuntime.ToastrError("Vui lòng tải lên ảnh hợp lệ.");
+                    return;
+                }
                 userInfo.Id = guidUserId;
                 var result = await AccountService.UpdateAsync(userInfo);
                 if (result != null)
@@ -275,7 +278,7 @@
         }
 
     }
-    
+
     private async Task ChangePassword()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -290,7 +293,7 @@
                 var result = await AccountUtilitiesService.ChangePasswordAsync(changePasswordRequest, CancellationToken.None);
                 if (result)
                 {
-                    await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công"); 
+                    await JSRuntime.ToastrSuccess("Đổi mật khẩu thành công");
                     await OnInitializedAsync();
 
                 }
@@ -319,42 +322,49 @@
         var userId = userInfo.Id;
         await LoadBookingHistory(userId);
     }
+
     private async Task LoadCouponUsageHistory(Guid userId)
     {
         couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(userId, pagingParameters, CancellationToken.None);
         metaData = couponUsageHistory.MetaData;
     }
-    private async Task LoadFiles(InputFileChangeEventArgs e)
+    private async Task HandleImageChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
-        FileInfo fileInfo = new(file.Name);
-        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
-        if (!Directory.Exists(_directoryPath))
+        if (file != null)
         {
-            Directory.CreateDirectory(_directoryPath);
-        }
-        var path = Path.Combine(_directoryPath, newFileName);
-        await using FileStream fs = new(path, FileMode.Create);
-        await file.OpenReadStream(file.Size).CopyToAsync(fs);
-        userInfo.Avatar = $"/img/Avatar/{newFileName}";
-    }
+            try
+            {
+                // Kiểm tra kích thước file trước khi xử lý
+                if (file.Size > 10 * 1024 * 1024) // 10 MB
+                {
+                    await JSRuntime.ToastrError("Kích thước file vượt quá giới hạn cho phép (10 MB).");
+                    return;
+                }
 
-    void DeleteImage()
-    {
-        if (userInfo.Avatar == null)
-        {
-            return;
-        }
-        var fileToDelete = userInfo.Avatar.Split('/').Reverse().First();
-        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
-        if (!File.Exists(filePathToDeleteImage))
-        {
-            userInfo.Avatar = null;
-            return;
-        }
-        File.Delete(filePathToDeleteImage);
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB
+                using var content = new MultipartFormDataContent();
+                using var fileContent = new StreamContent(stream);
 
-        userInfo.Avatar = null;
-        return;
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "formFile", file.Name);
+
+                // Gọi API để upload ảnh
+                var imageUrl = await CloudinaryService.UploadImageAsync(content);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    userInfo.Avatar = imageUrl;
+                    await JSRuntime.ToastrSuccess("Upload ảnh thành công.");
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Upload ảnh thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.ToastrError($"Đã xảy ra lỗi: {ex.Message}");
+            }
+        }
     }
 }
