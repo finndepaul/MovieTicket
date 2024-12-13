@@ -14,16 +14,16 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="true">Thông tin người dùng</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mt-3" role="presentation">
             <button class="nav-link" id="membership-points-tab" data-bs-toggle="tab" data-bs-target="#membership-points" type="button" role="tab" aria-controls="membership-points" aria-selected="false">Điểm VHD</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item  mt-3" role="presentation">
             <button class="nav-link" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Đổi mật khẩu</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item  mt-3" role="presentation">
             <button class="nav-link" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="false">Lịch sử đặt vé</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mt-3" role="presentation">
             <button class="nav-link" id="coupon-usage-history-tab" data-bs-toggle="tab" data-bs-target="#coupon-usage-history" type="button" role="tab" aria-controls="coupon-usage-history" aria-selected="false">Lịch sử sử dụng mã giảm giá</button>
         </li>
     </ul>
@@ -235,6 +235,7 @@
                 await LoadBookingHistory(guidUserId);
                 await LoadCouponUsageHistory(guidUserId);
                 membershipPoints = await AccountService.GetMembershipPointsAsync(guidUserId, CancellationToken.None);
+              
 
             }
         }

@@ -9,12 +9,12 @@
                 <i class="bi bi-award-fill"></i> Suất chiếu
             </button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mt-3" role="presentation">
             <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#bill" type="button" role="tab" aria-controls="bills" aria-selected="false">
                 <i class="bi bi-gift-fill"></i> Hóa đơn
             </button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item mt-3" role="presentation">
             <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#printTicket" type="button" role="tab" aria-controls="printTicket" aria-selected="false">
                 <i class="bi bi-gift-fill"></i> In vé
             </button>
@@ -86,6 +86,7 @@
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="printTicket" role="tabpanel" aria-labelledby="print-tab">
             <h3 class="text-success">In vé</h3>
+            <Print Id="@CinemaCenterId" />
         </div>
 
     </div>

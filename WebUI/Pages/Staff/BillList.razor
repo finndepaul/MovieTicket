@@ -1,4 +1,5 @@
-﻿@attribute [Authorize(Roles = "Staff")]
+﻿@page "/bill"
+@attribute [Authorize(Roles = "Staff")]
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Application.DataTransferObjs.Ticket
 <div class="modal fade" id="DeleteBillModalToggle" aria-hidden="true" aria-labelledby="DeleteBillModalToggleLabel" tabindex="-1">
@@ -101,15 +102,16 @@
 						<td>@item.TotalMoney.Value.ToString("#,##0") VND</td>
 						<td>@item.CreateTime</td>
 						<td>
-							<a class="btn btn-primary" href="/bill-staff/detail/@item.Id"><i class="bi bi-info-circle"></i></a>
+							<a class="btn btn-primary" href="/bill-staff/detail/@item.Id"><i class="bi bi-info-circle m-0"></i></a>
 							<button class="btn btn-danger" @onclick="() => OnSeletedBill(item.Id)">
-								<i class="bi bi-trash"></i>
+								<i class="bi bi-trash m-0"></i>
 							</button>
 						</td>
 					</tr>
 					count++;
 				}
 			}
+
 
 
 		</tbody>
@@ -135,22 +137,27 @@
 	private MetaData metaData { get; set; } = new MetaData();
 	private PagingParameters pagingParameters = new PagingParameters();
 	private BillWithPaginationRequest request = new BillWithPaginationRequest();
-	private DateTime? StartTime = DateTime.Now.Date;
-	private DateTime? EndTime = DateTime.Now.Date.AddDays(1).AddTicks(-1);
+	private DateTime? StartTime = DateTime.Today;
+	private DateTime? EndTime = DateTime.Today.AddDays(1).AddTicks(-1);
 	private BillStatus billStatus { get; set; }
 	private Guid SelectedBillId { get; set; }
 	private CancellationToken cancellationToken;
 
-	protected async override Task OnInitializedAsync()
+	protected async override Task OnParametersSetAsync()
 	{
-		request.CinemaCenterId = Guid.Parse(Id);
-		request.StartTime = StartTime;
-		request.EndTime = EndTime;
-		await Refresh();
-		StateHasChanged();
+		if (!String.IsNullOrEmpty(Id))
+		{
+			request.CinemaCenterId = Guid.Parse(Id);
+			request.StartTime = StartTime;
+			request.EndTime = EndTime;
+			await Refresh();
+			StateHasChanged();
+		}
+		
 	}
 	private async Task Refresh()
 	{
+	
 		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
 			{
 				PageNumber = pagingParameters.PageNumber,
