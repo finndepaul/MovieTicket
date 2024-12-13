@@ -78,13 +78,10 @@
 	[Parameter] public decimal TotalMoney { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatModal { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatModalCinemaSystem { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
 	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToDiscount { get; set; }
 	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToDiscountModalCinemaSystem { get; set; }
-	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToDiscountOfflineCounter { get; set; }
 	private EventCallbackHomeArgs args = new();
 	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
-	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -138,11 +135,6 @@
 			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
 			await BackToSeatModalCinemaSystem.InvokeAsync(ShowtimeId);
 		}
-		else if (location != null && location == "OfflineCounter")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
-		}
 	}
 
 	private async Task NextSelection()
@@ -161,13 +153,6 @@
                     {
 						BillId = BillId,
 						MembershipId = MembershipId
-                    };
-			}
-			else if (location == "OfflineCounter")
-			{
-				argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                    {
-						BillId = BillId
                     };
 			}
 			else if (location == "Home")
@@ -198,15 +183,7 @@
 					MembershipId = MembershipId
 				};
 			await NextToDiscountModalCinemaSystem.InvokeAsync(argsCinemaSystem);
-        }
-        else if (location == "OfflineCounter")
-        {
-            argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                {
-                    BillId = BillId
-                };
-            await NextToDiscountOfflineCounter.InvokeAsync(argsOfflineCounter);
-        }
+        }    
 	}
 
 	public Task Reset()
