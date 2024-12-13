@@ -145,7 +145,8 @@
 				accountDto = await AccountService.GetByIdAsync(guidUserId);
 			};
 		}
-		
+        var cinemaCenter = await CinemaCenterService.GetCinemaCenterById((Guid)accountDto.CinemaCenterId);
+        CinemaCenterName = cinemaCenter.Data.Name;
 	}
 	private void NavigationLogout()
 	{

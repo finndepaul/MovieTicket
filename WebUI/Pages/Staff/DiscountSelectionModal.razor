@@ -1,3 +1,5 @@
+@using System.Text.RegularExpressions
+@using MovieTicket.Application.DataTransferObjs.Account
 <style>
 	body {
 	background-color: #f8f8f8;
@@ -8,7 +10,10 @@
 	border: 1px solid #ddd;
 	background-color: #fff;
 	}
-
+	.mem-search	{
+	max-width: 960px;
+	margin: auto;
+	}
 	.container-payment {
 	max-width: 1200px;
 	margin: auto;
@@ -112,61 +117,77 @@
 	font-weight: bold;
 	}
 </style>
+<div class="memSearch">
+	<div class="input-group mb-3">
+		<input type="text" class="form-control" placeholder="Số điện thoại" aria-describedby="button-addon2" @bind-value="memPhone">
+		<button class="btn btn-outline-secondary" type="button" @onclick="()=> SearchMembershipByPhone(memPhone)">Tìm kiếm</button>
+	</div>
+	@if (!String.IsNullOrEmpty(errorMessage))
+	{
+		<div class="alert alert-danger" role="alert">
+			@errorMessage
+		</div>
+	}
+	<div>
 
+	</div>
+</div>
 <div class="d-flex container-payment p-3">
-	<Countdown @ref="timer" BillId="BillId" TimerOut="TimerOutCallback" />
 	<div class="payment-container">
-		<!-- Bước 1: Giảm giá -->
-		<div class="section-title d-flex justify-content-between">
-			<div>GIẢM GIÁ</div>
-			<button class="btn btn-secondary" @onclick="Reload">Đặt lại</button>
-		</div>
-		<div class="p-3">
-			<!-- Phần mã giảm giá -->
-			<div class="mb-3 btn-option pe-5">
-				<label for="discountCode" class="form-label">Mã giảm giá:</label>
-				<input type="text"
-				class="form-control mb-3"
-				id="discountCode"
-				placeholder="Nhập mã giảm giá:"
-				@bind-value="CouponCode"
-				disabled="@IsVHDUsed">
-				<button class="ms-2 btn btn-success" disabled="@IsVHDUsed" @onclick="UseDiscountCode">Xác nhận</button>
+		@if(accountDto!=null){
+			<div class="memInfo">
+				<div class="memName">
+					<div>Thành viên:</div>
+					<div>@accountDto.Name</div>
+				</div>
+				<div class="memPoint">
+					<div>Điểm hiện tại: @CurrentPoints</div>
+					<div></div>
+				</div>
 			</div>
+			<div class="section-title d-flex justify-content-between">
+				<div>GIẢM GIÁ</div>
+				<button class="btn btn-secondary" @onclick="Reload">Đặt lại</button>
+			</div>
+			<div class="p-3">
+				<!-- Phần mã giảm giá -->
+				<div class="mb-3 btn-option pe-5">
+					<label for="discountCode" class="form-label">Mã giảm giá:</label>
+					<input type="text"
+					class="form-control mb-3"
+					id="discountCode"
+					placeholder="Nhập mã giảm giá:"
+					@bind-value="CouponCode"
+					disabled="@IsVHDUsed">
+					<button class="ms-2 btn btn-success" disabled="@IsVHDUsed" @onclick="UseDiscountCode">Xác nhận</button>
+				</div>
 
-			<!-- Phần điểm VHD -->
-			<div class="mb-3 btn-option pe-5">
-				<label for="vhdPoints" class="form-label">Điểm VHD:</label>
-				<input type="number"
-				class="form-control"
-				id="vhdPoints"
-				placeholder="Sử dụng điểm"
-				@bind-value="VHDPoints"
-				disabled="@IsDiscountCodeUsed">
-				<div id="passwordHelpBlock" class="form-text ms-3">
-					<p class="m-0 p-0">Điểm hiện tại: @CurrentPoints</p>
-				</div>
-				<button class="ms-2 btn btn-success" disabled="@IsDiscountCodeUsed" @onclick="UseVHDPoints">Xác nhận</button>
-			</div>
-		</div>
-		<AuthorizeView Roles="Staff">
-			<div class="section-title">Membership</div>
-			<div class="row mb-3" disabled="@memberCheck">
-				<div class="col">
-					<input type="text" class="form-control" @bind-value="@phone" placeholder="Nhập số điện thoại" />
-				</div>
-				<div class="col-auto">
-					<button class="btn btn-primary" @onclick="() => SearchMembershipByPhone(phone)">Tìm</button>
+				<!-- Phần điểm VHD -->
+				<div class="mb-3 btn-option pe-5">
+					<label for="vhdPoints" class="form-label">Điểm VHD:</label>
+					<input type="number"
+					class="form-control"
+					id="vhdPoints"
+					placeholder="Sử dụng điểm"
+					@bind-value="VHDPoints"
+					disabled="@IsDiscountCodeUsed">
+					<div id="passwordHelpBlock" class="form-text ms-3">
+						<p class="m-0 p-0">Điểm hiện tại: @CurrentPoints</p>
+					</div>
+					<button class="ms-2 btn btn-success" disabled="@IsDiscountCodeUsed" @onclick="UseVHDPoints">Xác nhận</button>
 				</div>
 			</div>
-		</AuthorizeView>
-
+		}
 		<!-- Bước 3: Hình thức thanh toán -->
 		<div class="section-title">HÌNH THỨC THANH TOÁN</div>
 		<div class="p-3">
 			<div class="form-check">
-				<input class="form-check-input" type="radio" name="payment" id="vnpay" checked>
+				<input class="form-check-input" type="radio" name="payment" id="vnpay" @onchange="HandlePaymentMethodChange" checked>
 				<label class="form-check-label" for="vnpay">PayOS VHD</label>
+			</div>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" name="payment" id="cash" @onchange="HandlePaymentMethodChange">
+				<label class="form-check-label" for="cash">Tiền mặt</label>
 			</div>
 		</div>
 	</div>
@@ -177,13 +198,9 @@
 	[Parameter] public Guid MembershipId { get; set; }
 	[Parameter] public bool OpenDiscount {get;set;}
 	[Parameter] public EventCallback<int> Mempoint { get; set; }
-	[Parameter] public EventCallback<int> MempointCS { get; set; }
 	[Parameter] public EventCallback TimerOutDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> OnAppliedDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> OnAppliedDiscountCinemaSystem { get; set; }
-	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnAppliedDiscountOfflineCounter { get; set; }
-	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnAppliedDiscount { get; set; }
+	[Parameter] public EventCallback<string> Method { get; set; }
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private string CouponCode { get; set; } = string.Empty;
 	private int VHDPoints { get; set; } = 0;
@@ -193,22 +210,25 @@
 	private bool memberCheck = true;
 	private string? location;
 	CancellationToken cancellationToken;
-	private string phone { get; set; }
 	private Countdown? timer;
+	private string memPhone { get; set; }
+	private string errorMessage = string.Empty;
+	private AccountDto accountDto { get; set; }
+	private string selectedPaymentMethod = "vnpay";
 
 	protected override async Task OnParametersSetAsync()
 	{
-		if (BillId != Guid.Empty)
-		{
-			CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(MembershipId, cancellationToken);
-		}
-        if (OpenDiscount)
-        {
-            if (timer != null)
-			{
-				timer.Start(30);
-			}
-        }
+		// if (BillId != Guid.Empty)
+		// {
+		// 	CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(MembershipId, cancellationToken);
+		// }
+		//      if (OpenDiscount)
+		//      {
+		//          if (timer != null)
+		// {
+		// 	timer.Start(30);
+		// }
+		//      }
 		base.OnParametersSet();
 	}
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -239,24 +259,12 @@
 				IsDiscountCodeUsed = true;
 				IsVHDUsed = false;
 				memberCheck = false;
-				if (location == "Home")
-				{
-					args = new EventCallbackHomeArgs
-						{
-							Discount = await CalculateDiscount()
-						};
-					await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-					await OnAppliedDiscount.InvokeAsync(args);
-				}
-				else if (location == "CinemaSystem")
-				{
-					argsCinemaSystem = new EventCallbackCinemaSystemArgs
-						{
-							Discount = await CalculateDiscount()
-						};
-					await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-					await OnAppliedDiscountCinemaSystem.InvokeAsync(argsCinemaSystem);
-				}
+				argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                    {
+                        Discount = await CalculateDiscount()
+                    };
+				await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
+				await OnAppliedDiscount.InvokeAsync(argsOfflineCounter);
 				StateHasChanged();
 			}
 		}
@@ -280,26 +288,12 @@
 			IsVHDUsed = true;
 			IsDiscountCodeUsed = false;
 			memberCheck = false;
-			if (location == "Home")
-			{
-				args = new EventCallbackHomeArgs
-					{
-						Discount = await CalculateDiscount()
-					};
-				await JSRuntime.ToastrSuccess("Áp dụng điểm thành công!");
-				await Mempoint.InvokeAsync(VHDPoints);
-				await OnAppliedDiscount.InvokeAsync(args);
-			}
-			else if (location == "CinemaSystem")
-			{
-				argsCinemaSystem = new EventCallbackCinemaSystemArgs
-					{
-						Discount = await CalculateDiscount()
-					};
-				await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-				await OnAppliedDiscountCinemaSystem.InvokeAsync(argsCinemaSystem);
-			}
-			
+			argsOfflineCounter = new EventCallbackOfflineCounterArgs
+				{
+					Discount = await CalculateDiscount()
+				};
+			await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
+			await OnAppliedDiscount.InvokeAsync(argsOfflineCounter);
 		}
 		StateHasChanged();
 	}
@@ -313,11 +307,11 @@
 			memberCheck = false;
 			VHDPoints = 0;
 			await JSRuntime.ToastrSuccess("Đặt lại thành công!");
-			args = new EventCallbackHomeArgs
-				{
-					Discount = await CalculateDiscount()
-				};
-			await OnAppliedDiscount.InvokeAsync(args);
+			argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                {
+                    Discount = await CalculateDiscount()
+                };
+			await OnAppliedDiscount.InvokeAsync(argsOfflineCounter);
 		}
 		else
 		{
@@ -325,37 +319,74 @@
 		}
 		StateHasChanged();
 	}
-	
 
 	private async Task<decimal> CalculateDiscount()
 	{
 		var bill = await UserHomeService.GetBillForCheckOut(BillId);
 		return (decimal)(bill.AfterDiscount - bill.TotalMoney);
 	}
+
+	private async Task SearchMembershipByPhone(string phone)
+	{
+		errorMessage = string.Empty;
+		if (string.IsNullOrEmpty(phone))
+		{
+			errorMessage = "Vui lòng nhập số điện thoại!";
+			return;
+		}
+		if (!Regex.IsMatch(phone, @"^\d+$"))
+		{
+			errorMessage = "Số điện thoại chỉ được chứa chữ số!";
+			return;
+		}
+		var acc = await AccountService.GetAllAsync();
+		var mem = acc.FirstOrDefault(x => x.Phone == phone);
+		if (mem == null)
+		{
+			errorMessage = "Không tìm thấy thành viên!";
+			return;
+		}
+		accountDto = mem;
+		CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(accountDto.Id, cancellationToken);
+		await UserHomeService.UpdateCheckMembershipIdAsync(BillId, accountDto.Id, cancellationToken);
+	}
+
+	private async void HandlePaymentMethodChange(ChangeEventArgs e)
+	{
+		selectedPaymentMethod = e.Value.ToString();
+		if (selectedPaymentMethod == "vnpay")
+		{
+            await Method.InvokeAsync("vnpay");
+		}
+		else if (selectedPaymentMethod == "cash")
+		{
+            await Method.InvokeAsync("cash");
+		}
+		StateHasChanged();
+	}
+
+	private async void TimerOutCallback()
+	{
+		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+		await TimerOutDiscount.InvokeAsync();
+	}
+	public void StopTimer()
+	{
+		timer?.Stop();
+		timer?.Dispose();
+	}
+
 	public Task Reset()
 	{
 		IsDiscountCodeUsed = false;
 		IsVHDUsed = false;
 		CouponCode = string.Empty;
 		memberCheck = true;
+		errorMessage = string.Empty;
+		accountDto = null;
 		VHDPoints = 0;
-		StateHasChanged();
-		return Task.CompletedTask;
-	}
-
-	private async Task SearchMembershipByPhone(string phone)
-	{
-		var acc = await AccountService.GetAllAsync();
-        var mem = acc.FirstOrDefault(x => x.Phone == phone);
-	}
-    private async void TimerOutCallback()
-    {
-		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-		await TimerOutDiscount.InvokeAsync();
+        memPhone = string.Empty;
+        StateHasChanged();
+        return Task.CompletedTask;
     }
-	public void StopTimer()
-	{
-        timer?.Stop();
-        timer?.Dispose();
-	}
 }
