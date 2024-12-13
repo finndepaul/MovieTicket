@@ -22,50 +22,49 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         {
             _db = db;
         }
+		public async Task<PageList<CouponDto>> GetAllAsync(string? couponCode, DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters, CancellationToken cancellationToken)
+		{
+			var query = _db.Coupons.AsNoTracking();
 
-        public async Task<PageList<CouponDto>> GetAllAsync(string? couponCode, DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters, CancellationToken cancellationToken)
-        {
-            startDate ??= DateTime.Today;
-            endDate ??= DateTime.Today.AddDays(1).AddTicks(-1);
+			if (startDate.HasValue)
+			{
+				query = query.Where(x => x.StartDate >= startDate.Value);
+			}
 
-            startDate?.ToString("yyyy-dd-MM");
-            endDate?.ToString("yyyy-dd-MM");
+			if (endDate.HasValue)
+			{
+				query = query.Where(x => x.EndDate <= endDate.Value);
+			}
 
-            if (startDate > endDate)
-            {
-                throw new ArgumentException("Ngày bắt đầu không thể lớn hơn này kết thúc");
-            }
+			if (!string.IsNullOrEmpty(couponCode))
+			{
+				query = query.Where(x => x.CouponCode.Contains(couponCode));
+			}
 
-            var query = _db.Coupons
-                .AsNoTracking()
-                .Where(x => x.StartDate >= startDate && x.EndDate <= endDate);
+			// Sắp xếp theo trạng thái
+			query = query.OrderByDescending(x => x.IsActive);
 
-            if (!string.IsNullOrEmpty(couponCode))
-            {
-                query = query.Where(x => x.CouponCode.Contains(couponCode));
-            }
+			var dtoQuery = query.Select(x => new CouponDto
+			{
+				Id = x.Id,
+				CouponCode = x.CouponCode,
+				AmountValue = x.AmountValue,
+				StartDate = x.StartDate,
+				EndDate = x.EndDate,
+				IsActive = x.IsActive ? "Đang hoạt động" : "Ngưng hoạt động"
+			});
 
-            var dtoQuery = query.Select(x => new CouponDto
-            {
-                Id = x.Id,
-                CouponCode = x.CouponCode,
-                AmountValue = x.AmountValue,
-                StartDate = x.StartDate,
-                EndDate = x.EndDate,
-                IsActive = x.IsActive ? "Đang hoạt động" : "Ngưng hoạt động"
-            });
+			int count = await dtoQuery.CountAsync(cancellationToken);
 
-            int count = await dtoQuery.CountAsync(cancellationToken);
+			var data = await dtoQuery
+				.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+				.Take(pagingParameters.PageSize)
+				.ToListAsync(cancellationToken);
 
-            var data = await dtoQuery
-                .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
-                .Take(pagingParameters.PageSize)
-                .ToListAsync(cancellationToken);
+			return new PageList<CouponDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+		}
 
-            return new PageList<CouponDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
-        }
-
-        public async Task<UpdateCouponRequest> GetCouponForUpdate(Guid id, CancellationToken cancellationToken)
+		public async Task<UpdateCouponRequest> GetCouponForUpdate(Guid id, CancellationToken cancellationToken)
         {
             var result = await _db.Coupons
                     .AsNoTracking()

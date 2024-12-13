@@ -17,7 +17,7 @@
 	<div class="mb-3">
 		<label for="movieTitle" class="form-label">Phim chiếu</label>
 		<select class="form-select" id="movieTitle" value="@selectedFilmId" @onchange="OnFilmChange">
-			<option value="">Select a film</option>
+			<option value="">Chọn phim</option>
 			@foreach (var film in FilmValidate)
 			{
 				<option value="@film.Id" selected="@(film.Id == ShowTime.FilmId ? true : false)">@film.Name</option>
@@ -34,7 +34,7 @@
 	<div class="mb-3">
 		<label for="format" class="form-label">Hình thức chiếu</label>
 		<select class="form-select" id="format" @bind="ShowTime.ScreenTypeId">
-			<option value="">Select a screen type</option>
+			<option value="">Chọn hình thức chiếu</option>
 			@foreach (var item in ScreenTypeValidate)
 			{
 				<option value="@item.Id" selected="@(item.Id == ShowTime.ScreenTypeId ? true : false)">@item.Type</option>
@@ -50,7 +50,7 @@
 	<div class="mb-3">
 		<label for="translationType" class="form-label">Hình thức dịch</label>
 		<select class="form-select" id="translationType" @bind="ShowTime.TranslationTypeId">
-			<option value="">Select a translation type</option>
+			<option value="">Chọn hình thức dịch</option>
 			@foreach (var item in TranslationTypeValidate)
 			{
 				<option value="@item.Id" selected="@(item.Id == ShowTime.TranslationTypeId ? true : false)">@item.Type</option>

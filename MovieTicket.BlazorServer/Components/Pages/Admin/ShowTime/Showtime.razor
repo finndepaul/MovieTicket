@@ -11,6 +11,20 @@
 <div class="container-fluid">
 	<div class="d-flex align-items-center mb-3">
 		<div class="d-flex align-items-center me-4">
+			<label for="cinema" class="me-2 mb-0">Tỉnh thành:</label>
+			<select class="form-control form-control-sm" id="cinemaCenter" style="width: 150px;" @onchange="(e) => SelectedCity(e)">
+				<option value="">Chọn tỉnh/thành phố</option>
+				@if (city != null)
+				{
+					@foreach (var item in city)
+					{
+						<option value="@item">@item</option>
+					}
+				}
+			</select>
+		</div>
+
+		<div class="d-flex align-items-center me-4">
 			<label for="cinema" class="me-2 mb-0">Rạp chiếu:</label>
 			<select class="form-control form-control-sm" id="cinemaCenter" style="width: 150px;" @onchange="(e) => SelectedCinemaCenter(e)">
 				<option value="">Chọn rạp chiếu</option>
@@ -49,7 +63,6 @@
 			<button class="btn btn-primary btn-sm" @onclick="SearchShowTimes">Tìm kiếm</button>
 		</div>
 	</div>
-
 
 	<h6 class="text-center mt-5">Lịch chiếu ngày: @Date.ToString("dd-MM-yyyy")</h6>
 	<h6 class="text-center mt-3 text-white bg-primary" style="padding: 9px; border-radius: 6px">Rạp: @CinemaCenterName</h6>
@@ -289,13 +302,30 @@
 	private bool isCinemaSelected = false;
 	private ShowTimeUpdateRequest showTimeUpdateRequest = new ShowTimeUpdateRequest();
 	private ShowTimeUpdateStatus updateStatus = new ShowTimeUpdateStatus();
+	private List<string> city = new List<string> { "Hà Nội", "Hà Nam", "Ninh Bình", "Phú Thọ" };
 	protected override async Task OnInitializedAsync()
 	{
 		_lstCinema = "Select a cinema";
-		cinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);		
 		ShowTimeSearchs.ShowtimeDate = Date;
 		await SearchShowTimes();
 	}
+	private async Task SelectedCity(ChangeEventArgs e)
+	{
+		var selectedCity = e.Value.ToString();
+		if (selectedCity != null)
+		{
+			var cinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(cinemaCenterSearch);
+			var cinemacenters = cinemaCenterDtos.Where(x => x.AddresCity == selectedCity).ToList(); 
+			cinemaCenters = cinemacenters.AsQueryable();
+			ShowTimeSearchs.CinemaCenterId = null;
+			ShowTimeSearchs.CinemaId = null;
+			CinemaCenterName = string.Empty;
+			CinemaName = string.Empty;
+			isCinemaSelected = false;
+		}
+		await SearchShowTimes();
+	}
+
 	private async Task SelectedCinemaCenter(ChangeEventArgs e)
 	{
 		var selectedCinemaCenterId = e.Value.ToString();
