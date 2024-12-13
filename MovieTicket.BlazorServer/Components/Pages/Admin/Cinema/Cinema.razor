@@ -1,16 +1,27 @@
 ﻿@page "/cinema"
 @attribute [Authorize(Roles = "Admin")]
 
-@if (_lstCinemaCenters != null)
-{
     <div class="container-fluid">
         <!-- Nút -->
         <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+            <select class="form-select" style="width:auto" @onchange="(e) => SelectedCity(e)">
+                <option value="">Chọn tỉnh/thành phố</option>
+                @if (city != null)
+                {
+                    @foreach (var item in city)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                }
+            </select>
             <select class="form-select" style="width:auto" @onchange="OnChangeCinemaCenter">
                 <option value="" selected disabled>Chọn rạp</option>
-                @foreach (var item in _lstCinemaCenters)
+                @if (_lstCinemaCenters != null && _lstCinemaCenters.Any())
                 {
-                    <option value="@item.Name">@item.Name</option>
+                    @foreach (var item in _lstCinemaCenters)
+                    {
+                        <option value="@item.Name">@item.Name</option>
+                    }
                 }
             </select>
             <button class="btn add-btn me-md-2" id="btnAdd" data-id="selectedCinemaCenterName" @onclick="()=>OpenCreateCinemaModal(selectedCinemaCenterName)">
@@ -159,11 +170,7 @@
             </table>
         </div>
     </div>
-}
-else
-{
-    <h3>Loading...</h3>
-}
+
 
 <script>
     function openModal(modalId) {
@@ -192,15 +199,27 @@ else
     private SeatDetailModal seatDetailModalRef; // Tham chiếu đến SeatDetailModal
     private RowUpdateModal rowUpdateModalRef; // Reference to RowUpdateModal
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
+    private List<string> city = new List<string> { "Hà Nội", "Hà Nam", "Ninh Bình", "Phú Thọ" };
     protected override async Task OnInitializedAsync()
-    {   
-        _lstCinemaCenters = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+    {
+        _lstCinemaCenters = Enumerable.Empty<CinemaCenterDto>().AsQueryable();
         // Giả sử bạn đã chọn một cinema center nào đó
         selectedCinemaCenterName = "Tên Rạp Phim"; // Thay thế bằng tên thực tế
         _lstCinemas = await CinemaService.GetCinemasAsync(selectedCinemaCenterName, null); // Truyền cinemaCenterName
     }
-
+    private async Task SelectedCity(ChangeEventArgs e)
+    {
+        var selectedCity = e.Value.ToString();
+        if (selectedCity != null)
+        {
+            var cinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+            var cinemacenters = cinemaCenterDtos.Where(x => x.AddresCity == selectedCity).ToList();
+            _lstCinemaCenters = cinemacenters.AsQueryable();
+        }
+        _lstCinemas = Enumerable.Empty<CinemaDto>().AsQueryable();
+		selectedCinemaCenterName = string.Empty;
+		StateHasChanged();
+    }
     private async Task OnChangeCinemaCenter(ChangeEventArgs e)
     {
         selectedCinemaCenterName = e.Value?.ToString();
@@ -216,7 +235,7 @@ else
     private async void ShowDeleteConfirmation(Guid id)
     {
         guid = id;
-        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Mày chắc chưa?");
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Bạn chắc chưa?");
         if (confirmed)
         {
             await DeleteCinema();
