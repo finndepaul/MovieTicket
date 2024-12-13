@@ -43,8 +43,6 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
         public async Task<PageList<ScheduleDto>> GetAllAsync(string? filmName, DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
-            startDate ??= DateTime.Now;
-            endDate ??= DateTime.Now;
             var queryParameters = new Dictionary<string, string>
             {
                 ["pageNumber"] = pagingParameters.PageNumber.ToString(),
