@@ -1,0 +1,206 @@
+﻿<div class="container-fluid">
+	<div class="row">
+		<div class="col align-self-center" style="width:10%">
+			<button class="btn btn-primary text-light bi bi-chevron-left  fs-5" style="padding:10px;width:130px;height:50px" @onclick="BackToShowtime">Quay lại</button>
+		</div>
+		@if (showtimeDto != null && cinemaDto != null)
+		{
+			<div class="col" style="width:40%">
+				<div class="d-flex">
+					<img src="@filmDto.Poster" class="object-fit-cover" style="width: 75px;height:110px" />
+					<div class="ms-2">
+						<span class="fw-bold">
+							@showtimeDto.FilmName
+						</span>
+						<br />
+						@showtimeDto.ScreenTypeName
+						<br />
+						@formatRating
+					</div>
+				</div>
+
+			</div>
+			<div class="col" style="width:20%">
+				<label class="me-2">Rạp:</label>
+				<span class="fw-bold">@showtimeDto.CinemaCenterName</span>
+
+				<br />
+				<label class="me-2">Phòng chiếu:</label>
+				<span class="fw-bold">@cinemaDto.Name</span>
+
+			</div>
+			<div class="selectedSeats col" style="width:10%">
+				<label class="me-2">Suất chiếu:</label>
+				<br />
+				<span class="fw-bold">@formatStartTime</span>
+
+				<br />
+				<label class="me-2">Ghế đã chọn:</label>
+				<br />
+				<span class="fw-bold">@SeatsSelectedstr</span>
+
+			</div>
+			<div class="ticketPrices col" style="width:10%">
+				<label class="me-2">Tổng giá vé:</label>
+				<br />
+				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
+				<br />
+				<label class="me-2">Tổng tiền:</label>
+				<br />
+				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
+			</div>
+		}
+		<div class="col align-self-center text-end" style="width:10%;">
+			<button class="btn btn-success text-light fs-5 m-0" style="padding:10px;width:138px;height:50px" @onclick="NextToCombo">Tiếp theo<i class="bi bi-chevron-right m-0"></i></button>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public Guid ShowtimeId { get; set; }
+	[Parameter] public List<SeatDTO> SeatDTOs { get; set; }
+	[Parameter] public string SeatsSelectedstr { get; set; }
+	[Parameter] public decimal TotalTicket { get; set; }
+	[Parameter] public EventCallback<Guid> BackToShowtimeModal { get; set; }
+	[Parameter] public EventCallback<Guid> BackToShowtimeCinemaSystem { get; set; }
+    [Parameter] public EventCallback BackToShowtimeOfflineCounter { get; set; }
+	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToComboModal { get; set; }
+	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToComboModalCinemaSystem { get; set; }
+    [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToComboOfflineCounter{ get; set; }
+	private EventCallbackHomeArgs args = new();
+	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+    private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
+	private ShowTimeDto showtimeDto = new();
+	private CinemaDto cinemaDto { get; set; } = new();
+	private FilmDto filmDto = new();
+	private string formatStartTime = "";
+	private string formatRating = "";
+	private string today = DateTime.Now.DayOfWeek.ToString();
+	private Guid userId = Guid.Empty;
+	private AuthenticationState AuthenState;
+	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
+	private CreateCheckRequest checkrequest = new();
+	private List<TicketRequest> lstTicketRequests = new();
+	private List<TicketPriceDto> lstTicketPrices { get; set; }
+	private CancellationToken cancellationToken;
+	private List<SeatTypeDto> seatTypeDtos = new();
+	private List<TicketDto>? ticketsByShowtime = new();
+	private string? location;
+	private SeatSelectionModal seatSelectionModal;
+
+	protected async override Task OnParametersSetAsync()
+	{
+		if (ShowtimeId != Guid.Empty)
+		{	
+			var response = await ShowTimeService.GetById(ShowtimeId);
+			showtimeDto = response.Data;
+			var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+			cinemaDto = cinema.Data;
+			var film = await FilmService.GetById(showtimeDto.FilmId);
+			filmDto = film;
+			formatRating = "T" + filmDto.Rating;
+			formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
+			AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+			var getUserId = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			userId = Guid.Parse(getUserId);
+			var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+				{
+					PageNumber = 1,
+					PageSize = 180
+				});
+			seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
+			lstTicketPrices = responseTicket.Item.ToList();
+			ClaimsPrincipal currentUser = AuthenState.User;
+			var lstTicketByShowtime = await TicketService.GetListTicketByShowTimeIdAsync(ShowtimeId);
+			if (lstTicketByShowtime != null)
+			{
+				ticketsByShowtime = lstTicketByShowtime;
+			}
+		}
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+		}
+	}
+
+	private async Task BackToShowtime()
+	{
+		await BackToShowtimeOfflineCounter.InvokeAsync(argsOfflineCounter);
+	}
+
+	private async Task NextToCombo()
+	{
+		var lstTicketByShowtime = await TicketService.GetListTicketByShowTimeIdAsync(ShowtimeId);
+		if (lstTicketByShowtime != null)
+		{
+			ticketsByShowtime = lstTicketByShowtime;
+		}
+		if (SeatDTOs.Count == 0)
+		{
+			await JSRuntime.InvokeVoidAsync("alert", "Vui lòng chọn ghế");
+			StateHasChanged();
+			return;
+		}
+		else
+		{
+			foreach (var s in SeatDTOs)
+			{
+				if (ticketsByShowtime != null) 
+				{
+					if (ticketsByShowtime.Any(t => t.SeatId == s.Id))
+					{
+						await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn, vui lòng chọn lại ghế");
+						await Reset();
+                        await seatSelectionModal.Reset();
+						return;
+					}
+				}
+				var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == s.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
+							== cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+				lstTicketRequests.Add(new TicketRequest
+					{
+						SeatId = s.Id,
+						TicketPriceId = ticketPrice.Id
+					});
+			}
+			checkrequest.AccountId = userId;
+			checkrequest.ShowTimeId = ShowtimeId;
+			checkrequest.LstSeatAndTicketPrice = lstTicketRequests;
+			string billId = await UserHomeService.CreateCheckAsync(checkrequest, cancellationToken);
+            if (!string.IsNullOrEmpty(billId))
+            {
+                argsOfflineCounter = new EventCallbackOfflineCounterArgs
+                    {
+                        BillId = Guid.Parse(billId)
+                    };
+            }
+            Console.WriteLine("check");
+            await NextToComboOfflineCounter.InvokeAsync(argsOfflineCounter);
+		}
+	}
+	private string DayOfTheWeek(string day) //check ngày
+	{
+		if (day.Equals("Saturday") || day.Equals("Sunday"))
+		{
+			return "T7-CN";
+		}
+		else
+		{
+			return "T2-T6";
+		}
+	}
+
+	public Task Reset()
+	{
+		lstSeatUpdateRequests.Clear();
+        SeatDTOs.Clear();
+		SeatsSelectedstr = "";
+		TotalTicket = 0;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+}

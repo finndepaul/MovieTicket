@@ -9,16 +9,16 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime _JSRuntime
 @inject ITranslationTypeService TranslationTypeService
-
+@inject ICloudinaryService CloudinaryService
 <div class="container-fluid">
     <EditForm Model="filmCreateRequest" OnValidSubmit="HandleValidSubmit">
         <DataAnnotationsValidator />
         <a class="btn btn-outline-secondary mb-3" href="/film">Quay lại</a>
-        <button type="submit" class="btn btn-primary mb-3">Submit</button>
+        <button type="submit" class="btn btn-primary mb-3">Lưu</button>
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="tenPhim" class="form-label">Tên phim</label>
-                <input type="text" class="form-control" id="tenPhim" @bind="filmCreateRequest.Name" placeholder="Enter name">
+                <InputText class="form-control" id="tenPhim" @bind-Value="filmCreateRequest.Name" placeholder="Enter name" />
                 <ValidationMessage For="@(() => filmCreateRequest.Name)" />
             </div>
             <div class="col-md-6">
@@ -32,13 +32,18 @@
                         </div>
                     }
                 </div>
+                @if (!string.IsNullOrEmpty(ScreenTypeError))
+                {
+                    <span class="validation-message">@ScreenTypeError</span>
+                }
             </div>
+            
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="tenPhimEng" class="form-label">Tên phim (tiếng anh)</label>
-                <input type="text" class="form-control" id="tenPhimEng" @bind="filmCreateRequest.EnglishName" placeholder="Enter english name">
+                <InputText class="form-control" id="tenPhimEng" @bind-Value="filmCreateRequest.EnglishName" placeholder="Enter name in English" />
                 <ValidationMessage For="@(() => filmCreateRequest.EnglishName)" />
             </div>
             <div class="col-md-6">
@@ -52,19 +57,23 @@
                         </div>
                     }
                 </div>
+                @if (!string.IsNullOrEmpty(TranslationTypeError))
+                {
+                    <span class="validation-message">@TranslationTypeError</span>
+                }
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="trailer" class="form-label">Trailer</label>
-                <input type="text" class="form-control" id="trailer" @bind="filmCreateRequest.Trailer" placeholder="Enter trailer">
+                <InputText class="form-control" id="trailer" @bind-Value="filmCreateRequest.Trailer" placeholder="Enter trailer" />
                 <ValidationMessage For="@(() => filmCreateRequest.Trailer)" />
             </div>
             <div class="col-md-6">
                 <label for="doTuoi" class="form-label">Độ tuổi xem phim</label>
                 <select class="form-select" @bind="filmCreateRequest.Rating">
-                    <option selected>Lựa chọn độ tuổi của phim</option>
+                    <option selected disabled>Lựa chọn độ tuổi của phim</option>
                     <option value="12">Phim dành cho mọi lứa tuổi</option>
                     <option value="13">13 tuổi trở lên</option>
                     <option value="16">16 tuổi trở lên</option>
@@ -76,42 +85,42 @@
 
         <div class="mb-3">
             <label for="moTa" class="form-label">Mô tả</label>
-            <textarea class="form-control" id="moTa" @bind="filmCreateRequest.Description" rows="3" placeholder="Enter description"></textarea>
+            <InputTextArea class="form-control" id="moTa" @bind-Value="filmCreateRequest.Description" rows="3" placeholder="Enter description"></InputTextArea>
             <ValidationMessage For="@(() => filmCreateRequest.Description)" />
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="theLoai" class="form-label">Thể loại</label>
-                <input type="text" class="form-control" id="theLoai" @bind="filmCreateRequest.Gerne" placeholder="Enter genre">
+                <InputText class="form-control" id="theLoai" @bind-Value="filmCreateRequest.Gerne" placeholder="Enter genre" />
                 <ValidationMessage For="@(() => filmCreateRequest.Gerne)" />
             </div>
             <div class="col-md-4">
                 <label for="daoDien" class="form-label">Đạo diễn</label>
-                <input type="text" class="form-control" id="daoDien" @bind="filmCreateRequest.Director" placeholder="Enter director">
+                <InputText class="form-control" id="daoDien" @bind-Value="filmCreateRequest.Director" placeholder="Enter director" />
                 <ValidationMessage For="@(() => filmCreateRequest.Director)" />
             </div>
             <div class="col-md-4">
                 <label for="dienVien" class="form-label">Diễn viên</label>
-                <input type="text" class="form-control" id="dienVien" @bind="filmCreateRequest.Cast" placeholder="Enter cast">
+                <InputText class="form-control" id="dienVien" @bind-Value="filmCreateRequest.Cast" placeholder="Enter cast" />
                 <ValidationMessage For="@(() => filmCreateRequest.Cast)" />
             </div>
         </div>
 
         <div class="row mb-3">
             <div class="col-md-4">
-                <label for="ngayChieu" class="form-label">Lịch chiếu</label>
-                <input type="date" class="form-control" id="ngayChieu" @bind="filmCreateRequest.StartDate">
+                <label for="ngayChieu" class="form-label">Lịch khởi chiếu</label>
+                <InputDate class="form-control" id="ngayChieu" @bind-Value="filmCreateRequest.StartDate" />
                 <ValidationMessage For="@(() => filmCreateRequest.StartDate)" />
             </div>
             <div class="col-md-4">
                 <label for="namPhatHanh" class="form-label">Năm phát hành</label>
-                <input type="number" class="form-control" id="namPhatHanh" @bind="filmCreateRequest.ReleaseYear" placeholder="Enter release year">
+                <InputNumber class="form-control" id="namPhatHanh" @bind-Value="filmCreateRequest.ReleaseYear" placeholder="Enter release year" />
                 <ValidationMessage For="@(() => filmCreateRequest.ReleaseYear)" />
             </div>
             <div class="col-md-4">
                 <label for="thoiLuong" class="form-label">Thời lượng phim (phút)</label>
-                <input type="number" class="form-control" id="thoiLuong" @bind="filmCreateRequest.RunningTime" placeholder="Enter duration">
+                <InputNumber class="form-control" id="thoiLuong" @bind-Value="filmCreateRequest.RunningTime" placeholder="Enter duration" />
                 <ValidationMessage For="@(() => filmCreateRequest.RunningTime)" />
             </div>
         </div>
@@ -119,100 +128,129 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="language" class="form-label">Ngôn ngữ</label>
-                <input type="text" class="form-control" id="language" @bind="filmCreateRequest.Language" placeholder="Enter language">
+                <InputText class="form-control" id="language" @bind-Value="filmCreateRequest.Language" placeholder="Enter language" />
                 <ValidationMessage For="@(() => filmCreateRequest.Language)" />
             </div>
             <div class="col-md-6">
                 <label for="quocGia" class="form-label">Quốc gia</label>
-                <input type="text" class="form-control" id="quocGia" @bind="filmCreateRequest.Nation" placeholder="Enter nation">
+                <InputText class="form-control" id="quocGia" @bind-Value="filmCreateRequest.Nation" placeholder="Enter nation" />
                 <ValidationMessage For="@(() => filmCreateRequest.Nation)" />
             </div>
         </div>
 
         <div class="row mb-3">
-            <div class="col-md-12">
-                @if (filmCreateRequest.Poster == null)
-                {
-                    <label for="customFile" class="form-label">Upload Image</label>
-                    <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
-                }
-                @if (filmCreateRequest.Poster != null)
-                {
-                    <div class="row">
-                        <div class="col-md-12 pt-3">
-                            <img src="@filmCreateRequest.Poster" alt="Film Image" class="img-thumbnail img-fluid" style="max-width: 100%; height: auto;">
-                        </div>
-                        <div class="col-md-12 pt-3">
-                            <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
-                        </div>
-                    </div>
-                }
-            </div>
+            <label for="image" class="form-label">Tải hình ảnh</label>
+            <InputFile OnChange="HandleImageChange" class="form-control" />
+            <ValidationMessage For="@(() => filmCreateRequest.Poster)" />
         </div>
+        @if (!string.IsNullOrEmpty(filmCreateRequest.Poster))
+        {
+            <div class="mb-3">
+                <label>Preview:</label>
+                <img src="@filmCreateRequest.Poster" alt="Preview Image" style="max-width: 200px; max-height: 200px;" />
+            </div>
+        }
     </EditForm>
 </div>
 <style>
     .validation-message {
-        color: red;
+    color: red;
     }
 </style>
 @code {
     private FilmCreateRequest filmCreateRequest = new FilmCreateRequest();
     private List<ScreenTypeDto> screenTypes = new List<ScreenTypeDto>();
     private List<TranslationTypeDto> translationTypes = new List<TranslationTypeDto>();
-    private string? _directoryPath { get; set; }
     private List<Guid> selectedScreenTypeIds = new List<Guid>();
     private List<Guid> selectedTranslationTypeId = new List<Guid>();
+    private string? ScreenTypeError { get; set; }
+    private string? TranslationTypeError { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
         screenTypes = await ScreenTypeService.GetAllScreenTypes();
         translationTypes = await TranslationTypeService.GetAllTranslationTypes();
-        _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "posterFilm");
     }
 
     private async Task HandleValidSubmit()
     {
-        filmCreateRequest.ScreenTypeIds = selectedScreenTypeIds ;
-        filmCreateRequest.TranslationTypeIds = selectedTranslationTypeId;
-        await FilmService.CreateFilm(filmCreateRequest);
-        await _JSRuntime.ToastrSuccess("Tạo thành công");
-        NavigationManager.NavigateTo("/film");
+        ScreenTypeError = null;
+        TranslationTypeError = null;
 
+        if (!selectedScreenTypeIds.Any())
+        {
+            ScreenTypeError = "Vui lòng chọn ít nhất một Hình thức chiếu.";
+        }
+
+        if (!selectedTranslationTypeId.Any())
+        {
+            TranslationTypeError = "Vui lòng chọn ít nhất một Hình thức dịch.";
+        }
+
+        if (ScreenTypeError != null || TranslationTypeError != null)
+        {
+            StateHasChanged();
+            return;
+        }
+        if (string.IsNullOrEmpty(filmCreateRequest.Poster))
+        {
+            await JSRuntime.ToastrError("Vui lòng tải lên ảnh hợp lệ.");
+            return;
+        }
+        filmCreateRequest.ScreenTypeIds = selectedScreenTypeIds;
+        filmCreateRequest.TranslationTypeIds = selectedTranslationTypeId;
+        var result = await FilmService.CreateFilm(filmCreateRequest);
+        if (result != null)
+        {
+            await _JSRuntime.ToastrSuccess("Tạo thành công");
+            NavigationManager.NavigateTo("/film");
+        }
+        else
+        {
+            await _JSRuntime.ToastrError("Tạo phim thất bại");
+        }
+        StateHasChanged();
     }
 
-    private async Task LoadFiles(InputFileChangeEventArgs e)
+    private async Task HandleImageChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
-        FileInfo fileInfo = new(file.Name);
-        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
-        if (!Directory.Exists(_directoryPath))
+        if (file != null)
         {
-            Directory.CreateDirectory(_directoryPath);
-        }
-        var path = Path.Combine(_directoryPath, newFileName);
-        await using FileStream fs = new(path, FileMode.Create);
-        await file.OpenReadStream(file.Size).CopyToAsync(fs);
-        filmCreateRequest.Poster = $"/img/posterFilm/{newFileName}";
-    }
+            try
+            {
+                // Kiểm tra kích thước file trước khi xử lý
+                if (file.Size > 10 * 1024 * 1024) // 10 MB
+                {
+                    await JSRuntime.ToastrError("Kích thước file vượt quá giới hạn cho phép (10 MB).");
+                    return;
+                }
 
-    void DeleteImage()
-    {
-        if (filmCreateRequest.Poster == null)
-        {
-            return;
-        }
-        var fileToDelete = filmCreateRequest.Poster.Split('/').Reverse().First();
-        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
-        if (!File.Exists(filePathToDeleteImage))
-        {
-            filmCreateRequest.Poster = null;
-            return;
-        }
-        File.Delete(filePathToDeleteImage);
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB
+                using var content = new MultipartFormDataContent();
+                using var fileContent = new StreamContent(stream);
 
-        filmCreateRequest.Poster = null;
-        return;
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "formFile", file.Name);
+
+                // Gọi API để upload ảnh
+                var imageUrl = await CloudinaryService.UploadImageAsync(content);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    filmCreateRequest.Poster = imageUrl;
+                    await JSRuntime.ToastrSuccess("Upload ảnh thành công.");
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Upload ảnh thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.ToastrError($"Đã xảy ra lỗi: {ex.Message}");
+            }
+        }
     }
 
     private void OnScreenTypeChanges(ChangeEventArgs e, Guid screenTypeId)
@@ -232,7 +270,6 @@
     }
     private void OnTranslationTypeChanges(ChangeEventArgs e, Guid translationTypeId)
     {
-        // Kiểm tra và chuyển đổi giá trị từ checkbox
         var isChecked = (bool)e.Value;
 
         if (isChecked)

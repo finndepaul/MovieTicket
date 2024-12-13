@@ -1,0 +1,47 @@
+﻿@using Blazored.LocalStorage
+@using MovieTicket.Application.DataTransferObjs.Auth
+@using WebUI.Layout
+@using WebUI.Authentication
+@inject ILocalStorageService LocalStorage
+@layout UserLayout
+
+<EditForm FormName="login" Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <div class="input-group">
+        <span class="input-group-text">Tên tài khoản</span>
+        <InputText id="loginUsername" class="form-control" @bind-Value="loginModel.Username" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => loginModel.Username)" /></div>
+    <div class="input-group">
+        <span class="input-group-text">Mật khẩu</span>
+        <InputText id="loginPassword" type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+        <div class="validate mb-3 mt-1">
+        <ValidationMessage For="@(() => loginModel.Username)" /></div>
+    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+</EditForm>
+@code {
+    private LoginDTO loginModel = new ();
+
+    private async Task HandleLogin()
+    {
+        LoginRespone response = await AuthenService.LoginAsync(loginModel);
+        if(!response.Flag)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }
+        // await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", response.JWTToken);
+        var jwt = await LocalStorage.GetItemAsync<string>("authToken");
+        var customState = (CustomAuthenticationStateProvider)AuthStateProvider;
+        await customState.UpdateAuthenticationState(jwt);
+        CustomUserClaims claims = DecryptJWTService.DecryptToken(jwt);
+        if (claims.Role == "Staff")
+        {
+            NavigationManager.NavigateTo("/offline-counter", forceLoad: true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

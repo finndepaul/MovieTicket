@@ -1,0 +1,265 @@
+﻿@page "/bill"
+@attribute [Authorize(Roles = "Staff")]
+@using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Application.DataTransferObjs.Ticket
+<div class="modal fade" id="DeleteBillModalToggle" aria-hidden="true" aria-labelledby="DeleteBillModalToggleLabel" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header" data-bs-theme="dark">
+				<h1 class="modal-title fs-5" id="DeleteTicketPriceToggleLabel">Xác nhận xóa giá vé</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<p>Bạn có chắc chắn muốn xóa giá vé này không?</p>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => OnDeleteSubmit(SelectedBillId)">Xóa</button>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+<div class="container-fluid mt-4">
+	<div class="row mb-3">
+		<div class="col">
+			<input type="text" class="form-control" @bind-value="request.BarCode" placeholder="Search by BarCode or Status" />
+		</div>
+		<div class="col-auto">
+			<button class="btn btn-primary" @onclick="SearchBarCode">Search</button>
+		</div>
+	</div>
+
+	<table class="table align-middle">
+		<thead>
+			<tr>
+				<th>STT</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Mã hóa đơn</p>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Tên phim</p>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Suất chiếu</p>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Phòng chiếu </p>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Trạng thái</p>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p class="">Tổng tiền</p>
+					</div>
+				</th>
+				<th>
+					<div class="d-flex justify-content-between border-end">
+						<p>Ngày đặt</p>
+					</div>
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (lstBills != null)
+			{
+				int count = 1;
+				@foreach (var item in lstBills)
+				{
+					<tr>
+						<td>@count</td>
+						<td>@item.BarCode</td>
+						<td>@item.FilmName</td>
+						<td><span class="p-2 m-2 badge text-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css")) bg-opacity-10 border border-@(FormatShowtimeStatus(@item.ShowtimeStatus.Value,"css"))">@(FormatShowtimeStatus(@item.ShowtimeStatus.Value, "ui"))</span></td>
+						<td>@item.CinemaType_Name</td>
+						<td>
+							<span data-bs-toggle="dropdown"
+								  aria-expanded="false" class="p-2 m-2 badge text-@(FormatBillStatus(@item.Status.Value,"css")) bg-@(FormatBillStatus(@item.Status.Value,"css")) bg-opacity-10 border border-@(FormatBillStatus(@item.Status.Value,"css"))" style="cursor: pointer">@(FormatBillStatus(@item.Status.Value, "ui"))</span>
+							<div class="dropdown-menu p-3">
+								<select class="form-select mb-3" @bind="billStatus">
+									<option selected>Tất cả</option>
+									@foreach (var status in Enum.GetValues(typeof(BillStatus)))
+									{
+										<option value="@status">@(FormatBillStatus((Enum.Parse<BillStatus>(status.ToString())), "ui"))</option>
+									}
+								</select>
+								<button class="btn btn-primary w-100" @onclick="@(() => UpdateStatusBill(item.Id,billStatus))">
+									Xác nhận thay đổi
+								</button>
+							</div>
+						</td>
+						<td>@item.TotalMoney.Value.ToString("#,##0") VND</td>
+						<td>@item.CreateTime</td>
+						<td>
+							<a class="btn btn-primary" href="/bill-staff/detail/@item.Id"><i class="bi bi-info-circle m-0"></i></a>
+							<button class="btn btn-danger" @onclick="() => OnSeletedBill(item.Id)">
+								<i class="bi bi-trash m-0"></i>
+							</button>
+						</td>
+					</tr>
+					count++;
+				}
+			}
+
+
+
+		</tbody>
+		<tfoot>
+			<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
+		</tfoot>
+	</table>
+
+</div>
+
+<script>
+	function openModalDelete(modalId) {
+		var modal = new bootstrap.Modal(document.getElementById(modalId));
+		modal.show();
+	}
+</script>
+
+@code {
+	[Parameter] public string Id { get; set; }
+	private List<BillsDto> lstBills = new List<BillsDto>();
+	private List<TicketDto> lstTicketDto = new List<TicketDto>();
+	private TicketDto ticketDto = new TicketDto();
+	private MetaData metaData { get; set; } = new MetaData();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private BillWithPaginationRequest request = new BillWithPaginationRequest();
+	private DateTime? StartTime = DateTime.Today;
+	private DateTime? EndTime = DateTime.Today.AddDays(1).AddTicks(-1);
+	private BillStatus billStatus { get; set; }
+	private Guid SelectedBillId { get; set; }
+	private CancellationToken cancellationToken;
+
+	protected async override Task OnParametersSetAsync()
+	{
+		if (!String.IsNullOrEmpty(Id))
+		{
+			request.CinemaCenterId = Guid.Parse(Id);
+			request.StartTime = StartTime;
+			request.EndTime = EndTime;
+			await Refresh();
+			StateHasChanged();
+		}
+		
+	}
+	private async Task Refresh()
+	{
+	
+		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		metaData = pageList.MetaData;
+	}
+	private async Task SelectedPage(int page)
+	{
+		pagingParameters.PageNumber = page;
+		await Refresh();
+
+	}
+	private async Task SearchBarCode()
+	{
+		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+			{
+				PageNumber = pagingParameters.PageNumber,
+				PageSize = 10
+			});
+		lstBills = pageList.Item.ToList();
+		metaData = pageList.MetaData;
+		StateHasChanged();
+	}
+
+	private string FormatShowtimeStatus(ShowtimeStatus type, string formatType)
+	{
+		if (formatType == "css")
+		{
+			return type switch
+			{
+				ShowtimeStatus.Ended => "danger",
+				ShowtimeStatus.Showing => "primary",
+				ShowtimeStatus.ComingSoon => "warning",
+				_ => "Không xác định"
+			};
+		}
+		return type switch
+		{
+			ShowtimeStatus.Ended => "Đã chiếu",
+			ShowtimeStatus.Showing => "Đang chiếu",
+			ShowtimeStatus.ComingSoon => "Sắp chiếu",
+			_ => "Không xác định"
+		};
+	}
+	private string FormatBillStatus(BillStatus status, string formatType)
+	{
+		if (formatType == "css")
+		{
+			return status switch
+			{
+				BillStatus.Pending => "warning",
+				BillStatus.Cancelled => "danger",
+				BillStatus.Paid => "success",
+				_ => "Không xác định"
+			};
+		}
+		return status switch
+		{
+			BillStatus.Pending => "Chờ thanh toán",
+			BillStatus.Cancelled => "Đã Hủy",
+			BillStatus.Paid => "Đã thanh toán",
+			_ => "Không xác định"
+		};
+	}
+	private async Task UpdateStatusBill(Guid id, BillStatus status)
+	{
+		var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận sửa trạng thái");
+		if (confirm)
+		{
+			// Người dùng nhấn OK
+			var result = await BillService.UpdateStatusAsync(id, status);
+			if (result.Status == 200)
+			{
+				await JSRuntime.ToastrSuccess(result.Message);
+				await Refresh();
+			}
+			else
+			{
+				await JSRuntime.ToastrError(result.Message);
+			}
+		}
+	}
+	private async Task OnDeleteSubmit(Guid id)
+	{
+		var result = await UserHomeService.DeleteCheckAsync(id, CancellationToken.None);
+		if (result == "Success")
+		{
+			await JSRuntime.ToastrSuccess(result);
+			await Refresh();
+
+		}
+		else
+		{
+			await JSRuntime.ToastrError(result);
+		}
+	}
+	private async Task OnSeletedBill(Guid id)
+	{
+		SelectedBillId = id;
+		await JSRuntime.InvokeVoidAsync("openModalDelete", "DeleteBillModalToggle");
+
+	}
+}

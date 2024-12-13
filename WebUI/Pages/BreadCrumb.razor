@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+
+<nav>
+    <ul class="breadcrumb">
+        <li class="">
+            <NavLink class="nav-link p-0" href="admin">
+                <i class="bi bi-house-door-fill"></i>
+                Home /
+            </NavLink>
+        </li>
+        @foreach (var item in BreadcrumbItems)
+        {
+            <li class="">
+                <NavLink href="@item.Link" class="breadcrumb-item nav-link p-0 ps-1">@item.Title</NavLink>
+            </li>
+        }
+    </ul>
+</nav>
+
+@code {
+    [Parameter]
+    public List<BreadcrumbItem> BreadcrumbItems { get; set; } = new List<BreadcrumbItem>();
+    public class BreadcrumbItem
+    {
+        public string Title { get; set; }
+        public string Link { get; set; }
+    }
+}

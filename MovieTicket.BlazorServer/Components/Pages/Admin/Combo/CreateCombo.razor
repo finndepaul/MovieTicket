@@ -1,61 +1,43 @@
 @page "/combo/create"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
+@inject ICloudinaryService CloudinaryService
 <EditForm Model="createComboRequest" OnValidSubmit="HandleOnSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
         <a type="button" class="btn btn-light me-2" href="/combo">Quay lại</a>
-        <button type="submit" class="btn btn-primary me-2">Create</button>
+        <button type="submit" class="btn btn-primary me-2">Lưu</button>
     </div>
-    
+
     <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
+        <label for="name" class="form-label">Tên combo</label>
         <InputText id="name" class="form-control" @bind-Value="createComboRequest.Name" />
         <ValidationMessage For="@(() => createComboRequest.Name)" />
     </div>
 
     <div class="mb-3">
-        <label for="price" class="form-label">Price</label>
+        <label for="price" class="form-label">Giá</label>
         <InputNumber id="price" class="form-control" @bind-Value="createComboRequest.Price" />
         <ValidationMessage For="@(() => createComboRequest.Price)" />
     </div>
 
     <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
+        <label for="description" class="form-label">Mô tả</label>
         <InputTextArea id="description" class="form-control" @bind-Value="createComboRequest.Description" />
         <ValidationMessage For="@(() => createComboRequest.Description)" />
     </div>
-
     <div class="mb-3">
-        <label for="trangThai" class="form-label">Trạng thái</label>
-        <InputSelect class="form-select" id="trangThai" @bind-Value="createComboRequest.comboStatus">
-            <option selected>Select a Status</option>
-            @foreach (var Item in Enum.GetValues(typeof(ComboStatus)))
-            {
-                <option value="@Item">@Item</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => createComboRequest.comboStatus)" />
+        <label for="image" class="form-label">Tải hình ảnh</label>
+        <InputFile OnChange="HandleImageChange" class="form-control" />
+        <ValidationMessage For="@(() => createComboRequest.Image)" />
     </div>
-
-    <div class="mb-3">
-        @if (createComboRequest.Image == null)
-        {
-            <label for="customFile" class="form-label">Upload Image</label>
-            <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
-        }
-        @if (createComboRequest.Image != null)
-        {
-            <div class="row">
-                <div class="md-3 pt-3">
-                    <img src="@createComboRequest.Image" alt="User Avatar" class="img-thumbnail" style="width: 100px; height: 100px;">
-                </div>
-                <div class="md-3 pt-3 ">
-                    <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
-                </div>
-            </div>
-        }
-    </div>
+    @if (!string.IsNullOrEmpty(createComboRequest.Image))
+    {
+        <div class="mb-3">
+            <label>Preview:</label>
+            <img src="@createComboRequest.Image" alt="Preview Image" style="max-width: 200px; max-height: 200px;" />
+        </div>
+    }
 </EditForm>
 <style>
     .validation-message {
@@ -64,15 +46,54 @@
 </style>
 @code {
     private CreateComboRequest createComboRequest = new CreateComboRequest();
-    private string? _directoryPath { get; set; }
 
-
-    protected override async Task OnInitializedAsync()
+    private async Task HandleImageChange(InputFileChangeEventArgs e)
     {
-        _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Combo");
+        var file = e.File;
+        if (file != null)
+        {
+            try
+            {
+                // Kiểm tra kích thước file trước khi xử lý
+                if (file.Size > 10 * 1024 * 1024) // 10 MB
+                {
+                    await JSRuntime.ToastrError("Kích thước file vượt quá giới hạn cho phép (10 MB).");
+                    return;
+                }
+
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB
+                using var content = new MultipartFormDataContent();
+                using var fileContent = new StreamContent(stream);
+
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "formFile", file.Name);
+
+                // Gọi API để upload ảnh
+                var imageUrl = await CloudinaryService.UploadImageAsync(content);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    createComboRequest.Image = imageUrl;
+                    await JSRuntime.ToastrSuccess("Upload ảnh thành công.");
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Upload ảnh thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.ToastrError($"Đã xảy ra lỗi: {ex.Message}");
+            }
+        }
     }
+
     private async Task HandleOnSubmit()
     {
+        if (string.IsNullOrEmpty(createComboRequest.Image))
+        {
+            await JSRuntime.ToastrError("Vui lòng tải lên ảnh hợp lệ.");
+            return;
+        }
         var result = await ComboService.Create(createComboRequest);
         if (result.Status == 200)
         {
@@ -85,37 +106,5 @@
         }
 
     }
-    private async Task LoadFiles(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
-        FileInfo fileInfo = new(file.Name);
-        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
-        if (!Directory.Exists(_directoryPath))
-        {
-            Directory.CreateDirectory(_directoryPath);
-        }
-        var path = Path.Combine(_directoryPath, newFileName);
-        await using FileStream fs = new(path, FileMode.Create);
-        await file.OpenReadStream(file.Size).CopyToAsync(fs);
-        createComboRequest.Image = $"/img/Combo/{newFileName}";
-    }
-
-    void DeleteImage()
-    {
-        if (createComboRequest.Image == null)
-        {
-            return;
-        }
-        var fileToDelete = createComboRequest.Image.Split('/').Reverse().First();
-        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
-        if (!File.Exists(filePathToDeleteImage))
-        {
-            createComboRequest.Image = null;
-            return;
-        }
-        File.Delete(filePathToDeleteImage);
-
-        createComboRequest.Image = null;
-        return;
-    }
+    
 }

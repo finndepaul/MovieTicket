@@ -6,6 +6,7 @@
 @inject ICinemaCenterService CinemaCenterService
 @inject IAccountService AccountService
 @inject IAccountUtilitiesService AccountUtilitiesService
+@inject ICloudinaryService CloudinaryService
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container-fluid">
@@ -89,23 +90,17 @@
                     <ValidationMessage For="@(() => accountUpdateRequest.Status)" />
                 </div>
                 <div class="mb-3">
-                    @if (accountUpdateRequest.Avatar == null)
-                    {
-                        <label for="customFile" class="form-label">Upload Image</label>
-                        <InputFile OnChange="LoadFiles" class="form-control" id="customFile" accept="image/x-png,image/jpeg"></InputFile>
-                    }
-                    @if (accountUpdateRequest.Avatar != null)
-                    {
-                        <div class="row">
-                            <div class="md-3 pt-3">
-                                <img src="@accountUpdateRequest.Avatar" alt="User Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
-                            </div>
-                            <div class="md-3 pt-3 ">
-                                <a type="button" class="btn btn-danger" @onclick="DeleteImage">Xóa ảnh</a>
-                            </div>
-                        </div>
-                    }
+                    <label for="image" class="form-label">Tải hình ảnh</label>
+                    <InputFile OnChange="HandleImageChange" class="form-control" />
+                    <ValidationMessage For="@(() => accountUpdateRequest.Avatar)" />
                 </div>
+                @if (!string.IsNullOrEmpty(accountUpdateRequest.Avatar))
+                {
+                    <div class="mb-3">
+                        <label>Preview:</label>
+                        <img src="@accountUpdateRequest.Avatar" alt="Preview Image" style="max-width: 200px; max-height: 200px;" />
+                    </div>
+                }
             </EditForm>
         </div>
         <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
@@ -142,7 +137,7 @@
                                     <span class="badge text-bg-success">@bill.Status</span>
                                 </td>
                                 <td>
-                                    <a class="btn btn-success" href="@($"billuserdetail/{bill.Id}")">Chi tiết</a>
+                                    <a class="btn btn-success" href="@($"user/bill-detail/{bill.Id}")">Chi tiết</a>
                                 </td>
                             </tr>
                         }
@@ -188,7 +183,6 @@
 @code {
     [Parameter]
     public Guid Id { get; set; }
-    private string? _directoryPath { get; set; }
     private AccountDto accountDtos = new AccountDto();
     private AccountUpdateRequest accountUpdateRequest = new AccountUpdateRequest();
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
@@ -212,7 +206,6 @@
                 CinemaCenterId = accountDtos.CinemaCenterId
             };
         changePasswordRequest.Id = accountDtos.Id;
-        _directoryPath = Path.Combine(WebHostEnv.WebRootPath, "img", "Avatar");
 
         bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = 1, PageSize = 10 });
         metaData = bookingHistory.MetaData;
@@ -239,6 +232,11 @@
 
     private async Task UpdateAccount()
     {
+        if (string.IsNullOrEmpty(accountUpdateRequest.Avatar))
+        {
+            await JSRuntime.ToastrError("Vui lòng tải lên ảnh hợp lệ.");
+            return;
+        }
         if (accountUpdateRequest != null)
         {
             accountUpdateRequest.Id = Id;
@@ -252,43 +250,49 @@
         }
     }
 
-    private async Task LoadFiles(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
-        FileInfo fileInfo = new(file.Name);
-        var newFileName = $"{Guid.NewGuid()}{fileInfo.Extension}";
-        if (!Directory.Exists(_directoryPath))
-        {
-            Directory.CreateDirectory(_directoryPath);
-        }
-        var path = Path.Combine(_directoryPath, newFileName);
-        await using FileStream fs = new(path, FileMode.Create);
-        await file.OpenReadStream(file.Size).CopyToAsync(fs);
-        accountUpdateRequest.Avatar = $"/img/Avatar/{newFileName}";
-    }
-
-    void DeleteImage()
-    {
-        if (accountUpdateRequest.Avatar == null)
-        {
-            return;
-        }
-        var fileToDelete = accountUpdateRequest.Avatar.Split('/').Reverse().First();
-        var filePathToDeleteImage = Path.Combine(_directoryPath, fileToDelete);
-        if (!File.Exists(filePathToDeleteImage))
-        {
-            accountUpdateRequest.Avatar = null;
-            return;
-        }
-        File.Delete(filePathToDeleteImage);
-
-        accountUpdateRequest.Avatar = null;
-        return;
-    }
-
     private async Task SelectedPage(int page)
     {
         bookingHistory = await AccountService.GetUserBookingHistoryAsync(Id, new PagingParameters { PageNumber = page, PageSize = 10 });
         metaData = bookingHistory.MetaData;
+    }
+
+    private async Task HandleImageChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            try
+            {
+                // Kiểm tra kích thước file trước khi xử lý
+                if (file.Size > 10 * 1024 * 1024) // 10 MB
+                {
+                    await JSRuntime.ToastrError("Kích thước file vượt quá giới hạn cho phép (10 MB).");
+                    return;
+                }
+
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB
+                using var content = new MultipartFormDataContent();
+                using var fileContent = new StreamContent(stream);
+
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "formFile", file.Name);
+
+                // Gọi API để upload ảnh
+                var imageUrl = await CloudinaryService.UploadImageAsync(content);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    accountUpdateRequest.Avatar = imageUrl;
+                    await JSRuntime.ToastrSuccess("Upload ảnh thành công.");
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Upload ảnh thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.ToastrError($"Đã xảy ra lỗi: {ex.Message}");
+            }
+        }
     }
 }

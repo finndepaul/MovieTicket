@@ -1,18 +1,27 @@
 ﻿@page "/banner/create-banner"
+@inject ICloudinaryService CloudinaryService
 @attribute [Authorize(Roles = "Admin")]
 
 <div class="container d-flex">
-        <EditForm Model="UploadModel" enctype="multipart/form-data" Enhance FormName="add-form" OnValidSubmit="CreateBanner">
+    <EditForm Model="request" OnValidSubmit="CreateBanner">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="mb-3">
                 <label class="form-label">Tên</label>
-                <InputText @bind-Value="UploadModel.Name" class="form-control"></InputText>
+            <InputText @bind-Value="request.Name" class="form-control"></InputText>
             </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">Tải hình ảnh</label>
+            <InputFile OnChange="HandleImageChange" class="form-control" />
+            <ValidationMessage For="@(() => request.Image)" />
+        </div>
+        @if (!string.IsNullOrEmpty(request.Image))
+        {
             <div class="mb-3">
-                <label class="form-label">Chọn ảnh</label>
-                <InputFile OnChange="LoadFile" class="form-control" />
+                <label>Preview:</label>
+                <img src="@request.Image" alt="Preview Image" style="max-width: 200px; max-height: 200px;" />
             </div>
+        }
             <div class="mb-3 justify-content-center">
                 <input type="submit" class="btn btn-success" value="Tạo" />
             </div>
@@ -20,39 +29,11 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm(FormName = "add-form")]
-    private FileModel UploadModel { get; set; } = new();
-    private string? _uploadedImgUrl;
     private BannerCreateRequest request = new();
-    private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB
+
 
     private async Task CreateBanner()
     {   
-        var file = UploadModel.ImageFile;
-        if (file.Size > MaxFileSize)
-        {
-            await JSRuntime.InvokeVoidAsync("alert", "File size exceeds the maximum limit of 10 MB.");
-            return;
-        }
-        var folderPath = Path.Combine(WebHostEnv.WebRootPath, "./img/banner");
-        Directory.CreateDirectory(folderPath);
-        var filePath = Path.Combine(folderPath, file.Name);
-        try
-        {
-            using (var fileStream=new FileStream(filePath, FileMode.Create))
-            {
-                using var uploadFile = file.OpenReadStream(MaxFileSize);
-                await uploadFile.CopyToAsync(fileStream);
-                _uploadedImgUrl = $"./img/banner/{file.Name}";
-            }
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
-        request.Image = _uploadedImgUrl;
-        request.Name = UploadModel.Name;
         ResponseObject<BannerDTO> response = await BannerService.Create(request);
         if (response.Status == StatusCodes.Status200OK)
         {
@@ -65,17 +46,43 @@
         }
     }
 
-    private void LoadFile(InputFileChangeEventArgs e)
+    private async Task HandleImageChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
-        UploadModel.ImageFile = file;
-    }
+        if (file != null)
+        {
+            try
+            {
+                // Kiểm tra kích thước file trước khi xử lý
+                if (file.Size > 10 * 1024 * 1024) // 10 MB
+                {
+                    await JSRuntime.ToastrError("Kích thước file vượt quá giới hạn cho phép (10 MB).");
+                    return;
+                }
 
-    private class FileModel
-    {   
-        [Required(ErrorMessage="Chưa nhập tên")]
-        public string Name { get; set; }
-        [Required(ErrorMessage = "Chưa chọn ảnh")]
-        public IBrowserFile ImageFile { get; set; }
+                using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10 MB
+                using var content = new MultipartFormDataContent();
+                using var fileContent = new StreamContent(stream);
+
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                content.Add(fileContent, "formFile", file.Name);
+
+                // Gọi API để upload ảnh
+                var imageUrl = await CloudinaryService.UploadImageAsync(content);
+                if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    request.Image = imageUrl;
+                    await JSRuntime.ToastrSuccess("Upload ảnh thành công.");
+                }
+                else
+                {
+                    await JSRuntime.ToastrError("Upload ảnh thất bại.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JSRuntime.ToastrError($"Đã xảy ra lỗi: {ex.Message}");
+            }
+        }
     }
 }

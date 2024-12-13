@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="typeof(UserLayout) ">
+            <Authorizing>
+                <p>Đang xác thực...</p>
+            </Authorizing>
+            <NotAuthorized>
+                @if (context.User.Identity?.IsAuthenticated != true || context.User.IsInRole("User") != true)
+                {
+                    NavigationManager.NavigateTo("/", forceLoad: true);
+                }
+                else
+                {
+                    <p role="alert">You are not authorized to access this resource.</p>
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <CascadingAuthenticationState>
+            <LayoutView Layout="@typeof(Layout.UserLayout)">
+
+            </LayoutView>
+        </CascadingAuthenticationState>
+    </NotFound>
+</Router>
+@* <NavigationLock ConfirmExternalNavigation=true /> *@

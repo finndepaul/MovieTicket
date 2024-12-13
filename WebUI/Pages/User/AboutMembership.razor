@@ -1,0 +1,59 @@
+﻿@page "/about-membership"
+@layout UserLayout
+<div class="container my-5">
+    <ul class="nav nav-tabs" id="membershipTabs" role="tablist">
+        <!-- Tab 1: Chương trình điểm thưởng -->
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="points-tab" data-bs-toggle="tab" data-bs-target="#points" type="button" role="tab" aria-controls="points" aria-selected="true">
+                <i class="bi bi-award-fill"></i> Chương trình điểm thưởng
+            </button>
+        </li>
+        <!-- Tab 2: Quà tặng sinh nhật -->
+        <li class="nav-item mt-3" role="presentation">
+            <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#birthday" type="button" role="tab" aria-controls="birthday" aria-selected="false">
+                <i class="bi bi-gift-fill"></i> Quà tặng sinh nhật
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="membershipTabsContent">
+        <!-- Nội dung Tab 1 -->
+        <div class="tab-pane fade show active p-4 shadow-sm rounded-3" id="points" role="tabpanel" aria-labelledby="points-tab">
+            <h3 class="text-primary">Chương trình điểm thưởng</h3>
+            <p>
+                Chương trình điểm thưởng áp dụng cho tất cả các thành viên VHD. Mỗi khi thực hiện giao dịch tại hệ thống rạp VHD, bạn sẽ nhận được 3% giá trị hóa đơn dưới dạng điểm thưởng.
+                <br><br>
+                1 điểm = 1.000 VND, có giá trị như tiền mặt, dùng để mua vé xem phim, thức uống/ combo tại VHD và đổi voucher ưu đãi.
+            </p>
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Loại giao dịch</th>
+                        <th>Điểm thưởng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Quầy Vé</td>
+                        <td>3% giá trị hóa đơn</td>
+                    </tr>
+                    <tr>
+                        <td>Quầy Bắp Nước</td>
+                        <td>3% giá trị hóa đơn</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Nội dung Tab 2 -->
+        <div class="tab-pane fade p-4 shadow-sm rounded-3" id="birthday" role="tabpanel" aria-labelledby="birthday-tab">
+            <h3 class="text-success">Quà tặng sinh nhật</h3>
+            <p>Quà tặng cho các thành viên CGV vào sinh nhật, với các ưu đãi hấp dẫn dành cho từng hạng thành viên:</p>
+            <ul>
+                <li>Thân Thiết & U22: 01 CGV Birthday Combo</li>
+                <li>VIP: 01 CGV Birthday Combo + 01 Vé Xem Phim 2D/3D</li>
+                <li>VVIP: CGV Birthday Combo + 02 Vé Xem Phim 2D/3D</li>
+            </ul>
+            <p>Lưu ý: Thành viên U22 vào sinh nhật thứ 23 sẽ nhận thêm 01 vé xem phim 2D/3D.</p>
+        </div>
+    </div>
+</div>

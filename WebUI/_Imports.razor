@@ -1,0 +1,90 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.JSInterop
+@using WebUI
+@using WebUI.Layout
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Hosting
+
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using static Microsoft.EntityFrameworkCore.DbLoggerCategory
+@using static MovieTicket.Application.ValueObjs.ViewModels.CustomReponses
+@using static WebUI.Pages.Staff.OfflineCounter
+@using static WebUI.Pages.User.CinemaSystem
+@using static WebUI.Pages.Home
+
+@using MovieTicket.Domain.Enums
+
+@using WebUI.Services
+@using WebUI.Pages
+@using WebUI.Helper
+@using WebUI.Services.Implements
+@using WebUI.Services.Interfaces
+@using WebUI.Authentication
+
+@using MovieTicket.Application.ValueObjs.ViewModels
+@using MovieTicket.Application.ValueObjs.Paginations
+@using MovieTicket.Application.DataTransferObjs.Auth.Requests
+@using MovieTicket.Application.DataTransferObjs.Banner
+@using MovieTicket.Application.DataTransferObjs.AdminHome
+@using MovieTicket.Application.DataTransferObjs.Cinema
+@using MovieTicket.Application.DataTransferObjs.CinemaCenter
+@using MovieTicket.Application.DataTransferObjs.Cinema.Request
+@using MovieTicket.Application.DataTransferObjs.CinemaType
+@using MovieTicket.Application.DataTransferObjs.Seat
+@using MovieTicket.Application.DataTransferObjs.TicketPrice
+@using MovieTicket.Application.DataTransferObjs.SeatType
+@using MovieTicket.Application.DataTransferObjs.Combo
+@using MovieTicket.Application.DataTransferObjs.ShowTime
+@using MovieTicket.Application.DataTransferObjs.UserHome
+@using MovieTicket.Application.DataTransferObjs.Film
+@using MovieTicket.Application.DataTransferObjs.UserHome.Requests
+@using MovieTicket.Application.DataTransferObjs.Bill
+@using MovieTicket.Application.DataTransferObjs.Coupon.Requests
+@using MovieTicket.Application.DataTransferObjs.Ticket
+@using WebUI.Pages.User
+
+@using Net.payOS
+@using Net.payOS.Types
+@using Blazored.LocalStorage;
+@using MovieTicket.Application.DataTransferObjs.About
+
+@inject ILocalStorageService LocalStorage
+@inject IAuthenService AuthenService
+@inject IAccountService AccountService
+@inject IBannerService BannerService
+@inject ICinemaService CinemaService
+@inject ICinemaCenterService CinemaCenterService
+@inject IAdminHomeService AdminHomeService
+@inject ICinemaCenterService CinemaCenterService
+@inject ICinemaTypeService CinemaTypeService
+@inject ISeatService SeatService
+@inject ISeatTypeService SeatTypeService
+@inject IShowTimeService ShowTimeService
+@inject IScheduelService ScheduelService
+@inject ITicketPriceService TicketPriceService
+@inject IComboService ComboService
+@inject IUserHomeService UserHomeService;
+@inject IFilmService FilmService;
+@inject ITicketService TicketService;
+@inject IBillService BillService;
+@inject ICouponService CouponService;
+@inject IBillComboService BillComboService;
+@inject IAccountUtilitiesService AccountUtilitiesService;
+
+
+@inject IJSRuntime JSRuntime
+
+@* @inject IHostEnvironment WebHostEnv *@
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider

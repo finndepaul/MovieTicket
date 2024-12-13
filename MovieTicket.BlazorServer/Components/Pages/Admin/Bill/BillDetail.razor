@@ -49,7 +49,7 @@
 				}
 
 			</div><div class="">
-				<img src="https://tritonstore.com.au/wp-content/uploads/MSI-Plessey.webp" width="100%" height="200" class="object-fit-contain border rounded" />
+				<img src="@BarcodeImage" width="100%" height="200" class="object-fit-contain border rounded" />
 			</div>
 		</div>
 
@@ -76,7 +76,7 @@
 							<tr>
 								<td>@item.SeatName</td>
 								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
-								<td>@item.Price.ToString("#,##0")</td>
+								<td>@item.Price.ToString("#,##0") VND</td>
 							</tr>
 						}
 
@@ -108,8 +108,8 @@
 							<tr>
 								<td>@item.ComboName</td>
 								<td>@item.Quantity</td>
-								<td>@item.Price</td>
-								<td>@item.TotalPrice</td>
+								<td>@item.Price.Value.ToString("#,##0") VND</td>
+								<td>@item.TotalPrice.Value.ToString("#,##0") VND</td>
 							</tr>
 						}
 					}
@@ -148,6 +148,8 @@
 	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
 	private BillDetailDto objBill = new BillDetailDto();
 	private AccountDto objAccount = new AccountDto();
+	private string BarcodeImage;
+	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
 
 	protected async override Task OnInitializedAsync()
 	{
@@ -182,7 +184,7 @@
 				});
 		}
 		lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
-
+		BarcodeImage =  generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
 
 
 	}

@@ -1,0 +1,266 @@
+﻿@using MovieTicket.Application.DataTransferObjs.Account
+@using MovieTicket.Application.DataTransferObjs.BillCombo
+@attribute [Authorize(Roles = "Staff")]
+@layout WebUI.Layout.StaffLayout
+<div class="mb-3 d-flex justify-content-center" style="width:100%">
+	<div class="d-flex">
+		<input type="text" class="form-control me-3 fs-5 p-2" style="width:500px" @bind-value="Barcode" placeholder="Search by BarCode or Status" />
+		<button class="btn btn-primary" style="width:138px" @onclick="SearchBarCode"><i class="bi bi-search m-0"></i>Tìm kiếm</button>
+	</div>
+	
+	
+	
+</div>
+<div class="d-flex justify-content-end me-4">
+	<button class="btn btn-warning p-2"><i class="bi bi-printer"></i>In hóa đơn</button>
+</div>
+@if (IsHidden)
+{
+	
+	<div class="row">
+		<!-- Thông tin đơn hàng -->
+		<div class="col-md-6 mb-3">
+			<div class="row">
+				@if (objBill != null && objShowTime != null)
+				{
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin đơn hàng</h5>
+						</div>
+						<div><strong class="me-2">Phim:</strong><span class="text-primary">@objShowTime?.FilmName</span></div>
+						<p><strong class="me-2">Giờ chiếu:</strong><span class="badge bg-danger"> @(objShowTime?.StartTime?.ToString("HH:mm")) - @(objShowTime?.EndTime?.ToString("HH:mm"))</span></p>
+						<p><strong>Ngày chiếu:</strong> @(objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"))</p>
+						<p><strong>Phòng chiếu:</strong> @objShowTime?.CinemaName</p>
+						<p><strong class="me-2">Rạp chiếu:</strong><span class="text-primary"> @objShowTime?.CinemaCenterName</span></p>
+						<p><strong>Ngày đặt:</strong> @(objBill?.CreateTime?.ToString("dd/MM/yyyy"))</p>
+					</div>
+
+					<!-- Thông tin khách hàng -->
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin khách hàng</h5>
+						</div>
+						<p><strong>Khách hàng:</strong> @(objAccount?.Name)</p>
+						<p><strong>Điện thoại:</strong> @(objAccount?.Phone)</p>
+						<p><strong>Email:</strong> @(objAccount?.Email)</p>
+						<p><strong class="me-2">Trạng thái:</strong><span class="badge bg-success"> @objBill?.Status</span></p>
+						<p><strong>Thành tiền:</strong> @(objBill?.TotalMoney?.ToString("#,##0"))</p>
+						<p><strong>Giảm giá:</strong> @((objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"))</p>
+						<p><strong>Tổng tiền:</strong> @(objBill?.AfterDiscount?.ToString("#,##0"))</p>
+					</div>
+				}
+				else
+				{
+					<p>Không có dữ liệu</p>
+				}
+
+			</div>
+			<div class="d-flex justify-content-center border" style="width:100%">
+				<div class="border border-5 border-black rounded-4 p-1" style="width:50%">
+					@if (BarcodeImage != null)
+					{
+						<img src="@BarcodeImage" style="width:100%" height="200" class="object-fit-contain" />
+					}
+					<p class="text-center fw-bold" style="font-family:Arial">@objBill.BarCode</p>
+
+				</div>
+
+			</div>
+		</div>
+
+
+		<!-- Ghế & Dịch vụ -->
+		<div class="col-md-6 mb-3">
+			<div class="py-2 mb-3 border-bottom">
+				<h5>Ghế & Dịch vụ</h5>
+			</div>
+			<!-- Thông tin ghế -->
+			<table class="table align-middle mb-5">
+				<thead class="table-secondary">
+					<tr>
+						<th>Thông tin ghế</th>
+						<th>Loại ghế</th>
+						<th>Giá tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (lstSeat.Count > 0)
+					{
+						@foreach (var item in lstSeat)
+						{
+							<tr>
+								<td>@item.SeatName</td>
+								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
+								<td>@item.Price.ToString("#,##0") VND</td>
+							</tr>
+						}
+
+					}
+					else
+					{
+						<tr>
+							<td colspan="3">Không có dữ liệu</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<!-- Dịch vụ -->
+			<table class="table align-middle">
+				<thead class="table-secondary">
+					<tr>
+						<th>Tên dịch vụ</th>
+						<th>Số lượng</th>
+						<th>Đơn giá</th>
+						<th>Tổng tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (lstBillCombo.Count > 0)
+					{
+						@foreach (var item in lstBillCombo)
+						{
+							<tr>
+								<td>@item.ComboName</td>
+								<td>@item.Quantity</td>
+								<td>@item.Price.Value.ToString("#,##0") VND</td>
+								<td>@item.TotalPrice.Value.ToString("#,##0") VND</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="4">Không có dữ liệu</td>
+						</tr>
+					}
+
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+}
+else
+{
+	<p>Không có hóa đơn nào được tìm thấy</p>
+}
+
+@code {
+		[Parameter] public string Id { get; set; }
+	private BillWithPaginationRequest request = new BillWithPaginationRequest();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private string Barcode { get; set; } = string.Empty;
+	private Guid BillId { get; set; }
+	private DateTime? StartTime = DateTime.Today;
+	private DateTime? EndTime = DateTime.Today.AddDays(1).AddTicks(-1);
+	private bool IsHidden = false;
+
+	private List<TicketDto> lstTicket = new List<TicketDto>();
+	private TicketDto objTicket = new TicketDto();
+	private ShowTimeDto objShowTime = new ShowTimeDto();
+	private class BillSeat
+	{
+		public string SeatName { get; set; }
+		public string SeatType { get; set; }
+		public decimal Price { get; set; }
+	}
+	private class SeatPrice
+	{
+		public Guid SeatId { get; set; }
+		public decimal Price { get; set; }
+	}
+	private List<BillComboDto> lstBillCombo = new List<BillComboDto>();
+	private List<BillSeat> lstSeat = new List<BillSeat>();
+	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
+	private BillDetailDto objBill = new BillDetailDto();
+	private AccountDto objAccount = new AccountDto();
+	private string BarcodeImage;
+	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (!String.IsNullOrEmpty(Id))
+		{		
+			request.StartTime = StartTime;
+			request.EndTime = EndTime;	
+			request.CinemaCenterId = Guid.Parse(Id);
+		}
+
+	}
+	private async Task SearchBarCode()
+	{
+		IsHidden = false;
+		lstSeat.Clear();
+		lstSeatId.Clear();
+		lstBillCombo.Clear();
+		if (!String.IsNullOrWhiteSpace(Barcode))
+		{
+			request.BarCode = Barcode;
+			var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+				{
+					PageNumber = pagingParameters.PageNumber,
+					PageSize = 10
+				});
+			if (pageList.Item.Count() > 0)
+			{
+				BillId = pageList.Item.FirstOrDefault().Id;
+				if (BillId != Guid.Empty)
+				{
+					IsHidden = true;
+					objBill = await BillService.GetBillByIdAsync(BillId);
+					//lay account theo bill id
+					objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+					//lay list ticket theo bill id
+					lstTicket = await TicketService.GetListTicketByBillIdAsync(BillId);
+					//lay 1 ticket dau tien cua bill id do
+					objTicket = lstTicket.FirstOrDefault(x => x.BillId == BillId);
+					//lay showtimeid cua ticket
+					var showtimeId = objTicket.ShowTimeId.Value;
+					//tim showtime theo id
+					var findShowtime = await ShowTimeService.GetById(showtimeId);
+					//lay showtime
+					objShowTime = findShowtime.Data;
+					lstSeatId = lstTicket.Select(x => new SeatPrice
+						{
+							SeatId = x.SeatId.Value,
+							Price = x.Price
+						}).ToList();
+					foreach (var item in lstSeatId)
+					{
+						var obj = await SeatService.GetById(item.SeatId);
+						var seat = obj.Data;
+						lstSeat.Add(new BillSeat
+							{
+								SeatType = seat.SeatTypeName,
+								SeatName = seat.Position,
+								Price = item.Price
+							});
+					}
+					lstBillCombo = await BillComboService.GetListBillComboByBillId(BillId);
+					BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+					StateHasChanged();
+				}
+			}
+
+		}
+	}
+	private string FormatSeatTypeName(string type)
+	{
+		return type switch
+		{
+			"Normal" => "secondary",
+			"VIP" => "warning",
+			"Couple" => "danger",
+			_ => "Không xác định"
+		};
+	}
+	private void BillPrint()
+	{
+		if (IsHidden)
+		{
+			//code ở đây
+		}
+		
+	}
+}

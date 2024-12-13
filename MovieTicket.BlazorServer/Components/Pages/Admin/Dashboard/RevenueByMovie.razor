@@ -54,7 +54,7 @@
                     <tr>
                         <th scope="row">@item.FilmName</th>
                         <td>@item.TotalTicket</td>
-                        <td>@item.TotalRevenue</td>
+                        <td>@item.TotalRevenue?.ToString("#,##0") VND</td>
                     </tr>
                 }
                 <!-- Add more rows as needed -->

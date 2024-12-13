@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using MovieTicket.BlazorServer.Authentication;
 using MovieTicket.BlazorServer.Components;
+using MovieTicket.BlazorServer.Helper;
 using MovieTicket.BlazorServer.Services.Implements;
 using MovieTicket.BlazorServer.Services.Interfaces;
 using System.Globalization;
@@ -47,6 +48,8 @@ namespace MovieTicket.BlazorServer
             builder.Services.AddScoped<IBillComboService, BillComboService>();
             builder.Services.AddScoped<IAccountUtilitiesService, AccountUtilitiesService>();
             builder.Services.AddScoped<ICouponService, CouponService>();
+			builder.Services.AddSingleton<GeneratorBarcode>();
+            builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
             builder.Services.AddAuthentication()
                .AddScheme<AuthenticationSchemeOptions, CustomAuthenticationHandler>("CustomSchemeName", options => { });
             builder.Services.AddSingleton<AppState>();

@@ -9,17 +9,17 @@
     <DataAnnotationsValidator />
     <div class="mb-3">
         <a class="btn btn-light me-2" href="/about">Quay lại</a>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary">Lưu</button>
     </div>
 
     <div class="mb-3">
-        <label for="Title" class="form-label">Title</label>
+        <label for="Title" class="form-label">Tiêu đề</label>
         <InputText id="Title" class="form-control" @bind-Value="updateAboutDto.Title" />
         <ValidationMessage For="@(() => updateAboutDto.Title)" />
     </div>
 
     <div class="mb-3">
-        <label for="Content" class="form-label">Content</label>
+        <label for="Content" class="form-label">Nội dung</label>
         <FroalaEditor @bind-Content="updateAboutDto.Content" />
         <ValidationMessage For="@(() => updateAboutDto.Content)" />
     </div>

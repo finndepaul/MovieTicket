@@ -50,7 +50,10 @@
     <div class="row align-items-center mb-3">
         <!-- Nút Tạo Phim -->
         <div class="col-auto">
-            <button class="btn btn-primary" @onclick="CreateFilm">+ Tạo phim</button>
+            <button class="btn add-btn me-md-2" @onclick="CreateFilm">
+                <i class="bi bi-plus-square"></i>
+                Tạo phim
+            </button>
         </div>
 
         <!-- Tìm kiếm theo tên -->
@@ -63,7 +66,7 @@
         </div>
 
         <!-- Tìm kiếm theo năm phát hành -->
-        <div class="col-auto">
+        <div class="col-3">
             <input type="number"
                    class="form-control"
                    placeholder="Tìm kiếm theo năm phát hành"
@@ -99,6 +102,7 @@
         <table class="table">
             <thead class="table-light">
                 <tr>
+                    <th scope="col">STT</th>
                     <th scope="col">Tên phim</th>
                     <th scope="col">Năm phát hành</th>
                     <th scope="col">Thể loại</th>
@@ -113,10 +117,12 @@
                 {
                     @if (filmDto.Any())
                     {
+                        var count = 1;
                         @foreach (var film in filmDto)
                         {
                             <tr class="align-middle">
-                                <td>@film.Name</td>
+                                <td>@count</td>
+                                <td style="width: 230px;">@film.Name</td>
                                 <td>@film.ReleaseYear</td>
                                 <td>
                                     <span class="badge text-bg-primary"
@@ -137,17 +143,18 @@
                                 </td>
                                 <td>@film.CreatDate?.ToString("dd-MM-yyyy")</td>
                                 <td>
-                                    <a class="btn btn-outline-primary" href="@($"film/update/{film.Id}")">
+                                    <a class="btn btn-primary" href="@($"filmdetail/{film.Id}")">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a class="btn edit-btn" href="@($"film/update/{film.Id}")">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a class="btn btn-outline-primary" href="@($"filmdetail/{film.Id}")">
-                                        <i class="bi bi-ticket-detailed"></i>
-                                    </a>
-                                    <button class="btn btn-outline-danger" @onclick="() => GetFilmDeleteId(film.Id)">
+                                    <button class="btn btn-danger" @onclick="() => GetFilmDeleteId(film.Id)">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
                             </tr>
+                            count++;
                         }
                     }
                     else

@@ -6,7 +6,7 @@
 <div style="overflow: hidden;  height: 100vh;">
 	<div class="page">
 		<div class="sidebar">
-			<AuthorizeView>
+			<AuthorizeView Roles="Admin">
 				<Authorized>
 					<AdminNavMenu />
 				</Authorized>
@@ -15,7 +15,7 @@
 		</div>
 		<main>
 			<div class="pe-3" style="position: relative">
-				<AuthorizeView>
+				<AuthorizeView Roles="Admin">
 					<Authorized>
 						<div class="d-flex justify-content-end align-items-center" style="min-height: 56px">
 							<!-- Add align-items-center class -->
@@ -43,7 +43,7 @@
 <style>
 	.scrollable {
 		min-height: 90%;
-		max-height: 300px;/* 56px là chiều cao của navbar */
+		max-height: 300px; /* 56px là chiều cao của navbar */
 
 		overflow-y: auto;
 	}
@@ -51,6 +51,37 @@
 	.container-fluid {
 		padding-bottom: 4rem;
 	}
+
+	.add-btn {
+		-webkit-transition: all 0.3s ease-in-out;
+		background-color: #64B5F6;
+		color: #fff;
+	}
+
+		.add-btn:hover {
+			-webkit-transform: scale(1.1);
+			background-color: #64B5F6;
+			color: #fff;
+		}
+
+	.edit-btn {
+		background-color: #FFA726;
+		color: #fff;
+	}
+
+		.edit-btn:hover {
+			background-color: #FFA726;
+			color: #fff;
+		}
+
+	.btn {
+		-webkit-transition: all 0.3s ease-in-out;
+	}
+
+		.btn:hover {
+			-webkit-transform: scale(1.1);
+		}
+
 </style>
 @code {
 	private List<BreadcrumbItem> GetBreadcrumbItems()

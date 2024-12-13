@@ -7,7 +7,6 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\Staff\" />
     <Folder Include="wwwroot\img\Avatar\" />
 	<Folder Include="wwwroot\img\icons\" />
     <Folder Include="wwwroot\img\posterFilm\" />

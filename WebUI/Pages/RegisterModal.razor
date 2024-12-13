@@ -1,0 +1,60 @@
+﻿@page "/register"
+@using MovieTicket.Application.DataTransferObjs.Account.Request
+@using MovieTicket.Application.DataTransferObjs.Auth
+
+<EditForm Model="@RegisterRequest" OnValidSubmit="HandleRegister">
+    <DataAnnotationsValidator />
+    <div class="input-group">
+        <span class="input-group-text">Tên tài khoản</span>
+        <InputText id="regUsername" class="form-control" @bind-Value="RegisterRequest.Username" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => RegisterRequest.Username)" /></div>
+
+    <div class="input-group">
+        <span class="input-group-text">Mật khẩu</span>
+        <InputText id="regPassword" type="password" class="form-control" @bind-Value="RegisterRequest.Password" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => RegisterRequest.Password)" /></div>
+
+    <div class="input-group">
+        <span class="input-group-text">Xác nhận mật khẩu</span>
+        <InputText id="confirmpassword" type="password" class="form-control" @bind-Value="RegisterRequest.ConfirmPassword" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => RegisterRequest.ConfirmPassword)" /></div>
+
+    <div class="input-group">
+        <span class="input-group-text">Họ và tên</span>
+        <InputText id="name" type="name" class="form-control" place-holder="Họ tên" @bind-Value="RegisterRequest.Name" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => RegisterRequest.Name)" /></div>
+
+    <div class="input-group">
+        <span class="input-group-text">Số điện thoại</span>
+        <InputText id="phone" type="number" class="form-control" @bind-Value="RegisterRequest.Phone" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => RegisterRequest.Phone)" /></div>
+
+    <div class="input-group">
+        <span class="input-group-text">Email</span>
+        <InputText id="email" type="email" class="form-control" @bind-Value="RegisterRequest.Email" />
+    </div>
+    <div class="validate mb-3 mt-1"><ValidationMessage For="@(() => RegisterRequest.Email)" /></div>
+
+    <button type="submit" class="btn btn-primary">Đăng ký</button>
+</EditForm>
+@code {
+    private AccountRegisterRequest RegisterRequest = new();
+
+    private async Task HandleRegister()
+    {
+        RegisterResponse response = await AuthenService.RegisterAsync(RegisterRequest);
+        if (!response.Flag)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+        }else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+    }
+}
