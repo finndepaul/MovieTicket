@@ -30,6 +30,9 @@
             <div class="d-flex align-items-center">
                 <button class="btn btn-primary btn-sm" @onclick="Refresh">Tìm kiếm</button>
             </div>
+            <div class="d-flex align-items-center ms-3">
+                <button class="btn btn-secondary btn-sm" @onclick="CancelFilters">Hủy bộ lọc</button>
+            </div>
         </div>
         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -150,78 +153,67 @@
 
 <style>
     .add-btn {
-        -webkit-transition: all 0.5s ease-in-out;
-        background-color: #64B5F6;
-        color: #fff;
+    -webkit-transition: all 0.5s ease-in-out;
+    background-color: #64B5F6;
+    color: #fff;
     }
 
-        .add-btn:hover {
-            -webkit-transform: scale(1.1);
-            background-color: #64B5F6;
-            color: #fff;
-        }
+    .add-btn:hover {
+    -webkit-transform: scale(1.1);
+    background-color: #64B5F6;
+    color: #fff;
+    }
 
     .bg-soon {
-        background-color: #B3E5FC;
-        color: #03A9F4;
-        outline: thin solid #03A9F4;
+    background-color: #B3E5FC;
+    color: #03A9F4;
+    outline: thin solid #03A9F4;
     }
 
     .bg-now {
-        background-color: #F1F8E9;
-        color: #76FF03;
-        outline: thin solid #76FF03;
+    background-color: #F1F8E9;
+    color: #76FF03;
+    outline: thin solid #76FF03;
     }
 
     .edit-btn {
-        background-color: #FFA726;
-        color: #fff;
+    background-color: #FFA726;
+    color: #fff;
     }
 
-        .edit-btn:hover {
-            background-color: #FFA726;
-            color: #fff;
-        }
+    .edit-btn:hover {
+    background-color: #FFA726;
+    color: #fff;
+    }
 
     .btn {
-        -webkit-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
     }
 
-        .btn:hover {
-            -webkit-transform: scale(1.1);
-        }
+    .btn:hover {
+    -webkit-transform: scale(1.1);
+    }
 </style>
 <script>
     function openModal(modalId) {
-        var modal = new bootstrap.Modal(document.getElementById(modalId));
-        modal.show();
+    var modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
     }
-    
+
 </script>
 
 @code {
     private List<ScheduleDto> Schedules;
     private string selectedScheduleId;
     private string filmName {get; set;}
-    private DateTime startDate { get; set; } = DateTime.Now;
-    private DateTime endDate { get; set; } = DateTime.Now;
+    private DateTime? startDate { get; set; }
+    private DateTime? endDate { get; set; }
     private PagingParameters pagingParameters = new PagingParameters();
     CancellationToken cancellationToken;
     private MetaData metaData { get; set; } = new MetaData();
     override protected async Task OnInitializedAsync()
     {
-        var pagination = await _scheduleService.GetAllAsync(
-            filmName,
-            startDate,
-            endDate,
-            new PagingParameters
-            {
-                PageNumber = pagingParameters.PageNumber,
-                PageSize = 10
-            },
-            cancellationToken);
-        Schedules = pagination.Item.ToList();
-        metaData = pagination.MetaData;
+        await LoadSchedule();
         StateHasChanged();
     }
 
@@ -237,6 +229,10 @@
     }
     private async Task Refresh()
     {
+        if (startDate > endDate)
+        {
+            await JSRuntime.ToastrError("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+        }
         var pagination = await _scheduleService.GetAllAsync(
             filmName,
             startDate,
@@ -262,5 +258,30 @@
         {
             await JSRuntime.ToastrError(result.Message);
         }
+    }
+
+    private async Task CancelFilters()
+    {
+        filmName = string.Empty;
+        startDate = null;
+        endDate = null;
+        pagingParameters.PageNumber = 1;
+        await LoadSchedule();
+    }
+
+    private async Task LoadSchedule()
+    {
+        var pagination = await _scheduleService.GetAllAsync(
+            filmName,
+            startDate,
+            endDate,
+            new PagingParameters
+                {
+                    PageNumber = pagingParameters.PageNumber,
+                    PageSize = 10
+                },
+            cancellationToken);
+        Schedules = pagination.Item.ToList();
+        metaData = pagination.MetaData;
     }
 }
