@@ -16,7 +16,7 @@
 	<div class="mb-3">
 		<label for="movieTitle" class="form-label">Phim chiếu</label>
 		<select class="form-select" id="movieTitle" value="@selectedFilmId" @onchange="OnFilmChange">
-			<option value="">Select a film</option>
+			<option value="">Chọn phim</option>
 			@foreach (var film in FilmValidate)
 			{
 				<option value="@film.Id">@film.Name</option>
@@ -38,7 +38,7 @@
 	<div class="mb-3">
 		<label for="format" class="form-label">Hình thức chiếu</label>
 		<select class="form-select" id="format" @bind="ShowTime.ScreenTypeId">
-			<option value="">Select a screen type</option>
+			<option value="">Chọn hình thức chiếu</option>
 			@foreach (var item in ScreenTypeValidate)
 			{
 				<option value="@item.Id">@item.Type</option>
@@ -54,7 +54,7 @@
 	<div class="mb-3">
 		<label for="translationType" class="form-label">Hình thức dịch</label>
 		<select class="form-select" id="translationType" @bind="ShowTime.TranslationTypeId">
-			<option value="">Select a translation type</option>
+			<option value="">Chọn hình thức dịch</option>
 			@foreach (var item in TranslationTypeValidate)
 			{
 				<option value="@item.Id">@item.Type</option>
@@ -75,6 +75,10 @@
 				<ValidationMessage For="@(() => ShowTime.EndTime)" class="text-danger" />
 			</div>
 		</div>
+		@if (!string.IsNullOrEmpty(filmSelectionErrorMessage))
+		{
+			<small class="text-danger">@filmSelectionErrorMessage</small>
+		}
 	</div>
 	<div class="modal-footer">
 		<button type="submit" class="btn btn-primary">Tạo suất chiếu</button>
@@ -100,6 +104,7 @@
 	private string selectedFilmId = "";
 	private string startTimeValue = "";
 	private string screenTypeErrorMessage = "";
+	private string filmSelectionErrorMessage = "";
 	protected override async Task OnParametersSetAsync()
 	{
 		ShowTime.ShowtimeDate = Date;
@@ -197,15 +202,23 @@
 	private async Task OnStartTime(ChangeEventArgs e)
 	{
 		startTimeValue = e.Value.ToString();
+		filmSelectionErrorMessage = ""; 
+
+		if (string.IsNullOrEmpty(selectedFilmId) || ShowTime.FilmId == null)
+		{
+			filmSelectionErrorMessage = "Phải chọn phim trước khi chọn giờ.";
+			return; 
+		}
+
 		if (TimeSpan.TryParse(startTimeValue, out TimeSpan time))
 		{
 			ShowTime.StartTime = Date.Date + time;
-			int endTime = Films.FirstOrDefault(x => x.Id == idFilm).RunningTime.Value;
-			if (endTime != null)
+			int? runningTime = Films.FirstOrDefault(x => x.Id == idFilm)?.RunningTime;
+			if (runningTime.HasValue)
 			{
 				if (ShowTime.StartTime.HasValue)
 				{
-					ShowTime.EndTime = ShowTime.StartTime.Value.AddMinutes(endTime);
+					ShowTime.EndTime = ShowTime.StartTime.Value.AddMinutes(runningTime.Value);
 				}
 			}
 		}
