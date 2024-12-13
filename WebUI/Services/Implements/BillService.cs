@@ -62,6 +62,10 @@ namespace WebUI.Services.Implements
                 queryParameters.Add("StartTime", request.StartTime.ToString());
                 queryParameters.Add("EndTime", request.EndTime.ToString());
             }
+            if (request.CinemaCenterId.HasValue)
+            {
+                queryParameters.Add("CinemaCenterId", request.CinemaCenterId.ToString());
+			}
             string url = QueryHelpers.AddQueryString("api/Bill/GetListBillWithPagination", queryParameters);
             var result = await _http.GetFromJsonAsync<PageList<BillsDto>>(url);
             return result ?? new PageList<BillsDto>

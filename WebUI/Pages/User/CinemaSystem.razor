@@ -1,9 +1,17 @@
 ﻿@page "/cinema-system"
-@layout Layout.UserLayout
+@using MovieTicket.Application.DataTransferObjs.Film
+@layout WebUI.Layout.UserLayout
 
 <div class="container">
     <div class="theatre-list">
         <h1 class="header">VHD CINEMAS</h1>
+        <div class="cinemas">
+            <p class="cinema-item @(AddressCity == "Hà Nội" ? "selected" : "")" @onclick='() => OnCitySelected("Hà Nội")'>Hà Nội</p>
+            <p class="cinema-item @(AddressCity == "Hà Nam" ? "selected" : "")" @onclick='() => OnCitySelected("Hà Nam")'>Hà Nam</p>
+            <p class="cinema-item @(AddressCity == "Ninh Bình" ? "selected" : "")" @onclick='() => OnCitySelected("Ninh Bình")'>Ninh Bình</p>
+            <p class="cinema-item @(AddressCity == "Phú Thọ" ? "selected" : "")" @onclick='() => OnCitySelected("Phú Thọ")'>Phú Thọ</p>
+        </div>
+        <hr />
         <div class="cinemas">
             @foreach (var item in CinemaCenterDtos)
             {
@@ -109,10 +117,7 @@
                 <button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <SeatSelectionModal 
-                    @ref="seatSelectionModalref" 
-                    ShowtimeId="@ShowTimeId" 
-                    OnSeatSelectionCinemaSystem="HandleSelectedSeats" />
+                <SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelectionCinemaSystem="HandleSelectedSeats" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
                 <SeatFooter ShowtimeId="@ShowTimeId"
@@ -134,10 +139,7 @@
                 <h4 class="modal-title">Chọn Combo</h4>
             </div>
             <div class="modal-body">
-                <ComboSelectionModal 
-                    @ref="comboSelectionModalref" 
-                    BillId="@BillId" 
-                    OnComboSelectionCinemaSystem="HandleSelectedCombos" />
+                <ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelectionCinemaSystem="HandleSelectedCombos" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
                 <ComboFooter ShowtimeId="@ShowTimeId"
@@ -148,8 +150,7 @@
                              TotalCombo="@TotalCombo"
                              TotalMoney="@TotalMoney"
                              TotalTicket="@TotalTicket"
-                             BackToSeatModalCinemaSystem="PreComboSelectionModal" 
-                             NextToDiscountModalCinemaSystem="OpenDiscountModal"/>
+                             BackToSeatModalCinemaSystem="PreComboSelectionModal" />
             </div>
         </div>
     </div>
@@ -162,12 +163,7 @@
                 <h4 class="modal-title">Thanh toán</h4>
             </div>
             <div class="modal-body">
-                <DiscountSelectionModal 
-                    BillId="@BillId" 
-                    @ref="DiscountSelectionModalRef" 
-                    OnAppliedDiscountCinemaSystem="HandleAppliedDisCount" 
-                    MembershipId="@MembershipId" 
-                    MempointCS="HandleMembershipPoint" />
+                <DiscountSelectionModal />
             </div>
             <div class="modal-footer" style="width:100%;height:150px">
                 <DiscountFooter ShowtimeId="@ShowTimeId"
@@ -177,10 +173,7 @@
                                 TotalMoney="@TotalMoney"
                                 TotalTicket="@TotalTicket"
                                 BillCombo="ComboCheckRequest"
-                                Discount="@Discount"
-                                BackToSeatCinemaSystem="CancelCheckout"
-                                Mempoint="@mempoint"
-                                @ref="DiscountFooterRef" />
+                                BackToSeatCinemaSystem="CancelCheckout" />
             </div>
         </div>
     </div>
@@ -436,11 +429,8 @@
     private ComboSelectionModal comboSelectionModalref;
     private SeatFooter seatFooterRef;
     private ComboFooter comboFooterRef;
-    private DiscountSelectionModal DiscountSelectionModalRef;
-    private DiscountFooter DiscountFooterRef;
-    private Guid BillId = Guid.Empty;
-    private Guid MembershipId = Guid.Empty;
     private string SeatsSelectedstr;
+    private Guid BillId;
     private string IdFilm;
     private string filmName { get; set; }
     private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
@@ -451,11 +441,9 @@
     private decimal Discount;
     private ComboCheckRequest ComboCheckRequest;
     private bool isFirstRender = true;
-    private int mempoint;
-
+	private string AddressCity = "Hà Nội";
     public class EventCallbackCinemaSystemArgs
     {
-        public Guid MembershipId { get; set; }
         public List<SeatDTO> lstSeats { get; set; }
         public string str { get; set; }
         public decimal TotalMoney { get; set; }
@@ -467,23 +455,16 @@
         public List<SeatDTO> lstCheckedSeat { get; set; }
         public List<ComboRequest> _lstCombo = new();
         public ComboCheckRequest ComboCheckRequest { get; set; }
+        public Guid MembershipId { get; set; }
     }
 
    
     protected override async Task OnInitializedAsync()
     {
-        CinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
         Dates = Enumerable.Range(0, 28).Select(offset => DateTime.Today.AddDays(offset)).ToList();
         showTimeSearch.ShowtimeDate = DateTime.Today;
         AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
-        
-        if (CinemaCenterDtos.Any())
-        {
-            var firstCinemaCenterId = CinemaCenterDtos.First().Id;
-            showTimeSearch.CinemaCenterId = firstCinemaCenterId; 
-            await OnCinemaCenterSelected(firstCinemaCenterId);   
-        }
-
+		await LoadCinemas(AddressCity);
         base.OnInitialized();
     }
 
@@ -497,6 +478,29 @@
         }
     }
 
+    private async Task LoadCinemas(string city)
+    {
+        AddressCity = city;
+        var cinemaCenterDtos = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+		CinemaCenterDtos = cinemaCenterDtos.Where(c => c.AddresCity == AddressCity);
+        if (CinemaCenterDtos.Any())
+        {
+            var firstCinemaCenterId = CinemaCenterDtos.First().Id;
+            showTimeSearch.CinemaCenterId = firstCinemaCenterId;
+            await OnCinemaCenterSelected(firstCinemaCenterId);
+        }
+        else
+        {
+            showTimeDtos.Clear();
+            filmDto = new List<FilmDto>();
+        }
+		StateHasChanged();
+    }
+
+    private async Task OnCitySelected(string city)
+	{
+		await LoadCinemas(city);
+	}
 
     private async Task OnCinemaCenterSelected(Guid cinemaCenterId)
     {
@@ -582,24 +586,15 @@
         await seatSelectionModalref.Reset();
         await seatFooterRef.Reset();
         lstSeats.Clear();
-        lstCheckedSeats.Clear();
         SeatsSelectedstr = "";
         BillId = Guid.Empty;
         TotalMoney = 0;
-        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
+        //filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
     }
 
-    private async Task PreComboSelectionModal(Guid id)
+    private async Task PreComboSelectionModal()
     {
-        await seatSelectionModalref.Reset();
-        await comboFooterRef.Reset();
-        await seatFooterRef.Reset();
-        lstSeats.Clear();
-        SeatsSelectedstr = "";
-        BillId = Guid.Empty;
-        TotalMoney = 0;
-        TotalTicket = 0;
-        ShowTimeId = id;
         await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal"); //đóng seat selection modal
         await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
     }
@@ -614,17 +609,16 @@
 
     private async Task OpenComboSelectionModal(EventCallbackCinemaSystemArgs args)
     {
-        await comboFooterRef.Reset();
-        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        Task.Delay(300);
         BillId = args.BillId;
-        MembershipId = args.MembershipId;
+        await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
         await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
     }
 
     private async Task OpenDiscountModal(EventCallbackCinemaSystemArgs args)
     {
-        BillId = args.BillId;
-        MembershipId = args.MembershipId;
+        Task.Delay(1000);
+        ComboCheckRequest = args.ComboCheckRequest;
         await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
         await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
     }
@@ -639,6 +633,9 @@
 
     private async Task CancelCheckout(Guid id)
     {
+        await seatSelectionModalref.Reset();
+        await comboFooterRef.Reset();
+        await seatFooterRef.Reset();
         lstSeats.Clear();
         SeatsSelectedstr = "";
         BillId = Guid.Empty;
@@ -647,20 +644,7 @@
         TotalCombo = 0;
         Discount = 0;
         ShowTimeId = id;
-        MembershipId = Guid.Empty;
         await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
         await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
     }
-    private async Task HandleMembershipPoint(int point)
-    {
-        mempoint = point;
-        StateHasChanged();
-    }
-    private void HandleAppliedDisCount(EventCallbackCinemaSystemArgs args)
-    {
-        Discount = args.Discount;
-        TotalMoney = TotalTicket + TotalCombo + Discount;
-        StateHasChanged();
-    }
 }
-

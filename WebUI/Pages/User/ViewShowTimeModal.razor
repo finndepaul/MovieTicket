@@ -1,7 +1,7 @@
 @using MovieTicket.Application.DataTransferObjs.ShowTime
 
 <div class="container-fluid" style="max-height: 40%">
-    <ul class="nav" style="">
+    <ul class="nav mb-3" style="">
         @if (dateRange != null)
         {
             @foreach (var item in dateRange)
@@ -16,6 +16,19 @@
             }
         }
     </ul>
+    <ul class="nav">
+        @if (City != null)
+        {
+            @foreach (var item in City)
+            {
+                var isActive = (item == selectedCityName) ? "active" : "";
+                <li class="sort-show-time @isActive" @onclick="()=>SelectedCityName(item)">
+                    <p>@item</p>
+                </li>
+            }
+        }
+    </ul>
+    <hr/>
     <ul class="nav mt-3">
         @if (ShowTimes.Any())
         {
@@ -126,9 +139,11 @@
     public MetaData MetaData { get; set; } = new MetaData();
     private string selectedScreenTypeSort;
     private string selectedTranslationTypeSort;
+    private string selectedCityName = "Hà Nội";
+    private List<string> City = new();
     private Guid ShowTimeId;
     private string UserRole = null;
-
+    private DateTime dateCheck = DateTime.Today;
     protected async override Task OnParametersSetAsync()
     {
         if (!String.IsNullOrEmpty(Id))
@@ -151,51 +166,68 @@
         }
     }
 
-	private async Task LoadShowTimesAsync()
-	{
-		var paginationResponse = await ShowTimeService.GetAll(new ShowTimeSearch() { ShowtimeDate = selectedDate }, new PagingParameters() { PageSize = 30 });
+    private async Task LoadShowTimesAsync()
+    {
+        var paginationResponse = await ShowTimeService.GetAll(new ShowTimeSearch() { ShowtimeDate = selectedDate }, new PagingParameters() { PageSize = 30 });
+        var cinemaCenter = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
+        City = cinemaCenter.Select(x => x.AddresCity).Distinct().ToList();
+        ShowTimeSort = paginationResponse.Item
+            .Where(x => x.FilmId == Guid.Parse(Id) && x.StartTime.Value > DateTime.Now)
+            .GroupBy(x => new { x.CinemaCenterName, x.ScreenTypeName })
+            .SelectMany(x => x)
+            .OrderBy(x => x.ScreenTypeName)
+            .ToList();
+     
+        if (!String.IsNullOrEmpty(selectedCityName))
+        {
+            ShowTimes = ShowTimeSort.Where(x => x.City == selectedCityName).ToList();
+            if (ShowTimes.Count != 0)
+            {
+                if (!String.IsNullOrEmpty(selectedScreenTypeSort))
+                {
+                    ShowTimes = ShowTimeSort.Where(x => x.ScreenTypeName == selectedScreenTypeSort && x.TranslationTypeName == selectedTranslationTypeSort).ToList();
+                }
+                else
+                {
+                    ShowTimes = ShowTimeSort.Where(x => x.ScreenTypeName == ShowTimeSort[0].ScreenTypeName && x.TranslationTypeName == ShowTimeSort[0].TranslationTypeName).ToList();
+                }
+            }
+            else
+            {
+                ShowTimes = new List<ShowTimeDto>();
+            }
 
-		ShowTimeSort = paginationResponse.Item
-			.Where(x => x.FilmId == Guid.Parse(Id) && x.StartTime.Value > DateTime.Now)
-			.GroupBy(x => new { x.CinemaCenterName, x.ScreenTypeName })
-			.SelectMany(x => x)
-			.OrderBy(x => x.ScreenTypeName)
-			.ToList();
-		if (!String.IsNullOrEmpty(selectedScreenTypeSort))
-		{
-			ShowTimes = ShowTimeSort.Where(x => x.ScreenTypeName == selectedScreenTypeSort && x.TranslationTypeName == selectedTranslationTypeSort).ToList();
-		}
-		else
-		{
-			ShowTimes = ShowTimeSort.Where(x => x.ScreenTypeName == ShowTimeSort[0].ScreenTypeName && x.TranslationTypeName == ShowTimeSort[0].TranslationTypeName).ToList();
-		}
-        Console.WriteLine($"ShowTimes count: {ShowTimes.Count}");
-		MetaData = paginationResponse.MetaData;
-		AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
-		UserRole = AuthenState.User.FindFirst(ClaimTypes.Role)?.Value;
-	}
+        }
+        MetaData = paginationResponse.MetaData;
+        AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+        UserRole = AuthenState.User.FindFirst(ClaimTypes.Role)?.Value;
+    }
 
-	private async Task CheckLogged(Guid showtimeId,DateTime startTime)
-	{
-		if (UserRole=="User")
-		{
-			if (DateTime.Now.AddMinutes(15) >= startTime)
-			{
-				await JSRuntime.InvokeVoidAsync("alert", "Lịch chiếu sẽ bắt đầu ngay sau đây, hãy đặt vé tại địa điểm bạn muốn xem phim.");
-			}
-			else
-			{
-				await OpenSeatSelection(showtimeId);
-			}
-		}
-		else
-		{
-			await JSRuntime.InvokeVoidAsync("alert", "Bạn cần đăng nhập để chọn ghế");
-			await LoginCallback.InvokeAsync();
-		}
-	}
-
-	private async Task GetDate(DateTime date)
+    private async Task CheckLogged(Guid showtimeId,DateTime startTime)
+    {
+        if (UserRole=="User")
+        {
+            if (DateTime.Now.AddMinutes(15) >= startTime)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Lịch chiếu sẽ bắt đầu ngay sau đây, hãy đặt vé tại địa điểm bạn muốn xem phim.");
+            }
+            else
+            {
+                await OpenSeatSelection(showtimeId);
+            }
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Bạn cần đăng nhập để chọn ghế");
+            await LoginCallback.InvokeAsync();
+        }
+    }
+    private async Task SelectedCityName(string city)
+    {
+        selectedCityName = city;
+        await LoadShowTimesAsync();
+    }
+    private async Task GetDate(DateTime date)
 	{
 		selectedScreenTypeSort = null;
 		selectedTranslationTypeSort = null;

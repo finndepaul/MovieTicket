@@ -151,6 +151,17 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex justify-content-center border" style="width:100%">
+            <div class="border border-5 border-black rounded-4 p-1" style="width:50%">
+                @if (BarcodeImage != null)
+                {
+                    <img src="@BarcodeImage" style="width:100%" height="200" class="object-fit-contain" />
+                }
+                <p class="text-center fw-bold" style="font-family:Arial">@objBill.BarCode</p>
+
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -176,7 +187,8 @@
 	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
 	private BillDetailDto objBill = new BillDetailDto();
 	private AccountDto objAccount = new AccountDto();
-
+    private string BarcodeImage;
+    private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
 	protected async override Task OnInitializedAsync()
 	{
 		//lay bill theo id
@@ -210,6 +222,8 @@
 				});
 		}
 		lstBillCombo = await BillComboService.GetListBillComboByBillId(Id);
+        BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+
 	}
 
 	private void GoToUserDetail()

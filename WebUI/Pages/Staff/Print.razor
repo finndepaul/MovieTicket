@@ -1,16 +1,22 @@
-﻿@page "/bill-staff/detail/{Id}"
-@using BarcodeStandard
-@using System.Drawing
-@using MovieTicket.Application.DataTransferObjs.Account
-@using MovieTicket.Application.DataTransferObjs.Bill
+﻿@using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.BillCombo
-@using MovieTicket.Application.DataTransferObjs.Ticket
-@layout WebUI.Layout.StaffLayout
 @attribute [Authorize(Roles = "Staff")]
-<div class="container-fluid">
-	<div class="mb-2">
-		<NavLink href="offline-counter" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
+@layout WebUI.Layout.StaffLayout
+<div class="mb-3 d-flex justify-content-center" style="width:100%">
+	<div class="d-flex">
+		<input type="text" class="form-control me-3 fs-5 p-2" style="width:500px" @bind-value="Barcode" placeholder="Search by BarCode or Status" />
+		<button class="btn btn-primary" style="width:138px" @onclick="SearchBarCode"><i class="bi bi-search m-0"></i>Tìm kiếm</button>
 	</div>
+	
+	
+	
+</div>
+<div class="d-flex justify-content-end me-4">
+	<button class="btn btn-warning p-2"><i class="bi bi-printer"></i>In hóa đơn</button>
+</div>
+@if (IsHidden)
+{
+	
 	<div class="row">
 		<!-- Thông tin đơn hàng -->
 		<div class="col-md-6 mb-3">
@@ -50,15 +56,15 @@
 
 			</div>
 			<div class="d-flex justify-content-center border" style="width:100%">
-				<div class="border border-5 border-black rounded-4 p-1"  style="width:50%">
+				<div class="border border-5 border-black rounded-4 p-1" style="width:50%">
 					@if (BarcodeImage != null)
 					{
 						<img src="@BarcodeImage" style="width:100%" height="200" class="object-fit-contain" />
 					}
 					<p class="text-center fw-bold" style="font-family:Arial">@objBill.BarCode</p>
-					
+
 				</div>
-				
+
 			</div>
 		</div>
 
@@ -134,10 +140,22 @@
 			</table>
 		</div>
 	</div>
-</div>
+}
+else
+{
+	<p>Không có hóa đơn nào được tìm thấy</p>
+}
 
 @code {
-	[Parameter] public string Id { get; set; }
+		[Parameter] public string Id { get; set; }
+	private BillWithPaginationRequest request = new BillWithPaginationRequest();
+	private PagingParameters pagingParameters = new PagingParameters();
+	private string Barcode { get; set; } = string.Empty;
+	private Guid BillId { get; set; }
+	private DateTime? StartTime = DateTime.Today;
+	private DateTime? EndTime = DateTime.Today.AddDays(1).AddTicks(-1);
+	private bool IsHidden = false;
+
 	private List<TicketDto> lstTicket = new List<TicketDto>();
 	private TicketDto objTicket = new TicketDto();
 	private ShowTimeDto objShowTime = new ShowTimeDto();
@@ -160,47 +178,72 @@
 	private string BarcodeImage;
 	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
 
-
-	protected async override Task OnParametersSetAsync()
+	protected override async Task OnParametersSetAsync()
 	{
 		if (!String.IsNullOrEmpty(Id))
-		{
-			//lay bill theo id
-			objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
-			//lay account theo bill id
-			objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
-			//lay list ticket theo bill id
-			lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
-			//lay 1 ticket dau tien cua bill id do
-			objTicket = lstTicket.FirstOrDefault(x => x.BillId == Guid.Parse(Id));
-			//lay showtimeid cua ticket
-			var showtimeId = objTicket.ShowTimeId.Value;
-			//tim showtime theo id
-			var findShowtime = await ShowTimeService.GetById(showtimeId);
-			//lay showtime
-			objShowTime = findShowtime.Data;
-			lstSeatId = lstTicket.Select(x => new SeatPrice
-				{
-					SeatId = x.SeatId.Value,
-					Price = x.Price
-				}).ToList();
-			foreach (var item in lstSeatId)
-			{
-				var obj = await SeatService.GetById(item.SeatId);
-				var seat = obj.Data;
-				lstSeat.Add(new BillSeat
-					{
-						SeatType = seat.SeatTypeName,
-						SeatName = seat.Position,
-						Price = item.Price
-					});
-			}
-			lstBillCombo = await BillComboService.GetListBillComboByBillId(Guid.Parse(Id));
-			BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
-
+		{		
+			request.StartTime = StartTime;
+			request.EndTime = EndTime;	
+			request.CinemaCenterId = Guid.Parse(Id);
 		}
 
+	}
+	private async Task SearchBarCode()
+	{
+		IsHidden = false;
+		lstSeat.Clear();
+		lstSeatId.Clear();
+		lstBillCombo.Clear();
+		if (!String.IsNullOrWhiteSpace(Barcode))
+		{
+			request.BarCode = Barcode;
+			var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
+				{
+					PageNumber = pagingParameters.PageNumber,
+					PageSize = 10
+				});
+			if (pageList.Item.Count() > 0)
+			{
+				BillId = pageList.Item.FirstOrDefault().Id;
+				if (BillId != Guid.Empty)
+				{
+					IsHidden = true;
+					objBill = await BillService.GetBillByIdAsync(BillId);
+					//lay account theo bill id
+					objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+					//lay list ticket theo bill id
+					lstTicket = await TicketService.GetListTicketByBillIdAsync(BillId);
+					//lay 1 ticket dau tien cua bill id do
+					objTicket = lstTicket.FirstOrDefault(x => x.BillId == BillId);
+					//lay showtimeid cua ticket
+					var showtimeId = objTicket.ShowTimeId.Value;
+					//tim showtime theo id
+					var findShowtime = await ShowTimeService.GetById(showtimeId);
+					//lay showtime
+					objShowTime = findShowtime.Data;
+					lstSeatId = lstTicket.Select(x => new SeatPrice
+						{
+							SeatId = x.SeatId.Value,
+							Price = x.Price
+						}).ToList();
+					foreach (var item in lstSeatId)
+					{
+						var obj = await SeatService.GetById(item.SeatId);
+						var seat = obj.Data;
+						lstSeat.Add(new BillSeat
+							{
+								SeatType = seat.SeatTypeName,
+								SeatName = seat.Position,
+								Price = item.Price
+							});
+					}
+					lstBillCombo = await BillComboService.GetListBillComboByBillId(BillId);
+					BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+					StateHasChanged();
+				}
+			}
 
+		}
 	}
 	private string FormatSeatTypeName(string type)
 	{
@@ -212,5 +255,12 @@
 			_ => "Không xác định"
 		};
 	}
-
+	private void BillPrint()
+	{
+		if (IsHidden)
+		{
+			//code ở đây
+		}
+		
+	}
 }
