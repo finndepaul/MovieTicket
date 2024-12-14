@@ -102,30 +102,11 @@ else
 		{
 			lstComboSelected.Add(new ComboRequest { ComboId = comboId, Quantity = comboQuantities[comboId] });
 		}
-		if(location != null && location == "Home"){
-			args = new EventCallbackHomeArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-			await OnComboSelection.InvokeAsync(args);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                {
-                    _lstCombo = lstComboSelected,
-                    TotalCombo = CalculateTotal()
-                };
-			await OnComboSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
-		}
-		else if(location != null && location == "OfflineCounter"){
-			argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                {
-                    _lstCombo = lstComboSelected,
-                    TotalCombo = CalculateTotal()
-                };
-		}
+		argsOfflineCounter = new EventCallbackOfflineCounterArgs
+            {
+                _lstCombo = lstComboSelected,
+                TotalCombo = CalculateTotal()
+            };
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}
@@ -154,32 +135,11 @@ else
 				existingItem.Quantity = comboQuantities[comboId];
 			}
 		}
-		if (location != null && location == "Home")
-		{
-			args = new EventCallbackHomeArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-			await OnComboSelection.InvokeAsync(args);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			argsCinemaSystem = new EventCallbackCinemaSystemArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-			await OnComboSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
-		}
-		else if (location != null && location == "OfflineCounter")
-		{
-			argsOfflineCounter = new EventCallbackOfflineCounterArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-		}
+		argsOfflineCounter = new EventCallbackOfflineCounterArgs
+			{
+				_lstCombo = lstComboSelected,
+				TotalCombo = CalculateTotal()
+			};
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}

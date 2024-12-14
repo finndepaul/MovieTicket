@@ -2,17 +2,18 @@
 
 namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 {
-	public interface IUserHomeReadWriteRepository
-	{
-		Task<string> CreateCheckAsync(CreateCheckRequest request, CancellationToken cancellationToken);
+    public interface IUserHomeReadWriteRepository
+    {
+        Task<string> CreateCheckAsync(CreateCheckRequest request, CancellationToken cancellationToken);
 
-		Task<string> AddComboToCheckAsync(ComboCheckRequest request, CancellationToken cancellationToken);
+        Task<string> AddComboToCheckAsync(ComboCheckRequest request, CancellationToken cancellationToken);
 
-		Task<string> AddDiscountToCheckAsync(DiscountCheckRequest request, CancellationToken cancellationToken);
+        Task<string> AddDiscountToCheckAsync(DiscountCheckRequest request, CancellationToken cancellationToken);
 
-		Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken);
+        Task<string> DeleteCheckAsync(Guid billId, CancellationToken cancellationToken);
 
-		Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken);
-		Task<bool> ResetDiscountAsync(Guid billId, CancellationToken cancellationToken);
+        Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken);
+        Task<bool> ResetDiscountAsync(Guid billId, CancellationToken cancellationToken);
+        Task<string> UpdateCheckMembershipIdAsync(Guid billId, Guid membershipId, CancellationToken cancellationToken);
     }
 }
