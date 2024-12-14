@@ -76,11 +76,7 @@
 	[Parameter] public decimal TotalTicket { get; set; }
 	[Parameter] public decimal TotalCombo { get; set; }
 	[Parameter] public decimal TotalMoney { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatModal { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatModalCinemaSystem { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToDiscountModalCinemaSystem { get; set; }
 	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToDiscountOfflineCounter { get; set; }
 	private EventCallbackHomeArgs args = new();
 	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
