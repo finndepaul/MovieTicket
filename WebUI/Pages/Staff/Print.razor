@@ -1,9 +1,9 @@
 ﻿@using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.BillCombo
 @attribute [Authorize(Roles = "Staff")]
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 @layout WebUI.Layout.StaffLayout
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <div class="mb-3 d-flex justify-content-center" style="width:100%">
 	<div class="d-flex">
 		<input type="text" class="form-control me-3 fs-5 p-2" style="width:500px" @bind-value="Barcode" placeholder="Search by BarCode or Status" />
@@ -62,62 +62,76 @@ else
 	<p>Không có hóa đơn nào được tìm thấy</p>
 }
 
-<script>
-    window.generatePdf = function(pdfContent) {
-        const { jsPDF } = window.jspdf;
-        if (!jsPDF) {
-            console.error("jsPDF library is not loaded.");
-            return;
-        }
+<script type="text/javascript">
+	window.generatePdf = function(pdfContentJson) {
+		var pdfContent = JSON.parse(pdfContentJson);
+		var { jsPDF } = window.jspdf;
+		if (!jsPDF) {
+			console.error("jsPDF library is not loaded.");
+			return;
+		}
 
-        const doc = new jsPDF();
-        doc.setFontSize(20);
-        doc.text("Hoa Don Phim", 105, 10, { align: "center" });
+		var doc = new jsPDF();
+		doc.setFontSize(20);
+		doc.text("Hoa Don Phim", 105, 10, { align: "center" });
+		doc.setFontSize(14);
+		doc.text(`Phim: ${pdfContent.FilmName}`, 10, 20);
+		doc.text(`Gio chieu: ${pdfContent.Showtime}`, 10, 30);
+		doc.text(`Ngay Chieu: ${pdfContent.ShowDate}`, 10, 40);
+		doc.text(`Phong chieu: ${pdfContent.Cinema}`, 10, 50);
+		doc.text(`Rap chieu: ${pdfContent.CinemaCenter}`, 10, 60);
+		doc.text(`Khach hang: ${pdfContent.CustomerName}`, 10, 70);
+		doc.text(`Dien thoai: ${pdfContent.CustomerPhone}`, 10, 80);
+		doc.text(`Email: ${pdfContent.CustomerEmail}`, 10, 90);
 
-        doc.setFontSize(14);
-        doc.text(`Phim: ${pdfContent.FilmName}`, 10, 20);
-        doc.text(`Gio chieu: ${pdfContent.Showtime}`, 10, 30);
-        doc.text(`Ngay Chieu: ${pdfContent.ShowDate}`, 10, 40);
-        doc.text(`Phong chieu: ${pdfContent.Cinema}`, 10, 50);
-        doc.text(`Rap chieu: ${pdfContent.CinemaCenter}`, 10, 60);
+		let yPosition = 100; // Starting point for Seats
+		@* if (pdfContent.Seats && pdfContent.Seats.length > 0) {
+			doc.text("Thong tin ghe:", 10, yPosition);
+			yPosition += 10;
+			pdfContent.Seats.forEach((seat, index) => {
+				doc.text(`${seat.SeatName} | Loai ghe: ${seat.SeatType} | Gia ghe: ${seat.Price} VND`, 10, yPosition);
+				yPosition += 10;
+			});
+		} else {
+			doc.text("Khong co ghe chon.", 10, yPosition);
+			yPosition += 10;
+		}
 
-        doc.text(`Khach hang: ${pdfContent.CustomerName}`, 10, 70);
-        doc.text(`Dien thoai: ${pdfContent.CustomerPhone}`, 10, 80);
-        doc.text(`Email: ${pdfContent.CustomerEmail}`, 10, 90);
+		if (pdfContent.Combos && pdfContent.Combos.length > 0) {
+			doc.text("Dich vu bo sung:", 10, yPosition);
+			yPosition += 10;
+			pdfContent.Combos.forEach((combo, index) => {
+				doc.text(`${combo.ComboName} | So luong: ${combo.Quantity} | Don gia: ${combo.Price} VND | Tong: ${combo.TotalPrice} VND`, 10, yPosition);
+				yPosition += 10;
+			});
+		} else {
+			doc.text("Khong co dich vu bo sung", 10, yPosition);
+			yPosition += 10;
+		} *@
 
-        let yPosition = 100; // Starting point for Seats
-        if (Array.isArray(pdfContent.Seats) && pdfContent.Seats.length > 0) {
-            doc.text("Thong tin ghe:", 10, yPosition);
-            yPosition += 10;
-            pdfContent.Seats.forEach((seat, index) => {
-                doc.text(`${seat.SeatName} | Loai ghe: ${seat.SeatType} | Gia ghe: ${seat.Price} VND`, 10, yPosition);
-                yPosition += 10;
-            });
-        } else {
-            doc.text("Khong co ghe chon.", 10, yPosition);
-            yPosition += 10;
-        }
+		doc.text(`Thanh tien: ${pdfContent.TotalMoney} VND`, 10, yPosition);
+		yPosition += 10;
+		doc.text(`Giam gia: ${pdfContent.Discount} VND`, 10, yPosition);
+		yPosition += 10;
+		doc.text(`Tong tien: ${pdfContent.AfterDiscount} VND`, 10, yPosition);
 
-        if (Array.isArray(pdfContent.Combos) && pdfContent.Combos.length > 0) {
-            doc.text("Dich vu bo sung:", 10, yPosition);
-            yPosition += 10;
-            pdfContent.Combos.forEach((combo, index) => {
-                doc.text(`${combo.ComboName} | So luong: ${combo.Quantity} | Don gia: ${combo.Price} VND | Tong: ${combo.TotalPrice} VND`, 10, yPosition);
-                yPosition += 10;
-            });
-        } else {
-            doc.text("Khong co dich vu bo sung", 10, yPosition);
-            yPosition += 10;
-        }
+		// Save the PDF
+		@* doc.save("HoaDonXemPhim.pdf"); *@
 
-        doc.text(`Thanh tien: ${pdfContent.TotalMoney} VND`, 10, yPosition);
-        yPosition += 10;
-        doc.text(`Giam gia: ${pdfContent.Discount} VND`, 10, yPosition);
-        yPosition += 10;
-        doc.text(`Tong tien: ${pdfContent.AfterDiscount} VND`, 10, yPosition);
+		// Print the PDF
+		var iframe = document.createElement('iframe');
+		iframe.style.position = 'fixed';
+		iframe.style.width = '1px';
+		iframe.style.height = '1px';
+		iframe.style.opacity = '0.01';
+		document.body.appendChild(iframe);
 
-        doc.save("HoaDonXemPhim.pdf");
-    };
+		iframe.src = doc.output('bloburl');
+		iframe.onload = function() {
+			iframe.contentWindow.focus();
+			iframe.contentWindow.print();
+		};
+	};
 </script>
 
 
@@ -133,8 +147,8 @@ else
 	private string seatConcat = string.Empty;
 	private string comboConcat = string.Empty;
 	private List<TicketDto> lstTicket = new List<TicketDto>();
-	private TicketDto objTicket = new TicketDto();
-	private ShowTimeDto objShowTime = new ShowTimeDto();
+	private TicketDto objTicket { get; set; }
+	private ShowTimeDto objShowTime { get; set; }
 	private class BillSeat
 	{
 		public string SeatName { get; set; }
@@ -166,8 +180,8 @@ else
 	private List<BillComboDto> lstBillCombo = new List<BillComboDto>();
 	private List<BillSeat> lstSeat = new List<BillSeat>();
 	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
-	private BillDetailDto objBill = new BillDetailDto();
-	private AccountDto objAccount = new AccountDto();
+	private BillDetailDto objBill { get; set; }
+	private AccountDto objAccount { get; set; }
 	private string BarcodeImage;
 	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
 
@@ -228,10 +242,10 @@ else
 
 					lstBillCombo = await BillComboService.GetListBillComboByBillId(BillId);
 					BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
-					StateHasChanged();
 				}
 			}
 		}
+		StateHasChanged();
 	}
 
 	private string FormatSeatTypeName(string type)
@@ -251,7 +265,7 @@ else
 		
 			var pdfContent = new BillContent
 			{
-				FilmName = objShowTime?.FilmName,
+				FilmName = objShowTime.FilmName,
 				Showtime = $"{objShowTime?.StartTime?.ToString("HH:mm")} - {objShowTime?.EndTime?.ToString("HH:mm")}",
 				ShowDate = objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"),
 				Cinema = objShowTime?.CinemaName,
@@ -265,9 +279,10 @@ else
 				Discount = (objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"),
 				AfterDiscount = objBill?.AfterDiscount?.ToString("#,##0")
 			};
-
+			Console.WriteLine($"pdfContent: {System.Text.Json.JsonSerializer.Serialize(pdfContent)}");
+			var pdfContentJson = System.Text.Json.JsonSerializer.Serialize(pdfContent);
 			// Call JavaScript function to generate PDF
-			await JSRuntime.InvokeVoidAsync("generatePdf", pdfContent);
+			await JSRuntime.InvokeVoidAsync("generatePdf", pdfContentJson);
 		}
 	}
 
