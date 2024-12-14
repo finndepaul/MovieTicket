@@ -79,7 +79,7 @@
 	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
 	[Parameter] public int Mempoint { get; set; }
-    [Parameter] public string SelectedMedthod { get; set; }
+	[Parameter] public string SelectedMethod { get; set; }
 	private EventCallbackHomeArgs args = new();
 	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
@@ -124,7 +124,7 @@
 	}
 	private async Task Checkout()
 	{
-		if(SelectedMedthod == "vnpay")
+		if (SelectedMethod == "vnpay")
 		{
 			var bill = await UserHomeService.GetBillForCheckOut(BillId);
 			PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
@@ -144,7 +144,7 @@
 			CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 			NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
 		}
-        else if (SelectedMedthod == "cash")
+		else if (SelectedMethod == "cash")
         {
             
         }
