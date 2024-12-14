@@ -48,8 +48,6 @@ else
 
 @code {
 	[Parameter] public Guid BillId { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> OnComboSelection { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> OnComboSelectionCinemaSystem { get; set; }
 	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnComboSelectionOfflineCounter { get; set; }
 	public EventCallbackHomeArgs args = new();
 	public EventCallbackCinemaSystemArgs argsCinemaSystem = new();
@@ -107,6 +105,7 @@ else
                 _lstCombo = lstComboSelected,
                 TotalCombo = CalculateTotal()
             };
+		await OnComboSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}
@@ -140,6 +139,7 @@ else
 				_lstCombo = lstComboSelected,
 				TotalCombo = CalculateTotal()
 			};
+		await OnComboSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
 		// Làm mới giao diện ngay lập tức
 		StateHasChanged();
 	}

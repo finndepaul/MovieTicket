@@ -627,5 +627,7 @@
     private async Task SelectedPaymenMethod(string s)
     {
         SelectedMethod = s;
+        StateHasChanged();
     }
+    
 }
