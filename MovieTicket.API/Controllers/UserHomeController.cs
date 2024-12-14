@@ -48,6 +48,12 @@ namespace MovieTicket.API.Controllers
             var model = await _userHomeReadWrite.AddDiscountToCheckAsync(request, cancellationToken);
             return Ok(model);
         }
+        [HttpPut]
+        public async Task<ActionResult> UpdateCheckMembershipId(Guid billId, Guid membershipId, CancellationToken cancellationToken)
+        {
+            var model = await _userHomeReadWrite.UpdateCheckMembershipIdAsync(billId, membershipId, cancellationToken);
+            return Ok(model);
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetPointOfMembership(Guid accountId, CancellationToken cancellationToken)

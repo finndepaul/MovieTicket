@@ -76,7 +76,7 @@
 	private string formatStartTime = "";
 	private string formatRating = "";
 	private string today = DateTime.Now.DayOfWeek.ToString();
-	private Guid userId = Guid.Empty;
+	private Guid staffId = Guid.Empty;
 	private AuthenticationState AuthenState;
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
 	private CreateCheckRequest checkrequest = new();
@@ -102,7 +102,7 @@
 			formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
 			AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
 			var getUserId = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-			userId = Guid.Parse(getUserId);
+			staffId = Guid.Parse(getUserId);
 			var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
 				{
 					PageNumber = 1,
@@ -167,7 +167,7 @@
 						TicketPriceId = ticketPrice.Id
 					});
 			}
-			checkrequest.AccountId = userId;
+			checkrequest.AccountId = staffId;
 			checkrequest.ShowTimeId = ShowtimeId;
 			checkrequest.LstSeatAndTicketPrice = lstTicketRequests;
 			string billId = await UserHomeService.CreateCheckAsync(checkrequest, cancellationToken);

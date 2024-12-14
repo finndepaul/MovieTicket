@@ -1,4 +1,5 @@
 ﻿@page "/userinformation"
+@using Microsoft.AspNetCore.WebUtilities
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Application.DataTransferObjs.Coupon
 @inject IAccountService AccountService
@@ -12,24 +13,24 @@
 <div class="container py-5">
     <ul class="nav nav-underline" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="true">Thông tin người dùng</button>
+            <button class="nav-link @(activeTab == "user-info" ? "active" : "")" id="user-info-tab" data-bs-toggle="tab" data-bs-target="#user-info" type="button" role="tab" aria-controls="user-info" aria-selected="@(activeTab == "user-info")">Thông tin người dùng</button>
         </li>
         <li class="nav-item mt-3" role="presentation">
-            <button class="nav-link" id="membership-points-tab" data-bs-toggle="tab" data-bs-target="#membership-points" type="button" role="tab" aria-controls="membership-points" aria-selected="false">Điểm VHD</button>
-        </li>
-        <li class="nav-item  mt-3" role="presentation">
-            <button class="nav-link" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="false">Đổi mật khẩu</button>
-        </li>
-        <li class="nav-item  mt-3" role="presentation">
-            <button class="nav-link" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="false">Lịch sử đặt vé</button>
+            <button class="nav-link @(activeTab == "membership-points" ? "active" : "")" id="membership-points-tab" data-bs-toggle="tab" data-bs-target="#membership-points" type="button" role="tab" aria-controls="membership-points" aria-selected="@(activeTab == "membership-points")">Điểm VHD</button>
         </li>
         <li class="nav-item mt-3" role="presentation">
-            <button class="nav-link" id="coupon-usage-history-tab" data-bs-toggle="tab" data-bs-target="#coupon-usage-history" type="button" role="tab" aria-controls="coupon-usage-history" aria-selected="false">Lịch sử sử dụng mã giảm giá</button>
+            <button class="nav-link @(activeTab == "change-password" ? "active" : "")" id="change-password-tab" data-bs-toggle="tab" data-bs-target="#change-password" type="button" role="tab" aria-controls="change-password" aria-selected="@(activeTab == "change-password")">Đổi mật khẩu</button>
+        </li>
+        <li class="nav-item mt-3" role="presentation">
+            <button class="nav-link @(activeTab == "booking-history" ? "active" : "")" id="booking-history-tab" data-bs-toggle="tab" data-bs-target="#booking-history" type="button" role="tab" aria-controls="booking-history" aria-selected="@(activeTab == "booking-history")">Lịch sử đặt vé</button>
+        </li>
+        <li class="nav-item mt-3" role="presentation">
+            <button class="nav-link @(activeTab == "coupon-usage-history" ? "active" : "")" id="coupon-usage-history-tab" data-bs-toggle="tab" data-bs-target="#coupon-usage-history" type="button" role="tab" aria-controls="coupon-usage-history" aria-selected="@(activeTab == "coupon-usage-history")">Lịch sử sử dụng mã giảm giá</button>
         </li>
     </ul>
 
     <div class="tab-content mt-3" id="myTabContent">
-        <div class="tab-pane fade show active" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
+        <div class="tab-pane fade @(activeTab == "user-info" ? "show active" : "")" id="user-info" role="tabpanel" aria-labelledby="user-info-tab">
             <EditForm Model="userInfo" OnValidSubmit="UpdateUserInfo" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
                 <div class="mb-4 text-center">
@@ -77,7 +78,7 @@
             </EditForm>
         </div>
 
-        <div class="tab-pane fade" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
+        <div class="tab-pane fade @(activeTab == "change-password" ? "show active" : "")" id="change-password" role="tabpanel" aria-labelledby="change-password-tab">
             <EditForm Model="changePasswordRequest" OnValidSubmit="ChangePassword" class="p-4 bg-white rounded-4 shadow-sm">
                 <DataAnnotationsValidator />
                 <div class="mb-3">
@@ -99,7 +100,7 @@
             </EditForm>
         </div>
 
-        <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
+        <div class="tab-pane fade @(activeTab == "booking-history" ? "show active" : "")" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
             @if (bookingHistory?.Item != null && bookingHistory.Item.Any())
             {
                 <div class="row g-4">
@@ -157,7 +158,7 @@
         </div>
 
 
-        <div class="tab-pane fade" id="coupon-usage-history" role="tabpanel" aria-labelledby="coupon-usage-history-tab">
+        <div class="tab-pane fade @(activeTab == "coupon-usage-history" ? "show active" : "")" id="coupon-usage-history" role="tabpanel" aria-labelledby="coupon-usage-history-tab">
             @if (couponUsageHistory?.Item != null && couponUsageHistory.Item.Any())
             {
                 <div class="row g-3">
@@ -183,7 +184,7 @@
             }
         </div>
 
-        <div class="tab-pane fade" id="membership-points" role="tabpanel" aria-labelledby="membership-points-tab">
+        <div class="tab-pane fade @(activeTab == "membership-points" ? "show active" : "")" id="membership-points" role="tabpanel" aria-labelledby="membership-points-tab">
             <div class="p-4 bg-white rounded-4 shadow-sm">
                 <h3 class="text-primary">Điểm VHD</h3>
                 <p>Bạn hiện có <strong>@membershipPoints</strong> điểm VHD.</p>
@@ -199,6 +200,7 @@
 
 @code {
     private AccountUpdateRequest userInfo = new AccountUpdateRequest();
+    private string activeTab = "user-info";
     private string? _directoryPath { get; set; }
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
     private PageList<BillsDto>? bookingHistory;
@@ -209,6 +211,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("tab", out var tab))
+        {
+            activeTab = tab;
+        }
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 

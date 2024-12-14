@@ -23,44 +23,47 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 
         public async Task<PageList<ScheduleDto>> GetAllPagingAsync(string? filmName, DateTime? startDate, DateTime? endDate, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
-            startDate ??= DateTime.Now;
-            endDate ??= DateTime.Now;
-            var checkSchedules = _dbContext.Schedules.ToList();
-            foreach (var item in checkSchedules)
+
+            var query = from schedule in _dbContext.Schedules
+                        join film in _dbContext.Films on schedule.FilmId equals film.Id
+                        select new ScheduleDto
+                        {
+                            Id = schedule.Id,
+                            FilmId = schedule.FilmId,
+                            StartDate = schedule.StartDate,
+                            EndDate = schedule.EndDate,
+                            Type = schedule.Type,
+                            Status = schedule.Status,
+                            FilmName = film.Name,
+                            FilmReleaseDate = film.StartDate
+                        };
+
+
+            if (!string.IsNullOrEmpty(filmName))
             {
-                if (item.EndDate.Date < DateTime.Now.Date)
-                {
-                    item.Status = Domain.Enums.ScheduleStatus.Ended;
-                }
-                else if (item.StartDate.Date >= DateTime.Now.Date || DateTime.Now.Date <= item.EndDate)
-                {
-                    item.Status = Domain.Enums.ScheduleStatus.Showing;
-                }
+                query = query.Where(s => s.FilmName.Contains(filmName));
             }
-            _dbContext.Schedules.UpdateRange(checkSchedules);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            var scheduleDtos = from schedule in _dbContext.Schedules
-                               join film in _dbContext.Films on schedule.FilmId equals film.Id
-                               where (string.IsNullOrEmpty(filmName) || film.Name.Contains(filmName)) &&
-                                      schedule.StartDate >= startDate &&
-                                      schedule.EndDate <= endDate
-                               select new ScheduleDto
-                               {
-                                   Id = schedule.Id,
-                                   FilmId = schedule.FilmId,
-                                   StartDate = schedule.StartDate,
-                                   EndDate = schedule.EndDate,
-                                   Type = schedule.Type,
-                                   Status = schedule.Status,
-                                   FilmName = film.Name
-                               };
-            int count = await scheduleDtos.CountAsync(cancellationToken);
-            var data = await scheduleDtos.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(s => s.StartDate >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(s => s.EndDate <= endDate.Value);
+            }
+
+            var count = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
                 .Take(pagingParameters.PageSize)
-                .AsNoTracking()
                 .ToListAsync(cancellationToken);
-            return new PageList<ScheduleDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+
+            return new PageList<ScheduleDto>(items, count, pagingParameters.PageNumber, pagingParameters.PageSize);
         }
+
 
         public async Task<IQueryable<ScheduleDto>> GetAllAsync()
         {
