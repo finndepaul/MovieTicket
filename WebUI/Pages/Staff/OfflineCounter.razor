@@ -82,7 +82,7 @@
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="bill" role="tabpanel" aria-labelledby="bills-tab">
             <h3 class="text-success">Hóa đơn</h3>
-            <BillList Id="@CinemaCenterId" />
+            
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="printTicket" role="tabpanel" aria-labelledby="print-tab">
             <h3 class="text-success">In vé</h3>
@@ -106,13 +106,14 @@
                 OnSeatSelectionOfflineCounter="HandleSelectedSeats" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
-				<WebUI.Pages.Staff.SeatFooter ShowtimeId="@ShowTimeId"
+				<WebUI.Pages.Staff.SeatFooter 
+                ShowtimeId="@ShowTimeId"
 				SeatDTOs="lstSeats"
-				
 				SeatsSelectedstr="@SeatsSelectedstr"
 				TotalTicket="@TotalTicket"
 				NextToComboOfflineCounter="OpenComboSelectionModal"
-				BackToShowtimeOfflineCounter="CloseSeatSelectionModal" />
+				BackToShowtimeOfflineCounter="CloseSeatSelectionModal"
+                @ref="seatFooterRef" />
 			</div>
 		</div>
 	</div>
@@ -154,18 +155,29 @@
                 <button type="button" class="btn-close" @onclick="() => CloseDiscount()" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-                <WebUI.Pages.Staff.DiscountSelectionModal />
+                <WebUI.Pages.Staff.DiscountSelectionModal 
+                BillId="@BillId"
+                @ref="DiscountSelectionModalRef"
+                OpenDiscount="OpenDiscount"
+                OnAppliedDiscount="HandleAppliedDiscount"
+                Mempoint="HandleMembershipPoint"
+                TimerOutDiscount="HandleTimerOutDiscount"
+                Method="SelectedPaymenMethod"/>
 			</div>
             <div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
-                <WebUI.Pages.Staff.DiscountFooter ShowtimeId="@ShowTimeId"
-				CheckedSeats="lstCheckedSeats"
-				SeatsSelectedstr="@SeatsSelectedstr"
-				TotalCombo="@TotalCombo"
-				TotalMoney="@TotalMoney"
-				TotalTicket="@TotalTicket"
-				BillId="@BillId"
-				
-				BackToSeatOfflineCounter="CancelCheckout" />
+                <WebUI.Pages.Staff.DiscountFooter 
+                ShowtimeId="@ShowTimeId"
+                CheckedSeats="lstCheckedSeats"
+                SeatsSelectedstr="@SeatsSelectedstr"
+                TotalCombo="@TotalCombo"
+                TotalMoney="@TotalMoney"
+                TotalTicket="@TotalTicket"
+                Discount="@Discount"
+                BillId="@BillId"
+                Mempoint="@mempoint"
+                @ref="DiscountFooterRef"
+                BackToSeat="CancelCheckout"
+                SelectedMethod="@SelectedMethod"/>
 			</div>
 		</div>
 	</div>
@@ -418,14 +430,19 @@
     private List<ComboRequest> lstSelectedCombos = new();
     public SeatSelectionModal seatSelectionModalref;
     public ComboSelectionModal comboSelectionModalref;
+    public DiscountSelectionModal DiscountSelectionModalRef;
     private Guid BillId = Guid.Empty;
     public SeatFooter seatFooterRef;
     public ComboFooter comboFooterRef;
+    public DiscountFooter DiscountFooterRef;
     private string SeatsSelectedstr;
     private decimal TotalTicket;
     private decimal TotalCombo = 0;
     private decimal TotalMoney = 0;
     private decimal Discount;
+    private bool OpenDiscount = false;
+    private int mempoint;
+    private string SelectedMethod;
 
     public class EventCallbackOfflineCounterArgs
     {
@@ -441,6 +458,7 @@
         public List<SeatDTO> lstCheckedSeat { get; set; }
         public List<ComboRequest> _lstCombo = new();
         public ComboCheckRequest ComboCheckRequest { get; set; }
+        public bool NextToDiscount { get; set; }
     }
 
     protected override async Task OnInitializedAsync()
@@ -558,13 +576,7 @@
         await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
         await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
     }
-    private async Task OpenDiscountModal(EventCallbackOfflineCounterArgs args)
-    {
-        Task.Delay(1000);
-        
-        await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
-        await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
-    }
+
     private async Task CancelCheckout(Guid id)
     {
         await seatSelectionModalref.Reset();
@@ -585,4 +597,37 @@
     {
         await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
     }
+    private async Task OpenDiscountModal(EventCallbackOfflineCounterArgs args)
+    {   
+        await DiscountSelectionModalRef.Reset();
+        OpenDiscount = args.NextToDiscount;
+        await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
+        await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
+    }
+
+    private async Task HandleMembershipPoint(int point)
+    {
+        mempoint = point;
+        StateHasChanged();
+    }
+
+    private void HandleAppliedDiscount(EventCallbackOfflineCounterArgs args)
+    {
+        Discount = args.Discount;
+        TotalMoney = TotalTicket + TotalCombo + Discount;
+        StateHasChanged();
+    }
+
+    private async Task HandleTimerOutDiscount()
+    {
+        await JSRuntime.InvokeVoidAsync("alert", "Hết thời gian");
+        await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
+        NavigationManager.Refresh();
+    }
+    private async Task SelectedPaymenMethod(string s)
+    {
+        SelectedMethod = s;
+        StateHasChanged();
+    }
+    
 }

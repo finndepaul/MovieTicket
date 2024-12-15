@@ -79,6 +79,7 @@
 	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
 	[Parameter] public int Mempoint { get; set; }
+	[Parameter] public string SelectedMethod { get; set; }
 	private EventCallbackHomeArgs args = new();
 	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
@@ -118,42 +119,36 @@
 	}
 	private async Task PreSelection()
 	{
-		if(location != null && location == "Home")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeat.InvokeAsync(ShowtimeId);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatCinemaSystem.InvokeAsync(ShowtimeId);
-		}
-        else if (location != null && location == "OfflineCounter")
-        {
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
-        }
-		
+		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+		await BackToSeat.InvokeAsync(ShowtimeId);
 	}
 	private async Task Checkout()
 	{
-		var bill = await UserHomeService.GetBillForCheckOut(BillId);
-		PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
-		"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
-		ItemData itemData = new ItemData(bill.FilmName, 1, Convert.ToInt32(bill.AfterDiscount));
-		List<ItemData> lstItemDatas = new List<ItemData>();
-		lstItemDatas.Add(itemData);
-		PaymentData paymentData = new PaymentData
-		(
-			bill.BillCode,
-			Convert.ToInt32(bill.AfterDiscount),
-			"VHD Cinema",
-			lstItemDatas,
-			$"https://localhost:7239/check-out-failed/{BillId}",
-			$"https://localhost:7239/check-out-success/{BillId}&{Mempoint}"
-		);
-		CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
-		NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
+		if (SelectedMethod == "qr")
+		{
+			var bill = await UserHomeService.GetBillForCheckOut(BillId);
+			PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
+			"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
+			ItemData itemData = new ItemData(bill.FilmName, 1, Convert.ToInt32(bill.AfterDiscount));
+			List<ItemData> lstItemDatas = new List<ItemData>();
+			lstItemDatas.Add(itemData);
+			PaymentData paymentData = new PaymentData
+			(
+				bill.BillCode,
+				Convert.ToInt32(bill.AfterDiscount),
+				"VHD Cinema",
+				lstItemDatas,
+				$"https://localhost:9999/check-out-failed/{BillId}",
+				$"https://localhost:9999/check-out-success/{BillId}&{Mempoint}"
+			);
+			CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+			NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
+		}
+		else if (SelectedMethod == "cash")
+        {
+            await BillService.UpdateStatusAsync(BillId, BillStatus.Paid);
+			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+        }
 	}
 	public Task Reset()
 	{
@@ -166,5 +161,15 @@
 		Discount = 0;
 		StateHasChanged();
         return Task.CompletedTask;
+	}
+
+	public async void ShowCloseConfirmation()
+	{
+		bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận thanh toán?");
+
+		if (confirmed)
+		{
+			await Checkout();
+		}
 	}
 }

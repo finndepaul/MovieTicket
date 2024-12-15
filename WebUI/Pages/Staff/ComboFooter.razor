@@ -76,11 +76,7 @@
 	[Parameter] public decimal TotalTicket { get; set; }
 	[Parameter] public decimal TotalCombo { get; set; }
 	[Parameter] public decimal TotalMoney { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatModal { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatModalCinemaSystem { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToDiscountModalCinemaSystem { get; set; }
 	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToDiscountOfflineCounter { get; set; }
 	private EventCallbackHomeArgs args = new();
 	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
@@ -128,21 +124,8 @@
 
 	public async Task PreSelection()
 	{
-		if (location != null && location == "Home")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatModal.InvokeAsync(ShowtimeId);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatModalCinemaSystem.InvokeAsync(ShowtimeId);
-		}
-		else if (location != null && location == "OfflineCounter")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
-		}
+		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+		await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
 	}
 
 	private async Task NextSelection()
@@ -154,59 +137,18 @@
 					BillId = BillId,
 					LstCombos = SelectedCombos,
 				};
-			var result = await UserHomeService.AddComboToCheckAsync(billCombo, cancellationToken);
-			if (location == "CinemaSystem")
-			{
-				argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                    {
-						BillId = BillId,
-						MembershipId = MembershipId
-                    };
-			}
-			else if (location == "OfflineCounter")
-			{
-				argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                    {
-						BillId = BillId
-                    };
-			}
-			else if (location == "Home")
-			{
-				args = new EventCallbackHomeArgs
-                    {
-						BillId = BillId,
-						MembershipId = MembershipId
-                    };
-
-			}
-		}
-		if (location == "Home")
-		{
-			args = new EventCallbackHomeArgs
-				{
-					BillId = BillId,
-					MembershipId = MembershipId,
-					NextToDiscount = true
-				};
-			await NextToDiscount.InvokeAsync(args);
-		}
-		else if (location == "CinemaSystem")
-		{
-			argsCinemaSystem = new EventCallbackCinemaSystemArgs
-				{
-					BillId = BillId,
-					MembershipId = MembershipId
-				};
-			await NextToDiscountModalCinemaSystem.InvokeAsync(argsCinemaSystem);
-        }
-        else if (location == "OfflineCounter")
-        {
-            argsOfflineCounter = new EventCallbackOfflineCounterArgs
+			var result = await UserHomeService.AddComboToCheckAsync(billCombo, cancellationToken); 
+			argsOfflineCounter = new EventCallbackOfflineCounterArgs
                 {
-                    BillId = BillId
+					BillId = BillId
                 };
-            await NextToDiscountOfflineCounter.InvokeAsync(argsOfflineCounter);
-        }
+		}
+        argsOfflineCounter = new EventCallbackOfflineCounterArgs
+            {
+                BillId = BillId,
+				NextToDiscount = true
+            };
+        await NextToDiscountOfflineCounter.InvokeAsync(argsOfflineCounter);
 	}
 
 	public Task Reset()

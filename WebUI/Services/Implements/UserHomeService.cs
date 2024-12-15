@@ -1,8 +1,8 @@
 ﻿using MovieTicket.Application.DataTransferObjs.Bill;
 using MovieTicket.Application.DataTransferObjs.UserHome;
 using MovieTicket.Application.DataTransferObjs.UserHome.Requests;
-using WebUI.Services.Interfaces;
 using System.Net.Http.Json;
+using WebUI.Services.Interfaces;
 
 namespace WebUI.Services.Implements
 {
@@ -81,6 +81,11 @@ namespace WebUI.Services.Implements
         public async Task SendMailForCheckOutAsync(Guid billId, CancellationToken cancellationToken)
         {
             var result = await _http.GetAsync($"api/EmailSender/SendMailForCheckOut?billId={billId}", cancellationToken);
+        }
+
+        public async Task UpdateCheckMembershipIdAsync(Guid billId, Guid membershipId, CancellationToken cancellationToken)
+        {
+            var result = await _http.PutAsJsonAsync($"api/UserHome/UpdateCheckMembershipId?billId={billId}&membershipId={membershipId}", new { billId, membershipId }, cancellationToken);
         }
     }
 }

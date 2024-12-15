@@ -176,7 +176,10 @@ else
 				<button type="button" class="btn-close" @onclick="() => ShowCloseConfirmation()" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="background-color: #fdfcf0;height:70%">
-				<SeatSelectionModal @ref="seatSelectionModalref" ShowtimeId="@ShowTimeId" OnSeatSelection="HandleSelectedSeats" />
+				<SeatSelectionModal 
+					@ref="seatSelectionModalref" 
+					ShowtimeId="@ShowTimeId" 
+					OnSeatSelection="HandleSelectedSeats" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:20%; background-color:#031529;color:#fff">
 				<SeatFooter ShowtimeId="@ShowTimeId"
@@ -198,7 +201,10 @@ else
 				<h4 class="modal-title">Chọn Combo</h4>
 			</div>
 			<div class="modal-body" style="height:70%">
-				<ComboSelectionModal @ref="comboSelectionModalref" BillId="@BillId" OnComboSelection="HandleSelectedCombos" />
+				<ComboSelectionModal 
+					@ref="comboSelectionModalref" 
+					BillId="@BillId" 
+					OnComboSelection="HandleSelectedCombos" />
 			</div>
 			<div class="modal-footer" style="width:100%;height:20%;background-color:#031529;color:#fff">
 				<ComboFooter ShowtimeId="@ShowTimeId"
@@ -503,7 +509,7 @@ else
 	private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
 	private List<ComboRequest> lstSelectedCombos = new();
 	private string IdFilm;
-	private string filmName { get; set; }
+	private string filmName { get; set; }     
 	private Guid ShowTimeId;
 	public SeatSelectionModal seatSelectionModalref;
 	public ComboSelectionModal comboSelectionModalref;
@@ -551,6 +557,13 @@ else
 		{
 			lstBanner = banners.Where(b => b.Status == BannerStatus.Active).ToList();
 		}
+		var AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+		var getUserId = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		var userRole = AuthenState.User.FindFirst(ClaimTypes.Role)?.Value;
+        if (userRole == "Staff")
+        {
+            NavigationManager.NavigateTo("/offline-counter");
+		}
 		await DeletePendingBill();
 		base.OnInitialized();
 	}
@@ -582,7 +595,8 @@ else
 	{
 		var AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
 		var getUserId = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-		if(getUserId!=null)
+        var userRole = AuthenState.User.FindFirst(ClaimTypes.Role)?.Value;
+		if(getUserId!=null && userRole=="User")
 		{
 			var userId = Guid.Parse(getUserId);
 			if (userId != Guid.Empty)

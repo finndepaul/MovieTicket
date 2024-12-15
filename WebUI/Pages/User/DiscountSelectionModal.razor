@@ -149,7 +149,6 @@
 				<button class="ms-2 btn btn-success" disabled="@IsDiscountCodeUsed" @onclick="UseVHDPoints">Xác nhận</button>
 			</div>
 		</div>
-		<AuthorizeView Roles="Staff">
 			<div class="section-title">Membership</div>
 			<div class="row mb-3" disabled="@memberCheck">
 				<div class="col">
@@ -159,7 +158,6 @@
 					<button class="btn btn-primary" @onclick="() => SearchMembershipByPhone(phone)">Tìm</button>
 				</div>
 			</div>
-		</AuthorizeView>
 
 		<!-- Bước 3: Hình thức thanh toán -->
 		<div class="section-title">HÌNH THỨC THANH TOÁN</div>
