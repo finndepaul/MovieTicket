@@ -1,5 +1,3 @@
-@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
 @using static WebUI.Pages.Home
 
 @if (lstCombo == null)
@@ -49,11 +47,7 @@ else
 @code {
 	[Parameter] public Guid BillId { get; set; }
 	[Parameter] public EventCallback<EventCallbackHomeArgs> OnComboSelection { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> OnComboSelectionCinemaSystem { get; set; }
-	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnComboSelectionOfflineCounter { get; set; }
 	public EventCallbackHomeArgs args = new();
-	public EventCallbackCinemaSystemArgs argsCinemaSystem = new();
-	public EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private List<ComboDto> lstCombo = new List<ComboDto>();
 	private Dictionary<Guid, int> comboQuantities = new();
 	private List<ComboRequest> lstComboSelected = new List<ComboRequest>();
@@ -88,11 +82,9 @@ else
 		}
 		if (comboQuantities[comboId] >= 4)
 		{
-			return; // Dừng tăng số lượng
+			return;
 		}
 		comboQuantities[comboId]++;
-
-		// Cập nhật lstComboSelected
 		var existingItem = lstComboSelected.FirstOrDefault(x => x.ComboId == comboId);
 		if (existingItem != null)
 		{
@@ -102,31 +94,12 @@ else
 		{
 			lstComboSelected.Add(new ComboRequest { ComboId = comboId, Quantity = comboQuantities[comboId] });
 		}
-		if(location != null && location == "Home"){
-			args = new EventCallbackHomeArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-			await OnComboSelection.InvokeAsync(args);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                {
-                    _lstCombo = lstComboSelected,
-                    TotalCombo = CalculateTotal()
-                };
-			await OnComboSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
-		}
-		else if(location != null && location == "OfflineCounter"){
-			argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                {
-                    _lstCombo = lstComboSelected,
-                    TotalCombo = CalculateTotal()
-                };
-		}
-		// Làm mới giao diện ngay lập tức
+		args = new EventCallbackHomeArgs
+			{
+				_lstCombo = lstComboSelected,
+				TotalCombo = CalculateTotal()
+			};
+		await OnComboSelection.InvokeAsync(args);
 		StateHasChanged();
 	}
 
@@ -140,8 +113,6 @@ else
 		{
 			comboQuantities[comboId] = 0;
 		}
-
-		// Cập nhật lstComboSelected
 		var existingItem = lstComboSelected.FirstOrDefault(x => x.ComboId == comboId);
 		if (existingItem != null)
 		{
@@ -154,33 +125,12 @@ else
 				existingItem.Quantity = comboQuantities[comboId];
 			}
 		}
-		if (location != null && location == "Home")
-		{
-			args = new EventCallbackHomeArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-			await OnComboSelection.InvokeAsync(args);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			argsCinemaSystem = new EventCallbackCinemaSystemArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-			await OnComboSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
-		}
-		else if (location != null && location == "OfflineCounter")
-		{
-			argsOfflineCounter = new EventCallbackOfflineCounterArgs
-				{
-					_lstCombo = lstComboSelected,
-					TotalCombo = CalculateTotal()
-				};
-		}
-		// Làm mới giao diện ngay lập tức
+		args = new EventCallbackHomeArgs
+			{
+				_lstCombo = lstComboSelected,
+				TotalCombo = CalculateTotal()
+			};
+		await OnComboSelection.InvokeAsync(args);
 		StateHasChanged();
 	}
 
@@ -194,6 +144,4 @@ else
 		}
 		return totalCombo;
 	}
-
-
 }

@@ -1,6 +1,4 @@
 ﻿@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
-@using static WebUI.Pages.Home
 <div class="container-fluid">
 	<div class="row">
 		<div class="col align-self-center" style="width:10%">
@@ -78,8 +76,7 @@
 	[Parameter] public decimal TotalMoney { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
 	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToDiscountOfflineCounter { get; set; }
-	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();

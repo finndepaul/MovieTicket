@@ -11,7 +11,7 @@
 	background-color: #fff;
 	}
 	.mem-search	{
-	max-width: 960px;
+	width: 960px;
 	margin: auto;
 	}
 	.container-payment {
@@ -120,7 +120,7 @@
 <div class="memSearch">
 	<div class="input-group mb-3">
 		<input type="text" class="form-control" placeholder="Số điện thoại" aria-describedby="button-addon2" @bind-value="memPhone">
-		<button class="btn btn-outline-secondary" type="button" @onclick="()=> SearchMembershipByPhone(memPhone)">Tìm kiếm</button>
+		<button class="btn btn-primary" type="button" @onclick="()=> SearchMembershipByPhone(memPhone)">Tìm kiếm</button>
 	</div>
 	@if (!String.IsNullOrEmpty(errorMessage))
 	{
@@ -137,8 +137,7 @@
 		@if(accountDto!=null){
 			<div class="memInfo">
 				<div class="memName">
-					<div>Thành viên:</div>
-					<div>@accountDto.Name</div>
+					<div>Thành viên: @accountDto.Name</div>
 				</div>
 				<div class="memPoint">
 					<div>Điểm hiện tại: @CurrentPoints</div>
@@ -339,16 +338,19 @@
 			errorMessage = "Số điện thoại chỉ được chứa chữ số!";
 			return;
 		}
-		var acc = await AccountService.GetAllAsync();
-		var mem = acc.FirstOrDefault(x => x.Phone == phone);
-		if (mem == null)
+		var listAccounts = await AccountService.GetAllAsync();
+		var account = listAccounts.FirstOrDefault(x => x.Phone == phone);
+		if (account == null)
 		{
 			errorMessage = "Không tìm thấy thành viên!";
 			return;
 		}
-		accountDto = mem;
-		CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(accountDto.Id, cancellationToken);
-		await UserHomeService.UpdateCheckMembershipIdAsync(BillId, accountDto.Id, cancellationToken);
+		else
+		{
+			accountDto = account;
+			CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(account.Id, cancellationToken);
+			await UserHomeService.UpdateCheckMembershipIdAsync(BillId, memPhone, cancellationToken);
+		}
 	}
 
 	private async void HandlePaymentMethodChange(ChangeEventArgs e)

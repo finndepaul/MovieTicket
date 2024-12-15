@@ -1,5 +1,4 @@
 ﻿@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
 @using static WebUI.Pages.Home
 
 <div class="container-fluid">
@@ -76,12 +75,9 @@
 	[Parameter] public decimal Discount { get; set; }
 	[Parameter] public ComboCheckRequest BillCombo { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
 	[Parameter] public int Mempoint { get; set; }
+
 	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
-	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -118,22 +114,8 @@
 	}
 	private async Task PreSelection()
 	{
-		if(location != null && location == "Home")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeat.InvokeAsync(ShowtimeId);
-		}
-		else if (location != null && location == "CinemaSystem")
-		{
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatCinemaSystem.InvokeAsync(ShowtimeId);
-		}
-        else if (location != null && location == "OfflineCounter")
-        {
-			await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-			await BackToSeatOfflineCounter.InvokeAsync(ShowtimeId);
-        }
-		
+		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+		await BackToSeat.InvokeAsync(ShowtimeId);
 	}
 	private async Task Checkout()
 	{
