@@ -30,7 +30,12 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             {
                 var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == membership.Id);
                 var point = bill.TotalMoney.Value * (decimal)0.03;
-                member.Point = (int)(point + 0.5m) / 1000; // 3% giá trị hóa đơn
+                decimal totalPoint = point / 1000;
+                int roundedPoint = (int)(totalPoint - Math.Floor(totalPoint) == 0.5m
+                                         ? Math.Floor(totalPoint)
+                                         : Math.Round(totalPoint, MidpointRounding.AwayFromZero));
+
+                member.Point += roundedPoint; // 3% giá trị hóa đơn
                 _context.Memberships.Update(member);
             }
             // Sử dụng điểm thành viên VHD
