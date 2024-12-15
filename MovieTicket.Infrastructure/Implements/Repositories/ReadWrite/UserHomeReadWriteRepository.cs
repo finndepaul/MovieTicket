@@ -19,6 +19,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         public async Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken)
         {
             var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == request.BillId, cancellationToken);
+            var membership = await _context.Memberships.FirstOrDefaultAsync(x => x.AccountId == bill.AccountId, cancellationToken);
             if (bill == null)
             {
                 return "Bill not found";
@@ -27,15 +28,17 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             // Cộng điểm thành viên cho khách
             if (bill.TotalMoney == bill.AfterDiscount) // Nếu không sử dụng mã giảm giá thì mới đc công điểm
             {
-                var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId);
+                var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == membership.Id);
                 var point = bill.TotalMoney.Value * (decimal)0.03;
                 member.Point = (int)(point + 0.5m) / 1000; // 3% giá trị hóa đơn
                 _context.Memberships.Update(member);
             }
+            // Sử dụng điểm thành viên VHD
             if (request.MembershipPoint > 0)
             {
-                var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId);
-                member.Point = member.Point - request.MembershipPoint;
+                var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == membership.Id);
+                member.Point -= request.MembershipPoint;
+                bill.MembershipId = member.Id;
                 _context.Memberships.Update(member);
             }
             _context.Bills.Update(bill);
@@ -56,7 +59,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 var bill = new Bill
                 {
                     Id = Guid.NewGuid(),
-                    MembershipId = request.AccountId,
+                    AccountId = (Guid)request.AccountId,
                     CouponId = null,
                     TotalMoney = total,
                     AfterDiscount = total,
@@ -92,14 +95,20 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 return "Error: " + ex.Message;
             }
         }
-        public async Task<string> UpdateCheckMembershipIdAsync(Guid billId, Guid accountId, CancellationToken cancellationToken)
+        public async Task<string> UpdateCheckMembershipIdAsync(Guid billId, string sdt, CancellationToken cancellationToken)
         {
+            var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Phone == sdt, cancellationToken);
+            if (account == null)
+            {
+                return "Không tìm thấy tài khoản thành viên";
+            }
+            var membership = await _context.Memberships.FirstOrDefaultAsync(x => x.AccountId == account.Id, cancellationToken);
             var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == billId, cancellationToken);
             if (bill == null)
             {
                 return "Bill not found";
             }
-            bill.MembershipId = accountId;
+            bill.MembershipId = membership.Id;
             _context.Bills.Update(bill);
             await _context.SaveChangesAsync(cancellationToken);
             return "Success";
@@ -199,7 +208,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                 }
                 if (request.Point > 0)
                 {
-                    var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId, cancellationToken);
+                    var member = await _context.Memberships.FirstOrDefaultAsync(x => x.AccountId == bill.AccountId, cancellationToken);
                     if (request.Point > member.Point) return "Điểm tích lũy không đủ";
                     if (request.Point < 10) return "Phải sử dụng tối thiêu 10 VHD Point";
                     bill.AfterDiscount = bill.AfterDiscount - ((decimal)request.Point * 1000);

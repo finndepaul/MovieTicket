@@ -82,7 +82,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         public async Task<PageList<CouponDto>> GetUserCouponUsageHistoryAsync(Guid userId, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
             var query = _context.Bills
-                .Where(b => b.Membership.Account.Id == userId && b.CouponId != null)
+                .Where(b => b.Account.Id == userId && b.CouponId != null)
                 .Select(b => new CouponDto
                 {
                     CouponCode = b.Coupon.CouponCode,

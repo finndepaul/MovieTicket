@@ -175,14 +175,9 @@
 	[Parameter] public Guid MembershipId { get; set; }
 	[Parameter] public bool OpenDiscount {get;set;}
 	[Parameter] public EventCallback<int> Mempoint { get; set; }
-	[Parameter] public EventCallback<int> MempointCS { get; set; }
 	[Parameter] public EventCallback TimerOutDiscount { get; set; }
 	[Parameter] public EventCallback<EventCallbackHomeArgs> OnAppliedDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> OnAppliedDiscountCinemaSystem { get; set; }
-	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnAppliedDiscountOfflineCounter { get; set; }
 	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
-	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private string CouponCode { get; set; } = string.Empty;
 	private int VHDPoints { get; set; } = 0;
 	private int CurrentPoints { get; set; } // Ví dụ: điểm hiện tại là 100
@@ -237,24 +232,12 @@
 				IsDiscountCodeUsed = true;
 				IsVHDUsed = false;
 				memberCheck = false;
-				if (location == "Home")
-				{
-					args = new EventCallbackHomeArgs
-						{
-							Discount = await CalculateDiscount()
-						};
-					await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-					await OnAppliedDiscount.InvokeAsync(args);
-				}
-				else if (location == "CinemaSystem")
-				{
-					argsCinemaSystem = new EventCallbackCinemaSystemArgs
-						{
-							Discount = await CalculateDiscount()
-						};
-					await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-					await OnAppliedDiscountCinemaSystem.InvokeAsync(argsCinemaSystem);
-				}
+				args = new EventCallbackHomeArgs
+					{
+						Discount = await CalculateDiscount()
+					};
+				await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
+				await OnAppliedDiscount.InvokeAsync(args);
 				StateHasChanged();
 			}
 		}
@@ -278,26 +261,13 @@
 			IsVHDUsed = true;
 			IsDiscountCodeUsed = false;
 			memberCheck = false;
-			if (location == "Home")
-			{
-				args = new EventCallbackHomeArgs
-					{
-						Discount = await CalculateDiscount()
-					};
-				await JSRuntime.ToastrSuccess("Áp dụng điểm thành công!");
-				await Mempoint.InvokeAsync(VHDPoints);
-				await OnAppliedDiscount.InvokeAsync(args);
-			}
-			else if (location == "CinemaSystem")
-			{
-				argsCinemaSystem = new EventCallbackCinemaSystemArgs
-					{
-						Discount = await CalculateDiscount()
-					};
-				await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-				await OnAppliedDiscountCinemaSystem.InvokeAsync(argsCinemaSystem);
-			}
-			
+			args = new EventCallbackHomeArgs
+				{
+					Discount = await CalculateDiscount()
+				};
+			await JSRuntime.ToastrSuccess("Áp dụng điểm thành công!");
+			await Mempoint.InvokeAsync(VHDPoints);
+			await OnAppliedDiscount.InvokeAsync(args);
 		}
 		StateHasChanged();
 	}
