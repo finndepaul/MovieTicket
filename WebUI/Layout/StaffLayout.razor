@@ -132,7 +132,7 @@
 </style>
 
 @code {
-	private string CinemaCenterName;
+    private string CinemaCenterName { get; set; }
 	private AccountDto accountDto = new();
 
 	protected override async Task OnInitializedAsync()
@@ -145,7 +145,7 @@
 				accountDto = await AccountService.GetByIdAsync(guidUserId);
 			};
 		}
-        var cinemaCenter = await CinemaCenterService.GetCinemaCenterById((Guid)accountDto.CinemaCenterId);
+        var cinemaCenter = await CinemaCenterService.GetCinemaCenterById(accountDto.CinemaCenterId.Value);
         CinemaCenterName = cinemaCenter.Data.Name;
 	}
 	private void NavigationLogout()

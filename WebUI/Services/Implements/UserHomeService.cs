@@ -83,9 +83,9 @@ namespace WebUI.Services.Implements
             var result = await _http.GetAsync($"api/EmailSender/SendMailForCheckOut?billId={billId}", cancellationToken);
         }
 
-        public async Task UpdateCheckMembershipIdAsync(Guid billId, Guid membershipId, CancellationToken cancellationToken)
+        public async Task UpdateCheckMembershipIdAsync(Guid billId, string sdt, CancellationToken cancellationToken)
         {
-            var result = await _http.PutAsJsonAsync($"api/UserHome/UpdateCheckMembershipId?billId={billId}&membershipId={membershipId}", new { billId, membershipId }, cancellationToken);
+            var result = await _http.PutAsJsonAsync($"api/UserHome/UpdateCheckMembershipId?billId={billId}&sdt={sdt}", new { billId, sdt }, cancellationToken);
         }
     }
 }
