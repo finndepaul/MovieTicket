@@ -68,7 +68,7 @@
 @code {
 	[Parameter] public Guid ShowtimeId { get; set; }
 	[Parameter] public Guid BillId { get; set; }
-	[Parameter] public Guid MembershipId { get; set; }
+	[Parameter] public Guid AccountId { get; set; }
 	[Parameter] public List<SeatDTO> CheckedSeats { get; set; }
 	[Parameter] public List<ComboRequest> SelectedCombos { get; set; }
 	[Parameter] public string SeatsSelectedstr { get; set; }
@@ -141,14 +141,14 @@
 			args = new EventCallbackHomeArgs
                 {
 					BillId = BillId,
-					MembershipId = MembershipId
+					AccountId = AccountId
                 };
 			
 		}
 		args = new EventCallbackHomeArgs
 			{
 				BillId = BillId,
-				MembershipId = MembershipId,
+				AccountId = AccountId,
 				NextToDiscount = true
 			};
 		await NextToDiscount.InvokeAsync(args);
