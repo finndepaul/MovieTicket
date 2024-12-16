@@ -114,7 +114,7 @@
 </style>
 
 <div class="d-flex container-payment p-3">
-	<Countdown @ref="timer" BillId="BillId" TimerOut="TimerOutCallback" />
+
 	<div class="payment-container">
 		<!-- Bước 1: Giảm giá -->
 		<div class="section-title d-flex justify-content-between">
@@ -159,6 +159,7 @@
 			</div>
 		</div>
 	</div>
+	<Countdown @ref="timer" BillId="BillId" TimerOut="TimerOutCallback" />
 </div>
 
 @code {
