@@ -43,7 +43,7 @@
 				<br />
 				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
 				<br />
-				<label class="me-2">Combo:</label>
+				<label class="me-2">Phí dịch vụ:</label>
 				<br />
 				<span class="fw-bold">@TotalCombo.ToString("#,##0") VND</span>
 			</div>
@@ -119,7 +119,7 @@
 	}
 	private async Task Checkout()
 	{
-		if (SelectedMethod == "qr")
+		if(SelectedMethod == "qr")
 		{
 			var bill = await UserHomeService.GetBillForCheckOut(BillId);
 			PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
@@ -139,7 +139,7 @@
 			CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 			NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
 		}
-		else if (SelectedMethod == "cash")
+        else if (SelectedMethod == "cash")
         {
             await BillService.UpdateStatusAsync(BillId, BillStatus.Paid);
 			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
