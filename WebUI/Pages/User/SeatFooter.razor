@@ -62,14 +62,8 @@
 	[Parameter] public string SeatsSelectedstr { get; set; }
 	[Parameter] public decimal TotalTicket { get; set; }
 	[Parameter] public EventCallback<Guid> BackToShowtimeModal { get; set; }
-	[Parameter] public EventCallback<Guid> BackToShowtimeCinemaSystem { get; set; }
-    [Parameter] public EventCallback BackToShowtimeOfflineCounter { get; set; }
 	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToComboModal { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToComboModalCinemaSystem { get; set; }
-    [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToComboOfflineCounter{ get; set; }
 	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
-    private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -77,6 +71,7 @@
 	private string formatRating = "";
 	private string today = DateTime.Now.DayOfWeek.ToString();
 	private Guid userId = Guid.Empty;
+    private Guid membershipId = Guid.Empty;
 	private AuthenticationState AuthenState;
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
 	private CreateCheckRequest checkrequest = new();
@@ -103,6 +98,7 @@
 			AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
 			var getUserId = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			userId = Guid.Parse(getUserId);
+            
 			var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
 				{
 					PageNumber = 1,
@@ -129,18 +125,7 @@
 
 	private async Task BackToShowtime()
 	{
-		if(location != null && location == "Home")
-		{
-			await BackToShowtimeModal.InvokeAsync(ShowtimeId);
-        }
-        else if (location != null && location == "CinemaSystem")
-        {
-			await BackToShowtimeCinemaSystem.InvokeAsync(ShowtimeId);
-        }
-        else if (location != null && location == "OfflineCounter")
-        {
-			await BackToShowtimeOfflineCounter.InvokeAsync(argsOfflineCounter);
-        }
+		await BackToShowtimeModal.InvokeAsync(ShowtimeId);
 	}
 
 	private async Task NextToCombo()
@@ -182,44 +167,16 @@
 			checkrequest.ShowTimeId = ShowtimeId;
 			checkrequest.LstSeatAndTicketPrice = lstTicketRequests;
 			string billId = await UserHomeService.CreateCheckAsync(checkrequest, cancellationToken);
-			if(location != null && location == "Home")
+			if (!string.IsNullOrEmpty(billId))
 			{
-				if (!string.IsNullOrEmpty(billId))
-				{
-					args = new EventCallbackHomeArgs
-						{
-							BillId = Guid.Parse(billId),
-							MembershipId = userId
-						};
-				}
-				Console.WriteLine("check");
-				await NextToComboModal.InvokeAsync(args);
+				args = new EventCallbackHomeArgs
+					{
+						BillId = Guid.Parse(billId),
+						MembershipId = userId
+					};
 			}
-			else if (location != null && location == "CinemaSystem")
-			{
-				if(!string.IsNullOrEmpty(billId))
-				{
-                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                        {
-                            BillId = Guid.Parse(billId),
-							MembershipId = userId
-                        };
-				}
-				Console.WriteLine("check");
-				await NextToComboModalCinemaSystem.InvokeAsync(argsCinemaSystem);
-			}
-            else if (location != null && location == "OfflineCounter")
-            {
-                if (!string.IsNullOrEmpty(billId))
-                {
-                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                        {
-                            BillId = Guid.Parse(billId)
-                        };
-                }
-                Console.WriteLine("check");
-                await NextToComboOfflineCounter.InvokeAsync(argsOfflineCounter);
-            }
+			Console.WriteLine("check");
+			await NextToComboModal.InvokeAsync(args);
 		}
 	}
 	private string DayOfTheWeek(string day) //check ngày

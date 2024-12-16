@@ -1,5 +1,3 @@
-@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
 @using static WebUI.Pages.Home
 
 @if (lstCombo == null)
@@ -49,8 +47,6 @@ else
 @code {
 	[Parameter] public Guid BillId { get; set; }
 	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnComboSelectionOfflineCounter { get; set; }
-	public EventCallbackHomeArgs args = new();
-	public EventCallbackCinemaSystemArgs argsCinemaSystem = new();
 	public EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private List<ComboDto> lstCombo = new List<ComboDto>();
 	private Dictionary<Guid, int> comboQuantities = new();

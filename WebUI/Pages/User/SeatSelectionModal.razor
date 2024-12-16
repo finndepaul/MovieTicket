@@ -1,5 +1,3 @@
-@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
 @using static WebUI.Pages.Home
 
 @if (cinemaDto != null)
@@ -83,114 +81,114 @@ else
 
 <style>
     .seat-btn[open] {
-        outline: solid 1px #000;
+    outline: solid 1px #000;
     }
 
     .btn {
-        -webkit-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
     }
 
-        /*.btn:hover {
-            -webkit-transform: scale(1.1);
-        }*/
+    /*.btn:hover {
+    -webkit-transform: scale(1.1);
+    }*/
 
-        .btn.active {
-            background-color: orangered;
-            color: white;
-            outline: none;
-        }
+    .btn.active {
+    background-color: orangered;
+    color: white;
+    outline: none;
+    }
 
     /*[aria-pressed="false"] {
-        outline: solid;
+    outline: solid;
     }*/
 
     .seat-unavailable {
-        display: none;
+    display: none;
     }
 
 
 
     [data-seat-type="Normal"] {
-        background-color: #fff;
-        color: #000;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        outline: solid 3px #005a32 !important;
-        outline-offset: -4px;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #005a32 !important;
+    outline-offset: -4px;
     }
 
     /*[data-seat-status="Normal"]:hover {
-            background-color: #7C4DFF;
-            color: #fff;
-        }*/
+    background-color: #7C4DFF;
+    color: #fff;
+    }*/
 
     [data-seat-type="VIP"] {
-        background-color: #fff;
-        color: #000;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        outline: solid 3px #DD2C00 !important;
-        outline-offset: -4px;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #DD2C00 !important;
+    outline-offset: -4px;
     }
 
     /*[data-seat-status="VIP"]:hover {
-            background-color: #DD2C00;
-            color: #fff;
-        }*/
+    background-color: #DD2C00;
+    color: #fff;
+    }*/
 
     [data-seat-type="Couple"] {
-        background-color: #fff;
-        color: #000;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        outline: solid 3px #fe019a !important;
-        outline-offset: -4px;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #fe019a !important;
+    outline-offset: -4px;
     }
 
     /*[data-seat-status="Couple"]:hover {
-            background-color: #FF8A80;
-            color: #fff;
-        }*/
+    background-color: #FF8A80;
+    color: #fff;
+    }*/
 
     .row {
-        padding: 0px;
-        margin: 0.5rem;
+    padding: 0px;
+    margin: 0.5rem;
     }
 
     .col {
-        padding: 0rem;
-        width: 50px;
-        /*margin-left: 0.25rem;
-        margin-right: 0.25rem;
-        margin-bottom: 0.25rem;
-        margin-top: 0.25rem;*/
+    padding: 0rem;
+    width: 50px;
+    /*margin-left: 0.25rem;
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+    margin-top: 0.25rem;*/
     }
 
     .seat-grid {
-        width: max-content;
+    width: max-content;
     }
 
     .seatInfo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     }
 
     .container-modal {
-        display: grid;
-        justify-content: center;
+    display: grid;
+    justify-content: center;
     }
 
     .detail {
-        display: grid;
-        width: 100%;
+    display: grid;
+    width: 100%;
     }
 
     .selectedSeats {
@@ -200,107 +198,104 @@ else
     }
 
     .checkout {
-        align-content: center;
+    align-content: center;
     }
 
     [data-seat-selection="Checked"] {
-        background-color: #808080 !important;
-        color: #fff;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        cursor: not-allowed !important;
-        pointer-events: none !important;
-        outline: none;
+    background-color: #808080 !important;
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    outline: none;
     }
 
     .seat-Normal {
-        background-color: #fff;
-        color: #000;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        outline: solid 3px #005a32 !important;
-        outline-offset: -4px;
-        cursor: not-allowed;
-        pointer-events: none;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #005a32 !important;
+    outline-offset: -4px;
+    cursor: not-allowed;
+    pointer-events: none;
     }
 
     .seat-VIP {
-        background-color: #fff;
-        color: #000;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        outline: solid 3px #DD2C00 !important;
-        outline-offset: -4px;
-        cursor: not-allowed;
-        pointer-events: none;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #DD2C00 !important;
+    outline-offset: -4px;
+    cursor: not-allowed;
+    pointer-events: none;
     }
 
     .seat-Couple {
-        background-color: #fff;
-        color: #000;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        outline: solid 3px #fe019a !important;
-        outline-offset: -4px;
-        cursor: not-allowed;
-        pointer-events: none;
+    background-color: #fff;
+    color: #000;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    outline: solid 3px #fe019a !important;
+    outline-offset: -4px;
+    cursor: not-allowed;
+    pointer-events: none;
     }
 
     .seat-Checked {
-        background-color: orangered !important;
-        color: orangered;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        cursor: not-allowed !important;
-        pointer-events: none !important;
-        outline: none;
-        cursor: not-allowed;
-        pointer-events: none;
+    background-color: orangered !important;
+    color: orangered;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    outline: none;
+    cursor: not-allowed;
+    pointer-events: none;
     }
 
     .seat-Unavailable {
-        background-color: #808080 !important;
-        color: #fff;
-        width: 45px;
-        height: 45px;
-        margin: 0px;
-        padding: 10px;
-        cursor: not-allowed !important;
-        pointer-events: none !important;
-        outline: none;
-        cursor: not-allowed;
-        pointer-events: none;
+    background-color: #808080 !important;
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    margin: 0px;
+    padding: 10px;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    outline: none;
+    cursor: not-allowed;
+    pointer-events: none;
     }
 
 </style>
 
 <script>
     function toggleButtonById(buttonId) {
-        var button = document.querySelector(`button[data-id='${buttonId}']`);
-        if (button) {
-        button.classList.toggle('active');
-        }
+    var button = document.querySelector(`button[data-id='${buttonId}']`);
+    if (button) {
+    button.classList.toggle('active');
+    }
     }
 </script>
 
 @code {
     [Parameter] public Guid ShowtimeId { get; set; }
     [Parameter] public EventCallback<EventCallbackHomeArgs> OnSeatSelection { get; set; }
-    [Parameter] public EventCallback<EventCallbackCinemaSystemArgs> OnSeatSelectionCinemaSystem { get; set; }
-    [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnSeatSelectionOfflineCounter { get; set; }
+
     public EventCallbackHomeArgs args = new();
-    public EventCallbackCinemaSystemArgs argsCinemaSystem = new();
-    public EventCallbackOfflineCounterArgs argsOfflineCounter = new();
     private CinemaDto cinemaDto { get; set; } = new();
     private IQueryable<SeatDTO> lstSeats { get; set; }
     private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
@@ -311,7 +306,7 @@ else
     private string TickeTotalString = null;
     private decimal TotalTicket;
     private ShowTimeDto showtimeDto = new();
-    string today = DateTime.Now.DayOfWeek.ToString();
+    private string date = string.Empty;
     private AuthenticationState AuthenState;
     private Guid userId = Guid.Empty;
     private CreateCheckRequest request = new();
@@ -326,6 +321,7 @@ else
         {
             var response = await ShowTimeService.GetById(ShowtimeId);
             showtimeDto = response.Data;
+            date = showtimeDto.ShowtimeDate.Value.DayOfWeek.ToString();
             var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
             cinemaDto = cinema.Data;
             lstSeats = await SeatService.GetSeats(cinemaDto.Id);
@@ -336,7 +332,6 @@ else
                 });
             lstTicketPrices = responseTicket.Item.ToList();
             AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
-            // seatTypeDtos = await SeatTypeService.GetListSeatTypesAsync();
             var getUser = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             userId = Guid.Parse(getUser);
             var lstTicketByShowtime = await TicketService.GetListTicketByShowTimeIdAsync(ShowtimeId);
@@ -413,36 +408,13 @@ else
                 }
                 CalculateTotal();
                 TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
-                if (location != null && location == "CinemaSystem")
-                {
-                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                        {
-                            lstSeats = lstSeatsSelected,
-                            str = SeatsSelectedstr,
-                            TotalTicket = TotalTicket,
-                        };
-                    await OnSeatSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
-                }
-                else if (location != null && location == "Home")
-                {
-                    args = new EventCallbackHomeArgs
-                        {
-                            lstSeats = lstSeatsSelected,
-                            str = SeatsSelectedstr,
-                            TotalTicket = TotalTicket,
-                        };
-                    await OnSeatSelection.InvokeAsync(args);
-                }
-                else if (location != null && location == "OfflineCounter")
-                {
-                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                        {
-                            lstSeats = lstSeatsSelected,
-                            str = SeatsSelectedstr,
-                            TotalTicket = TotalTicket,
-                        };
-                    await OnSeatSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
-                }
+                args = new EventCallbackHomeArgs
+                    {
+                        lstSeats = lstSeatsSelected,
+                        str = SeatsSelectedstr,
+                        TotalTicket = TotalTicket,
+                    };
+                await OnSeatSelection.InvokeAsync(args);
             }
             else
             {
@@ -473,36 +445,13 @@ else
                 };
                 CalculateTotal();
                 TickeTotalString = TotalTicket.ToString("#,##0") + "VND";
-                if (location != null && location == "CinemaSystem")
-                {
-                    argsCinemaSystem = new EventCallbackCinemaSystemArgs
-                        {
-                            lstSeats = lstSeatsSelected,
-                            str = SeatsSelectedstr,
-                            TotalTicket = TotalTicket,
-                        };
-                    await OnSeatSelectionCinemaSystem.InvokeAsync(argsCinemaSystem);
-                }
-                else if (location != null && location == "Home")
-                {
-                    args = new EventCallbackHomeArgs
-                        {
-                            lstSeats = lstSeatsSelected,
-                            str = SeatsSelectedstr,
-                            TotalTicket = TotalTicket,
-                        };
-                    await OnSeatSelection.InvokeAsync(args);
-                }
-                else if (location != null && location == "OfflineCounter")
-                {
-                    argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                        {
-                            lstSeats = lstSeatsSelected,
-                            str = SeatsSelectedstr,
-                            TotalTicket = TotalTicket,
-                        };
-                    await OnSeatSelectionOfflineCounter.InvokeAsync(argsOfflineCounter);
-                }
+                args = new EventCallbackHomeArgs
+                    {
+                        lstSeats = lstSeatsSelected,
+                        str = SeatsSelectedstr,
+                        TotalTicket = TotalTicket,
+                    };
+                await OnSeatSelection.InvokeAsync(args);
             StateHasChanged();
             }
         }
@@ -514,7 +463,7 @@ else
         foreach (var item in lstSeatsSelected)
         {
             var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
-                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(date) && x.Status == TicketPriceStatus.Active);
             if (ticketPrice != null)
             {
                 TotalTicket += (Decimal)ticketPrice.Price;
