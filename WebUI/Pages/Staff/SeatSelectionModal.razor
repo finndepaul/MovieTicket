@@ -1,5 +1,5 @@
 @using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
+
 @using static WebUI.Pages.Home
 
 @if (cinemaDto != null)
@@ -307,7 +307,7 @@ else
     private string TickeTotalString = null;
     private decimal TotalTicket;
     private ShowTimeDto showtimeDto = new();
-    string today = DateTime.Now.DayOfWeek.ToString();
+    string date = string.Empty;
     private AuthenticationState AuthenState;
     private Guid userId = Guid.Empty;
     private CreateCheckRequest request = new();
@@ -322,6 +322,7 @@ else
         {
             var response = await ShowTimeService.GetById(ShowtimeId);
             showtimeDto = response.Data;
+            date = showtimeDto.ShowtimeDate.Value.DayOfWeek.ToString();
             var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
             cinemaDto = cinema.Data;
             lstSeats = await SeatService.GetSeats(cinemaDto.Id);
@@ -463,7 +464,7 @@ else
         foreach (var item in lstSeatsSelected)
         {
             var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
-                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+                == cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(date) && x.Status == TicketPriceStatus.Active);
             if (ticketPrice != null)
             {
                 TotalTicket += (Decimal)ticketPrice.Price;

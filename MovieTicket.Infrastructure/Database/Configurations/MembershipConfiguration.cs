@@ -10,7 +10,7 @@ namespace MovieTicket.Infrastructure.Database.Configurations
         {
             builder.ToTable("Membership");
             builder.HasKey(x => x.Id);
-            builder.HasOne(x => x.Account).WithOne(x => x.Membership).HasForeignKey<Membership>(x => x.Id);
+            builder.HasOne(x => x.Account).WithOne(x => x.Membership).HasForeignKey<Membership>(x => x.AccountId);
         }
     }
 }

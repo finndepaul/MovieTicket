@@ -49,9 +49,9 @@ namespace MovieTicket.API.Controllers
             return Ok(model);
         }
         [HttpPut]
-        public async Task<ActionResult> UpdateCheckMembershipId(Guid billId, Guid membershipId, CancellationToken cancellationToken)
+        public async Task<ActionResult> UpdateCheckMembershipId(Guid billId, string sdt, CancellationToken cancellationToken)
         {
-            var model = await _userHomeReadWrite.UpdateCheckMembershipIdAsync(billId, membershipId, cancellationToken);
+            var model = await _userHomeReadWrite.UpdateCheckMembershipIdAsync(billId, sdt, cancellationToken);
             return Ok(model);
         }
 

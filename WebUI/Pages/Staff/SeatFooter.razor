@@ -61,14 +61,9 @@
 	[Parameter] public List<SeatDTO> SeatDTOs { get; set; }
 	[Parameter] public string SeatsSelectedstr { get; set; }
 	[Parameter] public decimal TotalTicket { get; set; }
-	[Parameter] public EventCallback<Guid> BackToShowtimeModal { get; set; }
-	[Parameter] public EventCallback<Guid> BackToShowtimeCinemaSystem { get; set; }
     [Parameter] public EventCallback BackToShowtimeOfflineCounter { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToComboModal { get; set; }
-	[Parameter] public EventCallback<EventCallbackCinemaSystemArgs> NextToComboModalCinemaSystem { get; set; }
     [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToComboOfflineCounter{ get; set; }
-	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+
     private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();

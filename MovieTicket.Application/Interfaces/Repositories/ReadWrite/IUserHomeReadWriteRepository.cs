@@ -14,6 +14,6 @@ namespace MovieTicket.Application.Interfaces.Repositories.ReadWrite
 
         Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken);
         Task<bool> ResetDiscountAsync(Guid billId, CancellationToken cancellationToken);
-        Task<string> UpdateCheckMembershipIdAsync(Guid billId, Guid membershipId, CancellationToken cancellationToken);
+        Task<string> UpdateCheckMembershipIdAsync(Guid billId, string sdt, CancellationToken cancellationToken);
     }
 }
