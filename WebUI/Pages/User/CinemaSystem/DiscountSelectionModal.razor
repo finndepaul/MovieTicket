@@ -1,3 +1,4 @@
+@using static WebUI.Pages.User.CinemaSystem.CinemaSystem
 <style>
 	body {
 	background-color: #f8f8f8;
@@ -167,8 +168,8 @@
 	[Parameter] public bool OpenDiscount {get;set;}
 	[Parameter] public EventCallback<int> Mempoint { get; set; }
 	[Parameter] public EventCallback TimerOutDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> OnAppliedDiscount { get; set; }
-	private EventCallbackHomeArgs args = new();
+	[Parameter] public EventCallback<EventCallbackCS> OnAppliedDiscount { get; set; }
+	private EventCallbackCS args = new();
 	private string CouponCode { get; set; } = string.Empty;
 	private int VHDPoints { get; set; } = 0;
 	private int CurrentPoints { get; set; } // Ví dụ: điểm hiện tại là 100
@@ -223,7 +224,7 @@
 				IsDiscountCodeUsed = true;
 				IsVHDUsed = false;
 				memberCheck = false;
-				args = new EventCallbackHomeArgs
+				args = new EventCallbackCS
 					{
 						Discount = await CalculateDiscount()
 					};
@@ -252,7 +253,7 @@
 			IsVHDUsed = true;
 			IsDiscountCodeUsed = false;
 			memberCheck = false;
-			args = new EventCallbackHomeArgs
+			args = new EventCallbackCS
 				{
 					Discount = await CalculateDiscount()
 				};
@@ -272,7 +273,7 @@
 			memberCheck = false;
 			VHDPoints = 0;
 			await JSRuntime.ToastrSuccess("Đặt lại thành công!");
-			args = new EventCallbackHomeArgs
+			args = new EventCallbackCS
 				{
 					Discount = await CalculateDiscount()
 				};
@@ -284,7 +285,6 @@
 		}
 		StateHasChanged();
 	}
-	
 
 	private async Task<decimal> CalculateDiscount()
 	{

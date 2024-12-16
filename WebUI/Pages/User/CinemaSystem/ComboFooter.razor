@@ -1,5 +1,5 @@
-﻿@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.Home
+﻿@using static WebUI.Pages.User.CinemaSystem.CinemaSystem
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col align-self-center" style="width:10%">
@@ -76,11 +76,9 @@
 	[Parameter] public decimal TotalCombo { get; set; }
 	[Parameter] public decimal TotalMoney { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeatModal { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatModalCinemaSystem { get; set; }
-	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToDiscount { get; set; }
+	[Parameter] public EventCallback<EventCallbackCS> NextToDiscount { get; set; }
  
-	private EventCallbackHomeArgs args = new();
-
+	private EventCallbackCS args = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
@@ -138,14 +136,14 @@
 					LstCombos = SelectedCombos,
 				};
 			var result = await UserHomeService.AddComboToCheckAsync(billCombo, cancellationToken);
-			args = new EventCallbackHomeArgs
+			args = new EventCallbackCS
                 {
 					BillId = BillId,
 					AccountId = AccountId
                 };
 			
 		}
-		args = new EventCallbackHomeArgs
+		args = new EventCallbackCS
 			{
 				BillId = BillId,
 				AccountId = AccountId,

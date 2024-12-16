@@ -82,7 +82,7 @@
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="bill" role="tabpanel" aria-labelledby="bills-tab">
             <h3 class="text-success">Hóa đơn</h3>
-
+            <BillList Id="@CinemaCenterId" />
         </div>
         <div class="tab-pane fade p-4 shadow-sm rounded-3" id="printTicket" role="tabpanel" aria-labelledby="print-tab">
             <h3 class="text-success">In vé</h3>
@@ -123,7 +123,7 @@
     <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header" data-bs-theme="dark">
-                <h4 class="modal-title">Chọn Combo</h4>
+                <h4 class="modal-title">Chọn dịch vụ mua kèm</h4>
             </div>
             <div class="modal-body">
                 <WebUI.Pages.Staff.ComboSelectionModal 
@@ -162,7 +162,8 @@
                 OnAppliedDiscount="HandleAppliedDiscount"
                 Mempoint="HandleMembershipPoint"
                 TimerOutDiscount="HandleTimerOutDiscount"
-                Method="SelectedPaymenMethod"/>
+                Method="SelectedPaymenMethod"
+                TotalMoney="@TotalMoney" />
             </div>
             <div class="modal-footer" style="width:100%;height:150px; background-color:#031529;color:#fff">
                 <WebUI.Pages.Staff.DiscountFooter 

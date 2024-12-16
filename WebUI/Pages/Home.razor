@@ -211,7 +211,7 @@ else
 							 CheckedSeats="lstCheckedSeats"
 							 SelectedCombos="lstSelectedCombos"
 							 BillId="@BillId" @ref="comboFooterRef"
-							 MembershipId="@MembershipId"
+							 AccountId="@AccountId"
 							 SeatsSelectedstr="@SeatsSelectedstr"
 							 TotalCombo="@TotalCombo"
 							 TotalMoney="@TotalMoney"
@@ -235,7 +235,7 @@ else
 					@ref="DiscountSelectionModalRef" 
 					OpenDiscount="OpenDiscount" 
 					OnAppliedDiscount="HandleAppliedDisCount" 
-					MembershipId="@MembershipId" 
+					AccountId="@AccountId" 
 					Mempoint="HandleMembershipPoint"
 					TimerOutDiscount="HandleTimerOutDiscount" />
 			</div>
@@ -515,7 +515,7 @@ else
 	public ComboSelectionModal comboSelectionModalref;
 	public DiscountSelectionModal DiscountSelectionModalRef;
 	private Guid BillId = Guid.Empty;
-	private Guid MembershipId = Guid.Empty;
+	private Guid AccountId = Guid.Empty;
 	private SeatFooter seatFooterRef;
 	private ComboFooter comboFooterRef;
 	private DiscountFooter DiscountFooterRef;
@@ -534,7 +534,7 @@ else
 
 	public class EventCallbackHomeArgs
 	{
-		public Guid MembershipId { get; set; }
+		public Guid AccountId { get; set; }
 		public List<SeatDTO> lstSeats { get; set; }
 		public string str { get; set; }
 		public decimal TotalMoney { get; set; }
@@ -643,15 +643,6 @@ else
 		StateHasChanged();
 	}
 
-	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
-	{
-		await comboFooterRef.Reset();
-		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
-		BillId = args.BillId;
-		MembershipId = args.MembershipId;
-		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
-	}
-
 	private async Task CloseSeatSelectionModal()
 	{
 		await seatSelectionModalref.Reset();
@@ -664,6 +655,23 @@ else
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal"); //đóng seat selection modal
 		filmName = listObjFilm.FirstOrDefault(x => x.Id == Guid.Parse(IdFilm)).Name;
 		await JSRuntime.InvokeVoidAsync("openModalShowTime");
+	}
+
+	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
+	{
+		await comboFooterRef.Reset();
+		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+		BillId = args.BillId;
+		AccountId = args.AccountId;
+		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
+	}
+
+	private void HandleSelectedCombos(EventCallbackHomeArgs args)
+	{
+		lstSelectedCombos = args._lstCombo;
+		TotalCombo = args.TotalCombo;
+		TotalMoney = TotalCombo + TotalTicket;
+		StateHasChanged();
 	}
 
 	private async Task PreComboSelectionModal(Guid id)
@@ -695,7 +703,7 @@ else
 		TotalCombo = 0;
 		Discount = 0;
 		ShowTimeId = id;
-        MembershipId = Guid.Empty;
+		AccountId = Guid.Empty;
 		DiscountSelectionModalRef.StopTimer();
 		await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
@@ -711,17 +719,9 @@ else
 		}
 	}
 
-	private void HandleSelectedCombos(EventCallbackHomeArgs args)
-	{
-		lstSelectedCombos = args._lstCombo;
-		TotalCombo = args.TotalCombo;
-		TotalMoney = TotalCombo + TotalTicket;
-		StateHasChanged();
-	}
-
 	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
-		MembershipId = args.MembershipId;
+		AccountId = args.AccountId;
         OpenDiscount = args.NextToDiscount;
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
