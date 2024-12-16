@@ -1,4 +1,6 @@
-﻿@using static WebUI.Pages.Home
+﻿@using static WebUI.Pages.User.CinemaSystem.CinemaSystem
+@using static WebUI.Pages.Staff.OfflineCounter
+@using static WebUI.Pages.Home
 
 <div class="container-fluid">
 	<div class="row">
@@ -43,7 +45,7 @@
 				<br />
 				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
 				<br />
-				<label class="me-2">Phí dịch vụ:</label>
+				<label class="me-2">Combo:</label>
 				<br />
 				<span class="fw-bold">@TotalCombo.ToString("#,##0") VND</span>
 			</div>
@@ -76,7 +78,7 @@
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
 	[Parameter] public int Mempoint { get; set; }
 
-	private EventCallbackHomeArgs args = new();
+	private EventCallbackCS args = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
 	private FilmDto filmDto = new();
