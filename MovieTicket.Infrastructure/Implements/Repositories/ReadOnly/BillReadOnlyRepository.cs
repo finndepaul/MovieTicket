@@ -158,6 +158,10 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 			{
 				query = query.Where(x => x.group.group.cc.Id == request.CinemaCenterId);
 			}
+            if (request.AccountId.HasValue)
+            {
+                query = query.Where(x => x.group.group.group.group.group.group.b.AccountId == request.AccountId);
+            }
 
 			// Thực hiện sắp xếp
 			query = query
@@ -165,7 +169,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 				.ThenByDescending(x => x.group.group.group.group.group.group.b.CreateTime); // Sắp xếp theo CreateTime
 
 			// Tính tổng số kết quả
-			var count = await query.CountAsync(cancellationToken);
+			var count = await query.Distinct().CountAsync(cancellationToken);
 
 			// Lấy dữ liệu theo phân trang
 			var data = await query
@@ -178,8 +182,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
 					TotalMoney = x.group.group.group.group.group.group.b.AfterDiscount,
 					CreateTime = x.group.group.group.group.group.group.b.CreateTime,
 					BarCode = x.group.group.group.group.group.group.b.BarCode,
-					Status = x.group.group.group.group.group.group.b.Status
+					Status = x.group.group.group.group.group.group.b.Status,           
 				})
+                .Distinct()
 				.Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
 				.Take(pagingParameters.PageSize)
 				.AsNoTracking()
