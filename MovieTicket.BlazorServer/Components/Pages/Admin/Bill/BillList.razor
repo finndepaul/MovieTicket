@@ -246,7 +246,7 @@
 				PageNumber = pagingParameters.PageNumber,
 				PageSize = 10
 			});
-		lstBills = pageList.Item.ToList();
+		lstBills = pageList.Item.Distinct().ToList();
 		metaData = pageList.MetaData;
 	}
 	private async Task SelectedPage(int page)
@@ -262,7 +262,7 @@
 				PageNumber = pagingParameters.PageNumber,
 				PageSize = 10
 			});
-		lstBills = pageList.Item.ToList();
+		lstBills = pageList.Item.Distinct().ToList();
 		metaData = pageList.MetaData;
 		StateHasChanged();
 	}
