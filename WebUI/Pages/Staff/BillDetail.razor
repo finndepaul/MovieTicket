@@ -167,8 +167,15 @@
 		{
 			//lay bill theo id
 			objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
-			//lay account theo bill id
-			objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
+			if (objBill.MembershipId.HasValue)
+			{
+				objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+			}
+			else
+			{
+				objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
+
+			}
 			//lay list ticket theo bill id
 			lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
 			//lay 1 ticket dau tien cua bill id do
