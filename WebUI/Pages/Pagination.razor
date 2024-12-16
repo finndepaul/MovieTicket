@@ -1,0 +1,80 @@
+﻿@using MovieTicket.Application.ValueObjs.Paginations
+
+<!-- Phần HTML để hiển thị phân trang với các liên kết Previous, Next và các trang -->
+<nav aria-label="Page navigation example">
+	<ul class="pagination justify-content-center">
+		<!-- Duyệt qua danh sách các liên kết phân trang _link và hiển thị từng liên kết -->
+		@foreach (var item in _link)
+		{
+			<!-- Mỗi item là một đối tượng PagingLink. Khi nhấn vào item, gọi phương thức OnSelectedPage với tham số là item đó -->
+			<li @onclick="() => OnSelectedPage(item)" style="cursor: pointer" class="page-item @(item.Enabled ? null : "disabled") @(item.Active ? "active" : null)">
+				<!-- Văn bản hiển thị của liên kết trang, sử dụng thuộc tính Text của PagingLink -->
+				<span class="page-link" href="#">@item.Text</span>
+			</li>
+		}
+	</ul>
+</nav>
+
+@code {
+	// Khai báo các thuộc tính nhận từ component cha (parent component).
+
+	// MetaData chứa thông tin về phân trang (tổng số trang, trang hiện tại, có trang trước hay sau không).
+	[Parameter]
+	public MetaData MetaData { get; set; }
+
+	// Spread xác định số lượng trang hiển thị trước và sau trang hiện tại trong thanh phân trang.
+	[Parameter]
+	public int Spread { get; set; }
+
+	// SelectedPage là một EventCallback, cho phép component cha nhận số trang được chọn khi người dùng nhấn vào.
+	[Parameter]
+	public EventCallback<int> SelectedPage { get; set; }
+
+	// _link là danh sách chứa các đối tượng PagingLink, đại diện cho các trang phân trang và các liên kết Previous, Next.
+	private List<PagingLink> _link;
+
+	// Phương thức OnParametersSet() được gọi khi các giá trị [Parameter] (như MetaData, Spread) thay đổi.
+	// Khi đó, CreatePagination() sẽ được gọi để tạo lại danh sách các liên kết phân trang.
+	protected override void OnParametersSet()
+	{
+		CreatePagination();
+	}
+
+	// Phương thức CreatePagination() dùng để tạo ra danh sách các liên kết phân trang dựa trên thông tin từ MetaData.
+	private void CreatePagination()
+	{
+		// Khởi tạo danh sách các liên kết phân trang.
+		_link = new List<PagingLink>();
+
+		// Thêm liên kết "Previous" để chuyển về trang trước (nếu có thể).
+		_link.Add(new PagingLink(MetaData.CurrentPage - 1, MetaData.HasPrevious, "<<"));
+
+		// Duyệt qua tất cả các trang và thêm vào danh sách liên kết phân trang nếu trang nằm trong phạm vi Spread.
+		for (int i = 1; i <= MetaData.TotalPage; i++)
+		{
+			// Chỉ thêm các trang nằm trong khoảng Spread trước và sau trang hiện tại.
+			if (i >= MetaData.CurrentPage - Spread && i <= MetaData.CurrentPage + Spread)
+			{
+				// Thêm trang vào danh sách và đánh dấu là "Active" nếu trang hiện tại là trang này.
+				_link.Add(new PagingLink(i, true, i.ToString()) { Active = MetaData.CurrentPage == i });
+			}
+		}
+
+		// Thêm liên kết "Next" để chuyển sang trang sau (nếu có thể).
+		_link.Add(new PagingLink(MetaData.CurrentPage + 1, MetaData.HasNext, ">>"));
+	}
+
+	// Phương thức OnSelectedPage được gọi khi người dùng chọn một trang (nhấn vào một liên kết phân trang).
+	private async Task OnSelectedPage(PagingLink link)
+	{
+		// Nếu trang được chọn là trang hiện tại hoặc liên kết bị vô hiệu hóa, không thực hiện thao tác gì.
+		if (link.Page == MetaData.CurrentPage || !link.Enabled)
+			return;
+
+		// Cập nhật trang hiện tại thành trang đã chọn.
+		MetaData.CurrentPage = link.Page;
+
+		// Gọi sự kiện SelectedPage để thông báo cho component cha biết trang mới được chọn.
+		await SelectedPage.InvokeAsync(link.Page);
+	}
+}
