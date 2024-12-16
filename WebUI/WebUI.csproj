@@ -9,6 +9,8 @@
 	<ItemGroup>
 		<PackageReference Include="BarcodeLib" Version="3.1.4" />
 		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+		<PackageReference Include="BouncyCastle" Version="1.8.9" />
+		<PackageReference Include="itext7" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
@@ -22,6 +24,7 @@
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.1" />
 		<PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="8.0.11" />
 		<PackageReference Include="payOS" Version="1.0.9" />
+		<PackageReference Include="PdfSharp-MigraDoc" Version="6.1.1" />
 		<PackageReference Include="SixLabors.Fonts" Version="2.0.6" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />

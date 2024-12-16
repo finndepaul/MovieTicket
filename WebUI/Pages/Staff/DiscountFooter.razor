@@ -1,6 +1,4 @@
 ﻿@using static WebUI.Pages.Staff.OfflineCounter
-@using static WebUI.Pages.User.CinemaSystem
-@using static WebUI.Pages.Home
 
 <div class="container-fluid">
 	<div class="row">
@@ -76,12 +74,9 @@
 	[Parameter] public decimal Discount { get; set; }
 	[Parameter] public ComboCheckRequest BillCombo { get; set; }
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatCinemaSystem { get; set; }
-	[Parameter] public EventCallback<Guid> BackToSeatOfflineCounter { get; set; }
 	[Parameter] public int Mempoint { get; set; }
-    [Parameter] public string SelectedMethod { get; set; }
-	private EventCallbackHomeArgs args = new();
-	private EventCallbackCinemaSystemArgs argsCinemaSystem = new();
+	[Parameter] public string SelectedMethod { get; set; }
+
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
@@ -124,7 +119,7 @@
 	}
 	private async Task Checkout()
 	{
-		if(SelectedMethod == "vnpay")
+		if(SelectedMethod == "qr")
 		{
 			var bill = await UserHomeService.GetBillForCheckOut(BillId);
 			PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
@@ -138,15 +133,16 @@
 				Convert.ToInt32(bill.AfterDiscount),
 				"VHD Cinema",
 				lstItemDatas,
-				$"https://localhost:7239/check-out-failed/{BillId}",
-				$"https://localhost:7239/check-out-success/{BillId}&{Mempoint}"
+				$"https://localhost:9999/check-out-failed/{BillId}",
+				$"https://localhost:9999/check-out-success/{BillId}&{Mempoint}"
 			);
 			CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 			NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
 		}
         else if (SelectedMethod == "cash")
         {
-            
+            await BillService.UpdateStatusAsync(BillId, BillStatus.Paid);
+			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
         }
 	}
 	public Task Reset()
@@ -160,5 +156,15 @@
 		Discount = 0;
 		StateHasChanged();
         return Task.CompletedTask;
+	}
+
+	public async void ShowCloseConfirmation()
+	{
+		bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Xác nhận thanh toán?");
+
+		if (confirmed)
+		{
+			await Checkout();
+		}
 	}
 }

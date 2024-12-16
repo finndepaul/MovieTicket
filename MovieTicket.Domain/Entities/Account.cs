@@ -17,6 +17,7 @@ public class Account
     public Guid? CinemaCenterId { get; set; }
 
     public virtual Membership? Membership { get; set; }
+    public virtual ICollection<Bill> Bills { get; set; }
     public virtual ICollection<ConfirmedEmail>? ConfirmedEmails { get; set; }
     public virtual ICollection<RefreshToken>? RefreshTokens { get; set; }
 

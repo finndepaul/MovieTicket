@@ -519,8 +519,7 @@
         if (showTimeSearch.CinemaCenterId.HasValue && showTimeSearch.ShowtimeDate.HasValue)
         {
             var pagingResponse = await ShowTimeService.GetAll(showTimeSearch, new PagingParameters() { PageSize = 50 });
-            showTimeDtos = pagingResponse.Item.ToList();
-
+            showTimeDtos = pagingResponse.Item.Where(x => x.StartTime.Value > DateTime.Now).ToList();
             var filmIds = showTimeDtos.Select(s => s.FilmId).Distinct();
             filmDto = (await FilmService.GetAllFilms()).Where(f => filmIds.Contains(f.Id)).ToList();
         }

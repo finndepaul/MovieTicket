@@ -529,7 +529,7 @@ else
 	private List<SeatDTO> lstCheckedSeats = new List<SeatDTO>();
 	private List<ComboRequest> lstSelectedCombos = new();
 	private string IdFilm;
-	private string filmName { get; set; }
+	private string filmName { get; set; }     
 	private Guid ShowTimeId;
 	public SeatSelectionModal seatSelectionModalref;
 	public ComboSelectionModal comboSelectionModalref;
@@ -576,6 +576,13 @@ else
 		if (banners != null)
 		{
 			lstBanner = banners.Where(b => b.Status == BannerStatus.Active).ToList();
+		}
+		var AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+		var getUserId = AuthenState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+		var userRole = AuthenState.User.FindFirst(ClaimTypes.Role)?.Value;
+        if (userRole == "Staff")
+        {
+            NavigationManager.NavigateTo("/offline-counter");
 		}
 		await DeletePendingBill();
 		base.OnInitialized();

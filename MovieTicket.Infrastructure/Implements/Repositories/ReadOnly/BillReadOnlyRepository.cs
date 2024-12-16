@@ -94,7 +94,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     {
                         Id = b.Id,
                         MembershipId = b.MembershipId,
-                        BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
+						AccountId = b.AccountId,
+						BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
                         TotalMoney = b.TotalMoney,
                         AfterDiscount = b.AfterDiscount,
                         FilmName = (from ticket in _dbContext.Tickets
