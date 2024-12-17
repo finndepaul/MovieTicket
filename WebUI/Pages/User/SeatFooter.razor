@@ -63,6 +63,7 @@
 	[Parameter] public decimal TotalTicket { get; set; }
 	[Parameter] public EventCallback<Guid> BackToShowtimeModal { get; set; }
 	[Parameter] public EventCallback<EventCallbackHomeArgs> NextToComboModal { get; set; }
+    [Parameter] public EventCallback resetSeat { get; set; }
 	private EventCallbackHomeArgs args = new();
 	private ShowTimeDto showtimeDto = new();
 	private CinemaDto cinemaDto { get; set; } = new();
@@ -71,7 +72,7 @@
 	private string formatRating = "";
 	private string date = string.Empty;
 	private Guid userId = Guid.Empty;
-    private Guid membershipId = Guid.Empty;
+	private Guid membershipId = Guid.Empty;
 	private AuthenticationState AuthenState;
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
 	private CreateCheckRequest checkrequest = new();
@@ -151,8 +152,9 @@
 					if (ticketsByShowtime.Any(t => t.SeatId == s.Id))
 					{
 						await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn, vui lòng chọn lại ghế");
-						await Reset();
-                        await seatSelectionModal.Reset();
+                        await Reset();
+                        //await SeatSelectionModal.Reset();
+                        await resetSeat.InvokeAsync();
 						return;
 					}
 				}

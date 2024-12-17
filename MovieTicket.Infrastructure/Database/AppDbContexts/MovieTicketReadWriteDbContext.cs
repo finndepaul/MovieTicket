@@ -332,8 +332,8 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             // Faker for Combo
             var comboFaker = new Faker<Combo>()
                    .RuleFor(c => c.Id, f => Guid.NewGuid())
-                   .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
-                   .RuleFor(c => c.Price, f => 30000 * f.IndexFaker)
+                   .RuleFor(c => c.Name, f => $"Sản phẩm {f.IndexFaker + 1}")
+                   .RuleFor(c => c.Price, f => 30000 * (f.IndexFaker + 1))
                    .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
                    .RuleFor(c => c.ComboStatus, ComboStatus.Available)
                    .RuleFor(c => c.Image, "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634716/h3hwwervvd5rekegmb8b.png");

@@ -63,6 +63,7 @@
 	[Parameter] public decimal TotalTicket { get; set; }
     [Parameter] public EventCallback BackToShowtimeOfflineCounter { get; set; }
     [Parameter] public EventCallback<EventCallbackOfflineCounterArgs> NextToComboOfflineCounter{ get; set; }
+	[Parameter] public EventCallback resetSeat { get; set; }
 
     private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
@@ -150,7 +151,7 @@
 					{
 						await JSRuntime.InvokeVoidAsync("alert", "Ghế đã được chọn, vui lòng chọn lại ghế");
 						await Reset();
-                        await seatSelectionModal.Reset();
+						await resetSeat.InvokeAsync();
 						return;
 					}
 				}

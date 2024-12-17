@@ -149,7 +149,7 @@ else
         height: 45px;
         margin: 0px;
         padding: 10px;
-        outline: solid 3px #fe019a !important;
+        outline: solid 3px #7E1891 !important;
         outline-offset: -4px;
     }
 
@@ -248,7 +248,7 @@ else
         height: 45px;
         margin: 0px;
         padding: 10px;
-        outline: solid 3px #fe019a !important;
+        outline: solid 3px #7E1891 !important;
         outline-offset: -4px;
         cursor: not-allowed;
         pointer-events: none;
@@ -484,15 +484,16 @@ else
             return "T2-T6";
         }
     }
-    public async Task Reset()
+    public Task Reset()
     {
         foreach (var seat in lstSeatsSelected)
         {
-            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+             JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
         }
         lstSeatsSelected.Clear();
         SeatsSelectedstr = "";
         TotalTicket = 0;
         StateHasChanged();
+        return Task.CompletedTask;
     }
 }
