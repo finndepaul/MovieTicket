@@ -142,10 +142,22 @@
 		}
         else if (SelectedMethod == "cash")
         {
-            await BillService.UpdateStatusAsync(BillId, BillStatus.Paid);
-			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
-            await CheckOutCash.InvokeAsync();
-			NavigationManager.NavigateTo("/offline-counter");
+			var bill = await UserHomeService.GetBillForCheckOut(BillId);
+			if(bill.MembershipId != null)
+			{
+				await UserHomeService.CheckOutSuccessAsync(new CheckOutSuccessRequest { BillId = BillId, MembershipPoint = Mempoint },
+				cancellationToken);
+				await UserHomeService.SendMailForCheckOutAsync(BillId, cancellationToken);
+				await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+				//await CheckOutCash.InvokeAsync();
+				NavigationManager.NavigateTo($"/bill-staff/detail/{BillId}", true);
+			}
+			else
+			{
+                await BillService.UpdateStatusAsync(BillId, BillStatus.Paid);
+                await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+				NavigationManager.NavigateTo($"/bill-staff/detail/{BillId}", true);
+			}
         }
 	}
 	public Task Reset()
