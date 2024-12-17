@@ -104,7 +104,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         public async Task SendEmailForCheckOutAsync(Guid billId, CancellationToken cancellationToken)
         {
             var bill = await _db.Bills.FirstOrDefaultAsync(x => x.Id == billId, cancellationToken);
-            var account = await _db.Accounts.FirstOrDefaultAsync(x => x.Id == bill.MembershipId, cancellationToken);
+            var account = await _db.Accounts.FirstOrDefaultAsync(x => x.Id == bill.AccountId, cancellationToken);
             var ticket =  _db.Tickets.Where(x => x.BillId == billId);
             var showTime = await _db.ShowTimes.FirstOrDefaultAsync(x => x.Id == ticket.FirstOrDefault().ShowTimeId, cancellationToken);
             var schedule = await _db.Schedules.FirstOrDefaultAsync(x => x.Id == showTime.ScheduleId, cancellationToken);
