@@ -140,6 +140,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Status = bill.Status.ToString(),
                     TotalMoney = bill.TotalMoney,
                     Combos = bill.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList(),
+                    BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
                 };
                 if (billdto == null)
                 {
@@ -195,12 +196,6 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
             {
                 query = query.Where(x => x.group.group.group.group.group.group.b.AccountId == request.AccountId);
             }
-
-            // Thực hiện sắp xếp
-            query = query
-                .OrderBy(x => x.group.group.group.group.group.group.b.Status) // Sắp xếp theo Status
-                .ThenByDescending(x => x.group.group.group.group.group.group.b.CreateTime); // Sắp xếp theo CreateTime
-
             // Tính tổng số kết quả
             var count = await query.Distinct().CountAsync(cancellationToken);
 
@@ -218,6 +213,8 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Status = x.group.group.group.group.group.group.b.Status,
                 })
                 .Distinct()
+                  .OrderByDescending(x => x.CreateTime) // Sắp xếp theo CreateTime
+                  .OrderBy(x => x.Status)
                 .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
                 .Take(pagingParameters.PageSize)
                 .AsNoTracking()
