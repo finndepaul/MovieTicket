@@ -476,12 +476,12 @@
 
 	private async void HandlePaymentMethodChange(ChangeEventArgs e)
 	{
-		selectedPaymentMethod = e.Value.ToString();
-		if (selectedPaymentMethod == "qr")
+		SelectedMethod = e.Value.ToString();
+		if (SelectedMethod == "qr")
 		{
 			show = false;
 		}
-		else if (selectedPaymentMethod == "cash")
+		else if (SelectedMethod == "cash")
 		{
 			show = true;
 		}
