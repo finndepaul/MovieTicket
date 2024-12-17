@@ -50,21 +50,21 @@ public class MovieTicketReadOnlyDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Đăng:
-        //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		// Đăng:
+		//optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-        // Trung:
-        //optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
+		// Trung:
+		//optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
 
-        // Toản:
-        //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		// Toản:
+		//optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-        // Vũ:
-        //optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		// Vũ:
+		//optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-        // Đông:
-        //optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
-    }
+		// Đông:
+		//optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+	}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -98,7 +98,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "ClientTest",
 			Phone = "000-000-000",
-			Email = "azusachan309@gmail.com",
+			Email = "dangnph36044@fpt.edu.vn",
 			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
 			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
 		});
@@ -111,7 +111,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "ClientTest",
 			Phone = "000-000-000",
-			Email = "dangnph36044@fpt.edu.vn",
+			Email = "toandmph33341@fpt.edu.vn",
 			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
 			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
 		});
@@ -272,8 +272,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		cinemaCenters.Add(new CinemaCenter()
 		{
 			Id = Guid.NewGuid(),
-			Name = "VHD Vincom Mỹ Đình",
-			Address = "Số 1 Mỹ Đình, Nam Từ Liêm,Hà Nội",
+			Name = "VHD Cinemas Mỹ Đình",
+			Address = "Số 3 Mỹ Đình, Nam Từ Liêm, Hà Nội",
 			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.329821256736!2d105.77868087606693!3d21.01948508062756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313455b1766330d1%3A0x1511e0d5bf3067fd!2zVmluY29tIFBsYXphIFZpbmhvbWVzIFNreSBMYWtlIFBo4bqhbSBIw7luZyBN4bu5IMSQw6xuaA!5e0!3m2!1svi!2s!4v1733299099671!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
 			AddresCity = "Hà Nội",
@@ -281,8 +281,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		cinemaCenters.Add(new CinemaCenter()
 		{
 			Id = Guid.Parse("ad9ca2fb-ae80-49a1-835f-8c2f26a30f3a"),
-			Name = "VHD Vincom Nguyễn Chí Thanh",
-			Address = "Số 1 Nguyễn Chí Thanh, Ba Đình,Hà Nội",
+			Name = "VHD Cinemas Lý nhân",
+			Address = "Số 20 Nguyên Lý, Lý Nhân, Hà Nam",
 			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.2303104777766!2d105.806904776067!3d21.02346878062462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab6a17e518e3%3A0x82ef164fc911c781!2sVincom%20Center%20Nguy%E1%BB%85n%20Ch%C3%AD%20Thanh!5e0!3m2!1svi!2s!4v1733298758785!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
 			AddresCity = "Hà Nam",
@@ -290,8 +290,8 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		cinemaCenters.Add(new CinemaCenter()
 		{
 			Id = Guid.NewGuid(),
-			Name = "VHD TimeCity",
-			Address = "Số 1 Minh Khai, Hai Bà Trưng,Hà Nội",
+			Name = "VHD Cinemas Đoan Hùng",
+			Address = "Số 29 Ngọc Quan, Đoan Hùng, Phú Thọ",
 			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.9458662701677!2d105.8652574760663!3d20.994806980646135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac04b6fcfa63%3A0x579e974a43b9f42f!2sVincom%20Mega%20Mall%20Times%20City!5e0!3m2!1svi!2s!4v1733299130109!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
 			AddresCity = "Phú Thọ",
