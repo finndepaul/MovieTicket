@@ -71,6 +71,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieTicketReadWriteDbContext).Assembly);
         SeedingDataWithBogus(modelBuilder);
     }
+
 	private void SeedingDataWithBogus(ModelBuilder modelBuilder)
 	{
 		// Faker for Account
@@ -592,3 +593,4 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		modelBuilder.Entity<About>().HasData(abouts);
 	}
 }
+

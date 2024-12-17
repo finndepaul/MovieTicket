@@ -9,7 +9,7 @@
 @attribute [Authorize(Roles = "Staff")]
 <div class="container-fluid">
 	<div class="mb-2">
-		<NavLink href="offline-counter" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
+		<NavLink @onclick="GoToListBill" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
 	</div>
 	<div class="row">
 		<!-- Thông tin đơn hàng -->
@@ -234,4 +234,8 @@
             NavigationManager.NavigateTo($"/checkout-offline/detail/{Id}", true);
         }
     }
+	private void GoToListBill()
+	{
+		NavigationManager.NavigateTo($"/offline-counter?tab=bill");
+	}
 }
