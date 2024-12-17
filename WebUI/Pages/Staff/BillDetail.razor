@@ -134,6 +134,9 @@
 			</table>
 		</div>
 	</div>
+	<div class="col align-self-center text-end" style="width:10%;">
+		<button class="btn btn-success text-light fs-5" style="padding:10px;width:150px;" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right m-0"></i></button>
+	</div>
 </div>
 
 @code {
@@ -169,12 +172,11 @@
 			objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
 			if (objBill.MembershipId.HasValue)
 			{
-				objAccount = await AccountService.GetByIdAsync(objBill.UserAcountId.Value);
+				objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
 			}
 			else
 			{
 				objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
-
 			}
 			//lay list ticket theo bill id
 			lstTicket = await TicketService.GetListTicketByBillIdAsync(Guid.Parse(Id));
@@ -220,4 +222,15 @@
 		};
 	}
 
+    private async Task Checkout()
+    {
+        if (objBill.Status == BillStatus.Paid.ToString())
+        {
+            await JSRuntime.InvokeAsync<string>("alert", "Đơn hàng đã được thanh toán");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/checkout/detail/{Id}", true);
+        }
+    }
 }

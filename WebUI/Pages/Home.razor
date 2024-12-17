@@ -204,7 +204,8 @@ else
 							SeatsSelectedstr="@SeatsSelectedstr"
 							TotalTicket="@TotalTicket"
 							NextToComboModal="OpenComboSelectionModal"
-							BackToShowtimeModal="ShowCloseConfirmation" />
+							BackToShowtimeModal="ShowCloseConfirmation"
+							resetSeat ="ResetSeatSelection"/>
 			</div>
 		</div>
 	</div>
@@ -572,6 +573,7 @@ else
 
 	protected async override Task OnInitializedAsync()
 	{
+		await DeletePendingBill();
 		listObjFilm = await UserHomeService.GetAllFilmForUserHome();
 		var banners = await BannerService.GetBannersAsync();
 		if (banners != null)
@@ -585,7 +587,6 @@ else
         {
             NavigationManager.NavigateTo("/offline-counter");
 		}
-		await DeletePendingBill();
 		base.OnInitialized();
 	}
 
@@ -625,7 +626,7 @@ else
 				billDtos = await BillService.GetListBillAsync();
 				if (billDtos != null)
 				{
-					var bill = billDtos.FirstOrDefault(x => x.MembershipId == userId && x.Status == BillStatus.Pending.ToString());
+					var bill = billDtos.FirstOrDefault(x => x.AccountId == userId && x.Status == BillStatus.Pending.ToString());
 					if (bill != null)
 					{
 						await UserHomeService.DeleteCheckAsync(bill.Id, cancellationToken);
@@ -681,6 +682,7 @@ else
 	private async Task OpenComboSelectionModal(EventCallbackHomeArgs args)
 	{
 		await comboFooterRef.Reset();
+        await comboSelectionModalref.Reset();
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
 		BillId = args.BillId;
 		AccountId = args.AccountId;
@@ -700,6 +702,7 @@ else
 		await seatSelectionModalref.Reset();
 		await comboFooterRef.Reset();
 		await seatFooterRef.Reset();
+		await comboSelectionModalref.Reset();
 		lstSeats.Clear();
 		lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
@@ -715,6 +718,8 @@ else
 	{
 		await seatSelectionModalref.Reset();
 		await seatFooterRef.Reset();
+		await comboSelectionModalref.Reset();
+        await comboFooterRef.Reset();
 		lstSeats.Clear();
 		lstCheckedSeats.Clear();
 		SeatsSelectedstr = "";
@@ -743,7 +748,7 @@ else
 	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
 		AccountId = args.AccountId;
-    OpenDiscount = args.NextToDiscount;
+		OpenDiscount = args.NextToDiscount;
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
 	}
@@ -766,5 +771,17 @@ else
 		await JSRuntime.InvokeVoidAsync("alert", "Hết thời gian");
 		await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
 		NavigationManager.Refresh();
+	}
+
+	public async Task ResetSeatSelection()
+	{
+		await seatSelectionModalref.Reset();
+		await seatFooterRef.Reset();
+		lstSeats.Clear();
+		lstCheckedSeats.Clear();
+		SeatsSelectedstr = "";
+		BillId = Guid.Empty;
+		TotalMoney = 0;
+        TotalTicket = 0;
 	}
 }
