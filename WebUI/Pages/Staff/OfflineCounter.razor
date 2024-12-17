@@ -113,7 +113,8 @@
                 TotalTicket="@TotalTicket"
                 NextToComboOfflineCounter="OpenComboSelectionModal"
                 BackToShowtimeOfflineCounter="CloseSeatSelectionModal"
-                @ref="seatFooterRef" />
+                @ref="seatFooterRef"
+                resetSeat="ResetSeatSelection" />
             </div>
         </div>
     </div>
@@ -551,9 +552,10 @@
     }
     private async Task OpenComboSelectionModal(EventCallbackOfflineCounterArgs args)
     {
-        Task.Delay(300);
-        BillId = args.BillId;
+        await comboFooterRef.Reset();
+        await comboSelectionModalref.Reset();
         await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        BillId = args.BillId;
         await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
     }
     private void HandleSelectedCombos(EventCallbackOfflineCounterArgs args)
@@ -568,6 +570,7 @@
         await seatSelectionModalref.Reset();
         await comboFooterRef.Reset();
         await seatFooterRef.Reset();
+        await comboSelectionModalref.Reset();
         lstSeats.Clear();
         SeatsSelectedstr = "";
         BillId = Guid.Empty;
@@ -581,8 +584,9 @@
     private async Task CancelCheckout(Guid id)
     {
         await seatSelectionModalref.Reset();
-        await comboFooterRef.Reset();
         await seatFooterRef.Reset();
+        await comboSelectionModalref.Reset();
+        await comboFooterRef.Reset();
         lstSeats.Clear();
         SeatsSelectedstr = "";
         BillId = Guid.Empty;
@@ -629,6 +633,18 @@
     {
         SelectedMethod = s;
         StateHasChanged();
+    }
+
+    public async Task ResetSeatSelection()
+    {
+        await seatSelectionModalref.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        lstCheckedSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        TotalTicket = 0;
     }
     
 }
