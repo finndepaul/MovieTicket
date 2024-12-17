@@ -18,7 +18,7 @@
 </div>
 
 <div class="container-fluid">
-    <a class="btn add-btn me-md-2" href="/combo/create">  <i class="bi bi-plus-square"></i> Tạo dịch vụ</a>
+    <a class="btn add-btn me-md-2" href="/dich-vu/create">  <i class="bi bi-plus-square"></i> Tạo dịch vụ</a>
 
     <div class="table-responsive mb-3">
         <table class="table">
@@ -45,7 +45,7 @@
                             <td>@combo.Price?.ToString("#,##0") VND</td>
                             <td><span class="badge @(GetBadgeClass(combo.comboStatus))">@combo.comboStatus</span></td>
                             <td>
-                                <a class="btn edit-btn" href="@($"/combo/update/{combo.Id}")">
+                                <a class="btn edit-btn" href="@($"/dich-vu/update/{combo.Id}")">
                                      <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <button class="btn btn-danger" @onclick="() => GetComboDeleteId(combo.Id)">
