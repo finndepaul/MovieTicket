@@ -1,5 +1,7 @@
 ﻿@using MovieTicket.Application.DataTransferObjs.Account
 @using MovieTicket.Application.DataTransferObjs.BillCombo
+@using System.Text;
+@using System.Globalization
 @attribute [Authorize(Roles = "Staff")]
 @layout WebUI.Layout.StaffLayout
 
@@ -53,7 +55,88 @@
 				{
 					<p>Không có dữ liệu</p>
 				}
+			
 			</div>
+			<div class="d-flex justify-content-center border" style="width:100%">
+				<div class="border border-5 border-black rounded-4 p-1" style="width:50%">
+					@if (BarcodeImage != null)
+					{
+						<img src="@BarcodeImage" style="width:100%" height="200" class="object-fit-contain" />
+					}
+					<p class="text-center fw-bold" style="font-family:Arial">@objBill.BarCode</p>
+
+				</div>
+
+			</div>
+		</div>
+		<div class="col-md-6 mb-3">
+			<div class="py-2 mb-3 border-bottom">
+				<h5>Ghế & Dịch vụ</h5>
+			</div>
+			<!-- Thông tin ghế -->
+			<table class="table align-middle mb-5">
+				<thead class="table-secondary">
+					<tr>
+						<th>Thông tin ghế</th>
+						<th>Loại ghế</th>
+						<th>Giá tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (lstSeat.Count > 0)
+					{
+						@foreach (var item in lstSeat)
+						{
+							<tr>
+								<td>@item.SeatName</td>
+								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
+								<td>@item.Price.ToString("#,##0") VND</td>
+							</tr>
+						}
+
+					}
+					else
+					{
+						<tr>
+							<td colspan="3">Không có dữ liệu</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<!-- Dịch vụ -->
+			<table class="table align-middle">
+				<thead class="table-secondary">
+					<tr>
+						<th>Tên dịch vụ</th>
+						<th>Số lượng</th>
+						<th>Đơn giá</th>
+						<th>Tổng tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (lstBillCombo.Count > 0)
+					{
+						@foreach (var item in lstBillCombo)
+						{
+							<tr>
+								<td>@item.ComboName</td>
+								<td>@item.Quantity</td>
+								<td>@item.Price.Value.ToString("#,##0") VND</td>
+								<td>@item.TotalPrice.Value.ToString("#,##0") VND</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="4">Không có dữ liệu</td>
+						</tr>
+					}
+
+
+				</tbody>
+			</table>
 		</div>
 	</div>
 }
@@ -63,78 +146,103 @@ else
 }
 
 <script type="text/javascript">
+	// Base64 font Roboto (thay the bang ma Base64 chinh thuc cua ban)
+	window.robotoFontBase64 = "AAEAAAASAQAABAAgR0RFRrRCsIIAAEAAAAXAAAA..."; // Gia tri Base64 thuc cua font Roboto
+
 	window.generatePdf = function(pdfContentJson) {
-		var pdfContent = JSON.parse(pdfContentJson);
-		var { jsPDF } = window.jspdf;
-		if (!jsPDF) {
-			console.error("jsPDF library is not loaded.");
-			return;
-		}
+	  var pdfContent = JSON.parse(pdfContentJson);
+	  var { jsPDF } = window.jspdf;
 
-		var doc = new jsPDF();
-		doc.setFontSize(20);
-		doc.text("Hoa Don Phim", 105, 10, { align: "center" });
-		doc.setFontSize(14);
-		doc.text(`Phim: ${pdfContent.FilmName}`, 10, 20);
-		doc.text(`Gio chieu: ${pdfContent.Showtime}`, 10, 30);
-		doc.text(`Ngay Chieu: ${pdfContent.ShowDate}`, 10, 40);
-		doc.text(`Phong chieu: ${pdfContent.Cinema}`, 10, 50);
-		doc.text(`Rap chieu: ${pdfContent.CinemaCenter}`, 10, 60);
-		doc.text(`Khach hang: ${pdfContent.CustomerName}`, 10, 70);
-		doc.text(`Dien thoai: ${pdfContent.CustomerPhone}`, 10, 80);
-		doc.text(`Email: ${pdfContent.CustomerEmail}`, 10, 90);
+	  if (!jsPDF) {
+		console.error("jsPDF library is not loaded.");
+		return;
+	  }
 
-		let yPosition = 100; // Starting point for Seats
-		@* if (pdfContent.Seats && pdfContent.Seats.length > 0) {
-			doc.text("Thong tin ghe:", 10, yPosition);
-			yPosition += 10;
-			pdfContent.Seats.forEach((seat, index) => {
-				doc.text(`${seat.SeatName} | Loai ghe: ${seat.SeatType} | Gia ghe: ${seat.Price} VND`, 10, yPosition);
-				yPosition += 10;
-			});
-		} else {
-			doc.text("Khong co ghe chon.", 10, yPosition);
-			yPosition += 10;
-		}
+	  var doc = new jsPDF();
 
-		if (pdfContent.Combos && pdfContent.Combos.length > 0) {
-			doc.text("Dich vu bo sung:", 10, yPosition);
-			yPosition += 10;
-			pdfContent.Combos.forEach((combo, index) => {
-				doc.text(`${combo.ComboName} | So luong: ${combo.Quantity} | Don gia: ${combo.Price} VND | Tong: ${combo.TotalPrice} VND`, 10, yPosition);
-				yPosition += 10;
-			});
-		} else {
-			doc.text("Khong co dich vu bo sung", 10, yPosition);
-			yPosition += 10;
-		} *@
+	  // Them font va cai dat font
+	  doc.addFileToVFS("Roboto-Regular.ttf", window.robotoFontBase64);  // Dam bao ban co Base64 dung
+	  doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+	  doc.setFont("Roboto", "normal");
 
-		doc.text(`Thanh tien: ${pdfContent.TotalMoney} VND`, 10, yPosition);
+	  // Tieu de
+	  doc.setFontSize(18);
+	  doc.setFont("Roboto", "bold");
+	  doc.text("VE XEM PHIM", 105, 15, { align: "center" });
+
+	  // Phu de voi ten phim
+	  doc.setFontSize(14);
+	  doc.text(`Phim: ${pdfContent.FilmName}`, 105, 25, { align: "center" });
+
+	  // Ve duong phan cach
+	  doc.line(10, 30, 200, 30);
+
+	  // Phan chi tiet
+	  doc.setFontSize(12);
+	  doc.setFont("Roboto", "normal");
+	  doc.text(`Ngay chieu: ${pdfContent.ShowDate}`, 10, 40);
+	  doc.text(`Gio chieu: ${pdfContent.Showtime}`, 10, 50);
+	  doc.text(`Phong chieu: ${pdfContent.Cinema}`, 10, 60);
+	  doc.text(`Rap chieu: ${pdfContent.CinemaCenter}`, 10, 70);
+
+	  // Thong tin ghe ngoi
+	  doc.text("Thong tin ghe:", 10, 80);
+	  let yPosition = 90;
+	  if (pdfContent.Seats && pdfContent.Seats.length > 0) {
+		pdfContent.Seats.split(" ").forEach((seat) => {
+		  doc.text(`- Ghe: ${seat}`, 15, yPosition);
+		  yPosition += 10;
+		});
+	  } else {
+		doc.text("Khong co thong tin ghe.", 15, yPosition);
 		yPosition += 10;
-		doc.text(`Giam gia: ${pdfContent.Discount} VND`, 10, yPosition);
+	  }
+
+	  // Chi tiet gia tien
+	  doc.text(`Thanh tien: ${pdfContent.TotalMoney} VND`, 10, yPosition);
+	  yPosition += 10;
+	  doc.text(`Giam gia: ${pdfContent.Discount} VND`, 10, yPosition);
+	  yPosition += 10;
+	  doc.text(`Tong tien: ${pdfContent.AfterDiscount} VND`, 10, yPosition);
+
+	// Footer với mã vạch (nếu có)
+	if (pdfContent.BarcodeImage) {
+		const leftMargin = 10;
 		yPosition += 10;
-		doc.text(`Tong tien: ${pdfContent.AfterDiscount} VND`, 10, yPosition);
+		doc.text("Ma vach:", leftMargin, yPosition);
+		yPosition += 10;
+		try {
+			if (pdfContent.BarcodeImage.startsWith("data:image/png;base64,")) {
+				doc.addImage(pdfContent.BarcodeImage, "PNG", leftMargin, yPosition, 50, 20); 
+				yPosition += 25;
+				doc.setFontSize(12);
+				doc.text(pdfContent.BarcodeNumber, leftMargin, yPosition); // x = leftMargin
+			} else {
+				console.error("Barcode image is not a valid Base64 PNG.");
+				doc.text("Lỗi: Mã vạch không hợp lệ.", leftMargin, yPosition);
+			}
+		} catch (error) {
+			console.error("Error adding barcode image:", error);
+			doc.text("Lỗi: Không thể thêm mã vạch.", leftMargin, yPosition);
+		}
+	}
 
-		// Save the PDF
-		@* doc.save("HoaDonXemPhim.pdf"); *@
+	  // Luu hoac in
+	  var iframe = document.createElement('iframe');
+	  iframe.style.position = 'fixed';
+	  iframe.style.width = '1px';
+	  iframe.style.height = '1px';
+	  iframe.style.opacity = '0.01';
+	  document.body.appendChild(iframe);
 
-		// Print the PDF
-		var iframe = document.createElement('iframe');
-		iframe.style.position = 'fixed';
-		iframe.style.width = '1px';
-		iframe.style.height = '1px';
-		iframe.style.opacity = '0.01';
-		document.body.appendChild(iframe);
-
-		iframe.src = doc.output('bloburl');
-		iframe.onload = function() {
-			iframe.contentWindow.focus();
-			iframe.contentWindow.print();
-		};
+	  iframe.src = doc.output('bloburl');
+	  iframe.onload = function() {
+		iframe.contentWindow.focus();
+		iframe.contentWindow.print();
+	  };
 	};
 </script>
-
-
+ 
 @code {
 	[Parameter] public string Id { get; set; }
 	private BillWithPaginationRequest request = new BillWithPaginationRequest();
@@ -175,6 +283,8 @@ else
 		public string TotalMoney { get; set; }
 		public string Discount { get; set; }
 		public string AfterDiscount { get; set; }
+		public string BarcodeImage { get; set; }
+		public string BarcodeNumber { get; set; } 
 	}
 
 	private List<BillComboDto> lstBillCombo = new List<BillComboDto>();
@@ -216,7 +326,7 @@ else
 				{
 					IsHidden = true;
 					objBill = await BillService.GetBillByIdAsync(BillId);
-					objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+					objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
 					lstTicket = await TicketService.GetListTicketByBillIdAsync(BillId);
 					objTicket = lstTicket.FirstOrDefault(x => x.BillId == BillId);
 					var showtimeId = objTicket.ShowTimeId.Value;
@@ -258,32 +368,52 @@ else
 			_ => "Không xác định"
 		};
 	}
+
 	private async Task BillPrint()
 	{
 		if (IsHidden)
 		{
-		
-			var pdfContent = new BillContent
+			foreach (var seat in lstSeat)
 			{
-				FilmName = objShowTime.FilmName,
-				Showtime = $"{objShowTime?.StartTime?.ToString("HH:mm")} - {objShowTime?.EndTime?.ToString("HH:mm")}",
-				ShowDate = objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"),
-				Cinema = objShowTime?.CinemaName,
-				CinemaCenter = objShowTime?.CinemaCenterName,
-				CustomerName = objAccount?.Name,
-				CustomerPhone = objAccount?.Phone,
-				CustomerEmail = objAccount?.Email,
-				Seats = string.Join(" ", lstSeat.Select(x=>x.SeatName)),
-				Combos = string.Join(" ", lstBillCombo.Select(x => x.ComboName)),
-				TotalMoney = objBill?.TotalMoney?.ToString("#,##0"),
-				Discount = (objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"),
-				AfterDiscount = objBill?.AfterDiscount?.ToString("#,##0")
-			};
-			Console.WriteLine($"pdfContent: {System.Text.Json.JsonSerializer.Serialize(pdfContent)}");
-			var pdfContentJson = System.Text.Json.JsonSerializer.Serialize(pdfContent);
-			// Call JavaScript function to generate PDF
-			await JSRuntime.InvokeVoidAsync("generatePdf", pdfContentJson);
+				var pdfContent = new BillContent
+					{
+						FilmName = RemoveDiacritics(objShowTime.FilmName),
+						Showtime = $"{objShowTime?.StartTime?.ToString("HH:mm")} - {objShowTime?.EndTime?.ToString("HH:mm")}",
+						ShowDate = objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"),
+						Cinema = RemoveDiacritics(objShowTime?.CinemaName),
+						CinemaCenter = RemoveDiacritics(objShowTime?.CinemaCenterName),
+						CustomerName = RemoveDiacritics(objAccount?.Name),
+						CustomerPhone = objAccount?.Phone,
+						CustomerEmail = objAccount?.Email,
+						Seats = RemoveDiacritics(seat.SeatName),
+						TotalMoney = seat.Price.ToString("#,##0"),
+						Discount = "0",
+						AfterDiscount = seat.Price.ToString("#,##0"),
+						BarcodeImage = BarcodeImage,
+						BarcodeNumber = objBill.BarCode
+					};
+				var pdfContentJson = System.Text.Json.JsonSerializer.Serialize(pdfContent);
+				// Gọi hàm JavaScript để tạo PDF
+				await JSRuntime.InvokeVoidAsync("generatePdf", pdfContentJson);
+			}
 		}
+	}
+
+	public static string RemoveDiacritics(string text)
+	{
+		var normalizedString = text.Normalize(NormalizationForm.FormD);
+		var stringBuilder = new StringBuilder();
+
+		foreach (var character in normalizedString)
+		{
+			var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(character);
+			if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+			{
+				stringBuilder.Append(character);
+			}
+		}
+
+		return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
 	}
 
 }

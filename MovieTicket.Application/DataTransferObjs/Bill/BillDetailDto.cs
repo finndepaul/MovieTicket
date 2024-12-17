@@ -7,6 +7,7 @@ namespace MovieTicket.Application.DataTransferObjs.Bill
 	{
 		public Guid Id { get; set; }
 		public Guid? MembershipId { get; set; }
+		public Guid? AccountId { get; set; }
 
 		//public Guid? VoucherId { get; set; }
 		public int BillCode { get; set; }

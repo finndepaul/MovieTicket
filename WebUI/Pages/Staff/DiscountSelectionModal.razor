@@ -128,9 +128,6 @@
 			@errorMessage
 		</div>
 	}
-	<div>
-
-	</div>
 </div>
 <div class="d-flex container-payment p-3">
 	<div class="payment-container">
@@ -188,6 +185,25 @@
 				<input class="form-check-input" type="radio" name="payment" id="cash" value="cash" @onchange="HandlePaymentMethodChange">
 				<label class="form-check-label" for="cash">Tiền mặt</label>
 			</div>
+			@if (show)
+			{
+				<div class="mb-3 btn-option pe-5">
+					<label for="vhdPoints" class="form-label">Khách đưa:</label>
+					<input type="number"
+					class="form-control"
+					@bind-value="MoneyTake">
+					<div id="passwordHelpBlock" class="form-text ms-3">
+						<p class="m-0 p-0" style="font-size:20px">Trả lại: @MoneyReturn</p>
+					</div>
+					<button class="ms-2 btn btn-success" @onclick="ReturnChange">Xác nhận</button>
+				</div>
+				@if (!String.IsNullOrEmpty(errorMessage2))
+				{
+					<div class="alert alert-danger" role="alert">
+						@errorMessage2
+					</div>
+				}
+			}
 		</div>
 	</div>
 </div>
@@ -200,6 +216,7 @@
 	[Parameter] public EventCallback TimerOutDiscount { get; set; }
 	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnAppliedDiscount { get; set; }
 	[Parameter] public EventCallback<string> Method { get; set; }
+	[Parameter] public decimal TotalMoney { get; set; }
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private string CouponCode { get; set; } = string.Empty;
 	private int VHDPoints { get; set; } = 0;
@@ -212,8 +229,12 @@
 	private Countdown? timer;
 	private string memPhone { get; set; }
 	private string errorMessage = string.Empty;
+	private string errorMessage2 = string.Empty;
 	private AccountDto accountDto { get; set; }
-	private string selectedPaymentMethod = "vnpay";
+	private string selectedPaymentMethod;
+	private decimal MoneyTake { get; set; }
+	private decimal MoneyReturn { get; set; }
+	private bool show = false;
 
 	protected override async Task OnParametersSetAsync()
 	{
@@ -353,15 +374,29 @@
 		}
 	}
 
+	private async void ReturnChange()
+	{
+		errorMessage2 = string.Empty;
+		if (MoneyTake < TotalMoney)
+		{
+			errorMessage2 = "Số tiền khách đưa không đủ!";
+			return;
+		}
+		MoneyReturn = MoneyTake - TotalMoney;
+		StateHasChanged();
+	}
+
 	private async void HandlePaymentMethodChange(ChangeEventArgs e)
 	{
 		selectedPaymentMethod = e.Value.ToString();
 		if (selectedPaymentMethod == "qr")
 		{
-            await Method.InvokeAsync("qr");
+			show = false;
+			await Method.InvokeAsync("qr");
 		}
 		else if (selectedPaymentMethod == "cash")
 		{
+            show = true;
             await Method.InvokeAsync("cash");
 		}
 		StateHasChanged();
