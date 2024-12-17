@@ -73,21 +73,21 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Đăng:
-            //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+			// Đăng:
+			//optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-            // Trung:
-            //optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
+			// Trung:
+			//optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
 
-            // Toản:
-            //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+			// Toản:
+			//optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-            // Vũ:
-            //optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+			// Vũ:
+			//optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-            // Đông:
-            //optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
-        }
+			// Đông:
+			//optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -121,7 +121,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 Avatar = "img/Avatar/avatar.jpg",
                 Name = "ClientTest",
                 Phone = "000-000-000",
-                Email = "azusachan309@gmail.com",
+                Email = "dangnph36044@fpt.edu.vn",
                 Status = Domain.Enums.AccountStatus.Active, // 0 or 1
                 CreateDate = new DateTime(2024, 10, 1).AddDays(10)
             });
@@ -134,7 +134,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 Avatar = "img/Avatar/avatar.jpg",
                 Name = "ClientTest",
                 Phone = "000-000-000",
-                Email = "dangnph36044@fpt.edu.vn",
+                Email = "toandmph33341@fpt.edu.vn",
                 Status = Domain.Enums.AccountStatus.Active, // 0 or 1
                 CreateDate = new DateTime(2024, 10, 1).AddDays(10)
             });
@@ -166,7 +166,7 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 Gerne = "Hành Động, Hoạt Hình, Phiêu Lưu, Thần thoại",
                 Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634578/yffvfsxiuf4ixbw9ddnx.jpg",
                 RunningTime = 99,
-				Language = "Tiếng Việt",
+                Language = "Tiếng Việt",
                 Nation = "Mỹ",
                 Rating = 12,
                 ReleaseYear = 2024,
@@ -174,117 +174,119 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
                 StartDate = DateTime.Now,
                 Description = "Không biết viết gì"
             });
-			films.Add(new Film()
-			{
-				Id = Guid.Parse("288e19a4-c528-4fe5-8e03-5a3066255936"),
-				Name = "LINH MIÊU",
-				Cast = "Hồng Đào, Thiên An, Thuỳ Tiên, Văn Anh, Samuel An,...",
-				CreatDate = DateTime.Now,
-				Director = "Lưu Thành Luân",
-				EnglishName = "LINH MIÊU",
-				Gerne = "Kinh Dị",
-				Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634563/ape0ki5noohoxdc9gzkq.jpg",
-				RunningTime = 109,
-				Language = "Tiếng Việt",
-				Nation = "Việt Nam",
-				Rating = 18,
-				ReleaseYear = 2024,
-				Trailer = "https://www.youtube.com/embed/4oxoPMxBO6s",
-				StartDate = DateTime.Now,
-				Description = "Không biết viết gì"
-			});
             films.Add(new Film()
-			{
-				Id = Guid.Parse("afb5722b-e26e-4ea5-8b78-8cfc648a00ce"),
-				Name = "CHIẾN ĐỊA TỬ THI",
-				Cast = "Nonkul, Awat Ratanapintha, Supitcha Sangkhachinda, Akkarat Nimitchai, Thawatchanin Darayon, Thanadol Auepong, Guntapat Kasemsan Na Ayudhya, Seigi Ohzeki.",
-				CreatDate = DateTime.Now,
-				Director = "Kongkiat Komesiri",
-				EnglishName = "CHIẾN ĐỊA TỬ THI",
-				Gerne = "Kinh Dị",
-				Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634546/za98kf952chgo70lwgt5.jpg",
-				RunningTime = 105,
-				Language = "Tiếng Việt",
-				Nation = "Thái lan",
-				Rating = 18,
-				ReleaseYear = 2024,
-				Trailer = "https://www.youtube.com/embed/k_uHgoVKppU",
-				StartDate = DateTime.Now,
-				Description = "Không biết viết gì"
-			});
+            {
+                Id = Guid.Parse("288e19a4-c528-4fe5-8e03-5a3066255936"),
+                Name = "LINH MIÊU",
+                Cast = "Hồng Đào, Thiên An, Thuỳ Tiên, Văn Anh, Samuel An,...",
+                CreatDate = DateTime.Now,
+                Director = "Lưu Thành Luân",
+                EnglishName = "LINH MIÊU",
+                Gerne = "Kinh Dị",
+                Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634563/ape0ki5noohoxdc9gzkq.jpg",
+                RunningTime = 109,
+                Language = "Tiếng Việt",
+                Nation = "Việt Nam",
+                Rating = 18,
+                ReleaseYear = 2024,
+                Trailer = "https://www.youtube.com/embed/4oxoPMxBO6s",
+                StartDate = DateTime.Now,
+                Description = "Không biết viết gì"
+            });
             films.Add(new Film()
-			{
-				Id = Guid.Parse("7f4a0fe8-21b8-4333-958a-28cffd373782"),
-				Name = "CƯỜI XUYÊN BIÊN GIỚI",
-				Cast = "Ryu Seung-ryong , Jin Sun-kyu, Igor Rafael P EDROSO, Luan B RUM DE ABREU E LIMA, JB João Batista GOMES DE O LIVEIRA, Yeom Hye-ran và Go Kyoung- pyo, Lee Soon-won",
-				CreatDate = DateTime.Now,
-				Director = "KIM Chang-ju",
-				EnglishName = "CƯỜI XUYÊN BIÊN GIỚI",
-				Gerne = "Hài",
-				Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634595/qvokyz23egxqdubqtpo4.jpg",
-				RunningTime = 113,
-				Language = "Tiếng Việt",
-				Nation = "Hàn Quốc",
-				Rating = 13,
-				ReleaseYear = 2024,
-				Trailer = "https://www.youtube.com/embed/4ALt4VT7grw",
-				StartDate = DateTime.Now,
-				Description = "Không biết viết gì"
-			});
+            {
+                Id = Guid.Parse("afb5722b-e26e-4ea5-8b78-8cfc648a00ce"),
+                Name = "CHIẾN ĐỊA TỬ THI",
+                Cast = "Nonkul, Awat Ratanapintha, Supitcha Sangkhachinda, Akkarat Nimitchai, Thawatchanin Darayon, Thanadol Auepong, Guntapat Kasemsan Na Ayudhya, Seigi Ohzeki.",
+                CreatDate = DateTime.Now,
+                Director = "Kongkiat Komesiri",
+                EnglishName = "CHIẾN ĐỊA TỬ THI",
+                Gerne = "Kinh Dị",
+                Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634546/za98kf952chgo70lwgt5.jpg",
+                RunningTime = 105,
+                Language = "Tiếng Việt",
+                Nation = "Thái lan",
+                Rating = 18,
+                ReleaseYear = 2024,
+                Trailer = "https://www.youtube.com/embed/k_uHgoVKppU",
+                StartDate = DateTime.Now,
+                Description = "Không biết viết gì"
+            });
             films.Add(new Film()
-			{
-				Id = Guid.Parse("ed01e472-79ad-48cd-b67f-19e3d315f02f"),
-				Name = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
-				Cast = "Ayana Taketatsu, Ayane Sakura, Inori Minase, Kana Hanazawa, Miku Itō, Yoshitsugu Matsuoka",
-				CreatDate = DateTime.Now,
-				Director = "Masato Jinbo",
-				EnglishName = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
-				Gerne = "Hoạt Hình",
-				Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634607/tv2wzjrjndylbiob33tv.jpg",
-				RunningTime = 47,
-				Language = "Tiếng Việt",
-				Nation = "Nhật bản",
-				Rating = 13,
-				ReleaseYear = 2024,
-				Trailer = "https://www.youtube.com/embed/yBp6nAkI3ns",
-				StartDate = DateTime.Now,
-				Description = "Không biết viết gì"
-			}); 
+            {
+                Id = Guid.Parse("7f4a0fe8-21b8-4333-958a-28cffd373782"),
+                Name = "CƯỜI XUYÊN BIÊN GIỚI",
+                Cast = "Ryu Seung-ryong , Jin Sun-kyu, Igor Rafael P EDROSO, Luan B RUM DE ABREU E LIMA, JB João Batista GOMES DE O LIVEIRA, Yeom Hye-ran và Go Kyoung- pyo, Lee Soon-won",
+                CreatDate = DateTime.Now,
+                Director = "KIM Chang-ju",
+                EnglishName = "CƯỜI XUYÊN BIÊN GIỚI",
+                Gerne = "Hài",
+                Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634595/qvokyz23egxqdubqtpo4.jpg",
+                RunningTime = 113,
+                Language = "Tiếng Việt",
+                Nation = "Hàn Quốc",
+                Rating = 13,
+                ReleaseYear = 2024,
+                Trailer = "https://www.youtube.com/embed/4ALt4VT7grw",
+                StartDate = DateTime.Now,
+                Description = "Không biết viết gì"
+            });
             films.Add(new Film()
-			{
-				Id = Guid.Parse("035b2879-ebe6-432e-b198-a66b29c3c7c5"),
-				Name = "TRAPEZIUM",
-				Cast = "Yu Azuma, Kurumi Taiga, Ranko Katori, Mika Kamei",
-				CreatDate = DateTime.Now,
-				Director = "Masahiro Shinohara",
-				EnglishName = "TRAPEZIUM",
-				Gerne = "Hoạt Hình",
-				Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634484/vy0dr6fhhmuuya5exfmy.jpg",
-				RunningTime = 102,
-				Language = "Tiếng Việt",
-				Nation = "Nhật bản",
-				Rating = 13,
-				ReleaseYear = 2024,
-				Trailer = "https://www.youtube.com/embed/MIFfAMck7oA",
-				StartDate = DateTime.Now,
-				Description = "Không biết viết gì"
-			});
-			modelBuilder.Entity<Film>().HasData(films);
+            {
+                Id = Guid.Parse("ed01e472-79ad-48cd-b67f-19e3d315f02f"),
+                Name = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
+                Cast = "Ayana Taketatsu, Ayane Sakura, Inori Minase, Kana Hanazawa, Miku Itō, Yoshitsugu Matsuoka",
+                CreatDate = DateTime.Now,
+                Director = "Masato Jinbo",
+                EnglishName = "NHÀ CÓ NĂM NÀNG DÂU SPECIALS 2",
+                Gerne = "Hoạt Hình",
+                Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634607/tv2wzjrjndylbiob33tv.jpg",
+                RunningTime = 47,
+                Language = "Tiếng Việt",
+                Nation = "Nhật bản",
+                Rating = 13,
+                ReleaseYear = 2024,
+                Trailer = "https://www.youtube.com/embed/yBp6nAkI3ns",
+                StartDate = DateTime.Now,
+                Description = "Không biết viết gì"
+            });
+            films.Add(new Film()
+            {
+                Id = Guid.Parse("035b2879-ebe6-432e-b198-a66b29c3c7c5"),
+                Name = "TRAPEZIUM",
+                Cast = "Yu Azuma, Kurumi Taiga, Ranko Katori, Mika Kamei",
+                CreatDate = DateTime.Now,
+                Director = "Masahiro Shinohara",
+                EnglishName = "TRAPEZIUM",
+                Gerne = "Hoạt Hình",
+                Poster = "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634484/vy0dr6fhhmuuya5exfmy.jpg",
+                RunningTime = 102,
+                Language = "Tiếng Việt",
+                Nation = "Nhật bản",
+                Rating = 13,
+                ReleaseYear = 2024,
+                Trailer = "https://www.youtube.com/embed/MIFfAMck7oA",
+                StartDate = DateTime.Now,
+                Description = "Không biết viết gì"
+            });
+            modelBuilder.Entity<Film>().HasData(films);
 
             // Faker for Membership
             List<Membership> memberships = new List<Membership>();
-			memberships.Add(new Membership()
-			{
-				Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
-				Point = 0,
-				Status = Domain.Enums.MembershipStatus.Active
-			});
             memberships.Add(new Membership()
-			{
-				Id = Guid.Parse("0c3d44f5-af62-4e88-8ba5-062c1345354b"),
-				Point = 0,
-				Status = Domain.Enums.MembershipStatus.Active
-			});
+            {
+                Id = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+                Point = 0,
+                AccountId = Guid.Parse("35ff4cc4-7823-4ffb-95e4-c2e73dace190"),
+                Status = Domain.Enums.MembershipStatus.Active
+            });
+            memberships.Add(new Membership()
+            {
+                Id = Guid.Parse("0c3d44f5-af62-4e88-8ba5-062c1345354b"),
+                Point = 0,
+                AccountId = Guid.Parse("0c3d44f5-af62-4e88-8ba5-062c1345354b"),
+                Status = Domain.Enums.MembershipStatus.Active
+            });
             modelBuilder.Entity<Membership>().HasData(memberships);
 
             // Faker for CinemaCenter
@@ -293,35 +295,37 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
             cinemaCenters.Add(new CinemaCenter()
             {
                 Id = Guid.NewGuid(),
-                Name = "VHD Vincom Mỹ Đình",
-                Address = "Số 1 Mỹ Đình, Nam Từ Liêm,Hà Nội",
+                Name = "VHD Cinemas Mỹ Đình",
+                Address = "Số 3 Mỹ Đình, Nam Từ Liêm, Hà Nội",
                 AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.329821256736!2d105.77868087606693!3d21.01948508062756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313455b1766330d1%3A0x1511e0d5bf3067fd!2zVmluY29tIFBsYXphIFZpbmhvbWVzIFNreSBMYWtlIFBo4bqhbSBIw7luZyBN4bu5IMSQw6xuaA!5e0!3m2!1svi!2s!4v1733299099671!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
                 CreateDate = DateTime.Now,
-                 
+                AddresCity = "Hà Nội",
             });
             cinemaCenters.Add(new CinemaCenter()
             {
                 Id = Guid.Parse("ad9ca2fb-ae80-49a1-835f-8c2f26a30f3a"),
-                Name = "VHD Vincom Nguyễn Chí Thanh",
-                Address = "Số 1 Nguyễn Chí Thanh, Ba Đình,Hà Nội",
+                Name = "VHD Cinemas Lý nhân",
+                Address = "Số 20 Nguyên Lý, Lý Nhân, Hà Nam",
                 AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.2303104777766!2d105.806904776067!3d21.02346878062462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab6a17e518e3%3A0x82ef164fc911c781!2sVincom%20Center%20Nguy%E1%BB%85n%20Ch%C3%AD%20Thanh!5e0!3m2!1svi!2s!4v1733298758785!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
                 CreateDate = DateTime.Now,
+                AddresCity = "Hà Nam",
             });
             cinemaCenters.Add(new CinemaCenter()
             {
                 Id = Guid.NewGuid(),
-                Name = "VHD TimeCity",
-                Address = "Số 1 Minh Khai, Hai Bà Trưng,Hà Nội",
+                Name = "VHD Cinemas Đoan Hùng",
+                Address = "Số 29 Ngọc Quan, Đoan Hùng, Phú Thọ",
                 AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.9458662701677!2d105.8652574760663!3d20.994806980646135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac04b6fcfa63%3A0x579e974a43b9f42f!2sVincom%20Mega%20Mall%20Times%20City!5e0!3m2!1svi!2s!4v1733299130109!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
                 CreateDate = DateTime.Now,
+                AddresCity = "Phú Thọ",
             });
             modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
             // Faker for Combo
             var comboFaker = new Faker<Combo>()
                    .RuleFor(c => c.Id, f => Guid.NewGuid())
                    .RuleFor(c => c.Name, f => $"Combo {f.IndexFaker}")
-				   .RuleFor(c => c.Price, f => 30000 * f.IndexFaker)
-				   .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
+                   .RuleFor(c => c.Price, f => 30000 * f.IndexFaker)
+                   .RuleFor(c => c.Description, "02 nước ngọt siêu lớn + 01 bắp hai vị\r\n- Nhận 01 mã dự thưởng có cơ hội trúng Huy Hiệu Vàng kỉ niệm 10 năm đồng hành CGVxCOCA. Chi tiết chương trình tham khảo thêm tại website www.cgv.vn")
                    .RuleFor(c => c.ComboStatus, ComboStatus.Available)
                    .RuleFor(c => c.Image, "https://res.cloudinary.com/dqj2f2xbo/image/upload/v1733634716/h3hwwervvd5rekegmb8b.png");
 

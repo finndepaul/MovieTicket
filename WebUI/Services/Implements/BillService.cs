@@ -62,7 +62,11 @@ namespace WebUI.Services.Implements
                 queryParameters.Add("StartTime", request.StartTime.ToString());
                 queryParameters.Add("EndTime", request.EndTime.ToString());
             }
-            if (request.CinemaCenterId.HasValue)
+			if (request.AccountId.HasValue)
+			{
+				queryParameters.Add("AccountId", request.AccountId.ToString());
+			}
+			if (request.CinemaCenterId.HasValue)
             {
                 queryParameters.Add("CinemaCenterId", request.CinemaCenterId.ToString());
 			}

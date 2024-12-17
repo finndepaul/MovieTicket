@@ -22,7 +22,7 @@
             @foreach (var item in City)
             {
                 var isActive = (item == selectedCityName) ? "active" : "";
-                <li class="sort-show-time @isActive" @onclick="()=>SelectedCityName(item)">
+                <li class="sort-city @isActive" style="" @onclick="()=>SelectedCityName(item)">
                     <p>@item</p>
                 </li>
             }
@@ -86,6 +86,21 @@
     padding: 5px 10px;
     margin-right: 5px;
     cursor: pointer;
+    }
+
+        .sort-city.active {
+            background-color: #0056b3;
+            color: white;
+        }
+
+    .sort-city {
+        background-color: white;
+        color: black;
+        border: 1px solid #0056b3;
+        border-radius: 5px;
+        padding: 5px;
+        margin-right: 5px;
+        cursor: pointer;
     }
 
     .date.active {
@@ -172,7 +187,7 @@
         var cinemaCenter = await CinemaCenterService.GetCinemaCentersAsync(new CinemaCenterSearch());
         City = cinemaCenter.Select(x => x.AddresCity).Distinct().ToList();
         ShowTimeSort = paginationResponse.Item
-            .Where(x => x.FilmId == Guid.Parse(Id) && x.StartTime.Value > DateTime.Now)
+            .Where(x => x.FilmId == Guid.Parse(Id) && x.City == selectedCityName && x.StartTime.Value > DateTime.Now)
             .GroupBy(x => new { x.CinemaCenterName, x.ScreenTypeName })
             .SelectMany(x => x)
             .OrderBy(x => x.ScreenTypeName)
@@ -266,25 +281,25 @@
 		switch (day)
 		{
 			case "Monday":
-				result = "T2";
+				result = "Mon";
 				break;
 			case "Tuesday":
-				result = "T3";
+				result = "Tue";
 				break;
 			case "Wednesday":
-				result = "T4";
+				result = "Wed";
 				break;
 			case "Thursday":
-				result = "T5";
+				result = "Thu";
 				break;
 			case "Friday":
-				result = "T6";
+				result = "Fri";
 				break;
 			case "Saturday":
-				result = "T7";
+				result = "Sat";
 				break;
 			case "Sunday":
-				result = "CN";
+				result = "Sun";
 				break;
 		}
 		return result;

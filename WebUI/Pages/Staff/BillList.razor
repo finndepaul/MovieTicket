@@ -20,19 +20,20 @@
 	</div>
 </div>
 <div class="container-fluid mt-4">
-	<div class="row mb-3">
-		<div class="col">
-			<input type="text" class="form-control" @bind-value="request.BarCode" placeholder="Search by BarCode or Status" />
-		</div>
-		<div class="col-auto">
-			<button class="btn btn-primary" @onclick="SearchBarCode">Search</button>
-		</div>
+	<div class="mb-3 d-flex">
+			<input type="text" class="form-control me-3 p-2" style="width:500px" @bind-value="request.BarCode" placeholder="Tìm kiếm theo barcode" />
+			<button class="btn btn-primary me-2" style="width:138px" @onclick="SearchBarCode"><i class="bi bi-search m-0"></i>Tìm kiếm</button>
+		<button class="btn btn-warning text-light" @onclick="Refresh"><i class="bi bi-arrow-clockwise"></i>Làm mới</button>
 	</div>
 
 	<table class="table align-middle">
 		<thead>
 			<tr>
-				<th>STT</th>
+				<th>
+					<div class="border-end">
+						<p class="">STT</p>
+					</div>
+				</th>
 				<th>
 					<div class="d-flex justify-content-between border-end">
 						<p class="">Mã hóa đơn</p>
@@ -42,6 +43,8 @@
 					<div class="d-flex justify-content-between border-end">
 						<p class="">Tên phim</p>
 					</div>
+					
+				
 				</th>
 				<th>
 					<div class="d-flex justify-content-between border-end">
@@ -115,10 +118,11 @@
 
 
 		</tbody>
-		<tfoot>
-			<Pagination MetaData="metaData" Spread="3" SelectedPage="SelectedPage"></Pagination>
-		</tfoot>
+		
 	</table>
+	<div class="d-flex justify-content-start">
+		<Pagination MetaData="metaData" Spread="2" SelectedPage="SelectedPage"></Pagination>
+	</div>
 
 </div>
 
@@ -142,11 +146,16 @@
 	private BillStatus billStatus { get; set; }
 	private Guid SelectedBillId { get; set; }
 	private CancellationToken cancellationToken;
+	private AuthenticationState AuthenState;
 
 	protected async override Task OnParametersSetAsync()
 	{
 		if (!String.IsNullOrEmpty(Id))
 		{
+			AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
+			var user = AuthenState.User;
+			var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			request.AccountId = Guid.Parse(userId);
 			request.CinemaCenterId = Guid.Parse(Id);
 			request.StartTime = StartTime;
 			request.EndTime = EndTime;
@@ -161,7 +170,7 @@
 		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
 			{
 				PageNumber = pagingParameters.PageNumber,
-				PageSize = 10
+				PageSize = 5
 			});
 		lstBills = pageList.Item.ToList();
 		metaData = pageList.MetaData;
@@ -177,7 +186,7 @@
 		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
 			{
 				PageNumber = pagingParameters.PageNumber,
-				PageSize = 10
+				PageSize = 5
 			});
 		lstBills = pageList.Item.ToList();
 		metaData = pageList.MetaData;
