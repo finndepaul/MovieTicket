@@ -1,28 +1,32 @@
 ﻿@page "/offline-counter"
+@using Microsoft.AspNetCore.WebUtilities
 @layout StaffLayout
 @attribute [Authorize(Roles = "Staff")]
 
 <div class="container-fluid">
     <ul class="nav nav-tabs" id="counterTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="points-tab" data-bs-toggle="tab" data-bs-target="#showtime" type="button" role="tab" aria-controls="showtime" aria-selected="true">
+            <button class="nav-link @(activeTab == "showtime" ? "active" : "")" id="points-tab" data-bs-toggle="tab" data-bs-target="#showtime" type="button" role="tab" aria-controls="showtime" aria-selected="@(activeTab == "showtime")">
                 <i class="bi bi-award-fill"></i> Suất chiếu
             </button>
         </li>
+
         <li class="nav-item mt-3" role="presentation">
-            <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#bill" type="button" role="tab" aria-controls="bills" aria-selected="false">
+            <button class="nav-link @(activeTab == "bill" ? "active" : "")" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#bill" type="button" role="tab" aria-controls="bills" aria-selected="@(activeTab == "bill")">
                 <i class="bi bi-gift-fill"></i> Hóa đơn
             </button>
         </li>
+
         <li class="nav-item mt-3" role="presentation">
-            <button class="nav-link" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#printTicket" type="button" role="tab" aria-controls="printTicket" aria-selected="false">
+            <button class="nav-link @(activeTab == "print" ? "active" : "")" id="birthday-tab" data-bs-toggle="tab" data-bs-target="#print" type="button" role="tab" aria-controls="print" aria-selected="@(activeTab == "print")">
+
                 <i class="bi bi-gift-fill"></i> In vé
             </button>
         </li>
     </ul>
 
     <div class="tab-content" id="counterTabsContent" style="height: 100vh;">
-        <div class="tab-pane fade show active p-4 shadow-sm rounded-3"  id="showtime" role="tabpanel" aria-labelledby="showtime-tab">
+        <div class="tab-pane fade @(activeTab == "showtime" ? "show active" : "") p-4 shadow-sm rounded-3" id="showtime" role="tabpanel" aria-labelledby="showtime-tab">
             <h3 class="text-primary">Suất chiếu</h3>
             <div class="schedule-container">
                 <div class="date-navigation">
@@ -80,17 +84,20 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade p-4 shadow-sm rounded-3" id="bill" role="tabpanel" aria-labelledby="bills-tab">
+
+        <div class="tab-pane fade @(activeTab == "bill" ? "show active" : "") p-4 shadow-sm rounded-3" id="bill" role="tabpanel" aria-labelledby="bills-tab">
             <h3 class="text-success">Hóa đơn</h3>
             <BillList Id="@CinemaCenterId"/>
         </div>
-        <div class="tab-pane fade p-4 shadow-sm rounded-3" id="printTicket" role="tabpanel" aria-labelledby="print-tab">
+
+        <div class="tab-pane fade @(activeTab == "print" ? "show active" : "") p-4 shadow-sm rounded-3" id="print" role="tabpanel" aria-labelledby="print-tab">
             <h3 class="text-success">In vé</h3>
             <Print Id="@CinemaCenterId" />
         </div>
 
     </div>
 </div>
+
 <!--Modal chọn ghế -->
 <div class="modal fade" id="SeatSelectionModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
@@ -113,7 +120,8 @@
                 TotalTicket="@TotalTicket"
                 NextToComboOfflineCounter="OpenComboSelectionModal"
                 BackToShowtimeOfflineCounter="CloseSeatSelectionModal"
-                @ref="seatFooterRef" />
+                @ref="seatFooterRef"
+                resetSeat="ResetSeatSelection" />
             </div>
         </div>
     </div>
@@ -419,6 +427,7 @@
     private List<DateTime> VisibleDates => Dates.Skip(PageIndex * ItemsPerPage).Take(ItemsPerPage).ToList();
     private List<ShowTimeDto> showTimeDtos = new();
     private ShowTimeSearch showTimeSearch = new();
+    private string activeTab = "showtime";
     private int PageIndex = 0;
     private int ItemsPerPage = 9;
     private int TotalPages => (int)Math.Ceiling((double)Dates.Count / ItemsPerPage);
@@ -465,6 +474,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("tab", out var tab))
+        {
+            activeTab = tab;
+        }
         Dates = Enumerable.Range(0, 28).Select(offset => DateTime.Today.AddDays(offset)).ToList();
         AuthenState = await AuthStateProvider.GetAuthenticationStateAsync();
         var user = AuthenState.User;
@@ -526,6 +540,7 @@
     private async Task OpenSeatSelectionModal(Guid id)
     {
         await seatSelectionModalref.Reset();
+        await seatFooterRef.Reset();
         ShowTimeId = id;
         await JSRuntime.InvokeVoidAsync("openModal", "SeatSelectionModal");
     }
@@ -551,9 +566,10 @@
     }
     private async Task OpenComboSelectionModal(EventCallbackOfflineCounterArgs args)
     {
-        Task.Delay(300);
-        BillId = args.BillId;
+        await comboFooterRef.Reset();
+        await comboSelectionModalref.Reset();
         await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
+        BillId = args.BillId;
         await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
     }
     private void HandleSelectedCombos(EventCallbackOfflineCounterArgs args)
@@ -568,6 +584,7 @@
         await seatSelectionModalref.Reset();
         await comboFooterRef.Reset();
         await seatFooterRef.Reset();
+        await comboSelectionModalref.Reset();
         lstSeats.Clear();
         SeatsSelectedstr = "";
         BillId = Guid.Empty;
@@ -581,8 +598,9 @@
     private async Task CancelCheckout(Guid id)
     {
         await seatSelectionModalref.Reset();
-        await comboFooterRef.Reset();
         await seatFooterRef.Reset();
+        await comboSelectionModalref.Reset();
+        await comboFooterRef.Reset();
         lstSeats.Clear();
         SeatsSelectedstr = "";
         BillId = Guid.Empty;
@@ -596,7 +614,18 @@
     }
     private async Task CloseDiscount()
     {
+        lstSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        TotalTicket = 0;
+        TotalCombo = 0;
+        Discount = 0;
+        await seatSelectionModalref.Reset();
+        await seatFooterRef.Reset();
+        await comboSelectionModalref.Reset();
         await JSRuntime.InvokeVoidAsync("closeModall", "DiscountSelectionModal");
+        NavigationManager.NavigateTo("/offline-counter");
     }
     private async Task OpenDiscountModal(EventCallbackOfflineCounterArgs args)
     {   
@@ -629,6 +658,18 @@
     {
         SelectedMethod = s;
         StateHasChanged();
+    }
+
+    public async Task ResetSeatSelection()
+    {
+        await seatSelectionModalref.Reset();
+        await seatFooterRef.Reset();
+        lstSeats.Clear();
+        lstCheckedSeats.Clear();
+        SeatsSelectedstr = "";
+        BillId = Guid.Empty;
+        TotalMoney = 0;
+        TotalTicket = 0;
     }
     
 }

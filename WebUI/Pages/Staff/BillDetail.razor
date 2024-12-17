@@ -5,11 +5,14 @@
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Application.DataTransferObjs.BillCombo
 @using MovieTicket.Application.DataTransferObjs.Ticket
+@using System.Text;
+@using System.Globalization
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 @layout WebUI.Layout.StaffLayout
 @attribute [Authorize(Roles = "Staff")]
 <div class="container-fluid">
 	<div class="mb-2">
-		<NavLink href="offline-counter" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
+		<NavLink @onclick="GoToListBill" class="btn btn-secondary opacity-50"><i class="bi bi-arrow-bar-left"></i> Quay lại</NavLink>
 	</div>
 	<div class="row">
 		<!-- Thông tin đơn hàng -->
@@ -137,7 +140,107 @@
 	<div class="col align-self-center text-end" style="width:10%;">
 		<button class="btn btn-success text-light fs-5" style="padding:10px;width:150px;" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right m-0"></i></button>
 	</div>
+	<div class="d-flex justify-content-end me-4">
+		<button class="btn btn-warning p-2" @onclick="BillPrint"><i class="bi bi-printer"></i>In hóa đơn</button>
+	</div>
 </div>
+<script type="text/javascript">
+	// Base64 font Roboto (thay the bang ma Base64 chinh thuc cua ban)
+	window.robotoFontBase64 = "AAEAAAASAQAABAAgR0RFRrRCsIIAAEAAAAXAAAA..."; // Gia tri Base64 thuc cua font Roboto
+
+	window.generatePdf = function(pdfContentJson) {
+	  var pdfContent = JSON.parse(pdfContentJson);
+	  var { jsPDF } = window.jspdf;
+
+	  if (!jsPDF) {
+		console.error("jsPDF library is not loaded.");
+		return;
+	  }
+
+	  var doc = new jsPDF();
+
+	  // Them font va cai dat font
+	  doc.addFileToVFS("Roboto-Regular.ttf", window.robotoFontBase64);  // Dam bao ban co Base64 dung
+	  doc.addFont("Roboto-Regular.ttf", "Roboto", "normal");
+	  doc.setFont("Roboto", "normal");
+
+	  // Tieu de
+	  doc.setFontSize(18);
+	  doc.setFont("Roboto", "bold");
+	  doc.text("VE XEM PHIM", 105, 15, { align: "center" });
+
+	  // Phu de voi ten phim
+	  doc.setFontSize(14);
+	  doc.text(`Phim: ${pdfContent.FilmName}`, 105, 25, { align: "center" });
+
+	  // Ve duong phan cach
+	  doc.line(10, 30, 200, 30);
+
+	  // Phan chi tiet
+	  doc.setFontSize(12);
+	  doc.setFont("Roboto", "normal");
+	  doc.text(`Ngay chieu: ${pdfContent.ShowDate}`, 10, 40);
+	  doc.text(`Gio chieu: ${pdfContent.Showtime}`, 10, 50);
+	  doc.text(`Phong chieu: ${pdfContent.Cinema}`, 10, 60);
+	  doc.text(`Rap chieu: ${pdfContent.CinemaCenter}`, 10, 70);
+
+	  // Thong tin ghe ngoi
+	  doc.text("Thong tin ghe:", 10, 80);
+	  let yPosition = 90;
+	  if (pdfContent.Seats && pdfContent.Seats.length > 0) {
+		pdfContent.Seats.split(" ").forEach((seat) => {
+		  doc.text(`- Ghe: ${seat}`, 15, yPosition);
+		  yPosition += 10;
+		});
+	  } else {
+		doc.text("Khong co thong tin ghe.", 15, yPosition);
+		yPosition += 10;
+	  }
+
+	  // Chi tiet gia tien
+	  doc.text(`Thanh tien: ${pdfContent.TotalMoney} VND`, 10, yPosition);
+	  yPosition += 10;
+	  doc.text(`Giam gia: ${pdfContent.Discount} VND`, 10, yPosition);
+	  yPosition += 10;
+	  doc.text(`Tong tien: ${pdfContent.AfterDiscount} VND`, 10, yPosition);
+
+	// Footer với mã vạch (nếu có)
+	if (pdfContent.BarcodeImage) {
+		const leftMargin = 10;
+		yPosition += 10;
+		doc.text("Ma vach:", leftMargin, yPosition);
+		yPosition += 10;
+		try {
+			if (pdfContent.BarcodeImage.startsWith("data:image/png;base64,")) {
+				doc.addImage(pdfContent.BarcodeImage, "PNG", leftMargin, yPosition, 50, 20);
+				yPosition += 25;
+				doc.setFontSize(12);
+				doc.text(pdfContent.BarcodeNumber, leftMargin, yPosition); // x = leftMargin
+			} else {
+				console.error("Barcode image is not a valid Base64 PNG.");
+				doc.text("Lỗi: Mã vạch không hợp lệ.", leftMargin, yPosition);
+			}
+		} catch (error) {
+			console.error("Error adding barcode image:", error);
+			doc.text("Lỗi: Không thể thêm mã vạch.", leftMargin, yPosition);
+		}
+	}
+
+	  // Luu hoac in
+	  var iframe = document.createElement('iframe');
+	  iframe.style.position = 'fixed';
+	  iframe.style.width = '1px';
+	  iframe.style.height = '1px';
+	  iframe.style.opacity = '0.01';
+	  document.body.appendChild(iframe);
+
+	  iframe.src = doc.output('bloburl');
+	  iframe.onload = function() {
+		iframe.contentWindow.focus();
+		iframe.contentWindow.print();
+	  };
+	};
+</script>
 
 @code {
 	[Parameter] public string Id { get; set; }
@@ -162,6 +265,25 @@
 	private AccountDto objAccount = new AccountDto();
 	private string BarcodeImage;
 	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
+
+	private class BillContent
+	{
+		public string FilmName { get; set; }
+		public string Showtime { get; set; }
+		public string ShowDate { get; set; }
+		public string Cinema { get; set; }
+		public string CinemaCenter { get; set; }
+		public string CustomerName { get; set; }
+		public string CustomerPhone { get; set; }
+		public string CustomerEmail { get; set; }
+		public string Seats { get; set; }
+		public string Combos { get; set; }
+		public string TotalMoney { get; set; }
+		public string Discount { get; set; }
+		public string AfterDiscount { get; set; }
+		public string BarcodeImage { get; set; }
+		public string BarcodeNumber { get; set; }
+	}
 
 
 	protected async override Task OnParametersSetAsync()
@@ -230,7 +352,57 @@
         }
         else
         {
-            NavigationManager.NavigateTo($"/checkout/detail/{Id}", true);
+
+            NavigationManager.NavigateTo($"/checkout-offline/detail/{Id}", true);
         }
     }
+	private void GoToListBill()
+	{
+		NavigationManager.NavigateTo($"/offline-counter?tab=bill");
+	}
+
+	private async Task BillPrint()
+	{
+			foreach (var seat in lstSeat)
+			{
+				var pdfContent = new BillContent
+					{
+						FilmName = RemoveDiacritics(objShowTime.FilmName),
+						Showtime = $"{objShowTime?.StartTime?.ToString("HH:mm")} - {objShowTime?.EndTime?.ToString("HH:mm")}",
+						ShowDate = objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"),
+						Cinema = RemoveDiacritics(objShowTime?.CinemaName),
+						CinemaCenter = RemoveDiacritics(objShowTime?.CinemaCenterName),
+						CustomerName = RemoveDiacritics(objAccount?.Name),
+						CustomerPhone = objAccount?.Phone,
+						CustomerEmail = objAccount?.Email,
+						Seats = RemoveDiacritics(seat.SeatName),
+						TotalMoney = seat.Price.ToString("#,##0"),
+						Discount = "0",
+						AfterDiscount = seat.Price.ToString("#,##0"),
+						BarcodeImage = BarcodeImage,
+						BarcodeNumber = objBill.BarCode
+					};
+				var pdfContentJson = System.Text.Json.JsonSerializer.Serialize(pdfContent);
+				// Gọi hàm JavaScript để tạo PDF
+				await JSRuntime.InvokeVoidAsync("generatePdf", pdfContentJson);
+			}
+	}
+
+	public static string RemoveDiacritics(string text)
+	{
+		var normalizedString = text.Normalize(NormalizationForm.FormD);
+		var stringBuilder = new StringBuilder();
+
+		foreach (var character in normalizedString)
+		{
+			var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(character);
+			if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+			{
+				stringBuilder.Append(character);
+			}
+		}
+
+		return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+	}
+
 }

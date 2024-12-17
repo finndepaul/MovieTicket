@@ -1,5 +1,8 @@
-@using System.Text.RegularExpressions
+﻿@page "/checkout-offline/detail/{id:guid}"
 @using MovieTicket.Application.DataTransferObjs.Account
+@using System.Text.RegularExpressions
+@layout WebUI.Layout.StaffLayout
+
 <style>
 	body {
 	background-color: #f8f8f8;
@@ -10,10 +13,12 @@
 	border: 1px solid #ddd;
 	background-color: #fff;
 	}
-	.mem-search	{
+
+	.mem-search {
 	width: 960px;
 	margin: auto;
 	}
+
 	.container-payment {
 	max-width: 1200px;
 	margin: auto;
@@ -131,7 +136,8 @@
 </div>
 <div class="d-flex container-payment p-3">
 	<div class="payment-container">
-		@if(accountDto!=null){
+		@if (accountDto != null)
+		{
 			<div class="memInfo">
 				<div class="memName">
 					<div>Thành viên: @accountDto.Name</div>
@@ -208,65 +214,157 @@
 	</div>
 </div>
 
+<div class="container-fluid" style="width:100%;height:150px; background-color:#031529;color:#fff">
+	<div class="row">
+		@if (showtimeDto != null && cinemaDto != null)
+		{
+			<div class="col" style="width:40%">
+				<div class="d-flex">
+					<img src="@filmDto.Poster" class="object-fit-cover" style="width: 75px;height:110px" />
+					<div class="ms-2">
+						<span class="fw-bold">
+							@showtimeDto.FilmName
+						</span>
+						<br />
+						@showtimeDto.ScreenTypeName
+						<br />
+						@formatRating
+					</div>
+				</div>
+			</div>
+			<div class="col" style="width:20%">
+				<label class="me-2">Rạp:</label>
+				<span class="fw-bold">@showtimeDto.CinemaCenterName</span>
+				<br />
+				<label class="me-2">Phòng chiếu:</label>
+				<span class="fw-bold">@cinemaDto.Name</span>
+			</div>
+			<div class="selectedSeats col" style="width:10%">
+				<label class="me-2">Suất chiếu:</label>
+				<br />
+				<span class="fw-bold">@formatStartTime</span>
+
+				<br />
+				<label class="me-2">Ghế đã chọn:</label>
+				<br />
+				<span class="fw-bold">@SeatsSelectedstr</span>
+			</div>
+			<div class="ticketPrices col" style="width:5%">
+				<label>Giá vé: </label>
+				<br />
+				<span class="fw-bold">@TotalTicket.ToString("#,##0") VND</span>
+				<br />
+				<label class="me-2">Phí dịch vụ:</label>
+				<br />
+				<span class="fw-bold">@TotalCombo.ToString("#,##0") VND</span>
+			</div>
+			<div class="ticketPrices col" style="width:5%">
+				<label class="me-2">Giảm giá:</label>
+				<br />
+				<span class="fw-bold">@Discount.ToString("#,##0") VND</span>
+				<br />
+				<label class="me-2">Tổng tiền:</label>
+				<br />
+				<span class="fw-bold">@TotalMoney.ToString("#,##0") VND</span>
+			</div>
+		}
+		<div class="col align-self-center text-end" style="width:10%;">
+			<button class="btn btn-success text-light fs-5" style="padding:10px;width:150px;" @onclick="Checkout">Thanh toán<i class="bi bi-chevron-right m-0"></i></button>
+		</div>
+	</div>
+</div>
+
+
 @code {
-	[Parameter] public Guid BillId { get; set; }
-	[Parameter] public Guid MembershipId { get; set; }
-	[Parameter] public bool OpenDiscount {get;set;}
-	[Parameter] public EventCallback<int> Mempoint { get; set; }
-	[Parameter] public EventCallback TimerOutDiscount { get; set; }
-	[Parameter] public EventCallback<EventCallbackOfflineCounterArgs> OnAppliedDiscount { get; set; }
-	[Parameter] public EventCallback<string> Method { get; set; }
-	[Parameter] public decimal TotalMoney { get; set; }
-	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
+	[Parameter] public Guid Id { get; set; }
+
+	private string errorMessage = string.Empty;
+	private string errorMessage2 = string.Empty;
 	private string CouponCode { get; set; } = string.Empty;
 	private int VHDPoints { get; set; } = 0;
 	private int CurrentPoints { get; set; } // Ví dụ: điểm hiện tại là 100
 	private bool IsDiscountCodeUsed { get; set; } = false;
 	private bool IsVHDUsed { get; set; } = false;
 	private bool memberCheck = true;
-	private string? location;
-	CancellationToken cancellationToken;
+	private string SeatsSelectedstr = "";
 	private Countdown? timer;
 	private string memPhone { get; set; }
-	private string errorMessage = string.Empty;
-	private string errorMessage2 = string.Empty;
 	private AccountDto accountDto { get; set; }
 	private string selectedPaymentMethod;
 	private decimal MoneyTake { get; set; }
 	private decimal MoneyReturn { get; set; }
 	private bool show = false;
+	private ShowTimeDto showtimeDto = new();
+	private CinemaDto cinemaDto { get; set; } = new();
+	private FilmDto filmDto = new();
+	private List<SeatTypeDto> seatTypeDtos = new();
+	private string formatStartTime = "";
+	private string formatRating = "";
+	private CancellationToken cancellationToken;
+	private BillDetailDto billDetailDto = new();
+	private List<TicketDto> lstTicket = new();
+    private List<TicketPriceDto> lstTicketPrices = new();
+	private List<SeatDTO> seatDTOs = new();
+	private decimal TotalMoney;
+	private decimal TotalTicket;
+	private string date = string.Empty;
+	private decimal Discount;
+	private decimal TotalCombo;
+	private string SelectedMethod = "qr";
+	private int Mempoint = 0;
+
 
 	protected override async Task OnParametersSetAsync()
 	{
-		// if (BillId != Guid.Empty)
-		// {
-		// 	CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(MembershipId, cancellationToken);
-		// }
-		//      if (OpenDiscount)
-		//      {
-		//          if (timer != null)
-		// {
-		// 	timer.Start(30);
-		// }
-		//      }
-		base.OnParametersSet();
-	}
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
+		if (Id != Guid.Empty)
 		{
-			location = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "page");
+			billDetailDto = await UserHomeService.GetBillForCheckOut(Id);
+			lstTicket = await TicketService.GetListTicketByBillIdAsync(Id);
+			var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+				{
+					PageNumber = 1,
+					PageSize = 180
+				});
+			lstTicketPrices = responseTicket.Item.ToList();
+			if (lstTicket.Count > 0)
+			{
+				foreach (var item in lstTicket)
+				{
+					var result = await SeatService.GetById((Guid)item.SeatId);
+					var seat = result.Data;
+					seatDTOs.Add(seat);
+				}
+				var ticket = lstTicket.FirstOrDefault();
+				var res = await ShowTimeService.GetById((Guid)ticket.ShowTimeId);
+				showtimeDto = res.Data;
+				date = showtimeDto.ShowtimeDate.Value.DayOfWeek.ToString();
+                filmDto = await FilmService.GetById(showtimeDto.FilmId);
+				formatRating = "T" + filmDto.Rating;
+				formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
+                var cinemares = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+                cinemaDto = cinemares.Data;
+				TotalTicket = CalculateTotalTicket();
+				if (seatDTOs.Count > 0)
+				{
+					foreach(var s in seatDTOs)
+					{
+						SeatsSelectedstr += s.Position + " ";
+					}
+				}
+			}
+			TotalMoney = (decimal)billDetailDto.AfterDiscount;
+			Discount = (decimal)billDetailDto.TotalMoney - (decimal)billDetailDto.AfterDiscount;
+            TotalCombo = (decimal)billDetailDto.TotalMoney - TotalTicket;
 		}
 	}
 
-	// Xử lý khi nhấn nút xác nhận mã giảm giá
 	private async void UseDiscountCode()
 	{
 		if (!string.IsNullOrEmpty(CouponCode))
 		{
 			var modal = await UserHomeService.AddDiscountToCheckAsync(new DiscountCheckRequest
 				{
-					BillId = BillId,
+					BillId = Id,
 					CouponCode = CouponCode,
 					Point = null
 				}, cancellationToken);
@@ -279,12 +377,8 @@
 				IsDiscountCodeUsed = true;
 				IsVHDUsed = false;
 				memberCheck = false;
-				argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                    {
-                        Discount = await CalculateDiscount()
-                    };
+				Discount = await CalculateDiscount();
 				await JSRuntime.ToastrSuccess("Áp dụng mã giảm giá thành công!");
-				await OnAppliedDiscount.InvokeAsync(argsOfflineCounter);
 				StateHasChanged();
 			}
 		}
@@ -295,7 +389,7 @@
 	{
 		var modal = await UserHomeService.AddDiscountToCheckAsync(new DiscountCheckRequest
 			{
-				BillId = BillId,
+				BillId = Id,
 				Point = VHDPoints,
 				CouponCode = null,
 			}, cancellationToken);
@@ -308,31 +402,24 @@
 			IsVHDUsed = true;
 			IsDiscountCodeUsed = false;
 			memberCheck = false;
-			argsOfflineCounter = new EventCallbackOfflineCounterArgs
-				{
-					Discount = await CalculateDiscount()
-				};
+			Discount = await CalculateDiscount();
 			await JSRuntime.ToastrSuccess("Áp dụng điểm thành công!");
-			await Mempoint.InvokeAsync(VHDPoints);
-			await OnAppliedDiscount.InvokeAsync(argsOfflineCounter);
+            Mempoint = VHDPoints;
 		}
 		StateHasChanged();
 	}
 	private async void Reload()
 	{
-		var res = await UserHomeService.ResetDiscountAsync(BillId, cancellationToken);
-		if(res) {
+		var res = await UserHomeService.ResetDiscountAsync(Id, cancellationToken);
+		if (res)
+		{
 			IsDiscountCodeUsed = false;
 			IsVHDUsed = false;
 			CouponCode = string.Empty;
 			memberCheck = false;
 			VHDPoints = 0;
 			await JSRuntime.ToastrSuccess("Đặt lại thành công!");
-			argsOfflineCounter = new EventCallbackOfflineCounterArgs
-                {
-                    Discount = await CalculateDiscount()
-                };
-			await OnAppliedDiscount.InvokeAsync(argsOfflineCounter);
+			Discount = await CalculateDiscount();
 		}
 		else
 		{
@@ -343,7 +430,7 @@
 
 	private async Task<decimal> CalculateDiscount()
 	{
-		var bill = await UserHomeService.GetBillForCheckOut(BillId);
+		var bill = await UserHomeService.GetBillForCheckOut(Id);
 		return (decimal)(bill.AfterDiscount - bill.TotalMoney);
 	}
 
@@ -371,7 +458,7 @@
 		{
 			accountDto = account;
 			CurrentPoints = await UserHomeService.GetPointOfMembershipAsync(account.Id, cancellationToken);
-			await UserHomeService.UpdateCheckMembershipIdAsync(BillId, memPhone, cancellationToken);
+			await UserHomeService.UpdateCheckMembershipIdAsync(Id, memPhone, cancellationToken);
 		}
 	}
 
@@ -389,25 +476,23 @@
 
 	private async void HandlePaymentMethodChange(ChangeEventArgs e)
 	{
-		selectedPaymentMethod = e.Value.ToString();
-		if (selectedPaymentMethod == "qr")
+		SelectedMethod = e.Value.ToString();
+		if (SelectedMethod == "qr")
 		{
 			show = false;
-			await Method.InvokeAsync("qr");
 		}
-		else if (selectedPaymentMethod == "cash")
+		else if (SelectedMethod == "cash")
 		{
-            show = true;
-            await Method.InvokeAsync("cash");
+			show = true;
 		}
 		StateHasChanged();
 	}
 
-	private async void TimerOutCallback()
-	{
-		await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
-		await TimerOutDiscount.InvokeAsync();
-	}
+	// private async void TimerOutCallback()
+	// {
+	// 	await UserHomeService.DeleteCheckAsync(BillId, cancellationToken);
+	// 	await TimerOutDiscount.InvokeAsync();
+	// }
 	public void StopTimer()
 	{
 		timer?.Stop();
@@ -423,8 +508,62 @@
 		errorMessage = string.Empty;
 		accountDto = null;
 		VHDPoints = 0;
-        memPhone = string.Empty;
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
+		memPhone = string.Empty;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+	private decimal CalculateTotalTicket() //tính tổng tiền
+	{
+		decimal totalTicket = 0;
+		foreach (var item in seatDTOs)
+		{
+			var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
+				== cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(date) && x.Status == TicketPriceStatus.Active);
+			if (ticketPrice != null)
+			{
+				totalTicket += (Decimal)ticketPrice.Price;
+			}
+		}
+		return totalTicket;
+	}
+	private string DayOfTheWeek(string day) //check ngày
+	{
+		if (day.Equals("Saturday") || day.Equals("Sunday"))
+		{
+			return "T7-CN";
+		}
+		else
+		{
+			return "T2-T6";
+		}
+	}
+	private async Task Checkout()
+	{
+		if (SelectedMethod == "qr")
+		{
+			var bill = await UserHomeService.GetBillForCheckOut(Id);
+			PayOS payOS = new PayOS("696efb39-86fe-44ce-8182-a7a1bbe9881b", "d662ce34-c955-4710-a264-ab9a97e5319a",
+			"1e063ea755ccf53bf11fc90b624238daa15b57bb11fdcc6535a5ec48e84be53a");
+			ItemData itemData = new ItemData(bill.FilmName, 1, Convert.ToInt32(bill.AfterDiscount));
+			List<ItemData> lstItemDatas = new List<ItemData>();
+			lstItemDatas.Add(itemData);
+			PaymentData paymentData = new PaymentData
+			(
+				bill.BillCode,
+				Convert.ToInt32(bill.AfterDiscount),
+				"VHD Cinema",
+				lstItemDatas,
+				$"https://localhost:9999/offline-check-out-failed/{Id}",
+				$"https://localhost:9999/offline-check-out-success/{Id}&{Mempoint}"
+			);
+			CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
+			NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
+		}
+		else if (SelectedMethod == "cash")
+		{
+			await BillService.UpdateStatusAsync(Id, BillStatus.Paid);
+			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+			NavigationManager.NavigateTo("/offline-counter");
+		}
+	}
 }

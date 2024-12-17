@@ -147,7 +147,6 @@
 	private Guid SelectedBillId { get; set; }
 	private CancellationToken cancellationToken;
 	private AuthenticationState AuthenState;
-
 	protected async override Task OnParametersSetAsync()
 	{
 		if (!String.IsNullOrEmpty(Id))
@@ -162,11 +161,11 @@
 			await Refresh();
 			StateHasChanged();
 		}
-		
+
 	}
 	private async Task Refresh()
 	{
-	
+		int count = 0;
 		var pageList = await BillService.GetListBillWithPaginationAsync(request, new PagingParameters
 			{
 				PageNumber = pagingParameters.PageNumber,
@@ -174,6 +173,22 @@
 			});
 		lstBills = pageList.Item.ToList();
 		metaData = pageList.MetaData;
+		foreach (var item in lstBills)
+		{
+			if (item.Status == BillStatus.Pending)
+			{
+				if (item.CreateTime?.AddMinutes(3) <= DateTime.Now)
+				{
+					await UserHomeService.DeleteCheckAsync(item.Id,cancellationToken);
+					count++;
+				}
+			}
+		}
+		if (count > 0)
+		{
+			await JSRuntime.ToastrSuccess("Có " + count + " hóa đơn đã hết hạn");
+			await Refresh();
+		}
 	}
 	private async Task SelectedPage(int page)
 	{
@@ -190,6 +205,7 @@
 			});
 		lstBills = pageList.Item.ToList();
 		metaData = pageList.MetaData;
+	
 		StateHasChanged();
 	}
 
