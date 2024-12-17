@@ -1,6 +1,7 @@
 ﻿@page "/register"
 @using MovieTicket.Application.DataTransferObjs.Account.Request
 @using MovieTicket.Application.DataTransferObjs.Auth
+@inject IJSRuntime _IJSRuntime;
 
 <EditForm Model="@RegisterRequest" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator />
@@ -45,15 +46,22 @@
 @code {
     private AccountRegisterRequest RegisterRequest = new();
 
+    
     private async Task HandleRegister()
     {
         RegisterResponse response = await AuthenService.RegisterAsync(RegisterRequest);
         if (!response.Flag)
         {
             await JSRuntime.InvokeVoidAsync("alert", response.Message);
-        }else
+        }
+        else
         {
-            await JSRuntime.InvokeVoidAsync("alert", response.Message);
+
+            await JSRuntime.InvokeVoidAsync("alert", "Tạo tài khoản thành công, để đặt vé online bạn cần xác nhận tài khoản vui lòng kiểm tra email");
+            await _IJSRuntime.ToastrSuccess("Đang gửi...");
+            await AccountUtilitiesService.SendEmail(RegisterRequest.Email, EmailType.ConfirmEmaiL);
+            await _IJSRuntime.ToastrSuccess($"Gửi mail thành công đến {RegisterRequest.Email}");
+            await Task.Delay(500);
             NavigationManager.NavigateTo("/", forceLoad: true);
         }
     }

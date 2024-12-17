@@ -4,7 +4,7 @@
 <PageTitle>Home</PageTitle>
 @if (lstBanner.Count > 0)
 {
-	<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+	<div id="carouselExampleAutoplaying" class="carousel slide " data-bs-ride="carousel">
 		<div class="carousel-indicators">
 			@for (int i = 0; i < lstBanner.Count; i++)
 			{
@@ -33,7 +33,7 @@
 }
 else
 {
-	<div class="d-flex justify-content-center">
+	<div class="d-flex justify-content-center mt-3">
 		<div class="spinner-border text-info" role="status">
 			<span class="visually-hidden">Loading...</span>
 		</div>
