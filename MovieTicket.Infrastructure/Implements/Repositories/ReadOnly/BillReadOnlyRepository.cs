@@ -213,8 +213,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Status = x.group.group.group.group.group.group.b.Status,
                 })
                 .Distinct()
-                  .OrderByDescending(x => x.CreateTime) // Sắp xếp theo CreateTime
-                  .OrderBy(x => x.Status)
+                .OrderBy(x => x.Status)
+                .ThenByDescending(x => x.CreateTime) // Sắp xếp theo CreateTime
+                  
                 .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
                 .Take(pagingParameters.PageSize)
                 .AsNoTracking()
