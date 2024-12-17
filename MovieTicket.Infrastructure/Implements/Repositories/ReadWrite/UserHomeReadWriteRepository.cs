@@ -247,6 +247,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             var bill = await _context.Bills.FindAsync(billId, cancellationToken);
             if (bill == null) return false;
             bill.AfterDiscount = bill.TotalMoney;
+            bill.CouponId = null;
             _context.Bills.Update(bill);
             await _context.SaveChangesAsync(cancellationToken);
             return true;
