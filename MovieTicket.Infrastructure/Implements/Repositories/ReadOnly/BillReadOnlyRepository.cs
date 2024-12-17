@@ -21,39 +21,79 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         }
         public async Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
-            var query = _dbContext.Bills
-                .Where(b => b.AccountId == userId && b.Status == BillStatus.Paid)
-                .Join(_dbContext.Tickets, b => b.Id, t => t.BillId, (b, t) => new { b, t })
-                .Join(_dbContext.ShowTimes, bt => bt.t.ShowTimeId, s => s.Id, (bt, s) => new { bt.b, bt.t, s })
-                .Join(_dbContext.Schedules, bts => bts.s.ScheduleId, sc => sc.Id, (bts, sc) => new { bts.b, bts.t, bts.s, sc })
-                .Join(_dbContext.Films, btsc => btsc.sc.FilmId, f => f.Id, (btsc, f) => new { btsc.b, btsc.t, btsc.s, btsc.sc, f })
-                .Join(_dbContext.ScreenTypes, btscf => btscf.s.ScreenTypeId, st => st.Id, (btscf, st) => new { btscf.b, btscf.t, btscf.s, btscf.sc, btscf.f, st })
-                .Join(_dbContext.Cinemas, btscfs => btscfs.s.CinemaId, c => c.Id, (btscfs, c) => new { btscfs.b, btscfs.t, btscfs.s, btscfs.sc, btscfs.f, btscfs.st, c })
-                .Join(_dbContext.CinemaCenters, btscfsc => btscfsc.c.CinemaCenterId, cc => cc.Id, (btscfsc, cc) => new { btscfsc.b, btscfsc.t, btscfsc.s, btscfsc.sc, btscfsc.f, btscfsc.st, btscfsc.c, cc })
-                .Select(btscfsc => new BillsDto
-                {
-                    Id = btscfsc.b.Id,
-                    CinemaName = btscfsc.cc.Name,
-                    FilmName = btscfsc.f.Name,
-                    FilmPoster = btscfsc.f.Poster,
-                    FilmRating = btscfsc.f.Rating,
-                    ShowStartTime = btscfsc.s.StartTime,
-                    ShowEndTime = btscfsc.s.EndTime,
-                    TotalMoney = btscfsc.b.AfterDiscount,
-                    CreateTime = btscfsc.b.CreateTime,
-                    BarCode = btscfsc.b.BarCode,
-                    Status = btscfsc.b.Status
-                }).Distinct();
+            var membership = await _dbContext.Memberships.FirstOrDefaultAsync(m => m.AccountId == userId, cancellationToken);
+            if (membership == null)
+            {
+                var query = _dbContext.Bills
+                    .Where(b => b.AccountId == userId && b.Status == BillStatus.Paid)
+                    .Join(_dbContext.Tickets, b => b.Id, t => t.BillId, (b, t) => new { b, t })
+                    .Join(_dbContext.ShowTimes, bt => bt.t.ShowTimeId, s => s.Id, (bt, s) => new { bt.b, bt.t, s })
+                    .Join(_dbContext.Schedules, bts => bts.s.ScheduleId, sc => sc.Id, (bts, sc) => new { bts.b, bts.t, bts.s, sc })
+                    .Join(_dbContext.Films, btsc => btsc.sc.FilmId, f => f.Id, (btsc, f) => new { btsc.b, btsc.t, btsc.s, btsc.sc, f })
+                    .Join(_dbContext.ScreenTypes, btscf => btscf.s.ScreenTypeId, st => st.Id, (btscf, st) => new { btscf.b, btscf.t, btscf.s, btscf.sc, btscf.f, st })
+                    .Join(_dbContext.Cinemas, btscfs => btscfs.s.CinemaId, c => c.Id, (btscfs, c) => new { btscfs.b, btscfs.t, btscfs.s, btscfs.sc, btscfs.f, btscfs.st, c })
+                    .Join(_dbContext.CinemaCenters, btscfsc => btscfsc.c.CinemaCenterId, cc => cc.Id, (btscfsc, cc) => new { btscfsc.b, btscfsc.t, btscfsc.s, btscfsc.sc, btscfsc.f, btscfsc.st, btscfsc.c, cc })
+                    .Select(btscfsc => new BillsDto
+                    {
+                        Id = btscfsc.b.Id,
+                        CinemaName = btscfsc.cc.Name,
+                        FilmName = btscfsc.f.Name,
+                        FilmPoster = btscfsc.f.Poster,
+                        FilmRating = btscfsc.f.Rating,
+                        ShowStartTime = btscfsc.s.StartTime,
+                        ShowEndTime = btscfsc.s.EndTime,
+                        TotalMoney = btscfsc.b.AfterDiscount,
+                        CreateTime = btscfsc.b.CreateTime,
+                        BarCode = btscfsc.b.BarCode,
+                        Status = btscfsc.b.Status
+                    }).Distinct();
 
-            var count = await query.CountAsync(cancellationToken);
-            var data = await query
-                .OrderBy(b => b.CreateTime)
-                .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
-                .Take(pagingParameters.PageSize)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+                var count = await query.CountAsync(cancellationToken);
+                var data = await query
+                    .OrderBy(b => b.CreateTime)
+                    .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+                    .Take(pagingParameters.PageSize)
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken);
 
-            return new PageList<BillsDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+                return new PageList<BillsDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+            }
+            else
+            {
+                var query = _dbContext.Bills
+                                    .Where(b => b.AccountId == userId || b.MembershipId == membership.Id)
+                                    .Join(_dbContext.Tickets, b => b.Id, t => t.BillId, (b, t) => new { b, t })
+                                    .Join(_dbContext.ShowTimes, bt => bt.t.ShowTimeId, s => s.Id, (bt, s) => new { bt.b, bt.t, s })
+                                    .Join(_dbContext.Schedules, bts => bts.s.ScheduleId, sc => sc.Id, (bts, sc) => new { bts.b, bts.t, bts.s, sc })
+                                    .Join(_dbContext.Films, btsc => btsc.sc.FilmId, f => f.Id, (btsc, f) => new { btsc.b, btsc.t, btsc.s, btsc.sc, f })
+                                    .Join(_dbContext.ScreenTypes, btscf => btscf.s.ScreenTypeId, st => st.Id, (btscf, st) => new { btscf.b, btscf.t, btscf.s, btscf.sc, btscf.f, st })
+                                    .Join(_dbContext.Cinemas, btscfs => btscfs.s.CinemaId, c => c.Id, (btscfs, c) => new { btscfs.b, btscfs.t, btscfs.s, btscfs.sc, btscfs.f, btscfs.st, c })
+                                    .Join(_dbContext.CinemaCenters, btscfsc => btscfsc.c.CinemaCenterId, cc => cc.Id, (btscfsc, cc) => new { btscfsc.b, btscfsc.t, btscfsc.s, btscfsc.sc, btscfsc.f, btscfsc.st, btscfsc.c, cc })
+                                    .Select(btscfsc => new BillsDto
+                                    {
+                                        Id = btscfsc.b.Id,
+                                        CinemaName = btscfsc.cc.Name,
+                                        FilmName = btscfsc.f.Name,
+                                        FilmPoster = btscfsc.f.Poster,
+                                        FilmRating = btscfsc.f.Rating,
+                                        ShowStartTime = btscfsc.s.StartTime,
+                                        ShowEndTime = btscfsc.s.EndTime,
+                                        TotalMoney = btscfsc.b.AfterDiscount,
+                                        CreateTime = btscfsc.b.CreateTime,
+                                        BarCode = btscfsc.b.BarCode,
+                                        Status = btscfsc.b.Status
+                                    }).Distinct();
+
+                var count = await query.CountAsync(cancellationToken);
+                var data = await query
+                    .OrderBy(b => b.CreateTime)
+                    .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
+                    .Take(pagingParameters.PageSize)
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken);
+
+                return new PageList<BillsDto>(data, count, pagingParameters.PageNumber, pagingParameters.PageSize);
+            }
         }
         // Phương thức bất đồng bộ để lấy tất cả các Bill dưới dạng IQueryable<BillDto>
         public async Task<IQueryable<BillDto>> GetAllAsync()
@@ -216,7 +256,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 .Distinct()
                 .OrderBy(x => x.Status)
                 .ThenByDescending(x => x.CreateTime) // Sắp xếp theo CreateTime
-                  
+
                 .Skip((pagingParameters.PageNumber - 1) * pagingParameters.PageSize)
                 .Take(pagingParameters.PageSize)
                 .AsNoTracking()

@@ -215,7 +215,10 @@
 </div>
 
 <div class="container-fluid" style="width:100%;height:150px; background-color:#031529;color:#fff">
-	<div class="row">
+	<div class="row mt-3">
+		<div class="col align-self-center" style="width:10%">
+            <a class="btn btn-primary text-light bi bi-chevron-left fs-5" style="padding:10px;width:130px;height:50px" href="/bill-staff/detail/@Id">Quay lại</a>
+		</div>
 		@if (showtimeDto != null && cinemaDto != null)
 		{
 			<div class="col" style="width:40%">
@@ -274,6 +277,37 @@
 	</div>
 </div>
 
+<style>
+	.container-fluid {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+</style>
+
+<script>
+		const computedStyles = window.getComputedStyle($0);
+	const parentComputedStyles = window.getComputedStyle($0.parentElement);
+	const data = {
+	  elementStyles: {
+		display: computedStyles['display'],
+		position: computedStyles['position'],
+		bottom: computedStyles['bottom'],
+		left: computedStyles['left'],
+		right: computedStyles['right'],
+		width: computedStyles['width'],
+		height: computedStyles['height']
+	  },
+	  parentStyles: {
+		display: parentComputedStyles['display'],
+		position: parentComputedStyles['position'],
+		flexDirection: parentComputedStyles['flex-direction'],
+		justifyContent: parentComputedStyles['justify-content'],
+		alignItems: parentComputedStyles['align-items']
+	  }
+	};
+</script>
 
 @code {
 	[Parameter] public Guid Id { get; set; }
@@ -303,7 +337,7 @@
 	private CancellationToken cancellationToken;
 	private BillDetailDto billDetailDto = new();
 	private List<TicketDto> lstTicket = new();
-    private List<TicketPriceDto> lstTicketPrices = new();
+	private List<TicketPriceDto> lstTicketPrices = new();
 	private List<SeatDTO> seatDTOs = new();
 	private decimal TotalMoney;
 	private decimal TotalTicket;
@@ -561,9 +595,22 @@
 		}
 		else if (SelectedMethod == "cash")
 		{
-			await BillService.UpdateStatusAsync(Id, BillStatus.Paid);
-			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
-			NavigationManager.NavigateTo("/offline-counter");
+			var bill = await UserHomeService.GetBillForCheckOut(Id);
+			if (bill.MembershipId != null)
+			{
+				await UserHomeService.CheckOutSuccessAsync(new CheckOutSuccessRequest { BillId = Id, MembershipPoint = Mempoint },
+				cancellationToken);
+				await UserHomeService.SendMailForCheckOutAsync(Id, cancellationToken);
+				await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+				//await CheckOutCash.InvokeAsync();
+				NavigationManager.NavigateTo($"/bill-staff/detail/{Id}", true);
+			}
+			else
+			{
+				await BillService.UpdateStatusAsync(Id, BillStatus.Paid);
+				await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+				NavigationManager.NavigateTo($"/bill-staff/detail/{Id}", true);
+			}
 		}
 	}
 }

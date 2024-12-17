@@ -9,6 +9,6 @@
         await UserHomeService.CheckOutSuccessAsync(new CheckOutSuccessRequest {BillId = id, MembershipPoint = Mempoint},
             cancellationToken);
         await UserHomeService.SendMailForCheckOutAsync(id, cancellationToken);
-        NavigationManager.NavigateTo("/offline-counter");   
+        NavigationManager.NavigateTo($"/bill-staff/detail/{id}",true);
     }
 }
