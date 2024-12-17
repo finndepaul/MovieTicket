@@ -604,7 +604,7 @@
 		await comboFooterRef.Reset();
 		await JSRuntime.InvokeVoidAsync("closeModall", "SeatSelectionModal");
 		BillId = args.BillId;
-		MembershipId = args.MembershipId;
+		MembershipId = args.AccountId;
 		await JSRuntime.InvokeVoidAsync("openModal", "ComboSelectionModal");
 	}
 
@@ -677,7 +677,7 @@
 
 	private async Task OpenDiscountModal(EventCallbackHomeArgs args)
 	{
-		MembershipId = args.MembershipId;
+		MembershipId = args.AccountId;
 		OpenDiscount = args.NextToDiscount;
 		await JSRuntime.InvokeVoidAsync("closeModall", "ComboSelectionModal");
 		await JSRuntime.InvokeVoidAsync("openModal", "DiscountSelectionModal");
