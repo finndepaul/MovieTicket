@@ -140,6 +140,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                     Status = bill.Status.ToString(),
                     TotalMoney = bill.TotalMoney,
                     Combos = bill.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList(),
+                    BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
                 };
                 if (billdto == null)
                 {
