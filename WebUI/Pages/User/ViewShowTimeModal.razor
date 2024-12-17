@@ -327,7 +327,15 @@
 	private async Task SelectedCityName(string city)
 	{
 		selectedCityName = city;
+		selectedScreenTypeSort = null;
+		selectedTranslationTypeSort = null;
 		await LoadShowTimesAsync();
+		if (ShowTimeSort.Any())
+		{
+			var firstItem = ShowTimeSort.Distinct(new ShowTimeComparer()).First();
+			selectedScreenTypeSort = firstItem.ScreenTypeName;
+			selectedTranslationTypeSort = firstItem.TranslationTypeName;
+		}
 	}
 	private async Task GetDate(DateTime date)
 	{
