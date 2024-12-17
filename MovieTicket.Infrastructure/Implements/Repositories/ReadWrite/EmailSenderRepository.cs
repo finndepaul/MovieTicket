@@ -48,7 +48,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     bodyBuilder.HtmlBody = $@"
                 <p>Xin chào,</p>
                 <p>Bạn đã tạo tài khoản thành công. Vui lòng nhấp vào nút bên dưới để kích hoạt tài khoản:</p>
-                <a href=""https://localhost:7239/thank-you/{accountId}"">
+                <a href=""https://localhost:9999/thank-you/{accountId}"">
                 <button style=""background-color: #4CAF50; color: white; padding: 10px 20px; border: none; font-size: 16px;"">Kích Hoạt</button>
                 </a>";
 
