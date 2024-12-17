@@ -7,13 +7,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <div class="mb-3 d-flex justify-content-center" style="width:100%">
 	<div class="d-flex">
-		<input type="text" class="form-control me-3 fs-5 p-2" style="width:500px" @bind-value="Barcode" placeholder="Search by BarCode or Status" />
+		<input type="text" class="form-control me-3 fs-5 p-2" style="width:500px" @bind-value="Barcode" placeholder="Nhập Barcode" />
 		<button class="btn btn-primary" style="width:138px" @onclick="SearchBarCode"><i class="bi bi-search m-0"></i>Tìm kiếm</button>
 	</div>
-</div>
-
-<div class="d-flex justify-content-end me-4">
-	<button class="btn btn-warning p-2" @onclick="BillPrint"><i class="bi bi-printer"></i>In hóa đơn</button>
 </div>
 
 @if (IsHidden)
@@ -137,6 +133,9 @@
 				</tbody>
 			</table>
 		</div>
+	</div>
+	<div class="d-flex justify-content-end me-4">
+		<button class="btn btn-warning p-2" @onclick="BillPrint"><i class="bi bi-printer"></i>In hóa đơn</button>
 	</div>
 }
 else

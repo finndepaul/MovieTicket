@@ -19,11 +19,41 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
         public async Task<string> CheckOutSuccessAsync(CheckOutSuccessRequest request, CancellationToken cancellationToken)
         {
             var bill = await _context.Bills.FirstOrDefaultAsync(x => x.Id == request.BillId, cancellationToken);
-            var membership = await _context.Memberships.FirstOrDefaultAsync(x => x.AccountId == bill.AccountId, cancellationToken);
             if (bill == null)
             {
                 return "Bill not found";
             }
+            if (bill.MembershipId != null)
+            {
+                var mem = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId, cancellationToken);
+                bill.Status = BillStatus.Paid;
+                // Cộng điểm thành viên cho khách
+                if (bill.TotalMoney == bill.AfterDiscount) // Nếu không sử dụng mã giảm giá thì mới đc công điểm
+                {
+                    var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == mem.Id);
+                    var point = bill.TotalMoney.Value * (decimal)0.03;
+                    decimal totalPoint = point / 1000;
+                    int roundedPoint = (int)(totalPoint - Math.Floor(totalPoint) == 0.5m
+                                             ? Math.Floor(totalPoint)
+                                             : Math.Round(totalPoint, MidpointRounding.AwayFromZero));
+
+                    member.Point += roundedPoint; // 3% giá trị hóa đơn
+                    _context.Memberships.Update(member);
+                }
+                // Sử dụng điểm thành viên VHD
+                if (request.MembershipPoint > 0)
+                {
+                    var member = await _context.Memberships.FirstOrDefaultAsync(x => x.Id == mem.Id);
+                    member.Point -= request.MembershipPoint;
+                    bill.MembershipId = member.Id;
+                    _context.Memberships.Update(member);
+                }
+                _context.Bills.Update(bill);
+                await _context.SaveChangesAsync(cancellationToken);
+                return "Success";
+            }
+            var membership = await _context.Memberships.FirstOrDefaultAsync(x => x.AccountId == bill.AccountId, cancellationToken);
+
             bill.Status = BillStatus.Paid;
             // Cộng điểm thành viên cho khách
             if (bill.TotalMoney == bill.AfterDiscount) // Nếu không sử dụng mã giảm giá thì mới đc công điểm
