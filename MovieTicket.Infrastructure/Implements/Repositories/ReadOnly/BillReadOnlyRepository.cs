@@ -64,6 +64,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 {
                     Id = b.Id,
                     MembershipId = b.MembershipId,
+                    AccountId = b.AccountId,
                     FilmName = (from ticket in _dbContext.Tickets
                                 join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
                                 join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id

@@ -484,15 +484,16 @@ else
             return "T2-T6";
         }
     }
-    public async Task Reset()
+    public Task Reset()
     {
         foreach (var seat in lstSeatsSelected)
         {
-            await JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
+             JSRuntime.InvokeVoidAsync("toggleButtonById", seat.Id.ToString());
         }
         lstSeatsSelected.Clear();
         SeatsSelectedstr = "";
         TotalTicket = 0;
         StateHasChanged();
+        return Task.CompletedTask;
     }
 }

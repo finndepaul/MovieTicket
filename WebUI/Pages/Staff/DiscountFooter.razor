@@ -76,6 +76,7 @@
 	[Parameter] public EventCallback<Guid> BackToSeat { get; set; }
 	[Parameter] public int Mempoint { get; set; }
 	[Parameter] public string SelectedMethod { get; set; }
+    [Parameter] public EventCallback CheckOutCash { get; set; }
 
 	private EventCallbackOfflineCounterArgs argsOfflineCounter = new();
 	private ShowTimeDto showtimeDto = new();
@@ -133,8 +134,8 @@
 				Convert.ToInt32(bill.AfterDiscount),
 				"VHD Cinema",
 				lstItemDatas,
-				$"https://localhost:9999/check-out-failed/{BillId}",
-				$"https://localhost:9999/check-out-success/{BillId}&{Mempoint}"
+				$"https://localhost:9999/offline-check-out-failed/{BillId}",
+				$"https://localhost:9999/offline-check-out-success/{BillId}&{Mempoint}"
 			);
 			CreatePaymentResult createPayment = await payOS.createPaymentLink(paymentData);
 			NavigationManager.NavigateTo(createPayment.checkoutUrl, true);
@@ -143,6 +144,8 @@
         {
             await BillService.UpdateStatusAsync(BillId, BillStatus.Paid);
 			await JSRuntime.InvokeAsync<string>("alert", "Thanh toán thành công");
+            await CheckOutCash.InvokeAsync();
+			NavigationManager.NavigateTo("/offline-counter");
         }
 	}
 	public Task Reset()
