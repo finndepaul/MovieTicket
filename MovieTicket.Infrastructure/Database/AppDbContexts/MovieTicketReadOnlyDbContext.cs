@@ -120,7 +120,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Id = Guid.Parse("91b9fa1f-a898-4359-8c35-0cc0df5a22f1"),
 			Username = "Staff",
 			Password = Hash.EncryptPassword("123"),
-			CinemaCenterId = Guid.Parse("ad9ca2fb-ae80-49a1-835f-8c2f26a30f3a"),
+			CinemaCenterId = Guid.Parse("37d21a29-7abf-41b1-949c-a3f8cd97cb67"),
 			Role = Domain.Enums.AccountRole.Staff, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "StaffTest",
@@ -271,7 +271,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 
 		cinemaCenters.Add(new CinemaCenter()
 		{
-			Id = Guid.NewGuid(),
+			Id = Guid.Parse("37d21a29-7abf-41b1-949c-a3f8cd97cb67"),
 			Name = "VHD Cinemas Mỹ Đình",
 			Address = "Số 3 Mỹ Đình, Nam Từ Liêm, Hà Nội",
 			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.329821256736!2d105.77868087606693!3d21.01948508062756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313455b1766330d1%3A0x1511e0d5bf3067fd!2zVmluY29tIFBsYXphIFZpbmhvbWVzIFNreSBMYWtlIFBo4bqhbSBIw7luZyBN4bu5IMSQw6xuaA!5e0!3m2!1svi!2s!4v1733299099671!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
@@ -281,6 +281,15 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		cinemaCenters.Add(new CinemaCenter()
 		{
 			Id = Guid.Parse("ad9ca2fb-ae80-49a1-835f-8c2f26a30f3a"),
+			Name = "VHD Cinemas Nguyễn Chí Thanh",
+			Address = "Số 43 Nguyễn Chí Thanh, Ba Đình, Hà Nội",
+			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.2303104777766!2d105.806904776067!3d21.02346878062462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab6a17e518e3%3A0x82ef164fc911c781!2sVincom%20Center%20Nguy%E1%BB%85n%20Ch%C3%AD%20Thanh!5e0!3m2!1svi!2s!4v1733298758785!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
+			CreateDate = DateTime.Now,
+			AddresCity = "Hà Nội",
+		});
+		cinemaCenters.Add(new CinemaCenter()
+		{
+			Id = Guid.Parse("3e6af04c-44a1-40c9-9684-f81250eaf849"),
 			Name = "VHD Cinemas Lý nhân",
 			Address = "Số 20 Nguyên Lý, Lý Nhân, Hà Nam",
 			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.2303104777766!2d105.806904776067!3d21.02346878062462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab6a17e518e3%3A0x82ef164fc911c781!2sVincom%20Center%20Nguy%E1%BB%85n%20Ch%C3%AD%20Thanh!5e0!3m2!1svi!2s!4v1733298758785!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
@@ -289,12 +298,12 @@ public class MovieTicketReadOnlyDbContext : DbContext
 		});
 		cinemaCenters.Add(new CinemaCenter()
 		{
-			Id = Guid.NewGuid(),
-			Name = "VHD Cinemas Đoan Hùng",
-			Address = "Số 29 Ngọc Quan, Đoan Hùng, Phú Thọ",
+			Id = Guid.Parse("73408131-86a0-48f7-9ccb-02ae2a7d8073"),
+			Name = "VHD Cinemas Phủ Lý",
+			Address = "Số 29 Phù Vân, Phủ Lý, Hà Nam",
 			AddressMap = "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.9458662701677!2d105.8652574760663!3d20.994806980646135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac04b6fcfa63%3A0x579e974a43b9f42f!2sVincom%20Mega%20Mall%20Times%20City!5e0!3m2!1svi!2s!4v1733299130109!5m2!1svi!2s\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
 			CreateDate = DateTime.Now,
-			AddresCity = "Phú Thọ",
+			AddresCity = "Hà Nam",
 		});
 		modelBuilder.Entity<CinemaCenter>().HasData(cinemaCenters);
 		// Faker for Combo
