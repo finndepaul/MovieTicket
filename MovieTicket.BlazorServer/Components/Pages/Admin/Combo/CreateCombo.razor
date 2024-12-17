@@ -1,4 +1,4 @@
-@page "/combo/create"
+@page "/dich-vu/create"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 @inject ICloudinaryService CloudinaryService
@@ -98,7 +98,7 @@
         if (result.Status == 200)
         {
             await JSRuntime.ToastrSuccess(result.Message);
-            NavigationManager.NavigateTo("/combo");
+            NavigationManager.NavigateTo("/dich-vu");
         }
         else
         {

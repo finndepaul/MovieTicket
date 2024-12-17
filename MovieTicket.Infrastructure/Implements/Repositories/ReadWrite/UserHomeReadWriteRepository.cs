@@ -203,6 +203,16 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
                     else if (!coupon.IsActive) return "Chương trình giảm giá chưa được kích hoạt";
                     else if (coupon.StartDate > DateTime.Now) return "Chương trình khuyến mãi chưa được áp dụng";
                     else if (coupon.EndDate < DateTime.Now) return "Chương trình khuyến mãi đã hết hạn";
+
+                    // chỉ được dùng mã giảm giá 1 lần
+                    var accountBill = await _context.Bills.Where(b => b.AccountId == bill.AccountId).ToListAsync(cancellationToken);
+                    foreach (var item in accountBill)
+                    {
+                        if (item.CouponId == coupon.Id)
+                        {
+                            return "Bạn đã sử dụng mã giảm giá này!";
+                        }
+                    }
                     bill.CouponId = coupon.Id;
                     bill.AfterDiscount = bill.TotalMoney - coupon.AmountValue;
                     if ((double)(bill.AfterDiscount / bill.TotalMoney) <= 0.1)
