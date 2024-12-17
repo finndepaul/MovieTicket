@@ -47,10 +47,10 @@ namespace WebUI.Services.Implements
 
         public async Task<RegisterResponse> RegisterAsync(AccountRegisterRequest registerModel)
         {
-            var token = await localStorageService.GetItemAsync<string>("authToken");
-            if (token != "") return null!;
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            //var token = await localStorageService.GetItemAsync<string>("authToken");
+            //if (token != "") return null!;
+            //httpClient.DefaultRequestHeaders.Authorization =
+            //    new AuthenticationHeaderValue("Bearer", token);
             var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Account/Register", registerModel);
             var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
             return result;

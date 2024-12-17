@@ -1,4 +1,4 @@
-@page "/combo"
+@page "/dich-vu"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 
@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Bạn có chắc chắn muốn xóa Combo này không?</p>
+                <p>Bạn có chắc chắn muốn xóa dịch vụ này không?</p>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @onclick="() => HandleDeleteCombo(SelectedDeleteComboId)">Xóa</button>
             </div>
         </div>
@@ -18,7 +18,7 @@
 </div>
 
 <div class="container-fluid">
-    <a class="btn add-btn me-md-2" href="/combo/create">  <i class="bi bi-plus-square"></i> Tạo combo</a>
+    <a class="btn add-btn me-md-2" href="/dich-vu/create">  <i class="bi bi-plus-square"></i> Tạo dịch vụ</a>
 
     <div class="table-responsive mb-3">
         <table class="table">
@@ -26,8 +26,8 @@
                 <tr>
                     <th scope="col">STT</th>
                     <th scope="col">Ảnh</th>
-                    <th scope="col">Tên Combo</th>
-                    <th scope="col">Giá Combo</th>
+                    <th scope="col">Tên dịch vụ</th>
+                    <th scope="col">Giá dịch vụ</th>
                     <th scope="col">Trạng thái</th>
                     <th scope="col">Hành động</th>
                 </tr>
@@ -45,7 +45,7 @@
                             <td>@combo.Price?.ToString("#,##0") VND</td>
                             <td><span class="badge @(GetBadgeClass(combo.comboStatus))">@combo.comboStatus</span></td>
                             <td>
-                                <a class="btn edit-btn" href="@($"/combo/update/{combo.Id}")">
+                                <a class="btn edit-btn" href="@($"/dich-vu/update/{combo.Id}")">
                                      <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <button class="btn btn-danger" @onclick="() => GetComboDeleteId(combo.Id)">

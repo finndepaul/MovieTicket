@@ -1,16 +1,16 @@
-@page "/combo/create"
+@page "/dich-vu/create"
 @inject IComboService ComboService
 @attribute [Authorize(Roles = "Admin")]
 @inject ICloudinaryService CloudinaryService
 <EditForm Model="createComboRequest" OnValidSubmit="HandleOnSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <a type="button" class="btn btn-light me-2" href="/combo">Quay lại</a>
+        <a type="button" class="btn btn-light me-2" href="/dich-vu">Quay lại</a>
         <button type="submit" class="btn btn-primary me-2">Lưu</button>
     </div>
 
     <div class="mb-3">
-        <label for="name" class="form-label">Tên combo</label>
+        <label for="name" class="form-label">Tên dịch vụ</label>
         <InputText id="name" class="form-control" @bind-Value="createComboRequest.Name" />
         <ValidationMessage For="@(() => createComboRequest.Name)" />
     </div>
@@ -98,7 +98,7 @@
         if (result.Status == 200)
         {
             await JSRuntime.ToastrSuccess(result.Message);
-            NavigationManager.NavigateTo("/combo");
+            NavigationManager.NavigateTo("/dich-vu");
         }
         else
         {

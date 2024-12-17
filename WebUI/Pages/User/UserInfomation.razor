@@ -147,6 +147,8 @@
                             </div>
                         </div>
                     }
+
+                    <Pagination MetaData="metaData" Spread="2" SelectedPage="SelectedPage"></Pagination>
                 </div>
             }
             else
@@ -176,6 +178,7 @@
                             </div>
                         </div>
                     }
+                    <Pagination MetaData="metaData" Spread="2" SelectedPage="SelectedPageCoupon"></Pagination>
                 </div>
             }
             else
@@ -203,11 +206,12 @@
     private string activeTab = "user-info";
     private string? _directoryPath { get; set; }
     private ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-    private PageList<BillsDto>? bookingHistory;
-    private PageList<CouponDto>? couponUsageHistory;
+    private PageList<BillsDto>? bookingHistory = new PageList<BillsDto>();
+    private PageList<CouponDto>? couponUsageHistory = new PageList<CouponDto>();
     private int membershipPoints;
     private MetaData metaData = new MetaData();
-    private PagingParameters pagingParameters = new PagingParameters { PageNumber = 1, PageSize = 10 };
+    private PagingParameters pagingParametersBooking = new PagingParameters { PageNumber = 1, PageSize = 3 };
+    private PagingParameters pagingParametersCoupon = new PagingParameters { PageNumber = 1, PageSize = 3 };
 
     protected override async Task OnInitializedAsync()
     {
@@ -236,14 +240,10 @@
                         Status = accountDto.Status,
                         Avatar = accountDto.Avatar
                     };
-                // _directoryPath = Path.Combine(WebHostEnv.ContentRootPath, "img", "Avatar");
                 changePasswordRequest.Id = guidUserId;
-
-                await LoadBookingHistory(guidUserId);
-                await LoadCouponUsageHistory(guidUserId);
                 membershipPoints = await AccountService.GetMembershipPointsAsync(guidUserId, CancellationToken.None);
-              
-
+                await LoadCouponUsageHistory(guidUserId);
+                await LoadBookingHistory(guidUserId);
             }
         }
         else
@@ -320,22 +320,66 @@
 
     private async Task LoadBookingHistory(Guid userId)
     {
-        bookingHistory = await AccountService.GetUserBookingHistoryAsync(userId, pagingParameters);
+        bookingHistory = await AccountService.GetUserBookingHistoryAsync(userId, pagingParametersBooking);
         metaData = bookingHistory.MetaData;
-    }
-
-    private async Task SelectedPage(int page)
-    {
-        pagingParameters.PageNumber = page;
-        var userId = userInfo.Id;
-        await LoadBookingHistory(userId);
     }
 
     private async Task LoadCouponUsageHistory(Guid userId)
     {
-        couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(userId, pagingParameters, CancellationToken.None);
+        couponUsageHistory = await AccountService.GetUserCouponUsageHistoryAsync(userId, pagingParametersCoupon, CancellationToken.None);
         metaData = couponUsageHistory.MetaData;
     }
+
+    private async Task OnPageChanged(int pageNumber)
+    {
+        pagingParametersBooking.PageNumber = pageNumber;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(userId, out var guidUserId))
+            {
+                await LoadBookingHistory(guidUserId);
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private async Task OnPageChangedCoupon(int pageNumber)
+    {
+        pagingParametersBooking.PageNumber = pageNumber;
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (Guid.TryParse(userId, out var guidUserId))
+            {
+                await LoadCouponUsageHistory(guidUserId);
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private async Task SelectedPage(int pageNumber)
+    {
+        await OnPageChanged(pageNumber);
+    }
+
+    private async Task SelectedPageCoupon(int pageNumber)
+    {
+        await OnPageChangedCoupon(pageNumber);
+    }
+
     private async Task HandleImageChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
