@@ -286,7 +286,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
 					// Kiểm tra thời gian cách suất chiếu tiếp theo
 					if (nextShowTime2 != null)
 					{
-						var checkEndTime = nextShowTime.StartTime.Value - showTime.EndTime.Value;
+						var checkEndTime = nextShowTime2.StartTime.Value - showTime.EndTime.Value;
 						if (checkEndTime.TotalMinutes < 30)
 						{
 							return new ResponseObject<ShowTime>
