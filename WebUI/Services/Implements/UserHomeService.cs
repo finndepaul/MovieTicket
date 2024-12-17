@@ -80,7 +80,7 @@ namespace WebUI.Services.Implements
 
         public async Task SendMailForCheckOutAsync(Guid billId, CancellationToken cancellationToken)
         {
-            var result = await _http.GetAsync($"api/EmailSender/SendMailForCheckOut?billId={billId}", cancellationToken);
+            var result = await _http.GetAsync($"api/UserHome/SendEmailForCheckOut?billId={billId}", cancellationToken);
         }
 
         public async Task UpdateCheckMembershipIdAsync(Guid billId, string sdt, CancellationToken cancellationToken)
