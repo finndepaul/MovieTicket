@@ -214,7 +214,7 @@
 	</div>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid" style="width:100%;height:150px; background-color:#031529;color:#fff">
 	<div class="row">
 		@if (showtimeDto != null && cinemaDto != null)
 		{
@@ -303,10 +303,10 @@
 	private CancellationToken cancellationToken;
 	private BillDetailDto billDetailDto = new();
 	private List<TicketDto> lstTicket = new();
+    private List<TicketPriceDto> lstTicketPrices = new();
 	private List<SeatDTO> seatDTOs = new();
 	private decimal TotalMoney;
 	private decimal TotalTicket;
-	private List<TicketPriceDto> lstTicketPrices { get; set; }
 	private string date = string.Empty;
 	private decimal Discount;
 	private decimal TotalCombo;
@@ -320,18 +320,30 @@
 		{
 			billDetailDto = await UserHomeService.GetBillForCheckOut(Id);
 			lstTicket = await TicketService.GetListTicketByBillIdAsync(Id);
+			var responseTicket = await TicketPriceService.GetAllAsync(new TicketPriceWithPaginationRequest(), new PagingParameters()
+				{
+					PageNumber = 1,
+					PageSize = 180
+				});
+			lstTicketPrices = responseTicket.Item.ToList();
 			if (lstTicket.Count > 0)
 			{
 				foreach (var item in lstTicket)
 				{
-					var seat = SeatService.GetById(item.SeatId.Value);
-					seatDTOs.Add(seat.Result.Data);
+					var result = await SeatService.GetById((Guid)item.SeatId);
+					var seat = result.Data;
+					seatDTOs.Add(seat);
 				}
 				var ticket = lstTicket.FirstOrDefault();
 				var res = await ShowTimeService.GetById((Guid)ticket.ShowTimeId);
 				showtimeDto = res.Data;
 				date = showtimeDto.ShowtimeDate.Value.DayOfWeek.ToString();
-				CalculateTotalTicket();
+                filmDto = await FilmService.GetById(showtimeDto.FilmId);
+				formatRating = "T" + filmDto.Rating;
+				formatStartTime = showtimeDto.StartTime.Value.ToString("HH:mm dd/MM");
+                var cinemares = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
+                cinemaDto = cinemares.Data;
+				TotalTicket = CalculateTotalTicket();
 				if (seatDTOs.Count > 0)
 				{
 					foreach(var s in seatDTOs)
@@ -340,7 +352,9 @@
 					}
 				}
 			}
-			TotalMoney = (decimal)billDetailDto.TotalMoney;
+			TotalMoney = (decimal)billDetailDto.AfterDiscount;
+			Discount = (decimal)billDetailDto.TotalMoney - (decimal)billDetailDto.AfterDiscount;
+            TotalCombo = (decimal)billDetailDto.TotalMoney - TotalTicket;
 		}
 	}
 
@@ -500,17 +514,17 @@
 	}
 	private decimal CalculateTotalTicket() //tính tổng tiền
 	{
-		TotalTicket = 0;
+		decimal totalTicket = 0;
 		foreach (var item in seatDTOs)
 		{
 			var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == item.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
 				== cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(date) && x.Status == TicketPriceStatus.Active);
 			if (ticketPrice != null)
 			{
-				TotalTicket += (Decimal)ticketPrice.Price;
+				totalTicket += (Decimal)ticketPrice.Price;
 			}
 		}
-		return TotalTicket;
+		return totalTicket;
 	}
 	private string DayOfTheWeek(string day) //check ngày
 	{

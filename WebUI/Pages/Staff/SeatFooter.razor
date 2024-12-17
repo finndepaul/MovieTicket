@@ -71,7 +71,7 @@
 	private FilmDto filmDto = new();
 	private string formatStartTime = "";
 	private string formatRating = "";
-	private string today = DateTime.Now.DayOfWeek.ToString();
+    private string date = string.Empty;
 	private Guid staffId = Guid.Empty;
 	private AuthenticationState AuthenState;
 	private List<SeatUpdateRequest> lstSeatUpdateRequests = new();
@@ -90,6 +90,7 @@
 		{	
 			var response = await ShowTimeService.GetById(ShowtimeId);
 			showtimeDto = response.Data;
+            date = showtimeDto.StartTime.Value.DayOfWeek.ToString();
 			var cinema = await CinemaService.GetCinemaById(showtimeDto.CinemaId);
 			cinemaDto = cinema.Data;
 			var film = await FilmService.GetById(showtimeDto.FilmId);
@@ -156,7 +157,7 @@
 					}
 				}
 				var ticketPrice = lstTicketPrices.FirstOrDefault(x => x.SeatName == s.SeatTypeName && x.Type == showtimeDto.ScreenTypeName && x.CinemaTypeName
-							== cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(today) && x.Status == TicketPriceStatus.Active);
+							== cinemaDto.CinemaTypeName && x.Day == DayOfTheWeek(date) && x.Status == TicketPriceStatus.Active);
 				lstTicketRequests.Add(new TicketRequest
 					{
 						SeatId = s.Id,
