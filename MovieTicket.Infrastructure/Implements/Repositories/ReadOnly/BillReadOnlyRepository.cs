@@ -22,7 +22,7 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
         public async Task<PageList<BillsDto>> GetUserBookingHistoryAsync(Guid userId, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
             var query = _dbContext.Bills
-                .Where(b => b.MembershipId == userId && b.Status == BillStatus.Paid)
+                .Where(b => b.AccountId == userId && b.Status == BillStatus.Paid)
                 .Join(_dbContext.Tickets, b => b.Id, t => t.BillId, (b, t) => new { b, t })
                 .Join(_dbContext.ShowTimes, bt => bt.t.ShowTimeId, s => s.Id, (bt, s) => new { bt.b, bt.t, s })
                 .Join(_dbContext.Schedules, bts => bts.s.ScheduleId, sc => sc.Id, (bts, sc) => new { bts.b, bts.t, bts.s, sc })
