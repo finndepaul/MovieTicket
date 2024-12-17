@@ -50,7 +50,7 @@
 				}
 
 			</div><div class="">
-				<img src="https://tritonstore.com.au/wp-content/uploads/MSI-Plessey.webp" width="100%" height="200" class="object-fit-contain border rounded" />
+				<img src="@BarcodeImage" width="100%" height="200" class="object-fit-contain border rounded" />
 			</div>
 		</div>
 
@@ -76,8 +76,8 @@
 						{
 							<tr>
 								<td>@item.SeatName</td>
-								<td><span class="p-2 m-2 badge text-secondary bg-secondary bg-opacity-10 border border-secondary">@item.SeatType</span></td>
-								<td>@item.Price.ToString("#,##0")</td>
+								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
+								<td>@item.Price.ToString("#,##0") VND</td>
 							</tr>
 						}
 
@@ -109,8 +109,8 @@
 							<tr>
 								<td>@item.ComboName</td>
 								<td>@item.Quantity</td>
-								<td>@item.Price</td>
-								<td>@item.TotalPrice</td>
+								<td>@item.Price.Value.ToString("#,##0") VND</td>
+								<td>@item.TotalPrice.Value.ToString("#,##0") VND</td>
 							</tr>
 						}
 					}
@@ -149,13 +149,24 @@
 	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
 	private BillDetailDto objBill = new BillDetailDto();
 	private AccountDto objAccount = new AccountDto();
+	private string BarcodeImage;
+	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
 
 	protected async override Task OnInitializedAsync()
 	{
 		//lay bill theo id
 		objBill = await BillService.GetBillByIdAsync(Id);
 		//lay account theo bill id
-		objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+		if (objBill.MembershipId.HasValue)
+		{
+			objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+		}
+		else
+		{
+			objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
+
+		}
+
 		//lay list ticket theo bill id
 		lstTicket = await TicketService.GetListTicketByBillIdAsync(Id);
 		//lay 1 ticket dau tien cua bill id do
@@ -183,10 +194,23 @@
 				});
 		}
 		lstBillCombo = await BillComboService.GetListBillComboByBillId(Id);
+		BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+
+
+	}
+	private string FormatSeatTypeName(string type)
+	{
+		return type switch
+		{
+			"Normal" => "secondary",
+			"VIP" => "warning",
+			"Couple" => "danger",
+			_ => "Không xác định"
+		};
 	}
 
 	private void GoToUserDetail()
 	{
-		NavigationManager.NavigateTo($"/userdetail/{objBill.MembershipId}");
+		NavigationManager.NavigateTo($"/user-detail/{objBill.AccountId}");
 	}
 }

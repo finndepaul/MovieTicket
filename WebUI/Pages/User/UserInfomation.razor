@@ -140,7 +140,7 @@
                                     <span class="badge text-bg-success">
                                         @(bill.Status == BillStatus.Paid ? "Đã thanh toán" : bill.Status.ToString())
                                     </span>
-                                    <a href="@($"BookinghistoryDetail/{bill.Id}")" class="btn btn-outline-success btn-sm">
+                                    <a href="@($"booking-history-detail/{bill.Id}")" class="btn btn-outline-success btn-sm">
                                         Chi tiết
                                     </a>
                                 </div>
@@ -352,7 +352,7 @@
 
     private async Task OnPageChangedCoupon(int pageNumber)
     {
-        pagingParametersBooking.PageNumber = pageNumber;
+        pagingParametersCoupon.PageNumber = pageNumber;
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 

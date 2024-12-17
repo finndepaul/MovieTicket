@@ -1,4 +1,4 @@
-﻿@page "/bookinghistorydetail/{Id:guid}"
+﻿@page "/booking-history-detail/{Id:guid}"
 @layout Layout.UserLayout
 @using BarcodeStandard
 @using System.Drawing
@@ -6,165 +6,138 @@
 @using MovieTicket.Application.DataTransferObjs.Bill
 @using MovieTicket.Application.DataTransferObjs.BillCombo
 @using MovieTicket.Application.DataTransferObjs.Ticket
-<div class="container my-4">
-    <!-- Nút quay lại -->
-    <div class="mb-3" style="margin-top: 50px;">
-        <button @onclick="GoToUserDetail" class="btn btn-secondary d-flex align-items-center">
-            <i class="bi bi-arrow-bar-left me-2" ></i> Quay lại
-        </button>
-    </div>
+<div class="container">
+	<div class="mb-3" style="margin-top: 50px;">
+		<button @onclick="GoToUserDetail" class="btn btn-secondary d-flex align-items-center">
+			<i class="bi bi-arrow-bar-left me-2"></i> Quay lại
+		</button>
+	</div>
 
-    <!-- Thông tin đơn hàng và khách hàng -->
-    <div class="row">
-        <!-- Thông tin đơn hàng -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Thông tin đơn hàng</h5>
-                </div>
-                <div class="card-body">
-                    @if (objBill != null && objShowTime != null)
-                    {
-                        <p><strong>Mã đơn hàng:</strong> @(objBill?.Id)</p>
-                        <p><strong>Phim:</strong> <span class="text-primary">@objShowTime?.FilmName</span></p>
-                        <p>
-                            <strong>Giờ chiếu:</strong>
-                            <span class="badge bg-danger">@objShowTime?.StartTime?.ToString("HH:mm") - @objShowTime?.EndTime?.ToString("HH:mm")</span>
-                        </p>
-                        <p><strong>Ngày chiếu:</strong> @(objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"))</p>
-                        <p><strong>Phòng chiếu:</strong> @objShowTime?.CinemaName</p>
-                        <p><strong>Rạp chiếu:</strong> <span class="text-primary">@objShowTime?.CinemaCenterName</span></p>
-                        <p><strong>Ngày đặt:</strong> @(objBill?.CreateTime?.ToString("dd/MM/yyyy"))</p>
-                    }
-                    else
-                    {
-                        <p>Không có dữ liệu</p>
-                    }
-                </div>
-            </div>
-        </div>
+	<div class="row">
+		<!-- Thông tin đơn hàng -->
+		<div class="col-md-6 mb-3">
+			<div class="row">
+				@if (objBill != null && objShowTime != null)
+				{
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin đơn hàng</h5>
+						</div>
+						<p><strong>Mã đơn hàng:</strong> @(objBill?.Id)</p>
+						<div><strong class="me-2">Phim:</strong><span class="text-primary">@objShowTime?.FilmName</span></div>
+						<p><strong class="me-2">Giờ chiếu:</strong><span class="badge bg-danger"> @(objShowTime?.StartTime?.ToString("HH:mm")) - @(objShowTime?.EndTime?.ToString("HH:mm"))</span></p>
+						<p><strong>Ngày chiếu:</strong> @(objShowTime?.ShowtimeDate?.ToString("dd/MM/yyyy"))</p>
+						<p><strong>Phòng chiếu:</strong> @objShowTime?.CinemaName</p>
+						<p><strong class="me-2">Rạp chiếu:</strong><span class="text-primary"> @objShowTime?.CinemaCenterName</span></p>
+						<p><strong>Ngày đặt:</strong> @(objBill?.CreateTime?.ToString("dd/MM/yyyy"))</p>
+					</div>
 
-        <!-- Thông tin khách hàng -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Thông tin khách hàng</h5>
-                </div>
-                <div class="card-body">
-                    @if (objAccount != null)
-                    {
-                        <p><strong>Khách hàng:</strong> @(objAccount?.Name)</p>
-                        <p><strong>Điện thoại:</strong> @(objAccount?.Phone)</p>
-                        <p><strong>Email:</strong> @(objAccount?.Email)</p>
-                        <p><strong>Trạng thái:</strong> <span class="badge bg-success">@objBill?.Status</span></p>
-                        <p><strong>Thành tiền:</strong> @(objBill?.TotalMoney?.ToString("#,##0"))</p>
-                        <p><strong>Giảm giá:</strong> @((objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"))</p>
-                        <p><strong>Tổng tiền:</strong> @(objBill?.AfterDiscount?.ToString("#,##0"))</p>
-                    }
-                    else
-                    {
-                        <p>Không có dữ liệu</p>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
+					<!-- Thông tin khách hàng -->
+					<div class="col-md-6 mb-3">
+						<div class="py-2 mb-4 border-bottom">
+							<h5>Thông tin khách hàng</h5>
+						</div>
+						<p><strong>Khách hàng:</strong> @(objAccount?.Name)</p>
+						<p><strong>Điện thoại:</strong> @(objAccount?.Phone)</p>
+						<p><strong>Email:</strong> @(objAccount?.Email)</p>
+						<p><strong class="me-2">Trạng thái:</strong><span class="badge bg-success"> @objBill?.Status</span></p>
+						<p><strong>Thành tiền:</strong> @(objBill?.TotalMoney?.ToString("#,##0"))</p>
+						<p><strong>Giảm giá:</strong> @((objBill?.TotalMoney - objBill?.AfterDiscount)?.ToString("#,##0"))</p>
+						<p><strong>Tổng tiền:</strong> @(objBill?.AfterDiscount?.ToString("#,##0"))</p>
+					</div>
+				}
+				else
+				{
+					<p>Không có dữ liệu</p>
+				}
 
-    <!-- Ghế & Dịch vụ -->
-    <div class="row">
-        <!-- Thông tin ghế -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Thông tin ghế</h5>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-hover table-bordered mb-0">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>Ghế</th>
-                                <th>Loại</th>
-                                <th>Giá</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (lstSeat.Count > 0)
-                            {
-                                @foreach (var seat in lstSeat)
-                                {
-                                    <tr>
-                                        <td>@seat.SeatName</td>
-                                        <td>@seat.SeatType</td>
-                                        <td>@seat.Price.ToString("#,##0")</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="3">Không có dữ liệu</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+			</div>
+			<div class="d-flex justify-content-center border" style="width:100%">
+				<div class="border border-5 border-black rounded-4 p-1" style="width:50%">
+					@if (BarcodeImage != null)
+					{
+						<img src="@BarcodeImage" style="width:100%" height="120" class="object-fit-contain" />
+					}
+					<p class="text-center fw-bold" style="font-family:Arial">@objBill.BarCode</p>
 
-        <!-- Thông tin dịch vụ -->
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Dịch vụ</h5>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-hover table-bordered mb-0">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>Tên dịch vụ</th>
-                                <th>Số lượng</th>
-                                <th>Đơn giá</th>
-                                <th>Tổng tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (lstBillCombo.Count > 0)
-                            {
-                                @foreach (var combo in lstBillCombo)
-                                {
-                                    <tr>
-                                        <td>@combo.ComboName</td>
-                                        <td>@combo.Quantity</td>
-                                        <td>@combo.Price?.ToString("#,##0")</td>
-                                        <td>@combo.TotalPrice?.ToString("#,##0")</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4">Không có dữ liệu</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center border" style="width:100%">
-            <div class="border border-5 border-black rounded-4 p-1" style="width:50%">
-                @if (BarcodeImage != null)
-                {
-                    <img src="@BarcodeImage" style="width:100%" height="200" class="object-fit-contain" />
-                }
-                <p class="text-center fw-bold" style="font-family:Arial">@objBill.BarCode</p>
+				</div>
 
-            </div>
+			</div>
+		</div>
 
-        </div>
-    </div>
+
+		<!-- Ghế & Dịch vụ -->
+		<div class="col-md-6 mb-3">
+			<div class="py-2 mb-3 border-bottom">
+				<h5>Ghế & Dịch vụ</h5>
+			</div>
+			<!-- Thông tin ghế -->
+			<table class="table align-middle mb-5">
+				<thead class="table-secondary">
+					<tr>
+						<th>Thông tin ghế</th>
+						<th>Loại ghế</th>
+						<th>Giá tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (lstSeat.Count > 0)
+					{
+						@foreach (var item in lstSeat)
+						{
+							<tr>
+								<td>@item.SeatName</td>
+								<td><span class="p-2 m-2 badge text-@(FormatSeatTypeName(@item.SeatType)) bg-@(FormatSeatTypeName(@item.SeatType)) bg-opacity-10 border border-@(FormatSeatTypeName(@item.SeatType))">@item.SeatType</span></td>
+								<td>@item.Price.ToString("#,##0") VND</td>
+							</tr>
+						}
+
+					}
+					else
+					{
+						<tr>
+							<td colspan="3">Không có dữ liệu</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			<!-- Dịch vụ -->
+			<table class="table align-middle">
+				<thead class="table-secondary">
+					<tr>
+						<th>Tên dịch vụ</th>
+						<th>Số lượng</th>
+						<th>Đơn giá</th>
+						<th>Tổng tiền</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (lstBillCombo.Count > 0)
+					{
+						@foreach (var item in lstBillCombo)
+						{
+							<tr>
+								<td>@item.ComboName</td>
+								<td>@item.Quantity</td>
+								<td>@item.Price.Value.ToString("#,##0") VND</td>
+								<td>@item.TotalPrice.Value.ToString("#,##0") VND</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="4">Không có dữ liệu</td>
+						</tr>
+					}
+
+
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
-
 
 @code {
 	[Parameter] public Guid Id { get; set; }
@@ -187,14 +160,24 @@
 	private List<SeatPrice> lstSeatId = new List<SeatPrice>();
 	private BillDetailDto objBill = new BillDetailDto();
 	private AccountDto objAccount = new AccountDto();
-    private string BarcodeImage;
-    private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
+	private string BarcodeImage;
+	private GeneratorBarcode generatorBarcode = new GeneratorBarcode();
+
 	protected async override Task OnInitializedAsync()
 	{
 		//lay bill theo id
 		objBill = await BillService.GetBillByIdAsync(Id);
 		//lay account theo bill id
-		objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+		if (objBill.MembershipId.HasValue)
+		{
+			objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+		}
+		else
+		{
+			objAccount = await AccountService.GetByIdAsync(objBill.AccountId.Value);
+
+		}
+
 		//lay list ticket theo bill id
 		lstTicket = await TicketService.GetListTicketByBillIdAsync(Id);
 		//lay 1 ticket dau tien cua bill id do
@@ -222,12 +205,23 @@
 				});
 		}
 		lstBillCombo = await BillComboService.GetListBillComboByBillId(Id);
-        BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+		BarcodeImage = generatorBarcode.GenerateBarcode(long.Parse(objBill.BarCode));
+
 
 	}
+	private string FormatSeatTypeName(string type)
+	{
+		return type switch
+		{
+			"Normal" => "secondary",
+			"VIP" => "warning",
+			"Couple" => "danger",
+			_ => "Không xác định"
+		};
+	}
 
-    private void GoToUserDetail()
-    {
-        NavigationManager.NavigateTo($"/userinformation?tab=booking-history");
-    }
+	private void GoToUserDetail()
+	{
+		NavigationManager.NavigateTo($"/userinformation?tab=booking-history");
+	}
 }
