@@ -169,7 +169,7 @@
 			objBill = await BillService.GetBillByIdAsync(Guid.Parse(Id));
 			if (objBill.MembershipId.HasValue)
 			{
-				objAccount = await AccountService.GetByIdAsync(objBill.MembershipId.Value);
+				objAccount = await AccountService.GetByIdAsync(objBill.UserAcountId.Value);
 			}
 			else
 			{
