@@ -84,7 +84,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Role = Domain.Enums.AccountRole.Admin, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "AdminTest",
-			Phone = "000-000-000",
+			Phone = "0875 431 754",
 			Email = "azusachan307@gmail.com",
 			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
 			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
@@ -97,7 +97,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "ClientTest",
-			Phone = "000-000-000",
+			Phone = "0875 431 753",
 			Email = "dangnph36044@fpt.edu.vn",
 			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
 			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
@@ -110,7 +110,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Role = Domain.Enums.AccountRole.User, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "ClientTest",
-			Phone = "000-000-000",
+			Phone = "0877 431 754",
 			Email = "toandmph33341@fpt.edu.vn",
 			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
 			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
@@ -124,7 +124,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 			Role = Domain.Enums.AccountRole.Staff, // 1, 2, or 3
 			Avatar = "img/Avatar/avatar.jpg",
 			Name = "StaffTest",
-			Phone = "000-000-000",
+			Phone = "0975 431 754",
 			Email = "dangnguyen300708@gmail.com",
 			Status = Domain.Enums.AccountStatus.Active, // 0 or 1
 			CreateDate = new DateTime(2024, 10, 1).AddDays(10)
