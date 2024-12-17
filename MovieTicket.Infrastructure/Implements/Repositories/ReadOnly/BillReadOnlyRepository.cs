@@ -87,38 +87,68 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadOnly
                 throw new ArgumentException("Invalid ID.", nameof(id));
             }
 
-            // Lấy Bill từ dbContext theo ID và chuyển đổi sang BillDtoGetById
-            var bill = await _dbContext.Bills
-                    .Join(_dbContext.Memberships, b => b.MembershipId, m => m.Id, (b, m) => new { b, m })
-                    .Where(x => x.b.Id == id)
-                    .Select(b => new BillDetailDto
-                    {
-                        Id = b.b.Id,
-                        UserAcountId = b.m.AccountId,
-                        MembershipId = b.b.MembershipId,
-                        AccountId = b.b.AccountId,
-                        BillCode = int.Parse(DateTime.Now.ToString("HHmmss")),
-                        TotalMoney = b.b.TotalMoney,
-                        AfterDiscount = b.b.AfterDiscount,
-                        FilmName = (from ticket in _dbContext.Tickets
-                                    join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
-                                    join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
-                                    join film in _dbContext.Films on schedule.FilmId equals film.Id
-                                    where ticket.BillId == b.b.Id
-                                    select film.Name).FirstOrDefault(),
-                        CreateTime = b.b.CreateTime,
-                        BarCode = b.b.BarCode,
-                        Status = b.b.Status.ToString(),
-                        Combos = b.b.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList()
-                    })
-                    .FirstOrDefaultAsync();
-            // Nếu không tìm thấy Bill, ném ra ngoại lệ
-            if (bill == null)
+            var bill = await _dbContext.Bills.FirstOrDefaultAsync(x => x.Id == id);
+
+
+            if (bill.MembershipId != null)
             {
-                throw new InvalidOperationException($"No bill found with ID {id}.");
+                var mem = await _dbContext.Memberships.FirstOrDefaultAsync(x => x.Id == bill.MembershipId);
+                var userAccount = await _dbContext.Accounts.FirstOrDefaultAsync(x => x.Id == mem.AccountId);
+                var billdto = new BillDetailDto()
+                {
+                    Id = bill.Id,
+                    MembershipId = mem.Id,
+                    AccountId = bill.AccountId,
+                    UserAcountId = userAccount.Id,
+                    AfterDiscount = bill.AfterDiscount,
+                    BarCode = bill.BarCode,
+                    CreateTime = bill.CreateTime,
+                    FilmName = (from ticket in _dbContext.Tickets
+                                join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
+                                join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
+                                join film in _dbContext.Films on schedule.FilmId equals film.Id
+                                where ticket.BillId == bill.Id
+                                select film.Name).FirstOrDefault(),
+                    Status = bill.Status.ToString(),
+                    TotalMoney = bill.TotalMoney,
+                    Combos = bill.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList(),
+                };
+                if (billdto == null)
+                {
+                    throw new InvalidOperationException($"No bill found with ID {id}.");
+                }
+                return billdto;
+            }
+            else
+            {
+                var billdto = new BillDetailDto()
+                {
+                    Id = bill.Id,
+                    MembershipId = null,
+                    AccountId = bill.AccountId,
+                    UserAcountId = null,
+                    AfterDiscount = bill.AfterDiscount,
+                    BarCode = bill.BarCode,
+                    CreateTime = bill.CreateTime,
+                    FilmName = (from ticket in _dbContext.Tickets
+                                join showtime in _dbContext.ShowTimes on ticket.ShowTimeId equals showtime.Id
+                                join schedule in _dbContext.Schedules on showtime.ScheduleId equals schedule.Id
+                                join film in _dbContext.Films on schedule.FilmId equals film.Id
+                                where ticket.BillId == bill.Id
+                                select film.Name).FirstOrDefault(),
+                    Status = bill.Status.ToString(),
+                    TotalMoney = bill.TotalMoney,
+                    Combos = bill.BillCombos.Select(bc => _mapper.Map<ComboDto>(bc.Combo)!).ToList(),
+                };
+                if (billdto == null)
+                {
+                    throw new InvalidOperationException($"No bill found with ID {id}.");
+                }
+                return billdto;
             }
 
-            return bill;
+            // Nếu không tìm thấy Bill, ném ra ngoại lệ
+
         }
         public async Task<PageList<BillsDto>> GetListBillWithPaginationAsync(BillWithPaginationRequest request, PagingParameters pagingParameters, CancellationToken cancellationToken)
         {
