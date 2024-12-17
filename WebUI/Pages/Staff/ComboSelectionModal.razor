@@ -151,5 +151,10 @@ else
 		return totalCombo;
 	}
 
-
+	public Task Reset()
+	{
+		comboQuantities.Clear();
+		lstComboSelected.Clear();
+		return Task.CompletedTask;
+	}
 }
