@@ -253,8 +253,9 @@ namespace MovieTicket.Infrastructure.Implements.Repositories.ReadWrite
             await _db.SaveChangesAsync();
             var membership = new Membership
 			{
-				Id = account.Id,
-				Point = 0,
+				Id = Guid.NewGuid(),
+                AccountId = account.Id,
+                Point = 0,
 				Status = MembershipStatus.Active
 			};
 			await _db.Memberships.AddAsync(membership);
