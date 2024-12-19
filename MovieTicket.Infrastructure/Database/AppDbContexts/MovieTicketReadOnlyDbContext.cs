@@ -50,21 +50,21 @@ public class MovieTicketReadOnlyDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // Đăng:
-        //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		// Đăng:
+		//optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-        // Trung:
-        //optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
+		// Trung:
+		optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
 
-        // Toản:
-        //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		// Toản:
+		//optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-        // Vũ:
-        //optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+		// Vũ:
+		//optionsBuilder.UseSqlServer("Data Source=VUHOPE;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
-        // Đông:
-        //optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
-    }
+		// Đông:
+		//optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
+	}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
