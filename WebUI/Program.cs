@@ -17,7 +17,9 @@ namespace WebUI
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
+            // Server
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://vhdcinemasapi.azurewebsites.net/") });
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

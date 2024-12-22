@@ -16,20 +16,20 @@ namespace WebUI.Services.Implements
 
         public async Task<ResponseObject<BannerDTO>> Create(BannerCreateRequest banner)
         {
-            var respone = await _httpClient.PostAsJsonAsync<BannerCreateRequest>("https://localhost:6868/api/Banner/CreateBanner", banner);
+            var respone = await _httpClient.PostAsJsonAsync<BannerCreateRequest>("api/Banner/CreateBanner", banner);
             var result = await respone.Content.ReadFromJsonAsync<ResponseObject<BannerDTO>>();
             return result;
         }
 
         public async Task<ResponseObject<BannerDTO>> GetById(Guid id)
         {
-            var respone = await _httpClient.GetFromJsonAsync<ResponseObject<BannerDTO>>($"https://localhost:6868/api/Banner/GetById?id={id}");
+            var respone = await _httpClient.GetFromJsonAsync<ResponseObject<BannerDTO>>($"api/Banner/GetById?id={id}");
             return respone;
         }
 
         public async Task<List<BannerDTO>> GetBannersAsync()
         {
-            var result = await _httpClient.GetFromJsonAsync<List<BannerDTO>>("https://localhost:6868/api/Banner/GetAll");
+            var result = await _httpClient.GetFromJsonAsync<List<BannerDTO>>("api/Banner/GetAll");
             return result;
         }
 

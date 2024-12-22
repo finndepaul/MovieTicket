@@ -12,7 +12,18 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SQLSERVER" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.20.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.0" />
   </ItemGroup>
@@ -21,5 +32,14 @@
     <ProjectReference Include="..\MovieTicket.Application\MovieTicket.Application.csproj" />
     <ProjectReference Include="..\MovieTicket.Infrastructure\MovieTicket.Infrastructure.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Update="appsettings.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+		<Content Update="appsettings.Development.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>

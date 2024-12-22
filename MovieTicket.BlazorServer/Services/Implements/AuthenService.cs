@@ -39,7 +39,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
         public async Task<LoginRespone> LoginAsync(LoginDTO loginModel)
         {
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/Login", loginModel);
+            var response = await httpClient.PostAsJsonAsync("api/Auth/Login", loginModel);
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
             //await localStorageService.SetItemAsync(JWTToken, result.JWTToken);
             Constants.Token = result.JWTToken;
@@ -52,14 +52,14 @@ namespace MovieTicket.BlazorServer.Services.Implements
             if (Constants.Token != "") return null!;
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", Constants.Token);
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Account/Register", registerModel);
+            var response = await httpClient.PostAsJsonAsync("api/Account/Register", registerModel);
             var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
             return result;
         }
 
         public async Task<LoginRespone> RefreshToken(UserSession session)
         {
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", session);
+            var response = await httpClient.PostAsJsonAsync("api/Auth/RefreshToken", session);
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
             return result;
         }
@@ -85,7 +85,7 @@ namespace MovieTicket.BlazorServer.Services.Implements
 
         private async Task GetRefreshToken()
         {
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/RefreshToken", new UserSession() { JWTToken = Constants.Token });
+            var response = await httpClient.PostAsJsonAsync("api/Auth/RefreshToken", new UserSession() { JWTToken = Constants.Token });
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
             Constants.Token = result!.JWTToken;
         }
