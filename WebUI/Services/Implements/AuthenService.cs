@@ -37,7 +37,7 @@ namespace WebUI.Services.Implements
 
         public async Task<LoginRespone> LoginAsync(LoginDTO loginModel)
         {
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Auth/Login", loginModel);
+            var response = await httpClient.PostAsJsonAsync("api/Auth/Login", loginModel);
             var result = await response.Content.ReadFromJsonAsync<LoginRespone>();
 
             await localStorageService.SetItemAsync("authToken", result.JWTToken);
@@ -51,7 +51,7 @@ namespace WebUI.Services.Implements
             //if (token != "") return null!;
             //httpClient.DefaultRequestHeaders.Authorization =
             //    new AuthenticationHeaderValue("Bearer", token);
-            var response = await httpClient.PostAsJsonAsync("https://localhost:6868/api/Account/Register", registerModel);
+            var response = await httpClient.PostAsJsonAsync("api/Account/Register", registerModel);
             var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
             return result;
         }
