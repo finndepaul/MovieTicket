@@ -67,7 +67,7 @@ public class MovieTicketReadOnlyDbContext : DbContext
 
         // Đông:
         //optionsBuilder.UseSqlServer("Data Source=HAKARI;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
-    }
+	}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
