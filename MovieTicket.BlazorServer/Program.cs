@@ -16,8 +16,16 @@ namespace MovieTicket.BlazorServer
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration
+            .AddJsonFile("appsettings.Blazor.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.Blazor.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
             // Add services to the container.
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
+
+            // Server
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://vhdcinemasapi.azurewebsites.net/") });
+            //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:6868/") });
+
             builder.Services.AddRazorComponents()
                       .AddInteractiveServerComponents();
             builder.Services.AddBlazoredLocalStorage();

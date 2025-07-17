@@ -73,11 +73,14 @@ namespace MovieTicket.Infrastructure.Database.AppDbContexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // Server
+            optionsBuilder.UseSqlServer("Data Source=dongbdph35416-dbserver.database.windows.net; Initial Catalog=MovieTicket; User ID=vip; Password=Abc@12345; TrustServerCertificate=true");
+
             // Đăng:
             //optionsBuilder.UseSqlServer("Data Source=SURINRIN\\SQLEXPRESS01;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
 
             // Trung:
-            //optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
+            optionsBuilder.UseSqlServer("Data Source=MSI\\ISORA;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true;Connection Timeout=120;");
 
             // Toản:
             //optionsBuilder.UseSqlServer("Data Source=LAPTOP-JMN439Q3\\SQLEXPRESS02;Initial Catalog=MovieTicket;Integrated Security=True;TrustServerCertificate=true");
